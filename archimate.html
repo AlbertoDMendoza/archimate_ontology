@@ -23,10 +23,10 @@
       font-family: sans-serif;
     }
     
-    h1, h2, h3, h4, h5, h6 { text-align: left }
-    h1, h2, h3 { color: #005A9C; background: white }
+    h1, h3, h3, h4, h5, h6 { text-align: left }
+    h1, h3, h3 { color: #005A9C; background: white }
     h1 { font: 170% sans-serif }
-    h2 { font: 140% sans-serif }
+    h3 { font: 140% sans-serif }
     h3 { font: 120% sans-serif }
     h4 { font: bold 100% sans-serif }
     h5 { font: italic 100% sans-serif }
@@ -41,15 +41,146 @@
 </head>
 
 <body>
-  <div class="head">
-    <p>
-      <a href="">
-        <img width="" height="" alt="" src=""/>
-      </a>
-    </p>
-    <h1>Archimate Vocabulary</h1>
-  </div>
-  <p>This is the namespace for use with Archimate 3.2. Vocabulary</p>
+	<div class="head">
+		<p>
+			<a href="">
+				<img width="" height="" alt="" src=""/>
+			</a>
+		</p>
+		<h1>Archimate Vocabulary</h1>
+	</div>
+	<p>This is the namespace for use with Archimate 3.2. Vocabulary</p>
+	
+	<h2>Versioning</h2>
+	<p>Ontology Version Information will be stored in the OWL attribute owl:versionInfo</p>
+	<p>Root namespace will resolve to the latest version of the the specification.  Versions can be found in corresponding folders starting with v3.2. E.g https://purl.org/archimate/3.2/</p>
+
+	<h2>Vocabulary</h2>
+	<h3><a name="VisualLanguage"></a>Visual Language</h3>
+	<p>A type of language that uses visual elements to convey meaning.</p>
+
+	<h3><a name="EnterpriseArchitecture"></a>Enterprise Architecture</h3>
+	<p>The practice of analyzing, designing, planning, and implementing enterprise analysis to successfully execute on business strategies.</p>
+
+	<h3><a name="Archimate"></a>Archimate</h3>
+	<p>ArchiMate Enterprise Architecture modeling language, a visual language with a set of default iconography for describing, analyzing, and communicating many concerns of Enterprise Architectures as they change over time. The standard provides a set of entities and relationships with their corresponding iconography for the representation of Architecture Descriptions.</p>
+
+	<h3><a name="ArchimateCoreFramework"></a>ArchiMate Core Framework</h3>
+	<p>A reference structure used to classify elements of the ArchiMate core language. It consists of three layers and three aspects.</p>
+
+	<h3><a name="ArchiMateCoreLanguage"></a>ArchiMate Core Language</h3>
+	<p>The central part of the ArchiMate language that defines the concepts to model Enterprise Architectures. It includes concepts from three layers: Business, Application, and Technology (including Physical).</p>
+
+	<h3><a name="ArchitectureView"></a>Architecture View</h3>
+	<p>A representation of a system from the perspective of a related set of concerns.</p>
+
+	<h3><a name="ArchitectureViewpoint"></a>Architecture Viewpoint</h3>
+	<p>A specification of the conventions for a particular kind of architecture view.</p>
+
+	<h3><a name="Aspect"></a>Aspect</h3>
+	<p>Classification of elements based on layer-independent characteristics related to the concerns of different stakeholders. Used for positioning elements in the ArchiMate metamodel.</p>
+
+	<h3><a name="Attribute"></a>Attribute</h3>
+	<p>A property associated with an ArchiMate language element or relationship.</p>
+
+	<h3><a name="Model"></a>Model</h3>
+	<p>A model contains elements and relationships within an architecture.</p>
+
+	<h3><a name="Concept"></a>Concept</h3>
+	<p>A conceptual entity within the ArchiMate modeling language.</p>
+
+	<h3><a name="Element"></a>Element</h3>
+	<p>A fundamental building block within an architecture model.</p>
+
+	<h3><a name="CompositeElement"></a>CompositeElement</h3>
+	<p>An element that does not necessarily fit in a single aspect of the framework but may combine two or more aspects.</p>
+
+	<h3><a name="Relationship"></a>Relationship</h3>
+	<p>A relationship between two elements within an architecture model.</p>
+
+	<h3><a name="RelationshipConnector"></a>Relationship Connector</h3>
+	<p>A connector element that connects relationships between elements.</p>
+
+	<h3><a name="ActiveStructure"></a>Active Structure</h3>
+	<p>A category of elements that perform behavior and collaborate to provide services.</p>
+
+	<h3><a name="ExternalActiveStructure"></a>External Active Structure</h3>
+	<p>A category of external active structure elements (also called interfaces) that perform behavior and collaborate to provide services.</p>
+
+	<h3><a name="InternalActiveStructure"></a>Internal Active Structure</h3>
+	<p>A category of internal elements that perform behavior and collaborate to provide services.</p>
+
+	<h3><a name="Behavior"></a>Behavior</h3>
+	<p>Represents elements that define the behavior performed by active structure elements.</p>
+
+	<h3><a name="ExternalBehavior"></a>External Behavior</h3>
+	<p>Represents external elements (also called services) that define the behavior performed by active structure elements.</p>
+
+	<h3><a name="InternalBehavior"></a>Internal Behavior</h3>
+	<p>Represents internal elements that define the behavior performed by active structure elements.</p>
+
+	<h3><a name="Event"></a>Event</h3>
+	<p>Represents elements that define the behavior performed by active structure elements.</p>
+
+	<h3><a name="PassiveStructure"></a>Passive Structure</h3>
+	<p>Represents structural elements that are used or produced by behavior elements.</p>
+
+	<h3><a name="Layer"></a>Layer</h3>
+	<p>A major division in the architecture that categorizes elements according to their scope and purpose.</p>
+
+	<h3><a name="BusinessLayer"></a>Business Layer</h3>
+	<p>Represents elements and relationships that describe the organization's business functions and processes.</p>
+
+	<h3><a name="ApplicationLayer"></a>Application Layer</h3>
+	<p>Represents elements and relationships that describe the organization's business functions and processes.</p>
+
+	<h3><a name="BusinessActor"></a>Business Actor</h3>
+	<p>An organizational entity that is capable of performing behavior.</p>
+
+	<h3><a name="BusinessRole"></a>Business Role</h3>
+	<p>The responsibility for performing specific behavior, to which an actor can be assigned.</p>
+
+	<h3><a name="BusinessCollaboration"></a>Business Collaboration</h3>
+	<p>An aggregate of two or more business roles that work together to perform collective behavior.</p>
+
+	<h3><a name="BusinessInterface"></a>Business Interface</h3>
+	<p>A point of access where a business service is made available to the environment.</p>
+
+	<h3><a name="BusinessProcess"></a>Business Process</h3>
+	<p>A sequence of business behaviors that achieve a specific outcome.</p>
+
+	<h3><a name="BusinessFunction"></a>Business Function</h3>
+	<p>A collection of business behavior based on a chosen set of criteria (typically required skills, resources, etc.) and closely aligned to an organization.</p>
+
+	<h3><a name="BusinessService"></a>Business Service</h3>
+	<p>An explicitly defined exposed business behavior.</p>
+
+	<h3><a name="BusinessInteraction"></a>Business Interaction</h3>
+	<p>A unit of collective business behavior performed by two or more business actors, business roles, or business collaborations.</p>
+
+	<h3><a name="BusinessEvent"></a>Business Event</h3>
+	<p>Represents a business-related state change.</p>
+
+	<h3><a name="BusinessObject"></a>Business Object</h3>
+	<p>Represents a concept used within a particular business domain.</p>
+
+	<h3><a name="BusinessContract"></a>Business Constract</h3>
+	<p>Represents a formal or informal specification of an agreement between a provider and a consumer that specifies the rights and obligations associated with a product and establishes functional and non-functional parameters for interaction.</p>
+
+	<h3><a name="Representation"></a>Representation</h3>
+	<p>A perceptible form of the information carried by a business object.</p>
+
+	<h3><a name="Product"></a>Product</h3>
+	<p>Represents a coherent collection of services and/or passive structure elements, accompanied by a contract, which is offered as a whole to (internal or external) customers.</p>
+
+	<h3><a name="ApplicationComponent"></a>Application Component</h3>
+	<p>An encapsulation of application functionality aligned to implementation structure, which is modular and replaceable.</p>
+
+	<h3><a name="ApplicationCollaboration"></a>Application Component</h3>
+	<p>Represents an aggregate of two or more application internal active structure elements that work together to perform collective application behavior.</p>
+
+
+
 </body>
 
 </html>
