@@ -179,7 +179,12 @@
 	
 <#ApplicationLayer> rdf:type owl:Class ;
     rdfs:label "Application Layer" ;
-    rdfs:comment "Represents elements and relationships that describe the organization's business functions and processes." ;
+    rdfs:comment "Represents the software applications and their components that support business processes and provide services to users and other applications." ;
+    rdfs:subClassOf <#Layer> .
+
+<#TechnologyLayer> rdf:type owl:Class ;
+    rdfs:label "Technology Layer" ;
+    rdfs:comment "Represents the physical and software infrastructure that supports the Application Layer and, ultimately, the Business Layer. It focuses on the hardware, software, and networking components required to run applications and deliver business functionality." ;
     rdfs:subClassOf <#Layer> .
 
 # Core Elements
@@ -292,7 +297,7 @@
     rdfs:subClassOf <#Element> .
 
 <#ApplicationCollaboration> rdf:type owl:Class ;
-    rdfs:label "Application Component" ;
+    rdfs:label "Application Collaboration" ;
     rdfs:comment "Represents an aggregate of two or more application internal active structure elements that work together to perform collective application behavior." ;
     rdfs:subClassOf <#ActiveStructure> ;
     rdfs:subClassOf <#ApplicationLayer> ;
@@ -307,7 +312,7 @@
 
 # Behavior Elements
 <#ApplicationFunction> rdf:type owl:Class ;
-    rdfs:label "Application Component" ;
+    rdfs:label "Application Function" ;
     rdfs:comment "Represents an automated behavior that can be performed by an application component." ;
     rdfs:subClassOf <#Behavior> ;
     rdfs:subClassOf <#ApplicationLayer> ;
@@ -321,7 +326,7 @@
     rdfs:subClassOf <#Element> .	
 	
 <#ApplicationProcess> rdf:type owl:Class ;
-    rdfs:label "Application Component" ;
+    rdfs:label "Application Process" ;
     rdfs:comment " Addresses a set of related concerns and is tailored for specific stakeholders.  A View is specified by means of a Viewpoint, which prescribes the concepts, models, analysis techniques, and visualizations that are provided by the View.  The same elements from the Model Tree can be re-used multiple times in the same or different View." ;
     rdfs:subClassOf <#Behavior> ;
     rdfs:subClassOf <#ApplicationLayer> ;
