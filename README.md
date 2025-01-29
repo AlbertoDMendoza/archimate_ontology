@@ -2,18 +2,19 @@
 This is a namespace to use with the Archimate 3.2 Ontology.  
 
 ### Permanent URL
-  https://purl.org/archimate-one/
+  https://purl.org/archimate/
   
 ### Last Updated Date
-  2025-01-30
+  2024-06-15
+  
 ### Author
   Alberto D. Mendoza
 
 ## Status of this Document
-This is an extension of the Archimate Ontology specifically for the ONE POC
+This vocabulary is a rendition of The Open Group® ArchiMate® 3.2 Specification. See the full specification at https://pubs.opengroup.org/architecture/archimate3-doc/. 
 
 ## Serialisations
 The vocabulary is published both in human- and machine-readable forms: HTML, RDF (Turtle), and RDF/XML  
 
 ### Disclaimer
-This is a personal project.  
+This is an experimental project.  All trademarks and copyrights belong to The Open Group
