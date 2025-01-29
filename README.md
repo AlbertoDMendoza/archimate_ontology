@@ -1,4 +1,4 @@
-# Archimate Ontology
+# Archimate ONE Ontology
 This is a namespace to use with the Archimate 3.2 Ontology.  
 
 ### Permanent URL
