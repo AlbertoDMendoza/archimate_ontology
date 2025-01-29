@@ -23,7 +23,7 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2024-06-14"^^xsd:date .
+    dct:modified "2025-01-29"^^xsd:date .
 
 
 ### General Definitions
