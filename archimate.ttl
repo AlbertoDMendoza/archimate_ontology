@@ -109,9 +109,19 @@
     rdfs:subClassOf <#Concept> .
 	
 <#CompositeElement> rdf:type owl:Class ;
-	rdfs:label "CompositeElement" ;
-	rdfs:comment "An element that does not necessarily fit in a single aspect of the framework but may combine two or more aspects." ;
-	rdfs:subClassOf <#Element> .
+    rdfs:label "CompositeElement" ;
+    rdfs:comment "An element that does not necessarily fit in a single aspect of the framework but may combine two or more aspects." ;
+    rdfs:subClassOf <#Element> .
+
+<#BehaviorElement> rdf:type owl:Class ;
+    rdfs:label "Behavior Element" ;
+    rdfs:comment "An element that represent the dynamic aspects of the enterprise." ;
+    rdfs:subClassOf <#Element> .
+
+<#InternalBehaviorElement> rdf:type owl:Class ;
+    rdfs:label "Internal Behavior Element" ;
+    rdfs:comment "An internal behavior element represents a unit of activity that can be performed by one or more active structure elements." ;
+    rdfs:subClassOf <#Element> .
 
 <#Relationship> rdf:type owl:Class ;
     rdfs:label "Relationship" ;
@@ -166,6 +176,7 @@
     rdfs:subClassOf <#Aspect> .
 
 
+
 # Layers
 <#Layer> rdf:type owl:Class ;
     rdfs:label "Layer" ;
@@ -201,6 +212,67 @@
     rdfs:label "Implementation and Migration Layer" ;
     rdfs:comment "Represents elements related to projects, programs, and transition architectures." ;
     rdfs:subClassOf <#Layer> .
+
+<#Motivation> rdf:type owl:Class ;
+    rdfs:label "Motivation" ;
+    rdfs:comment "A cross-cutting aspect that represents drivers, goals, requirements, and principles in an enterprise architecture." ;
+    rdfs:subClassOf <#BehaviorElement> ;
+    rdfs:subClassOf <#Layer> .
+
+
+
+## Motivation Elements
+
+<#Stakeholder> rdf:type owl:Class ;
+    rdfs:label "Stakeholder" ;
+    rdfs:comment "An individual or group with an interest in the architecture." ;
+    rdfs:subClassOf <#Motivation> .
+
+<#Driver> rdf:type owl:Class ;
+    rdfs:label "Driver" ;
+    rdfs:comment "An external or internal factor that influences architecture decisions." ;
+    rdfs:subClassOf <#Motivation> .
+
+<#Assessment> rdf:type owl:Class ;
+    rdfs:label "Assessment" ;
+    rdfs:comment "An evaluation of an architecture driver, such as a SWOT analysis." ;
+    rdfs:subClassOf <#Motivation> .
+
+<#Goal> rdf:type owl:Class ;
+    rdfs:label "Goal" ;
+    rdfs:comment "A high-level outcome that an enterprise aims to achieve." ;
+    rdfs:subClassOf <#Motivation> .
+
+<#Outcome> rdf:type owl:Class ;
+    rdfs:label "Outcome" ;
+    rdfs:comment "A measurable result that contributes to achieving a goal." ;
+    rdfs:subClassOf <#Motivation> .
+
+<#Principle> rdf:type owl:Class ;
+    rdfs:label "Principle" ;
+    rdfs:comment "A fundamental guideline for architecture decision-making." ;
+    rdfs:subClassOf <#Motivation> .
+
+<#Requirement> rdf:type owl:Class ;
+    rdfs:label "Requirement" ;
+    rdfs:comment "A specific need that must be met by the architecture." ;
+    rdfs:subClassOf <#Motivation> .
+
+<#Constraint> rdf:type owl:Class ;
+    rdfs:label "Constraint" ;
+    rdfs:comment "A limitation or restriction affecting architecture decisions." ;
+    rdfs:subClassOf <#Motivation> .
+
+<#Value> rdf:type owl:Class ;
+    rdfs:label "Value" ;
+    rdfs:comment "The importance or worth of a concept in the enterprise." ;
+    rdfs:subClassOf <#Motivation> .
+
+<#Meaning> rdf:type owl:Class ;
+    rdfs:label "Meaning" ;
+    rdfs:comment "The definition or interpretation of a concept in a specific context." ;
+    rdfs:subClassOf <#Motivation> .
+
 
 
 ## Strategy Elements
