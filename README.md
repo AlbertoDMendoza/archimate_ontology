@@ -2,7 +2,7 @@
 This is a namespace to use with the Archimate 3.2 Ontology.  
 
 ### Permanent URL
-  https://purl.org/archimate/
+  https://purl.org/archimate#
   
 ### Last Updated Date
   2024-06-15
