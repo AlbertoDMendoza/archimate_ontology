@@ -1,11 +1,14 @@
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix base: <https://purl.org/archimate#> .
+@prefix ex: <http://example.org/archimate/> .
 @base <https://purl.org/archimate#> .
 
 ### Ontology Declaration
@@ -818,15 +821,14 @@
 ## 4.1 Valid Relationships
 
 # DR1 Valid Derivations for Specialization Relationships
-<#Specializes> rdf:type #Specialization ;
+<#Specializes> rdf:type <#Specialization> ;
     rdf:type owl:TransitiveProperty ;
     rdfs:label "specializes" ;
     skos:altLabel "is a" ;
-    skos:exactMatch base:Specialization ;
+    skos:exactMatch <#Specialization> ;
     rdfs:comment "If p(a,b):S and q(b,c):S exist, then r(a,c):S can be derived. S being Specialization" .
 
-
-# SHACL Rule for Transitivity
+# SHACL Rule for Transitivity of Specialization
 ex:DR1_TransitivityRule rdf:type sh:SPARQLRule ;
     rdfs:label "DR1: Transitivity of Specialization" ;
     rdfs:comment "If p(a,b):S and q(b,c):S exist, then r(a,c):S can be derived" ;
@@ -868,7 +870,8 @@ ex:DR1_TransitivityRule rdf:type sh:SPARQLRule ;
 ### 5.  Validation Queries for Completeness
 
 # SPARQL query to find all relationships derived by DR1
-```sparql
+ex:ValidationQuery ex:sparqlText 
+"""
 SELECT ?source ?target ?relationshipId ?derivationChain
 WHERE {
     <<?source base:specializes ?target>> {
@@ -876,11 +879,12 @@ WHERE {
         base:derivedFrom "DR1_transitivity" ;
         base:derivationChain ?derivationChain .
     }
-}
-```
+} 
+""" .
 
 # SPARQL query to check if all possible transitive relationships have been derived
-```sparql
+ex:ValidationQuery ex:sparqlText 
+"""
 SELECT ?a ?c 
 WHERE {
     ?a base:specializes ?b .
@@ -891,4 +895,4 @@ WHERE {
         ?a base:specializes ?c .
     }
 }
-```
+""" .
