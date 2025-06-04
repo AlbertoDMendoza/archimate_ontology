@@ -6,7 +6,7 @@
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@base <https://purl.org/archimate> .
+@base <https://purl.org/archimate#> .
 
 ### Ontology Declaration
 <#> rdf:type owl:Ontology ;
@@ -23,10 +23,26 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2025-01-29"^^xsd:date .
+    dct:modified "2025-06-04"^^xsd:date .
 
+# NOTES (Updated 2025-06-04)
+# This is a Work in Progress and not remotely a complete ontology file for ArchiMate. 
+# SKOS file only has only definitions.  This one is a mix bag of Thesaurus and Ontology (I might need to pick one approach, still not sure).
+# Includes Full Framework (SKOS file does not have the full framework *yet*).
+# The goal is to make this Ontology conformant with RDF-Star 1.2 which can add properties to edges which ArchiMate allows for. 
 
-### General Definitions
+# TODO
+# Add *All* Derivation Rules <-- the whole reason why I'm trying to do this.
+# Add Check and Balances
+# Might have to review the whole thing to conform with RDF-Star 1.2
+# Once compliant, we can start adding properties/attributes to views elements. 
+# Figure out Specializations and Profiles
+
+# UPDATES
+# 2025-06-04 Added DR1.
+#
+
+### 0. General Definitions
 
 # Define OWL classes
 <#EnterpriseArchitecture> rdf:type owl:Class ;
@@ -54,9 +70,9 @@
     skos:exactMatch <#Archimate> .
 
 
-### Archimate Specification in RDF
+### 1. Archimate Specification in RDF
 
-## Archimate Definitions
+## 1.0 Archimate Definitions
 <#Archimate> rdf:type owl:Class ;
 	rdfs:label "Archimate" ;
 	rdfs:comment "ArchiMate Enterprise Architecture modeling language, a visual language with a set of default iconography for describing, analyzing, and communicating many concerns of Enterprise Architectures as they change over time. The standard provides a set of entities and relationships with their corresponding iconography for the representation of Architecture Descriptions." ;
@@ -221,7 +237,7 @@
 
 
 
-## Motivation Elements
+## 1.1 Motivation Elements
 
 <#Stakeholder> rdf:type owl:Class ;
     rdfs:label "Stakeholder" ;
@@ -275,7 +291,7 @@
 
 
 
-## Strategy Elements
+## 1.2 Strategy Elements
 
 # Active Structure Elements
 <#ResourceElement> rdf:type owl:Class ;
@@ -316,7 +332,7 @@
     rdfs:subClassOf <#Element> .
 
 
-## Business Layer Elements
+## 1.3 Business Layer Elements
 
 # Active Structure Elements
 <#BusinessActor> rdf:type owl:Class ;
@@ -413,7 +429,7 @@
     rdfs:subClassOf <#CompositeElement> .
 
 
-## Application Layer Elements
+## 1.4 Application Layer Elements
 
 # Active Structure Elements
 <#ApplicationComponent> rdf:type owl:Class ;
@@ -475,7 +491,7 @@
     rdfs:subClassOf <#Element> .		
 
 
-## Technology Layer Elements
+## 1.5 Technology Layer Elements
 
 # Active Structure Elements
 <#Node> rdf:type owl:Class ;
@@ -572,7 +588,7 @@
     rdfs:subClassOf <#Element> .
 
 
-## Physical Elements
+## 1.6 Physical Elements
 
 # Active Structure Elements
 <#Equipment> rdf:type owl:Class ;
@@ -605,7 +621,7 @@
     rdfs:subClassOf <#Element> .
 
 
-## Implementation and Migration Elements
+## 1.7 Implementation and Migration Elements
 
 # Active Structure Elements
 <#WorkPackage> rdf:type owl:Class ;
@@ -646,9 +662,9 @@
     rdfs:subClassOf <#Element> .
 
 
-### Relationships
+### 2. Relationships
 
-# Relationship Classes
+## Relationship Types
 <#StructuralRelationship> rdf:type owl:Class ;
     rdfs:label "Structural Relationship" ;
     rdfs:comment "A structural relationship defines the static construction or composition of concepts." ;
@@ -670,7 +686,7 @@
     rdfs:subClassOf <#Relationship> .
 
 
-# Specific Relationships
+# Relationships
 <#Assignment> rdf:type owl:ObjectProperty ;
     rdfs:label "Assignment" ;
     rdfs:comment "Links active structure elements with units of behavior that are performed by them, or roles that are fulfilled by them." ;
@@ -790,12 +806,89 @@
 			<#Layer>
 		) .
 
-	
 
-# Metamodels (WIP)
-# <#ExternalBehavior> <#Access> <#PassiveStructure> .
-# <#ExternalBehavior> <#Serving> <#InternalActiveStructure> .
-# <#ExternalBehavior> <#Triggering> <#Event> .
-# <#ExternalBehavior> <#Flow> <#Event> .
-# <#ExternalBehavior> <#Triggering> <#ExternalBehavior> .
-# <#ExternalBehavior> <#Flow> <#ExternalBehavior> .
+### 3. Relationship Tables
+
+# SEE: Archimate Normative Specification
+
+
+
+### 4. Specification of Derivation Rules
+
+## 4.1 Valid Relationships
+
+# DR1 Valid Derivations for Specialization Relationships
+<#Specializes> rdf:type #Specialization ;
+    rdf:type owl:TransitiveProperty ;
+    rdfs:label "specializes" ;
+    skos:altLabel "is a" ;
+    skos:exactMatch base:Specialization ;
+    rdfs:comment "If p(a,b):S and q(b,c):S exist, then r(a,c):S can be derived. S being Specialization" .
+
+
+# SHACL Rule for Transitivity
+ex:DR1_TransitivityRule rdf:type sh:SPARQLRule ;
+    rdfs:label "DR1: Transitivity of Specialization" ;
+    rdfs:comment "If p(a,b):S and q(b,c):S exist, then r(a,c):S can be derived" ;
+    sh:construct """
+        CONSTRUCT {
+            <<?s base:specializes ?o>> {
+                rdf:type base:Specialization ;
+                base:relationshipId ?newId ;
+                base:derivedFrom "DR1_transitivity" ;
+                base:derivedFromRelationships (?rel1 ?rel2) ;
+                rdfs:label ?derivedLabel ;
+                base:sourceLayer ?sourceLayer ;
+                base:targetLayer ?targetLayer .
+            }
+        }
+        WHERE {
+            <<?s base:specializes ?intermediate>> ?rel1 .
+            <<?intermediate base:specializes ?o>> ?rel2 .
+            
+            # Get layer information
+            ?rel1 base:sourceLayer ?sourceLayer .
+            ?rel2 base:targetLayer ?targetLayer .
+            
+            # Ensure we don't already have this derived relationship
+            FILTER NOT EXISTS {
+                <<?s base:specializes ?o>> ?existing .
+            }
+            
+            # Generate new relationship ID
+            BIND(CONCAT("r_", STR(?s), "_", STR(?o)) AS ?newId)
+            BIND(CONCAT("Derived: ", STR(?s), " specializes ", STR(?o)) AS ?derivedLabel)
+        }
+    """ .
+
+## 4.2 Potential Relationships
+## 4.3 Restrictions on Applying Derivation Rules
+
+
+### 5.  Validation Queries for Completeness
+
+# SPARQL query to find all relationships derived by DR1
+```sparql
+SELECT ?source ?target ?relationshipId ?derivationChain
+WHERE {
+    <<?source base:specializes ?target>> {
+        base:relationshipId ?relationshipId ;
+        base:derivedFrom "DR1_transitivity" ;
+        base:derivationChain ?derivationChain .
+    }
+}
+```
+
+# SPARQL query to check if all possible transitive relationships have been derived
+```sparql
+SELECT ?a ?c 
+WHERE {
+    ?a base:specializes ?b .
+    ?b base:specializes ?c .
+    
+    # Check if the transitive relationship is missing
+    FILTER NOT EXISTS {
+        ?a base:specializes ?c .
+    }
+}
+```
