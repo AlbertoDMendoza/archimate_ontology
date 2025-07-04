@@ -13,11 +13,11 @@
 
 ### Ontology Declaration
 <#> rdf:type owl:Ontology ;
-    owl:versionInfo "1.0" ;
-	rdf:label "Archimate Ontology" ;
-    rdfs:comment "An ontology for the ArchiMate modeling language." ;
+    owl:versionInfo "Alpha" ;
+    rdf:label "ArchiMate Ontology - RDF-Star Edition" ;
+    rdfs:comment "An RDF-Star compliant ontology for the ArchiMate modeling language with relationship metadata support." ;
     dct:title "ArchiMate Ontology" ;
-    dct:description "An ontology for the ArchiMate modeling language." ;
+    dct:description "An RDF-Star based ontology for the ArchiMate modeling language supporting relationship attributes." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:publisher <https://purl.org/archimate> ;
     dct:contributor [
@@ -26,96 +26,92 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2025-06-04"^^xsd:date .
+    dct:modified "2025-07-04"^^xsd:date .
 
-# NOTES (Updated 2025-06-04)
+# NOTES 
 # This is a Work in Progress and not remotely a complete ontology file for ArchiMate. 
 # SKOS file only has only definitions.  This one is a mix bag of Thesaurus and Ontology (I might need to pick one approach, still not sure).
 # Includes Full Framework (SKOS file does not have the full framework *yet*).
-# The goal is to make this Ontology conformant with RDF-Star 1.2 which can add properties to edges which ArchiMate allows for. 
+# Rewritten Relationships to leverage RDF-Star which supports relationship attributes.
+# Expanding SHACL constrains.  File is getting unwielding, hard to maintain. (Very inclined to split for Beta). 
 
 # TODO
 # Add *All* Derivation Rules <-- the whole reason why I'm trying to do this.
-# Add Check and Balances
-# Might have to review the whole thing to conform with RDF-Star 1.2
-# Once compliant, we can start adding properties/attributes to views elements. 
 # Figure out Specializations and Profiles
+# Add Relationship Connectors
 
 # UPDATES
+# 2025-07-04 Redid Relationships with RDF-Star, added SHACL for relationships. changed version to Alpha
 # 2025-06-04 Added DR1.
 #
 
 ### 0. General Definitions
 
-# Define OWL classes
-<#EnterpriseArchitecture> rdf:type owl:Class ;
+# Using SKOS
+<#EnterpriseArchitecture> rdf:type skos:Concept ;
     rdfs:label "Enterprise Architecture" ;
     rdfs:comment "The practice of analyzing, designing, planning, and implementing enterprise analysis to successfully execute on business strategies." .
 
-<#VisualLanguage> rdf:type owl:Class ;
+<#VisualLanguage> rdf:type skos:Concept ;
     rdfs:label "Visual Language" ;
     rdfs:comment "A type of language that uses visual elements to convey meaning." .
 
-# Defining Archimate as a SKOS Concept Scheme
-<#EnterpriseArchitectureScheme> rdf:type skos:ConceptScheme ;
-    skos:prefLabel "Enterprise Architecture Scheme" .
-
-# Define a SKOS concept within the scheme
-<#Archimate> rdf:type skos:Concept ;
-    skos:prefLabel "Archimate" ;
+# Defining ArchiMate as a SKOS concept scheme
+<#ArchiMateConcept> rdf:type skos:ConceptScheme ;
+    skos:prefLabel "ArchiMate" ;
     skos:definition "A visual language for enterprise architecture." ;
     rdfs:subClassOf <#VisualLanguage>, <#EnterpriseArchitecture> ;
     skos:inScheme <#EnterpriseArchitectureScheme> .
 
-# Define Archimate as an OWL class and link it to the SKOS concept
-<#ArchimateClass> rdf:type owl:Class ;
-    rdfs:label "Archimate" ;
-    skos:exactMatch <#Archimate> .
+# Define ArchiMate as an OWL class and link it to the SKOS concept
+<#ArchiMateClass> rdf:type owl:Class ;
+    rdfs:label "ArchiMate" ;
+    skos:exactMatch <#ArchiMate> .
 
 
-### 1. Archimate Specification in RDF
+### 1. ArchiMate Specification in RDF
 
-## 1.0 Archimate Definitions
-<#Archimate> rdf:type owl:Class ;
-	rdfs:label "Archimate" ;
+## 1.0 ArchiMate Definitions
+<#ArchiMate> rdf:type owl:Class ;
+	rdfs:label "ArchiMate" ;
 	rdfs:comment "ArchiMate Enterprise Architecture modeling language, a visual language with a set of default iconography for describing, analyzing, and communicating many concerns of Enterprise Architectures as they change over time. The standard provides a set of entities and relationships with their corresponding iconography for the representation of Architecture Descriptions." ;
 	rdfs:subClassOf owl:Thing ;
-	skos:exactMatch <#Archimate> .
+	skos:exactMatch <#ArchiMate> .
 	
-<#ArchimateCoreFramework> rdf:type owl:NamedIndividual ;
+<#ArchiMateCoreFramework> rdf:type skos:Concept ;
     rdfs:label "ArchiMate Core Framework" ;
     rdfs:comment "A reference structure used to classify elements of the ArchiMate Core language. It consists of three layers and three aspects." ;
-    rdfs:subClassOf <#Archimate> .
+    rdfs:subClassOf <#ArchiMate> .
 
-<#ArchiMateCoreLanguage> rdf:type owl:NamedIndividual ;
+<#ArchiMateCoreLanguage> rdf:type skos:Concept ;
 	rdfs:label "ArchiMate Core Language";
 	rdfs:comment "The central part of the ArchiMate language that defines the concepts to model Enterprise Architectures. It includes concepts from three layers: Business, Application, and Technology (including Physical).";
-	rdfs:subClassOf <#Archimate> .
+	rdfs:subClassOf <#ArchiMate> .
 
 <#ArchitectureView> rdf:type owl:Class ;
 	rdfs:label "Architecture View";
 	rdfs:comment "A representation of a system from the perspective of a related set of concerns.";
-	rdfs:subClassOf <#Archimate> .
+	rdfs:subClassOf <#ArchiMate> .
 
 <#ArchitectureViewpoint> rdf:type owl:Class ;
 	rdfs:label "Architecture Viewpoint";
 	rdfs:comment "A specification of the conventions for a particular kind of architecture view.";
-	rdfs:subClassOf <#Archimate> .
+	rdfs:subClassOf <#ArchiMate> .
 
 <#Aspect> rdf:type owl:Class ;
     rdfs:label "Aspect" ;
     rdfs:comment "Classification of elements based on layer-independent characteristics related to the concerns of different stakeholders. Used for positioning elements in the ArchiMate metamodel." ;
-    rdfs:subClassOf <#Archimate> .
+    rdfs:subClassOf <#ArchiMate> .
 	
 <#Attribute> rdf:type owl:Class ;
 	rdfs:label "Attribute";
 	rdfs:comment "A property associated with an ArchiMate language element or relationship.";
-	rdfs:subClassOf <#Archimate> .
+	rdfs:subClassOf <#ArchiMate> .
 
 <#Model> rdf:type owl:Class ;
     rdfs:label "Model" ;
     rdfs:comment "A model contains elements and relationships within an architecture." ;
-    rdfs:subClassOf <#Archimate> .
+    rdfs:subClassOf <#ArchiMate> .
 
 <#Concept> rdf:type owl:Class ;
     rdfs:label "Concept" ;
@@ -126,21 +122,6 @@
     rdfs:label "Element" ;
     rdfs:comment "A fundamental building block within an architecture model." ;
     rdfs:subClassOf <#Concept> .
-	
-<#CompositeElement> rdf:type owl:Class ;
-    rdfs:label "CompositeElement" ;
-    rdfs:comment "An element that does not necessarily fit in a single aspect of the framework but may combine two or more aspects." ;
-    rdfs:subClassOf <#Element> .
-
-<#BehaviorElement> rdf:type owl:Class ;
-    rdfs:label "Behavior Element" ;
-    rdfs:comment "An element that represent the dynamic aspects of the enterprise." ;
-    rdfs:subClassOf <#Element> .
-
-<#InternalBehaviorElement> rdf:type owl:Class ;
-    rdfs:label "Internal Behavior Element" ;
-    rdfs:comment "An internal behavior element represents a unit of activity that can be performed by one or more active structure elements." ;
-    rdfs:subClassOf <#Element> .
 
 <#Relationship> rdf:type owl:Class ;
     rdfs:label "Relationship" ;
@@ -154,10 +135,15 @@
 
 
 # Aspects
+<#StructureElement> rdf:type owl:Class ;
+    rdfs:label "Structure Element" ;
+    rdfs:comment "" ;
+    rdfs:subClassOf <#Element> .
+
 <#ActiveStructure> rdf:type owl:Class ;
     rdfs:label "Active Structure" ;
     rdfs:comment "A category of elements that perform behavior and collaborate to provide services." ;
-    rdfs:subClassOf <#Aspect> .
+    rdfs:subClassOf <#StructureElement> .
 	
 <#ExternalActiveStructure> rdf:type owl:Class ;
     rdfs:label "External Active Structure" ;
@@ -169,32 +155,35 @@
     rdfs:comment "A category of internal elements that perform behavior and collaborate to provide services." ;
     rdfs:subClassOf <#ActiveStructure> .
 
-<#Behavior> rdf:type owl:Class ;
-    rdfs:label "Behavior" ;
-    rdfs:comment "Represents elements that define the behavior performed by active structure elements." ;
-    rdfs:subClassOf <#Aspect> .
-	
-<#ExternalBehavior> rdf:type owl:Class ;
-    rdfs:label "External Behavior" ;
-    rdfs:comment "Represents external elements (also called services) that define the behavior performed by active structure elements." ;
-    rdfs:subClassOf <#Behavior> .
-	
-<#InternalBehavior> rdf:type owl:Class ;
-    rdfs:label "Internal Behavior" ;
-    rdfs:comment "Represents internal elements that define the behavior performed by active structure elements." ;
-    rdfs:subClassOf <#Behavior> .
-	
-<#Event> rdf:type owl:Class ;
-    rdfs:label "Event" ;
-    rdfs:comment "Represents elements that define the behavior performed by active structure elements." ;
-    rdfs:subClassOf <#Behavior> .
-
 <#PassiveStructure> rdf:type owl:Class ;
     rdfs:label "Passive Structure" ;
     rdfs:comment "Represents structural elements that are used or produced by behavior elements." ;
-    rdfs:subClassOf <#Aspect> .
+    rdfs:subClassOf <#StructureElement> .
 
+<#BehaviorElement> rdf:type owl:Class ;
+    rdfs:label "Behavior" ;
+    rdfs:comment "Represents elements that define the behavior performed by active structure elements." ;
+    rdfs:subClassOf <#Element> .
 
+<#InternalBehavior> rdf:type owl:Class ;
+    rdfs:label "Internal Behavior" ;
+    rdfs:comment "An internal behavior element represents a unit of activity that can be performed by one or more active structure elements." ;
+    rdfs:subClassOf <#BehaviorElement> .	
+
+<#ExternalBehavior> rdf:type owl:Class ;
+    rdfs:label "External Behavior" ;
+    rdfs:comment "Represents external elements (also called services) that define the behavior performed by active structure elements." ;
+    rdfs:subClassOf <#BehaviorElement> .
+
+<#MotivationElement> rdf:type owl:Class ;
+    rdfs:label "Motivation" ;
+    rdfs:comment "A cross-cutting aspect that represents drivers, goals, requirements, and principles in an enterprise architecture." ;
+    rdfs:subClassOf <#Element> .
+
+<#CompositeElement> rdf:type owl:Class ;
+    rdfs:label "CompositeElement" ;
+    rdfs:comment "An element that does not necessarily fit in a single aspect of the framework but may combine two or more aspects." ;
+    rdfs:subClassOf <#Element> .
 
 # Layers
 <#Layer> rdf:type owl:Class ;
@@ -232,11 +221,7 @@
     rdfs:comment "Represents elements related to projects, programs, and transition architectures." ;
     rdfs:subClassOf <#Layer> .
 
-<#Motivation> rdf:type owl:Class ;
-    rdfs:label "Motivation" ;
-    rdfs:comment "A cross-cutting aspect that represents drivers, goals, requirements, and principles in an enterprise architecture." ;
-    rdfs:subClassOf <#BehaviorElement> ;
-    rdfs:subClassOf <#Layer> .
+
 
 
 
@@ -297,7 +282,7 @@
 ## 1.2 Strategy Elements
 
 # Active Structure Elements
-<#ResourceElement> rdf:type owl:Class ;
+<#Resource> rdf:type owl:Class ;
     rdfs:label "Resource" ;
     rdfs:comment "An asset owned or controlled by an individual or organization." ;
     rdfs:subClassOf <#ActiveStructure> ;
@@ -326,13 +311,6 @@
     rdfs:subClassOf <#StrategyLayer> ;
     rdfs:subClassOf <#Element> .
 
-# Passive Structure Elements
-<#Outcome> rdf:type owl:Class ;
-    rdfs:label "Outcome" ;
-    rdfs:comment "An end result that has been achieved." ;
-    rdfs:subClassOf <#PassiveStructure> ;
-    rdfs:subClassOf <#StrategyLayer> ;
-    rdfs:subClassOf <#Element> .
 
 
 ## 1.3 Business Layer Elements
@@ -476,7 +454,14 @@
     rdfs:comment " Addresses a set of related concerns and is tailored for specific stakeholders.  A View is specified by means of a Viewpoint, which prescribes the concepts, models, analysis techniques, and visualizations that are provided by the View.  The same elements from the Model Tree can be re-used multiple times in the same or different View." ;
     rdfs:subClassOf <#Behavior> ;
     rdfs:subClassOf <#ApplicationLayer> ;
-    rdfs:subClassOf <#Element> .	
+    rdfs:subClassOf <#Element> .
+
+<#ApplicationEvent> rdf:type owl:Class ;
+    rdfs:label "Application Event" ;
+    rdfs:comment "An application event represents an application state change." ;
+    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#ApplicationLayer> ;
+    rdfs:subClassOf <#Element> .
 
 <#ApplicationService> rdf:type owl:Class ;
     rdfs:label "Application Service" ;
@@ -665,154 +650,250 @@
     rdfs:subClassOf <#Element> .
 
 
+## 1.8 Composite Elements
+
+<#Grouping> rdf:type owl:Class ;
+    rdfs:label "Grouping" ;
+    rdfs:comment "An element that aggregates or composes concepts that belong together based on some common characteristic." ;
+    rdfs:subClassOf <#CompositeElement> ;
+    rdfs:subClassOf <#Element> .
+
+<#Location> rdf:type owl:Class ;
+    rdfs:label "Location" ;
+    rdfs:comment "A conceptual or physical place or position where concepts are located or performed." ;
+    rdfs:subClassOf <#CompositeElement> ;
+    rdfs:subClassOf <#Element> .
+
+
 ### 2. Relationships
 
-## Relationship Types
-<#StructuralRelationship> rdf:type owl:Class ;
-    rdfs:label "Structural Relationship" ;
-    rdfs:comment "A structural relationship defines the static construction or composition of concepts." ;
-    rdfs:subClassOf <#Relationship> .
+## 2.1 Base Relationship Properties
+<#structuralRelationship> rdf:type owl:ObjectProperty ;
+    rdfs:label "structural relationship" ;
+    rdfs:comment "Base property for structural relationships that define static construction or composition." ;
+    rdfs:domain <#Element> ;
+    rdfs:range <#Element> .
 
-<#DependencyRelationship> rdf:type owl:Class ;
-    rdfs:label "Dependency Relationship" ;
-    rdfs:comment "A dependency relationship models how elements depend on each other." ;
-    rdfs:subClassOf <#Relationship> .
+<#dependencyRelationship> rdf:type owl:ObjectProperty ;
+    rdfs:label "dependency relationship" ;
+    rdfs:comment "Base property for dependency relationships between elements." ;
+    rdfs:domain <#Element> ;
+    rdfs:range <#Element> .
 
-<#DynamicRelationship> rdf:type owl:Class ;
-    rdfs:label "Dynamic Relationship" ;
-    rdfs:comment "A dynamic relationship models behavioral dependencies between elements." ;
-    rdfs:subClassOf <#Relationship> .
+<#dynamicRelationship> rdf:type owl:ObjectProperty ;
+    rdfs:label "dynamic relationship" ;
+    rdfs:comment "Base property for dynamic behavioral relationships." ;
+    rdfs:domain <#Behavior> ;
+    rdfs:range <#Behavior> .
 
-<#OtherRelationship> rdf:type owl:Class ;
+<#otherRelationship> rdf:type owl:ObjectProperty ;
     rdfs:label "Other Relationship" ;
     rdfs:comment "Other types of relationships not covered by structural, dependency, or dynamic relationships." ;
-    rdfs:subClassOf <#Relationship> .
+    rdfs:domain <#Element> ;
+    rdfs:range <#Element> .
 
 
-# Relationships
-<#Assignment> rdf:type owl:ObjectProperty ;
-    rdfs:label "Assignment" ;
-    rdfs:comment "Links active structure elements with units of behavior that are performed by them, or roles that are fulfilled by them." ;
+## 2.2 Relationships
+
+# Structural Relationships
+<#assignment> rdf:type owl:ObjectProperty ;
+    rdfs:label "assignment" ;
+    rdfs:comment "Links active structure elements with behavior that they perform or roles they fulfill." ;
+    rdfs:subPropertyOf <#structuralRelationship> ;
     rdfs:domain <#ActiveStructure> ;
-    rdfs:range <#Behavior> ;
-    rdfs:subPropertyOf <#StructuralRelationship> .
+    rdfs:range <#Behavior> .
 
-<#Aggregation> rdf:type owl:ObjectProperty ;
-    rdfs:label "Aggregation" ;
-    rdfs:comment "Models a whole-part relationship between a composite and its parts." ;
+<#aggregation> rdf:type owl:ObjectProperty ;
+    rdfs:label "aggregation" ;
+    rdfs:comment "Models a whole-part relationship where parts can exist independently." ;
+    rdfs:subPropertyOf <#structuralRelationship> ;
     rdfs:domain <#Element> ;
-    rdfs:range <#Element> ;
-    rdfs:subPropertyOf <#StructuralRelationship> .
+    rdfs:range <#Element> .
 
-<#Composition> rdf:type owl:ObjectProperty ;
-    rdfs:label "Composition" ;
-    rdfs:comment "Indicates that an element consists of one or more other elements." ;
+<#composition> rdf:type owl:ObjectProperty ;
+    rdfs:label "composition" ;
+    rdfs:comment "Models a whole-part relationship where parts cannot exist without the whole." ;
+    rdfs:subPropertyOf <#structuralRelationship> ;
     rdfs:domain <#Element> ;
-    rdfs:range <#Element> ;
-    rdfs:subPropertyOf <#StructuralRelationship> .
+    rdfs:range <#Element> .
 
-<#Realization> rdf:type owl:ObjectProperty ;
-    rdfs:label "Realization" ;
-    rdfs:comment "Indicates that an entity (e.g., a business process or function) realizes another entity (e.g., a business service)." ;
+<#realization> rdf:type owl:ObjectProperty ;
+    rdfs:label "realization" ;
+    rdfs:comment "Indicates that an entity realizes or implements another entity." ;
+    rdfs:subPropertyOf <#structuralRelationship> ;
+    rdfs:domain <#Element> ;
+    rdfs:range <#Element> .
+
+# Dependency Relationships  
+<#serving> rdf:type owl:ObjectProperty ;
+    rdfs:label "serving" ;
+    rdfs:comment "Models that an element provides functionality to another element." ;
+    rdfs:subPropertyOf <#dependencyRelationship> ;
+    rdfs:domain <#Element> ;
+    rdfs:range <#Element> .
+
+<#access> rdf:type owl:ObjectProperty ;
+    rdfs:label "access" ;
+    rdfs:comment "Models access of behavior elements to passive structure elements." ;
+    rdfs:subPropertyOf <#dependencyRelationship> ;
     rdfs:domain <#Behavior> ;
-    rdfs:range <#Element> ;
-    rdfs:subPropertyOf <#StructuralRelationship> .
+    rdfs:range <#PassiveStructure> .
 
-<#Serving> rdf:type owl:ObjectProperty ;
-    rdfs:label "Serving" ;
-    rdfs:comment "Models that an element provides its functionality to another element." ;
+<#influence> rdf:type owl:ObjectProperty ;
+    rdfs:label "influence" ;
+    rdfs:comment "Models how one element influences another element." ;
+    rdfs:subPropertyOf <#dependencyRelationship> ;
     rdfs:domain <#Element> ;
-    rdfs:range <#Element> ;
-    rdfs:subPropertyOf <#DependencyRelationship> .
-	
-<#Access> rdf:type owl:ObjectProperty ;
-    rdfs:label "Access" ;
-    rdfs:comment "Models the access of a behavior element to a passive structure element." ;
+    rdfs:range <#Element> .
+
+<#association> rdf:type owl:ObjectProperty ;
+    rdfs:label "association" ;
+    rdfs:comment "Models a relationship not covered by other specific relationship types." ;
+    rdfs:subPropertyOf <#dependencyRelationship> ;
+    rdfs:domain <#Element> ;
+    rdfs:range <#Element> .
+
+# Dynamic Relationships
+<#triggering> rdf:type owl:ObjectProperty ;
+    rdfs:label "triggering" ;
+    rdfs:comment "Models temporal or causal relationships where one behavior triggers another." ;
+    rdfs:subPropertyOf <#dynamicRelationship> ;
     rdfs:domain <#Behavior> ;
-    rdfs:range <#PassiveStructure> ;
-    rdfs:subPropertyOf <#DependencyRelationship> .
+    rdfs:range <#Behavior> .
 
-	#Properties for Access
-	<#Read> rdf:type owl:ObjectProperty ;	
-		rdfs:label "Read" ;
-		rdfs:comment "Indicates that a behavior element reads or retrieves information from a passive structure element." ;
-		rdfs:domain <#Behavior> ;
-		rdfs:range <#PassiveStructure> ;
-		rdfs:subPropertyOf <#Access> .
-
-	<#Write> rdf:type owl:ObjectProperty ;
-		rdfs:label "Write" ;
-		rdfs:comment "Indicates that a behavior element writes or modifies information in a passive structure element." ;
-		rdfs:domain <#Behavior> ;
-		rdfs:range <#PassiveStructure> ;
-		rdfs:subPropertyOf <#Access> .
-
-	<#ReadWrite> rdf:type owl:ObjectProperty ;
-		rdfs:label "Read-Write" ;
-		rdfs:comment "Indicates that a behavior element both reads from and writes to a passive structure element." ;
-		rdfs:domain <#Behavior> ;
-		rdfs:range <#PassiveStructure> ;
-		rdfs:subPropertyOf <#Access> .	
-
-<#Influence> rdf:type owl:ObjectProperty ;
-    rdfs:label "Influence" ;
-    rdfs:comment "Models how an element influences another element." ;
-    rdfs:domain <#Element> ;
-    rdfs:range <#Element> ;
-    rdfs:subPropertyOf <#DependencyRelationship> .
-	
-	# Properties for Influence
-	<#Sign> rdf:type owl:DatatypeProperty ;
-		rdfs:label "Sign" ;
-		rdfs:comment "Indicates the sign of the influence (e.g., positive or negative)." ;
-		rdfs:domain <#Influence> ;
-		rdfs:range xsd:string .
-
-	<#Strength> rdf:type owl:DatatypeProperty ;
-		rdfs:label "Strength" ;
-		rdfs:comment "Indicates the strength of the influence (e.g., weak, moderate, strong)." ;
-		rdfs:domain <#Influence> ;
-		rdfs:range xsd:string .
-
-<#Association> rdf:type owl:ObjectProperty ;
-    rdfs:label "Association" ;
-    rdfs:comment "Models a relationship between objects that is not covered by the other relationship types." ;
-    rdfs:domain <#Element> ;
-    rdfs:range <#Element> ;
-    rdfs:subPropertyOf <#DependencyRelationship> .
-
-<#Triggering> rdf:type owl:ObjectProperty ;
-    rdfs:label "Triggering" ;
-    rdfs:comment "Models the temporal or causal relationship between two behavior elements, where one triggers the other." ;
+<#flow> rdf:type owl:ObjectProperty ;
+    rdfs:label "flow" ;
+    rdfs:comment "Models transfer of information, materials, or energy between behavior elements." ;
+    rdfs:subPropertyOf <#dynamicRelationship> ;
     rdfs:domain <#Behavior> ;
-    rdfs:range <#Behavior> ;
-    rdfs:subPropertyOf <#DynamicRelationship> .
-	
-<#Flow> rdf:type owl:ObjectProperty ;
-	rdfs:label "The flow relationship represents transfer from one element to another." ;
-    rdfs:domain <#Behavior> ;
-    rdfs:range <#Behavior> ;
-    rdfs:subPropertyOf <#DynamicRelationship> .
+    rdfs:range <#Behavior> .
 
-<#Specialization> rdf:type owl:ObjectProperty ;
-    rdfs:label "Specialization" ;
-    rdfs:comment "Indicates that an element is a more specific form of another element of the same type." ;
+# Other Relationships
+<#specialization> rdf:type owl:ObjectProperty ;
+    rdfs:label "specialization" ;
+    rdfs:comment "Indicates that an element is a more specific form of another element." ;
     rdfs:domain <#Element> ;
     rdfs:range <#Element> ;
-    rdfs:subPropertyOf <#OtherRelationship> ;
-    owl:propertyDisjointWith rdfs:subClassOf .
-	
-	# Restriction for Specialization
-	<#Element> rdf:type owl:Class ;
-		owl:disjointUnionOf (
-			<#Aspect>
-			<#Layer>
-		) .
+    rdf:type owl:TransitiveProperty .
 
+## 2.3 RDF-Star Relationship Metadata Properties
+
+# General Relationship Metadata
+<#relationshipId> rdf:type owl:DatatypeProperty ;
+    rdfs:label "relationship ID" ;
+    rdfs:comment "Unique identifier for a relationship instance." ;
+    rdfs:range xsd:string .
+
+<#relationshipName> rdf:type owl:DatatypeProperty ;
+    rdfs:label "relationship name" ;
+    rdfs:comment "Human-readable name for a relationship instance." ;
+    rdfs:range xsd:string .
+
+<#description> rdf:type owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "Textual description of the relationship." ;
+    rdfs:range xsd:string .
+
+<#createdBy> rdf:type owl:DatatypeProperty ;
+    rdfs:label "created by" ;
+    rdfs:comment "Person or system that created this relationship." ;
+    rdfs:range xsd:string .
+
+<#createdDate> rdf:type owl:DatatypeProperty ;
+    rdfs:label "created date" ;
+    rdfs:comment "Date when the relationship was created." ;
+    rdfs:range xsd:dateTime .
+
+<#lastModified> rdf:type owl:DatatypeProperty ;
+    rdfs:label "last modified" ;
+    rdfs:comment "Date when the relationship was last modified." ;
+    rdfs:range xsd:dateTime .
+
+<#confidence> rdf:type owl:DatatypeProperty ;
+    rdfs:label "confidence" ;
+    rdfs:comment "Confidence level in the relationship, if derived (e.g., valid, potential). " ;
+    rdfs:range xsd:string .
+
+
+# Access Relationship Specific Properties
+<#accessType> rdf:type owl:DatatypeProperty ;
+    rdfs:label "access type" ;
+    rdfs:comment "Type of access: read, write, readwrite, or unspecified." ;
+    rdfs:range xsd:string .
+
+# Influence Relationship Specific Properties  
+<#influenceSign> rdf:type owl:DatatypeProperty ;
+    rdfs:label "influence sign" ;
+    rdfs:comment "Sign of the influence: positive, negative, or unspecified." ;
+    rdfs:range xsd:string .
+
+<#influenceStrength> rdf:type owl:DatatypeProperty ;
+    rdfs:label "influence strength" ;
+    rdfs:comment "Strength of the influence: weak, moderate, strong, or unspecified." ;
+    rdfs:range xsd:string .
+
+# Flow Relationship Specific Properties
+<#flowType> rdf:type owl:DatatypeProperty ;
+    rdfs:label "flow type" ;
+    rdfs:comment "Type of flow: information, material, energy, or unspecified." ;
+    rdfs:range xsd:string .
+
+
+## 2.4 SHACL Validation Rules for RDF-Star
+
+# Validate Access Type Values
+ex:AccessTypeValidation rdf:type sh:NodeShape ;
+    rdfs:label "Access Type Validation" ;
+    sh:targetSubjectsOf <#access> ;
+    sh:sparql [
+        sh:message "Access relationships must have valid access types: read, write, readwrite, or unspecified" ;
+        sh:select """
+            SELECT $this WHERE {
+                <<?this access ?target>> ?statement .
+                ?statement <#accessType> ?accessType .
+                FILTER(?accessType NOT IN ("read", "write", "readwrite", "unspecified"))
+            }
+        """
+    ] .
+
+# Validate Influence Sign Values  
+ex:InfluenceSignValidation rdf:type sh:NodeShape ;
+    rdfs:label "Influence Sign Validation" ;
+    sh:targetSubjectsOf <#influence> ;
+    sh:sparql [
+        sh:message "Influence relationships must have valid signs: positive, negative, or unspecified" ;
+        sh:select """
+            SELECT $this WHERE {
+                <<?this influence ?target>> ?statement .
+                ?statement <#influenceSign> ?sign .
+                FILTER(?sign NOT IN ("positive", "negative", "unspecified"))
+            }
+        """
+    ] .
+
+# Validate Relationship ID Uniqueness
+ex:RelationshipIdUniqueness rdf:type sh:NodeShape ;
+    rdfs:label "Relationship ID Uniqueness" ;
+    sh:sparql [
+        sh:message "Relationship IDs must be unique across all relationships" ;
+        sh:select """
+            SELECT ?id WHERE {
+                {
+                    <<?s1 ?p1 ?o1>> ?stmt1 .
+                    ?stmt1 <#relationshipId> ?id .
+                }
+                {
+                    <<?s2 ?p2 ?o2>> ?stmt2 .
+                    ?stmt2 <#relationshipId> ?id .
+                }
+                FILTER(?stmt1 != ?stmt2)
+            }
+        """
+    ] .
 
 ### 3. Relationship Tables
 
-# SEE: Archimate Normative Specification
+# SEE: ArchiMate Normative Specification
 
 
 
@@ -829,41 +910,79 @@
     rdfs:comment "If p(a,b):S and q(b,c):S exist, then r(a,c):S can be derived. S being Specialization" .
 
 # SHACL Rule for Transitivity of Specialization
-ex:DR1_TransitivityRule rdf:type sh:SPARQLRule ;
-    rdfs:label "DR1: Transitivity of Specialization" ;
-    rdfs:comment "If p(a,b):S and q(b,c):S exist, then r(a,c):S can be derived" ;
-    sh:construct """
-        CONSTRUCT {
-            <<?s base:specializes ?o>> {
-                rdf:type base:Specialization ;
-                base:relationshipId ?newId ;
-                base:derivedFrom "DR1_transitivity" ;
-                base:derivedFromRelationships (?rel1 ?rel2) ;
-                rdfs:label ?derivedLabel ;
-                base:sourceLayer ?sourceLayer ;
-                base:targetLayer ?targetLayer .
-            }
-        }
-        WHERE {
-            <<?s base:specializes ?intermediate>> ?rel1 .
-            <<?intermediate base:specializes ?o>> ?rel2 .
-            
-            # Get layer information
-            ?rel1 base:sourceLayer ?sourceLayer .
-            ?rel2 base:targetLayer ?targetLayer .
-            
-            # Ensure we don't already have this derived relationship
-            FILTER NOT EXISTS {
-                <<?s base:specializes ?o>> ?existing .
-            }
-            
-            # Generate new relationship ID
-            BIND(CONCAT("r_", STR(?s), "_", STR(?o)) AS ?newId)
-            BIND(CONCAT("Derived: ", STR(?s), " specializes ", STR(?o)) AS ?derivedLabel)
-        }
-    """ .
+INSERT {
+    ?source base:specializes ?target .
+    <<?source base:specializes ?target>> {
+        rdf:type base:SpecializationRelationship ;
+        base:relationshipId ?newId ;
+        base:derivedFrom "DR1_transitivity" ;
+        base:confidence "valid" ;
+        base:derivationChain (?intermediate) ;
+        base:sourceRelationship ?rel1 ;
+        base:sourceRelationship ?rel2 ;
+        base:createdDate ?now ;
+        base:createdBy "inference_engine" ;
+        rdfs:label ?label .
+    }
+}
+WHERE {
+    # Find the transitive pattern
+    <<?source base:specializes ?intermediate>> ?rel1 .
+    <<?intermediate base:specializes ?target>> ?rel2 .
+    
+    # Get confidence from source relationships
+    ?rel1 base:confidence ?conf1 .
+    ?rel2 base:confidence ?conf2 .
+    
+    # Only derive if both source relationships are valid
+    FILTER(?conf1 IN ("asserted", "derived", "valid"))
+    FILTER(?conf2 IN ("asserted", "derived", "valid"))
+    
+    # Avoid cycles and self-references
+    FILTER(?source != ?target)
+    FILTER(?source != ?intermediate)
+    FILTER(?intermediate != ?target)
+    
+    # Don't create if relationship already exists
+    FILTER NOT EXISTS {
+        <<?source base:specializes ?target>> ?existing .
+    }
+    
+    # Generate metadata
+    BIND(CONCAT("derived_spec_", STRUUID()) AS ?newId)
+    BIND(NOW() AS ?now)
+    BIND(CONCAT("Derived: ", STR(?source), " specializes ", STR(?target)) AS ?label)
+}
+
+# DR 2: Derivation Between Structural Relationships
+# If two relationships p(a,b):S and q(b,c):T exist, with S and T being structural relationships, then a relationship r(a,c):U can be derived, with U being the weakest of S and T.
+# Relationship strength ordering (from strongest to weakest)
+# 1. Composition (strongest) - parts cannot exist without whole
+# 2. Aggregation - parts can exist independently  
+# 3. Assignment - active structure assigned to behavior
+# 4. Realization (weakest) - one element realizes another
+
+# DR 3: Derivation Between Structural and Dependency Relationships
+# If two relationships p(a,b):S and q(b,c):T exist, with S being a structural relationship and T being a dependency relationship, then a relationship r(a,c):T can be derived.
+
+# DR 4: Derivation Between Opposing Structural and Dependency Relationships
+# If two relationships p(a,b):S and q(c,b):T exist, with S being a structural relationship and T being a dependency relationship, then a relationship r(c,a):T can be derived.
+
+# DR 5: Derivation Between Structural and Dynamic Relationships
+# If two relationships p(a,b):S and q(b,c):T exist, with S being a structural relationship and T being a dynamic relationship, then a relationship r(a,c):T can be derived.
+
+# DR 6: Derivation Between Structural and Flow Relationships
+# If two relationships p(a,b):S and q(c,b):T exist, with S being a structural relationship and T being Flow, then a relationship r(c,a):T can be derived.
+
+# DR 7: Derivation Between Structural and Triggering Relationships
+# If two relationships p(a,b):S and q(b,c):T exist, with S being Triggering and T being a structural relationship, then a relationships r(a,c):S can be derived.
+
+# DR 8: Derivation Between Triggering Relationships
+# If two relationships p(a,b):S and q(b,c):S exist, with S being Triggering, then a relationship r(a,c):S can be derived.
+
 
 ## 4.2 Potential Relationships
+
 ## 4.3 Restrictions on Applying Derivation Rules
 
 
