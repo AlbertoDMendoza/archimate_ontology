@@ -14,7 +14,6 @@
     rdfs:comment "SHACL validation constraints for basic ArchiMate model quality and consistency." ;
     owl:versionInfo "Alpha" .
 
-
 ### 1. Universal Element and Relationship Requirements
 
 # All realized elements must have required attributes
@@ -40,13 +39,13 @@ ex:RealizedElementShape rdf:type sh:NodeShape ;
     sh:property [
         sh:path archimate:documentation ;
         sh:minCount 1 ;
-        sh:maxCount 1 ;
         sh:datatype xsd:string ;
+        sh:minLength 1 ;
         sh:message "All realized elements must have documentation"
     ] ;
     sh:property [
         sh:path archimate:specialization ;
-        sh:maxCount 1 ;
+        sh:minCount 1 ;
         sh:class archimate:Element ;
         sh:message "All realized elements must declare their specialization (what ArchiMate element type they represent)"
     ] .
@@ -61,25 +60,26 @@ ex:RealizedRelationshipShape rdf:type sh:NodeShape ;
         sh:maxCount 1 ;
         sh:datatype xsd:string ;
         sh:pattern "^[a-zA-Z_][a-zA-Z0-9_-]*$" ;
-        sh:message "All realized relationships must have exactly one valid identifier"
+        sh:message "All realized relationships must have exactly one valid identifier (must start with letter or underscore, then alphanumeric, underscore, hyphen)"
     ] ;
     sh:property [
         sh:path archimate:name ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:datatype xsd:string ;
-        sh:message "All realized relationships must have exactly one valid identifier (must start with letter or underscore, then alphanumeric, underscore, hyphen)"
+        sh:minLength 1 ;
+        sh:message "All realized relationships must have exactly one non-empty name"
     ] ;
     sh:property [
         sh:path archimate:documentation ;
         sh:minCount 1 ;
-        sh:maxCount 1 ;                
         sh:datatype xsd:string ;
+        sh:minLength 1 ;
         sh:message "All realized relationships must have documentation"
     ] ;
     sh:property [
         sh:path archimate:specialization ;
-        sh:maxCount 1 ;
+        sh:minCount 1 ;
         sh:message "All realized relationships must declare their specialization (what ArchiMate relationship type they represent)"
     ] .
 
