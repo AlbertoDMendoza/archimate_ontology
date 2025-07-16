@@ -78,7 +78,7 @@ ex:BusinessServiceRealization rdf:type sh:NodeShape ;
 
 # Capabilities should be linked to business elements
 ex:CapabilityLinkage rdf:type sh:NodeShape ;
-    sh:targetClass base:Capability ;
+    sh:targetClass archimate:Capability ;
     rdfs:label "Capability Business Linkage" ;
     sh:sparql [
         sh:message "Capabilities should be realized by business processes, functions, or services" ;
@@ -96,7 +96,7 @@ ex:CapabilityLinkage rdf:type sh:NodeShape ;
 
 # Value Streams should connect to business processes
 ex:ValueStreamConnection rdf:type sh:NodeShape ;
-    sh:targetClass base:ValueStream ;
+    sh:targetClass archimate:ValueStream ;
     rdfs:label "Value Stream Process Connection" ;
     sh:sparql [
         sh:message "Value streams should aggregate or be realized by business processes or capabilities" ;
@@ -114,7 +114,7 @@ ex:ValueStreamConnection rdf:type sh:NodeShape ;
 
 # Goals should have measurable outcomes
 ex:GoalMeasurability rdf:type sh:NodeShape ;
-    sh:targetClass base:Goal ;
+    sh:targetClass archimate:Goal ;
     rdfs:label "Goal Measurability" ;
     sh:sparql [
         sh:message "Goals should be associated with measurable outcomes" ;
@@ -131,7 +131,7 @@ ex:GoalMeasurability rdf:type sh:NodeShape ;
 
 # Requirements should trace to architectural elements
 ex:RequirementTraceability rdf:type sh:NodeShape ;
-    sh:targetClass base:Requirement ;
+    sh:targetClass archimate:Requirement ;
     rdfs:label "Requirement Traceability" ;
     sh:sparql [
         sh:message "Requirements should influence at least one architectural element" ;
