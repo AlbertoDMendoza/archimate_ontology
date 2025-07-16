@@ -308,6 +308,280 @@
 
 	<h3><a name="Copyright"></a>Copyright</h3>
 	<p>All trademarks and copyrights belong to The Open Group</p>
-</body>
 
+	<h2>ArchiMate Ontology Project Structure</h2>
+
+	<pre><code>archimate_ontology/
+	├── README.md   
+	├── archimate.html				# HTML landing page for ArchiMate Ontology (this file)	
+	├── ontology/
+	│   ├── archimate.ttl				# Core OWL semantic definitions, including all elements and relationships.
+	│   ├── archimate_skos.ttl			# ArchiMate definitions formalized in SKOS.		
+	│   └── archimate_derivation_rules.ttl		# Inference rules and property chains
+	├── validation/
+	│   ├── core/
+	│   │   └── archimate_core_validation.ttl	# Universal validation constraints
+	│   ├── context/
+	│   │   ├── archimate-business-analyst-validation.ttl    # BA-specific rules
+	│   │   ├── archimate-technical-architect-validation.ttl # TA-specific rules
+	│   │   ├── archimate-data-architect-validation.ttl      # DA-specific rules
+	│   │   └── archimate-enterprise-validation.ttl          # Enterprise-wide rules
+	│   ├── continuum/
+	│   │   ├── archimate-temporal-validation.ttl            # Temporal constraints
+	│   │   └── archimate-geospatial-validation.ttl          # Location constraints
+	│   └── quality/
+	│       ├── archimate-naming-conventions.ttl             # Naming standards
+	│       ├── archimate-completeness-validation.ttl        # Model completeness
+	│       └── archimate-ai-extraction-validation.ttl       # AI-generated content
+	├── examples/
+	│   ├── basic-business-model.ttl              # Sample basic maturity model
+	│   ├── enterprise-model.ttl                  # Sample enterprise maturity model
+	│   └── validation-reports/                   # Sample validation outputs
+	├── documentation/
+	│   ├── owl-shacl-separation-guidelines.md    # Implementation guidelines
+	│   ├── maturity-framework.md                 # Model maturity documentation
+	│   └── validation-context-guide.md           # When to use which validation
+	└── tools/
+	    ├── validate-model.sh                     # Validation script
+	    ├── generate-report.py                    # Validation reporting
+	    └── maturity-calculator.sparql            # Maturity level assessment
+	</code></pre>
+	
+	<h2>Key Principles Applied</h2>
+	
+	<h3>1. <strong>OWL-Only Semantic Definitions</strong> (<code>ontology/</code> directory)</h3>
+	
+	<p><strong>What goes here:</strong> Universal truths, inference rules, and semantic relationships that apply globally across all ArchiMate models.</p>
+	
+	<p><strong>Key characteristics:</strong></p>
+	<ul>
+	<li><code>owl:TransitiveProperty</code> for specialization and composition</li>
+	<li><code>owl:FunctionalProperty</code> for unique identifiers</li>
+	<li><code>owl:propertyChainAxiom</code> for derived relationships</li>
+	<li>Domain and range restrictions that represent universal truths</li>
+	<li>No context-specific business rules</li>
+	</ul>
+	
+	<p><strong>Example from current file:</strong></p>
+	<pre><code class="language-turtle"># Universal truth: Specialization is transitive
+	&lt;#specialization&gt; rdf:type owl:ObjectProperty ;
+	    rdf:type owl:TransitiveProperty ;
+	    rdf:type owl:AsymmetricProperty .
+	
+	# Universal truth: Assignment chains with serving create indirect serving
+	&lt;#indirectServing&gt; owl:propertyChainAxiom ( &lt;#assignment&gt; &lt;#serving&gt; ) .
+	</code></pre>
+	
+	<h3>2. <strong>SHACL-Only Validation Rules</strong> (<code>validation/</code> directory)</h3>
+	
+	<p><strong>What goes here:</strong> Context-specific constraints, business rules, and data quality requirements that vary by use case.</p>
+	
+	<h4>Core Validation (<code>validation/core/</code>)</h4>
+	<ul>
+	<li>Universal structural constraints (no self-relationships, unique IDs)</li>
+	<li>Basic ArchiMate metamodel compliance</li>
+	<li>Relationship domain/range validation</li>
+	</ul>
+	
+	<h4>Context-Specific Validation (<code>validation/context/</code>)</h4>
+	<ul>
+	<li><strong>Business Analyst:</strong> Business layer completeness, stakeholder linkage, AI extraction confidence</li>
+	<li><strong>Technical Architect:</strong> Deployment constraints, performance requirements, security validation</li>
+	<li><strong>Data Architect:</strong> Data lineage, storage requirements, integration patterns</li>
+	<li><strong>Enterprise:</strong> Cross-layer relationships, governance requirements</li>
+	</ul>
+	
+	<h4>Continuum Validation (<code>validation/maturity/</code>)</h4>
+	<ul>
+	<li>For a folder that holds time and space descriptions.  Describes the Enterprise "In-motion"</li>
+	<li>In classic physics term, describes how two objects cannot occupy the same space at the same time</li>
+	<li>Optional human-readable label: “spatial-temporal exclusion” or “mutual exclusivity.”</li>
+	</ul>
+	
+	<h4>Quality Assurance (<code>validation/quality/</code>)</h4>
+	<ul>
+	<li>Naming conventions by role and context</li>
+	<li>Documentation completeness requirements</li>
+	<li>AI-generated content validation thresholds</li>
+	</ul>
+	
+	<h2>Migration Strategy from Your Current File</h2>
+	
+	<h3>Step 1: Extract OWL Semantics</h3>
+	<p>Move these sections to <code>archimate-core-ontology.ttl</code>:</p>
+	<ul>
+	<li>All <code>owl:Class</code> definitions (keep semantic meaning only)</li>
+	<li><code>owl:ObjectProperty</code> definitions with OWL characteristics</li>
+	<li>Property chain axioms and inference rules</li>
+	<li>Universal domain/range restrictions</li>
+	</ul>
+	
+	<h3>Step 2: Extract SHACL Validation</h3>
+	<p>Move these sections to appropriate validation files:</p>
+	<ul>
+	<li>All <code>sh:NodeShape</code> definitions</li>
+	<li>SPARQL-based validation queries</li>
+	<li>Access type, influence sign validations</li>
+	<li>Relationship uniqueness constraints</li>
+	</ul>
+	
+	<h3>Step 3: Separate by Context</h3>
+	<p>Distribute SHACL rules based on:</p>
+	<ul>
+	<li><strong>User role</strong> (BA, TA, DA)</li>
+	<li><strong>Maturity level</strong> (basic, temporal, operational, geospatial, enterprise)</li>
+	<li><strong>Quality concern</strong> (naming, completeness, AI confidence)</li>
+	</ul>
+	
+	<h3>Step 4: Add RDF-Star Relationship Metadata</h3>
+	<p>Create separate files for:</p>
+	<ul>
+	<li>Relationship attribute definitions (accessType, influenceSign, etc.)</li>
+	<li>RDF-Star specific validation rules</li>
+	<li>Metadata quality constraints</li>
+	</ul>
+	
+	<h2>Benefits of This Structure</h2>
+	
+	<h3>1. <strong>Modularity</strong></h3>
+	<ul>
+	<li>Each file has a single, clear purpose</li>
+	<li>Easy to maintain and update independently</li>
+	<li>Supports your layered user strategy</li>
+	</ul>
+	
+	<h3>2. <strong>Reusability</strong></h3>
+	<ul>
+	<li>Core ontology can be shared across different validation contexts</li>
+	<li>Validation rules can be mixed and matched for different scenarios</li>
+	<li>Supports your federated architecture approach</li>
+	</ul>
+	
+	<h3>3. <strong>Maintainability</strong></h3>
+	<ul>
+	<li>Changes to business rules don't affect semantic definitions</li>
+	<li>Context-specific validation can evolve independently</li>
+	<li>Clear separation supports your prototype development</li>
+	</ul>
+	
+	<h3>4. <strong>Integration with ArchiGraph Features</strong></h3>
+	<ul>
+	<li><strong>Model Maturity Framework:</strong> Progressive validation based on maturity levels</li>
+	<li><strong>Layered User Strategy:</strong> Role-specific validation contexts</li>
+	<li><strong>Consensus Algorithm:</strong> Maturity-based voting weights</li>
+	<li><strong>AI Extraction:</strong> Confidence-based validation thresholds</li>
+	</ul>
+	
+	<h2>Validation Workflows</h2>
+	
+	<h3>For Business Analysts</h3>
+	<pre><code class="language-bash"># Validate business model with BA-specific rules
+	./tools/validate-model.sh \
+	  --ontology ontology/archimate-core-ontology.ttl \
+	  --validation validation/core/archimate-basic-validation.ttl \
+	  --validation validation/context/archimate-business-analyst-validation.ttl \
+	  --validation validation/maturity/archimate-maturity-validation.ttl \
+	  --model examples/business-model.ttl
+	</code></pre>
+	
+	<h3>For Technical Architects</h3>
+	<pre><code class="language-bash"># Validate technical model with TA-specific rules
+	./tools/validate-model.sh \
+	  --ontology ontology/archimate-core-ontology.ttl \
+	  --validation validation/core/archimate-basic-validation.ttl \
+	  --validation validation/context/archimate-technical-architect-validation.ttl \
+	  --validation validation/maturity/archimate-operational-validation.ttl \
+	  --model examples/technical-model.ttl
+	</code></pre>
+	
+	<h3>For Enterprise Models</h3>
+	<pre><code class="language-bash"># Validate enterprise model with all constraints
+	./tools/validate-model.sh \
+	  --ontology ontology/archimate-core-ontology.ttl \
+	  --validation validation/core/archimate-basic-validation.ttl \
+	  --validation validation/context/archimate-enterprise-validation.ttl \
+	  --validation validation/maturity/archimate-maturity-validation.ttl \
+	  --validation validation/quality/archimate-completeness-validation.ttl \
+	  --model examples/enterprise-model.ttl
+	</code></pre>
+	
+	<h2>Required Attributes for All Realized Elements and Relationships</h2>
+	
+	<p>Following your specification, every realized element and relationship must have these four attributes:</p>
+	
+	<h3><strong>Core Ontology Definition (OWL)</strong></h3>
+	<pre><code class="language-turtle"># Universal semantic constraint - all concepts need specialization
+	&lt;#specialization&gt; rdf:type owl:ObjectProperty ;
+	    rdfs:label "specialization" ;
+	    rdfs:comment "Links realized instances to their abstract ArchiMate types" ;
+	    rdfs:domain &lt;#Concept&gt; ;
+	    rdfs:range &lt;#Concept&gt; ;
+	    rdf:type owl:FunctionalProperty .
+	</code></pre>
+	
+	<h3><strong>Validation Rules (SHACL)</strong></h3>
+	<pre><code class="language-turtle"># All realized elements must have: identifier, name, documentation, specialization
+	ex:RealizedElementShape rdf:type sh:NodeShape ;
+	    sh:targetClass archimate:Element ;
+	    sh:property [
+	        sh:path archimate:identifier ;
+	        sh:minCount 1 ; sh:maxCount 1 ;
+	        sh:datatype xsd:string ;
+	        sh:pattern "^[a-zA-Z_][a-zA-Z0-9_-]*$"
+	    ] ;
+	    sh:property [
+	        sh:path archimate:name ;
+	        sh:minCount 1 ; sh:maxCount 1 ;
+	        sh:datatype xsd:string ; sh:minLength 1
+	    ] ;
+	    sh:property [
+	        sh:path archimate:documentation ;
+	        sh:minCount 1 ;
+	        sh:datatype xsd:string ; sh:minLength 1
+	    ] ;
+	    sh:property [
+	        sh:path archimate:specialization ;
+	        sh:minCount 1 ;
+	        sh:class archimate:Element
+	    ] .
+	</code></pre>
+	
+	<h3><strong>Example Usage</strong></h3>
+	<pre><code class="language-turtle"># Abstract ArchiMate type (defined in ontology)
+	archimate:BusinessActor rdf:type owl:Class ;
+	    rdfs:label "Business Actor" ;
+	    rdfs:subClassOf archimate:ActiveStructure, archimate:BusinessLayer ;
+	    skos:exactMatch archimate-skos:BusinessActor .
+	
+	# Realized instance (in actual models)
+	ex:SalesManager rdf:type archimate:Element ;
+	    archimate:identifier "sales-mgr-001" ;
+	    archimate:name "Sales Manager" ;
+	    archimate:documentation "Responsible for regional sales operations and team management" ;
+	    archimate:specialization archimate:BusinessActor .
+	
+	# Realized relationship instance
+	ex:SalesManagerToSalesProcess rdf:type archimate:Relationship ;
+	    archimate:identifier "rel-001" ;
+	    archimate:name "Sales Manager performs Sales Process" ;
+	    archimate:documentation "Sales Manager is assigned to perform the Sales Process" ;
+	    archimate:specialization archimate:assignment ;
+	    # RDF-Star metadata for the relationship
+	    rdf:subject ex:SalesManager ;
+	    rdf:predicate archimate:assignment ;
+	    rdf:object ex:SalesProcess .
+	</code></pre>
+	
+	<h2>Implementation Notes</h2>
+	
+	<ol>
+	<li><strong>Import Structure:</strong> Each validation file should import the core ontology and any dependencies</li>
+	<li><strong>Namespace Management:</strong> Use consistent prefixes across all files</li>
+	<li><strong>Version Control:</strong> Each file should have its own version information</li>
+	<li><strong>Documentation:</strong> Include clear comments about when to use each validation context</li>
+	<li><strong>Testing:</strong> Create example models that demonstrate each maturity level and validation context</li>
+	</ol>
+	
+	<p>This structure aligns perfectly with Franco's guidelines while supporting your ArchiGraph architecture and development goals.</p>
+	</body>
 </html>
