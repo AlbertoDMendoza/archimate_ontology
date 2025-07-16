@@ -1,0 +1,293 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix archimate: <https://purl.org/archimate#> .
+@prefix ex: <https://purl.org/archimate/validation/business#> .
+@base <https://purl.org/archimate/validation/business#> .
+
+### SHACL Validation for Business Analyst Context
+<#> rdf:type owl:Ontology ;
+    owl:imports <https://purl.org/archimate#> ;
+    owl:imports <https://purl.org/archimate/validation#> ;
+    rdfs:label "ArchiMate Business Analyst Validation Rules" ;
+    rdfs:comment "Context-specific SHACL validation constraints for Business Analyst modeling scenarios focused on business and strategy layers." ;
+    owl:versionInfo "Alpha" .
+
+### 1. Business Layer Completeness Requirements
+
+# Business Actors must have assigned roles or processes
+ex:BusinessActorCompleteness rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessActor ;
+    rdfs:label "Business Actor Completeness" ;
+    sh:sparql [
+        sh:message "Business actors should be assigned to at least one business role or process" ;
+        sh:severity sh:Warning ;
+        sh:select """
+            SELECT $this WHERE {
+                FILTER NOT EXISTS {
+                    { $this archimate:assignment ?role . ?role rdf:type archimate:BusinessRole } UNION
+                    { $this archimate:assignment ?process . ?process rdf:type archimate:BusinessProcess }
+                }
+            }
+        """
+    ] .
+
+# Business Processes should have clear outcomes
+ex:BusinessProcessOutcome rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessProcess ;
+    rdfs:label "Business Process Outcome" ;
+    sh:property [
+        sh:path archimate:documentation ;
+        sh:minCount 1 ;
+        sh:minLength 10 ;
+        sh:message "Business processes must have documentation describing their outcomes"
+    ] ;
+    sh:sparql [
+        sh:message "Business processes should create, access, or serve business objects or services" ;
+        sh:severity sh:Warning ;
+        sh:select """
+            SELECT $this WHERE {
+                FILTER NOT EXISTS {
+                    { $this archimate:access ?object . ?object rdf:type archimate:BusinessObject } UNION
+                    { $this archimate:serving ?service . ?service rdf:type archimate:BusinessService } UNION
+                    { $this archimate:flow ?target }
+                }
+            }
+        """
+    ] .
+
+# Business Services must be realized by processes or functions
+ex:BusinessServiceRealization rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessService ;
+    rdfs:label "Business Service Realization" ;
+    sh:sparql [
+        sh:message "Business services must be realized by at least one business process or function" ;
+        sh:select """
+            SELECT $this WHERE {
+                FILTER NOT EXISTS {
+                    { ?process archimate:realization $this . ?process rdf:type archimate:BusinessProcess } UNION
+                    { ?function archimate:realization $this . ?function rdf:type archimate:BusinessFunction }
+                }
+            }
+        """
+    ] .
+
+### 2. Strategy Layer Requirements
+
+# Capabilities should be linked to business elements
+ex:CapabilityLinkage rdf:type sh:NodeShape ;
+    sh:targetClass base:Capability ;
+    rdfs:label "Capability Business Linkage" ;
+    sh:sparql [
+        sh:message "Capabilities should be realized by business processes, functions, or services" ;
+        sh:severity sh:Info ;
+        sh:select """
+            SELECT $this WHERE {
+                FILTER NOT EXISTS {
+                    { ?element archimate:realization $this . 
+                      ?element rdf:type ?type .
+                      ?type rdfs:subClassOf archimate:BusinessLayer }
+                }
+            }
+        """
+    ] .
+
+# Value Streams should connect to business processes
+ex:ValueStreamConnection rdf:type sh:NodeShape ;
+    sh:targetClass base:ValueStream ;
+    rdfs:label "Value Stream Process Connection" ;
+    sh:sparql [
+        sh:message "Value streams should aggregate or be realized by business processes or capabilities" ;
+        sh:select """
+            SELECT $this WHERE {
+                FILTER NOT EXISTS {
+                    { $this archimate:aggregation ?process . ?process rdf:type archimate:BusinessProcess } UNION
+                    { ?process archimate:realization $this . ?process rdf:type archimate:BusinessProcess }
+                }
+            }
+        """
+    ] .
+
+### 3. Motivation Element Requirements
+
+# Goals should have measurable outcomes
+ex:GoalMeasurability rdf:type sh:NodeShape ;
+    sh:targetClass base:Goal ;
+    rdfs:label "Goal Measurability" ;
+    sh:sparql [
+        sh:message "Goals should be associated with measurable outcomes" ;
+        sh:severity sh:Warning ;
+        sh:select """
+            SELECT $this WHERE {
+                FILTER NOT EXISTS {
+                    $this archimate:realization ?outcome .
+                    ?outcome rdf:type archimate:Outcome
+                }
+            }
+        """
+    ] .
+
+# Requirements should trace to architectural elements
+ex:RequirementTraceability rdf:type sh:NodeShape ;
+    sh:targetClass base:Requirement ;
+    rdfs:label "Requirement Traceability" ;
+    sh:sparql [
+        sh:message "Requirements should influence at least one architectural element" ;
+        sh:severity sh:Info ;
+        sh:select """
+            SELECT $this WHERE {
+                FILTER NOT EXISTS {
+                    $this archimate:influence ?element .
+                    ?element rdf:type ?type .
+                }
+            }
+        """
+    ] .
+
+### 2. Strategy Layer Requirements
+
+# Capabilities should be linked to business elements
+ex:CapabilityLinkage rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Capability ;
+    rdfs:label "Capability Business Linkage" ;
+    sh:sparql [
+        sh:message "Capabilities should be realized by business processes, functions, or services" ;
+        sh:severity sh:Info ;
+        sh:select """
+            SELECT $this WHERE {
+                FILTER NOT EXISTS {
+                    { ?element archimate:realization $this . 
+                      ?element rdf:type ?type .
+                      ?type rdfs:subClassOf archimate:BusinessLayer }
+                }
+            }
+        """
+    ] .
+
+# Value Streams should connect to business processes
+ex:ValueStreamConnection rdf:type sh:NodeShape ;
+    sh:targetClass archimate:ValueStream ;
+    rdfs:label "Value Stream Process Connection" ;
+    sh:sparql [
+        sh:message "Value streams should aggregate or be realized by business processes" ;
+        sh:select """
+            SELECT $this WHERE {
+                FILTER NOT EXISTS {
+                    { $this archimate:aggregation ?process . ?process rdf:type archimate:BusinessProcess } UNION
+                    { ?process archimate:realization $this . ?process rdf:type archimate:BusinessProcess }
+                }
+            }
+        """
+    ] .
+
+### 3. Motivation Element Requirements
+
+# Goals should have measurable outcomes
+ex:GoalMeasurability rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Goal ;
+    rdfs:label "Goal Measurability" ;
+    sh:sparql [
+        sh:message "Goals should be associated with measurable outcomes" ;
+        sh:severity sh:Warning ;
+        sh:select """
+            SELECT $this WHERE {
+                FILTER NOT EXISTS {
+                    $this archimate:realization ?outcome .
+                    ?outcome rdf:type archimate:Outcome
+                }
+            }
+        """
+    ] .
+
+# Requirements should trace to architectural elements
+ex:RequirementTraceability rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Requirement ;
+    rdfs:label "Requirement Traceability" ;
+    sh:sparql [
+        sh:message "Requirements should influence at least one architectural element" ;
+        sh:severity sh:Info ;
+        sh:select """
+            SELECT $this WHERE {
+                FILTER NOT EXISTS {
+                    $this archimate:influence ?element .
+                    ?element rdf:type ?type .
+                    { ?type rdfs:subClassOf archimate:BusinessLayer } UNION
+                    { ?type rdfs:subClassOf archimate:ApplicationLayer } UNION
+                    { ?type rdfs:subClassOf archimate:TechnologyLayer }
+                }
+            }
+        """
+    ] .
+
+### 4. Business Context Naming Conventions
+
+# Business elements should follow naming conventions
+ex:BusinessNamingConvention rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessActor ;
+    rdfs:label "Business Actor Naming Convention" ;
+    sh:property [
+        sh:path archimate:name ;
+        sh:pattern "^[A-Z][a-zA-Z\\s]+$" ;
+        sh:message "Business actor names should start with capital letter and contain only letters and spaces"
+    ] .
+
+ex:BusinessProcessNaming rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessProcess ;
+    rdfs:label "Business Process Naming Convention" ;
+    sh:property [
+        sh:path archimate:name ;
+        sh:pattern "^(Manage|Create|Update|Delete|Process|Handle|Execute|Perform)\\s.+" ;
+        sh:message "Business process names should start with action verbs (Manage, Create, Update, Delete, Process, Handle, Execute, Perform)"
+    ] .
+
+ex:BusinessServiceNaming rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessService ;
+    rdfs:label "Business Service Naming Convention" ;
+    sh:property [
+        sh:path archimate:name ;
+        sh:pattern ".+\\sService$" ;
+        sh:message "Business service names should end with 'Service'"
+    ] .
+
+### 5. Collaboration and Stakeholder Requirements
+
+# Business collaborations must have multiple participants
+ex:BusinessCollaborationParticipants rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessCollaboration ;
+    rdfs:label "Business Collaboration Participants" ;
+    sh:sparql [
+        sh:message "Business collaborations must aggregate at least two business roles or actors" ;
+        sh:select """
+            SELECT $this WHERE {
+                {
+                    SELECT $this (COUNT(?participant) AS ?count) WHERE {
+                        $this archimate:aggregation ?participant .
+                        { ?participant rdf:type archimate:BusinessRole } UNION
+                        { ?participant rdf:type archimate:BusinessActor }
+                    }
+                    GROUP BY $this
+                }
+                FILTER(?count < 2)
+            }
+        """
+    ] .
+
+# Stakeholders should be linked to goals or requirements  
+ex:StakeholderLinkage rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Stakeholder ;
+    rdfs:label "Stakeholder Goal Linkage" ;
+    sh:sparql [
+        sh:message "Stakeholders should be associated with goals, requirements, or assessments" ;
+        sh:severity sh:Warning ;
+        sh:select """
+            SELECT $this WHERE {
+                FILTER NOT EXISTS {
+                    { $this archimate:association ?goal . ?goal rdf:type archimate:Goal } UNION
+                    { $this archimate:association ?req . ?req rdf:type archimate:Requirement } UNION
+                    { $this archimate:association ?assess . ?assess rdf:type archimate:Assessment }
+                }
+            }
+        """
+    ] .
