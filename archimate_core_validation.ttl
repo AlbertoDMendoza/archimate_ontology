@@ -1,0 +1,312 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix archimate: <https://purl.org/archimate#> .
+@prefix ex: <https://purl.org/archimate/validation#> .
+@base <https://purl.org/archimate/validation#> .
+
+### SHACL Validation for ArchiMate Basic Constraints
+<#> rdf:type owl:Ontology ;
+    owl:imports <https://purl.org/archimate#> ;
+    rdfs:label "ArchiMate Basic Validation Rules" ;
+    rdfs:comment "SHACL validation constraints for basic ArchiMate model quality and consistency." ;
+    owl:versionInfo "Alpha" .
+
+
+### 1. Universal Element and Relationship Requirements
+
+# All realized elements must have required attributes
+ex:RealizedElementShape rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "Realized Element Requirements" ;
+    sh:property [
+        sh:path archimate:identifier ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:pattern "^[a-zA-Z_][a-zA-Z0-9_-]*$" ;
+        sh:message "All realized elements must have exactly one valid identifier (must start with letter or underscore, then alphanumeric, underscore, hyphen)"
+    ] ;
+    sh:property [
+        sh:path archimate:name ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:minLength 1 ;
+        sh:message "All realized elements must have exactly one non-empty name"
+    ] ;
+    sh:property [
+        sh:path archimate:documentation ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "All realized elements must have documentation"
+    ] ;
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:maxCount 1 ;
+        sh:class archimate:Element ;
+        sh:message "All realized elements must declare their specialization (what ArchiMate element type they represent)"
+    ] .
+
+# All realized relationships must have required attributes
+ex:RealizedRelationshipShape rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Relationship ;
+    rdfs:label "Realized Relationship Requirements" ;
+    sh:property [
+        sh:path archimate:identifier ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:pattern "^[a-zA-Z_][a-zA-Z0-9_-]*$" ;
+        sh:message "All realized relationships must have exactly one valid identifier"
+    ] ;
+    sh:property [
+        sh:path archimate:name ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "All realized relationships must have exactly one valid identifier (must start with letter or underscore, then alphanumeric, underscore, hyphen)"
+    ] ;
+    sh:property [
+        sh:path archimate:documentation ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;                
+        sh:datatype xsd:string ;
+        sh:message "All realized relationships must have documentation"
+    ] ;
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:maxCount 1 ;
+        sh:message "All realized relationships must declare their specialization (what ArchiMate relationship type they represent)"
+    ] .
+
+# Validate that specialization points to valid ArchiMate types
+ex:ValidSpecializationShape rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element, archimate:Relationship ;
+    rdfs:label "Valid Specialization Target" ;
+    sh:sparql [
+        sh:message "Specialization must point to a valid ArchiMate element or relationship type defined in the ontology" ;
+        sh:select """
+            SELECT $this WHERE {
+                $this archimate:specialization ?type .
+                FILTER NOT EXISTS {
+                    ?type rdf:type owl:Class .
+                    { 
+                        ?type rdfs:subClassOf+ archimate:Element 
+                    } UNION { 
+                        ?type rdfs:subClassOf+ archimate:Relationship 
+                    }
+                }
+            }
+        """
+    ] .
+
+# Unique identifier constraint across all elements
+ex:UniqueIdentifierShape rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "Unique Identifier Constraint" ;
+    sh:sparql [
+        sh:message "Element identifiers must be unique across the model" ;
+        sh:select """
+            SELECT $this ?other WHERE {
+                $this archimate:identifier ?id .
+                ?other archimate:identifier ?id .
+                FILTER($this != ?other)
+            }
+        """
+    ] .
+
+### 2. Relationship Validation
+
+# Basic relationship structure validation
+ex:RelationshipShape rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Relationship ;
+    rdfs:label "Relationship Basic Structure" ;
+    sh:property [
+        sh:path [ sh:inversePath rdf:subject ] ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class archimate:Element ;
+        sh:message "All relationships must have exactly one source element"
+    ] ;
+    sh:property [
+        sh:path [ sh:inversePath rdf:object ] ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class archimate:Element ;
+        sh:message "All relationships must have exactly one target element"
+    ] .
+
+# No self-relationships for composition and aggregation
+ex:NoSelfCompositionShape rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "No Self-Composition" ;
+    sh:sparql [
+        sh:message "Elements cannot compose or aggregate themselves" ;
+        sh:select """
+            SELECT $this WHERE {
+                { $this archimate:composition $this } UNION
+                { $this archimate:aggregation $this }
+            }
+        """
+    ] .
+
+# No circular composition
+ex:NoCircularCompositionShape rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "No Circular Composition" ;
+    sh:sparql [
+        sh:message "Circular composition relationships are not allowed" ;
+        sh:select """
+            SELECT $this WHERE {
+                $this archimate:composition+ $this
+            }
+        """
+    ] .
+
+### 3. Layer Consistency Validation
+
+# Elements should primarily belong to one layer
+ex:LayerConsistencyShape rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "Layer Consistency" ;
+    sh:sparql [
+        sh:message "Elements should belong to exactly one primary layer" ;
+        sh:select """
+            SELECT $this WHERE {
+                {
+                    SELECT $this (COUNT(?layer) AS ?layerCount) WHERE {
+                        $this rdf:type ?layer .
+                        ?layer rdfs:subClassOf archimate:Layer .
+                    }
+                    GROUP BY $this
+                }
+                FILTER(?layerCount > 1)
+            }
+        """
+    ] .
+
+# Cross-layer relationships should follow ArchiMate guidelines
+ex:CrossLayerRelationshipShape rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:serving ;
+    rdfs:label "Cross-Layer Serving Relationships" ;
+    sh:sparql [
+        sh:message "Serving relationships should generally flow from lower to higher layers" ;
+        sh:select """
+            SELECT $this ?target WHERE {
+                $this archimate:serving ?target .
+                
+                # Check if this is violating layer hierarchy
+                {
+                    $this rdf:type/rdfs:subClassOf archimate:BusinessLayer .
+                    ?target rdf:type/rdfs:subClassOf archimate:ApplicationLayer .
+                } UNION {
+                    $this rdf:type/rdfs:subClassOf archimate:BusinessLayer .
+                    ?target rdf:type/rdfs:subClassOf archimate:TechnologyLayer .
+                } UNION {
+                    $this rdf:type/rdfs:subClassOf archimate:ApplicationLayer .
+                    ?target rdf:type/rdfs:subClassOf archimate:TechnologyLayer .
+                }
+            }
+        """
+    ] .
+
+### 4. Access Relationship Validation
+
+# Access relationships must be from behavior to passive structure
+ex:AccessRelationshipShape rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:access ;
+    rdfs:label "Access Relationship Domain" ;
+    sh:class archimate:BehaviorElement ;
+    sh:message "Access relationships can only originate from behavior elements" .
+
+ex:AccessRelationshipRangeShape rdf:type sh:NodeShape ;
+    sh:targetObjectsOf archimate:access ;
+    rdfs:label "Access Relationship Range" ;
+    sh:class archimate:PassiveStructure ;
+    sh:message "Access relationships can only target passive structure elements" .
+
+### 5. Assignment Relationship Validation
+
+# Assignment relationships must be from active structure to behavior
+ex:AssignmentRelationshipShape rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:assignment ;
+    rdfs:label "Assignment Relationship Domain" ;
+    sh:class archimate:ActiveStructure ;
+    sh:message "Assignment relationships can only originate from active structure elements" .
+
+ex:AssignmentRelationshipRangeShape rdf:type sh:NodeShape ;
+    sh:targetObjectsOf archimate:assignment ;
+    rdfs:label "Assignment Relationship Range" ;
+    sh:class archimate:BehaviorElement ;
+    sh:message "Assignment relationships can only target behavior elements" .
+
+### 6. RDF-Star Relationship Metadata Validation
+
+# Validate access type values for RDF-Star statements
+ex:AccessTypeValidation rdf:type sh:NodeShape ;
+    rdfs:label "Access Type Validation" ;
+    sh:sparql [
+        sh:message "Access relationships must have valid access types: read, write, readwrite, or unspecified" ;
+        sh:select """
+            SELECT ?subject ?object WHERE {
+                <<?subject archimate:access ?object>> ?statement .
+                ?statement archimate:accessType ?accessType .
+                FILTER(?accessType NOT IN ("read", "write", "readwrite", "unspecified"))
+            }
+        """
+    ] .
+
+# Validate influence sign values  
+ex:InfluenceSignValidation rdf:type sh:NodeShape ;
+    rdfs:label "Influence Sign Validation" ;
+    sh:sparql [
+        sh:message "Influence relationships must have valid signs: positive, negative, or unspecified" ;
+        sh:select """
+            SELECT ?subject ?object WHERE {
+                <<?subject archimate:influence ?object>> ?statement .
+                ?statement archimate:influenceSign ?sign .
+                FILTER(?sign NOT IN ("positive", "negative", "unspecified"))
+            }
+        """
+    ] .
+
+# Validate flow type values
+ex:FlowTypeValidation rdf:type sh:NodeShape ;
+    rdfs:label "Flow Type Validation" ;
+    sh:sparql [
+        sh:message "Flow relationships must have valid types: information, material, energy, or unspecified" ;
+        sh:select """
+            SELECT ?subject ?object WHERE {
+                <<?subject archimate:flow ?object>> ?statement .
+                ?statement archimate:flowType ?flowType .
+                FILTER(?flowType NOT IN ("information", "material", "energy", "unspecified"))
+            }
+        """
+    ] .
+
+### 7. Model Completeness Validation
+
+# Check for orphaned elements (no relationships)
+ex:OrphanedElementShape rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "Connected Elements" ;
+    sh:sparql [
+        sh:message "Elements should participate in at least one relationship" ;
+        sh:severity sh:Info ;
+        sh:select """
+            SELECT $this WHERE {
+                FILTER NOT EXISTS {
+                    { $this ?p ?o . ?p rdfs:subPropertyOf+ archimate:structuralRelationship } UNION
+                    { $this ?p ?o . ?p rdfs:subPropertyOf+ archimate:dependencyRelationship } UNION
+                    { $this ?p ?o . ?p rdfs:subPropertyOf+ archimate:dynamicRelationship } UNION
+                    { ?s ?p $this . ?p rdfs:subPropertyOf+ archimate:structuralRelationship } UNION
+                    { ?s ?p $this . ?p rdfs:subPropertyOf+ archimate:dependencyRelationship } UNION
+                    { ?s ?p $this . ?p rdfs:subPropertyOf+ archimate:dynamicRelationship }
+                }
+            }
+        """
+    ] .
