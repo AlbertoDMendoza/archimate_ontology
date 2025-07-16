@@ -141,7 +141,7 @@
     rdfs:comment "different perspectives or views of the enterprise architecture that help in structuring and focusing on specific concerns." ;
     rdfs:subClassOf <#Concept> .
 
-<#StructureElement> rdf:type owl:Class ;
+<#BehaviorAspect> rdf:type owl:Class ;
     rdfs:label "Structure Element" ;
     rdfs:comment "" ;
     rdfs:subClassOf <#Aspect> .
@@ -149,7 +149,7 @@
 <#ActiveStructure> rdf:type owl:Class ;
     rdfs:label "Active Structure" ;
     rdfs:comment "A category of elements that perform behavior and collaborate to provide services." ;
-    rdfs:subClassOf <#StructureElement> .
+    rdfs:subClassOf <#BehaviorAspect> .
 	
 <#ExternalActiveStructure> rdf:type owl:Class ;
     rdfs:label "External Active Structure" ;
@@ -164,7 +164,7 @@
 <#PassiveStructure> rdf:type owl:Class ;
     rdfs:label "Passive Structure" ;
     rdfs:comment "Represents structural elements that are used or produced by behavior elements." ;
-    rdfs:subClassOf <#StructureElement> .
+    rdfs:subClassOf <#BehaviorAspect> .
 
 <#BehaviorAspect> rdf:type owl:Class ;
     rdfs:label "Behavior" ;
@@ -174,12 +174,17 @@
 <#InternalBehavior> rdf:type owl:Class ;
     rdfs:label "Internal Behavior" ;
     rdfs:comment "An internal behavior element represents a unit of activity that can be performed by one or more active structure elements." ;
-    rdfs:subClassOf <#BehaviorElement> .	
+    rdfs:subClassOf <#BehaviorAspect> .	
 
 <#ExternalBehavior> rdf:type owl:Class ;
     rdfs:label "External Behavior" ;
     rdfs:comment "Represents external elements (also called services) that define the behavior performed by active structure elements." ;
-    rdfs:subClassOf <#BehaviorElement> .
+    rdfs:subClassOf <#BehaviorAspect> .
+
+<#CollectiveBehavior> rdf:type owl:Class ;
+    rdfs:label "Collective Behavior" ; 
+    rdfs:comment "Represents collective behavior (interaction) that is performed by a collaboration of multiple structural elements." ;
+    rdfs:subClassOf <#BehaviorAspect> .
 
 <#MotivationAspect> rdf:type owl:Class ;
     rdfs:label "Motivation" ;
@@ -310,21 +315,21 @@
 <#Capability> rdf:type owl:Class ;
     rdfs:label "Capability" ;
     rdfs:comment "An ability that an active structure element possesses." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#BehaviorAspect> ;
     rdfs:subClassOf <#StrategyLayer> ;
     rdfs:subClassOf <#Element> .
 
 <#CourseOfAction> rdf:type owl:Class ;
     rdfs:label "Course of Action" ;
     rdfs:comment "An approach or plan for configuring some capabilities and resources of the enterprise." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#BehaviorAspect> ;
     rdfs:subClassOf <#StrategyLayer> ;
     rdfs:subClassOf <#Element> .
 
 <#ValueStream> rdf:type owl:Class ;
     rdfs:label "Value Stream" ;
     rdfs:comment "A sequence of activities that create an overall result for a customer, stakeholder, or end user." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#BehaviorAspect> ;
     rdfs:subClassOf <#StrategyLayer> ;
     rdfs:subClassOf <#Element> .
 
@@ -365,35 +370,35 @@
 <#BusinessProcess> rdf:type owl:Class ;
     rdfs:label "Business Process" ;
     rdfs:comment "A sequence of business behaviors that achieve a specific outcome." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#InternalBehavior> ;
     rdfs:subClassOf <#BusinessLayer> ;
     rdfs:subClassOf <#Element> .
 
 <#BusinessFunction> rdf:type owl:Class ;
     rdfs:label "Business Function" ;
     rdfs:comment "A collection of business behavior based on a chosen set of criteria (typically required skills, resources, etc.) and closely aligned to an organization." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#InternalBehavior> ;
     rdfs:subClassOf <#BusinessLayer> ;
     rdfs:subClassOf <#Element> .
 
 <#BusinessService> rdf:type owl:Class ;
     rdfs:label "Business Service" ;
     rdfs:comment "An explicitly defined exposed business behavior." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#ExternalBehavior> ;
     rdfs:subClassOf <#BusinessLayer> ;
     rdfs:subClassOf <#Element> .
 
 <#BusinessInteraction> rdf:type owl:Class ;
     rdfs:label "Business Interaction" ;
     rdfs:comment "A unit of collective business behavior performed by two or more business actors, business roles, or business collaborations." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#CollectiveBehavior> ;
     rdfs:subClassOf <#BusinessLayer> ;
     rdfs:subClassOf <#Element> .
 
 <#BusinessEvent> rdf:type owl:Class ;
     rdfs:label "Business Event" ;
     rdfs:comment "Represents a business-related state change." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#BehaviorAspect> ;
     rdfs:subClassOf <#BusinessLayer> ;
     rdfs:subClassOf <#Element> .
 
@@ -455,35 +460,35 @@
 <#ApplicationFunction> rdf:type owl:Class ;
     rdfs:label "Application Function" ;
     rdfs:comment "Represents an automated behavior that can be performed by an application component." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#InternalBehavior> ;
     rdfs:subClassOf <#ApplicationLayer> ;
     rdfs:subClassOf <#Element> .	
 
 <#ApplicationInteraction> rdf:type owl:Class ;
     rdfs:label "Application Interaction" ;
     rdfs:comment "an encapsulation of application functionality aligned to implementation structure, which is modular and replaceable." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#CollectiveBehavior> ;
     rdfs:subClassOf <#ApplicationLayer> ;
     rdfs:subClassOf <#Element> .	
 	
 <#ApplicationProcess> rdf:type owl:Class ;
     rdfs:label "Application Process" ;
     rdfs:comment " Addresses a set of related concerns and is tailored for specific stakeholders.  A View is specified by means of a Viewpoint, which prescribes the concepts, models, analysis techniques, and visualizations that are provided by the View.  The same elements from the Model Tree can be re-used multiple times in the same or different View." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#InternalBehavior> ;
     rdfs:subClassOf <#ApplicationLayer> ;
     rdfs:subClassOf <#Element> .
 
 <#ApplicationEvent> rdf:type owl:Class ;
     rdfs:label "Application Event" ;
     rdfs:comment "An application event represents an application state change." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#BehaviorAspect> ;
     rdfs:subClassOf <#ApplicationLayer> ;
     rdfs:subClassOf <#Element> .
 
 <#ApplicationService> rdf:type owl:Class ;
     rdfs:label "Application Service" ;
     rdfs:comment "represents an explicitly defined exposed application behavior." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#ExternalBehavior> ;
     rdfs:subClassOf <#ApplicationLayer> ;
     rdfs:subClassOf <#Element> .	
 
@@ -552,35 +557,35 @@
 <#TechnologyFunction> rdf:type owl:Class ;
     rdfs:label "Technology Function" ;
     rdfs:comment "A collection of technology behavior that can be performed by a technology internal active structure element." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#InternalBehavior> ;
     rdfs:subClassOf <#TechnologyLayer> ;
     rdfs:subClassOf <#Element> .
 
 <#TechnologyProcess> rdf:type owl:Class ;
     rdfs:label "Technology Process" ;
     rdfs:comment "A sequence of technology behaviors that achieves a specific result." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#InternalBehavior> ;
     rdfs:subClassOf <#TechnologyLayer> ;
     rdfs:subClassOf <#Element> .
 	
 <#TechnologyInteraction> rdf:type owl:Class ;
     rdfs:label "Technology Interaction" ;
     rdfs:comment "A unit of collective technology behavior performed by (a collaboration of) two or more technology internal active structure elements." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#CollectiveBehavior> ;
     rdfs:subClassOf <#TechnologyLayer> ;
     rdfs:subClassOf <#Element> .
 	
 <#TechnologyEvent> rdf:type owl:Class ;
     rdfs:label "Technology Event" ;
     rdfs:comment "A technology event represents a technology state change." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#BehaviorAspect> ;
     rdfs:subClassOf <#TechnologyLayer> ;
     rdfs:subClassOf <#Element> .
 	
 <#TechnologyService> rdf:type owl:Class ;
     rdfs:label "Technology Service" ;
     rdfs:comment "An explicitly defined exposed technology behavior." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#ExternalBehavior> ;
     rdfs:subClassOf <#TechnologyLayer> ;
     rdfs:subClassOf <#Element> .
 
@@ -640,7 +645,7 @@
 <#ImplementationEvent> rdf:type owl:Class ;
     rdfs:label "Implementation Event" ;
     rdfs:comment "A state change related to implementation or migration." ;
-    rdfs:subClassOf <#Behavior> ;
+    rdfs:subClassOf <#BehaviorAspect> ;
     rdfs:subClassOf <#ImplementationAndMigrationLayer> ;
     rdfs:subClassOf <#Element> .
 
@@ -700,8 +705,8 @@
 <#dynamicRelationship> rdf:type owl:ObjectProperty ;
     rdfs:label "dynamic relationship" ;
     rdfs:comment "Base property for dynamic behavioral relationships." ;
-    rdfs:domain <#Behavior> ;
-    rdfs:range <#Behavior> .
+    rdfs:domain <#BehaviorAspect> ;
+    rdfs:range <#BehaviorAspect> .
 
 <#otherRelationship> rdf:type owl:ObjectProperty ;
     rdfs:label "Other Relationship" ;
@@ -718,7 +723,7 @@
     rdfs:comment "Links active structure elements with behavior that they perform or roles they fulfill." ;
     rdfs:subPropertyOf <#structuralRelationship> ;
     rdfs:domain <#ActiveStructure> ;
-    rdfs:range <#Behavior> .
+    rdfs:range <#BehaviorAspect> .
 
 <#aggregation> rdf:type owl:ObjectProperty ;
     rdfs:label "aggregation" ;
@@ -753,7 +758,7 @@
     rdfs:label "access" ;
     rdfs:comment "Models access of behavior elements to passive structure elements." ;
     rdfs:subPropertyOf <#dependencyRelationship> ;
-    rdfs:domain <#Behavior> ;
+    rdfs:domain <#BehaviorAspect> ;
     rdfs:range <#PassiveStructure> .
 
 <#influence> rdf:type owl:ObjectProperty ;
@@ -775,15 +780,15 @@
     rdfs:label "triggering" ;
     rdfs:comment "Models temporal or causal relationships where one behavior triggers another." ;
     rdfs:subPropertyOf <#dynamicRelationship> ;
-    rdfs:domain <#Behavior> ;
-    rdfs:range <#Behavior> .
+    rdfs:domain <#BehaviorAspect> ;
+    rdfs:range <#BehaviorAspect> .
 
 <#flow> rdf:type owl:ObjectProperty ;
     rdfs:label "flow" ;
     rdfs:comment "Models transfer of information, materials, or energy between behavior elements." ;
     rdfs:subPropertyOf <#dynamicRelationship> ;
-    rdfs:domain <#Behavior> ;
-    rdfs:range <#Behavior> .
+    rdfs:domain <#BehaviorAspect> ;
+    rdfs:range <#BehaviorAspect> .
 
 # Other Relationships
 <#specialization> rdf:type owl:ObjectProperty ;
