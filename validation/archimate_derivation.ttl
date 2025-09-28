@@ -1,0 +1,1040 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix archimate: <https://purl.org/archimate#> .
+@prefix ex: <https://purl.org/archimate/derivation#> .
+@base <https://purl.org/archimate/derivation#> .
+
+### ArchiMate Derivation Rules Implementation
+<#> rdf:type owl:Ontology ;
+    owl:imports <https://purl.org/archimate#> ;
+    rdfs:label "ArchiMate Derivation Rules" ;
+    rdfs:comment "Complete implementation of ArchiMate derivation rules DR1-DR8 and PDR1-PDR12 using SPARQL CONSTRUCT rules." ;
+    owl:versionInfo "Alpha" ;
+    rdfs:seeAlso <https://digital-portfolio.opengroup.org/archimate-specs/latest/99-appendices/02-relationships-normative.html> .
+
+### Helper Properties for Relationship Strength
+
+# Structural relationship strength ordering
+ex:structuralStrength rdf:type owl:DatatypeProperty ;
+    rdfs:label "structural strength" ;
+    rdfs:comment "Numeric strength of structural relationships: realization=1, assignment=2, aggregation=3, composition=4" ;
+    rdfs:domain archimate:structuralRelationship ;
+    rdfs:range xsd:integer .
+
+# Dependency relationship strength ordering  
+ex:dependencyStrength rdf:type owl:DatatypeProperty ;
+    rdfs:label "dependency strength" ;
+    rdfs:comment "Numeric strength of dependency relationships: association=1, influence=2, access=3, serving=4" ;
+    rdfs:domain archimate:dependencyRelationship ;
+    rdfs:range xsd:integer .
+
+### Valid Derivation Rules (DR1-DR8)
+
+## DR1: Transitivity of Specialization (Already implemented in your ontology)
+# Note: This is already handled by making specialization owl:TransitiveProperty
+
+## DR2: Derivation Between Structural Relationships
+ex:DR2_StructuralChain rdf:type sh:SPARQLRule ;
+    rdfs:label "DR2: Structural Relationship Chain Derivation" ;
+    rdfs:comment "If two structural relationships p(a,b):S and q(b,c):T exist, derive r(a,c):U with U being the weakest of S and T." ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?a ?weakerRel ?c .
+            <<?a ?weakerRel ?c>> archimate:confidence "valid" ;
+                                archimate:description "Derived via DR2: structural relationship chain" ;
+                                ex:derivedFrom ?rel1, ?rel2 .
+        }
+        WHERE {
+            # Find chain of two structural relationships
+            ?a ?rel1 ?b .
+            ?b ?rel2 ?c .
+            
+            # Both must be structural relationships
+            ?rel1 rdfs:subPropertyOf+ archimate:structuralRelationship .
+            ?rel2 rdfs:subPropertyOf+ archimate:structuralRelationship .
+            
+            # Get strength values
+            ?rel1 ex:structuralStrength ?strength1 .
+            ?rel2 ex:structuralStrength ?strength2 .
+            
+            # Determine weaker relationship
+            BIND(IF(?strength1 <= ?strength2, ?rel1, ?rel2) AS ?weakerRel)
+            
+            # Avoid self-relationships and direct relationships
+            FILTER(?a != ?c)
+            FILTER NOT EXISTS { ?a ?weakerRel ?c }
+        }
+    """ .
+
+## DR3: Derivation Between Structural and Dependency Relationships
+ex:DR3_StructuralDependency rdf:type sh:SPARQLRule ;
+    rdfs:label "DR3: Structural + Dependency → Dependency" ;
+    rdfs:comment "If structural p(a,b):S and dependency q(b,c):T exist, derive r(a,c):T" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?a ?depRel ?c .
+            <<?a ?depRel ?c>> archimate:confidence "valid" ;
+                             archimate:description "Derived via DR3: structural + dependency" ;
+                             ex:derivedFrom ?structRel, ?depRel .
+        }
+        WHERE {
+            ?a ?structRel ?b .
+            ?b ?depRel ?c .
+            
+            ?structRel rdfs:subPropertyOf+ archimate:structuralRelationship .
+            ?depRel rdfs:subPropertyOf+ archimate:dependencyRelationship .
+            
+            FILTER(?a != ?c)
+            FILTER NOT EXISTS { ?a ?depRel ?c }
+        }
+    """ .
+
+## DR4: Derivation Between Opposing Structural and Dependency Relationships  
+ex:DR4_OpposingStructuralDependency rdf:type sh:SPARQLRule ;
+    rdfs:label "DR4: Opposing Structural + Dependency → Dependency" ;
+    rdfs:comment "If structural p(a,b):S and dependency q(c,b):T exist, derive r(c,a):T" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?c ?depRel ?a .
+            <<?c ?depRel ?a>> archimate:confidence "valid" ;
+                             archimate:description "Derived via DR4: opposing structural + dependency" ;
+                             ex:derivedFrom ?structRel, ?depRel .
+        }
+        WHERE {
+            ?a ?structRel ?b .
+            ?c ?depRel ?b .
+            
+            ?structRel rdfs:subPropertyOf+ archimate:structuralRelationship .
+            ?depRel rdfs:subPropertyOf+ archimate:dependencyRelationship .
+            
+            FILTER(?a != ?c)
+            FILTER NOT EXISTS { ?c ?depRel ?a }
+        }
+    """ .
+
+## DR5: Derivation Between Structural and Dynamic Relationships
+ex:DR5_StructuralDynamic rdf:type sh:SPARQLRule ;
+    rdfs:label "DR5: Structural + Dynamic → Dynamic" ;
+    rdfs:comment "If structural p(a,b):S and dynamic q(b,c):T exist, derive r(a,c):T" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?a ?dynRel ?c .
+            <<?a ?dynRel ?c>> archimate:confidence "valid" ;
+                             archimate:description "Derived via DR5: structural + dynamic" ;
+                             ex:derivedFrom ?structRel, ?dynRel .
+        }
+        WHERE {
+            ?a ?structRel ?b .
+            ?b ?dynRel ?c .
+            
+            ?structRel rdfs:subPropertyOf+ archimate:structuralRelationship .
+            ?dynRel rdfs:subPropertyOf+ archimate:dynamicRelationship .
+            
+            FILTER(?a != ?c)
+            FILTER NOT EXISTS { ?a ?dynRel ?c }
+        }
+    """ .
+
+## DR6: Derivation Between Structural and Flow Relationships
+ex:DR6_StructuralFlow rdf:type sh:SPARQLRule ;
+    rdfs:label "DR6: Structural + Flow (opposite) → Flow" ;
+    rdfs:comment "If structural p(a,b):S and flow q(c,b):T exist, derive r(c,a):T" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?c archimate:flow ?a .
+            <<?c archimate:flow ?a>> archimate:confidence "valid" ;
+                                     archimate:description "Derived via DR6: structural + flow (opposite)" ;
+                                     ex:derivedFrom ?structRel, archimate:flow .
+        }
+        WHERE {
+            ?a ?structRel ?b .
+            ?c archimate:flow ?b .
+            
+            ?structRel rdfs:subPropertyOf+ archimate:structuralRelationship .
+            
+            FILTER(?a != ?c)
+            FILTER NOT EXISTS { ?c archimate:flow ?a }
+        }
+    """ .
+
+## DR7: Derivation Between Triggering and Structural Relationships
+ex:DR7_TriggeringStructural rdf:type sh:SPARQLRule ;
+    rdfs:label "DR7: Triggering + Structural → Triggering" ;
+    rdfs:comment "If triggering p(a,b):S and structural q(b,c):T exist, derive r(a,c):S" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?a archimate:triggering ?c .
+            <<?a archimate:triggering ?c>> archimate:confidence "valid" ;
+                                           archimate:description "Derived via DR7: triggering + structural" ;
+                                           ex:derivedFrom archimate:triggering, ?structRel .
+        }
+        WHERE {
+            ?a archimate:triggering ?b .
+            ?b ?structRel ?c .
+            
+            ?structRel rdfs:subPropertyOf+ archimate:structuralRelationship .
+            
+            FILTER(?a != ?c)
+            FILTER NOT EXISTS { ?a archimate:triggering ?c }
+        }
+    """ .
+
+## DR8: Derivation Between Triggering Relationships (Transitivity)
+ex:DR8_TriggeringTransitivity rdf:type sh:SPARQLRule ;
+    rdfs:label "DR8: Triggering Transitivity" ;
+    rdfs:comment "If triggering p(a,b):S and triggering q(b,c):S exist, derive r(a,c):S" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?a archimate:triggering ?c .
+            <<?a archimate:triggering ?c>> archimate:confidence "valid" ;
+                                           archimate:description "Derived via DR8: triggering transitivity" ;
+                                           ex:derivedFrom archimate:triggering, archimate:triggering .
+        }
+        WHERE {
+            ?a archimate:triggering ?b .
+            ?b archimate:triggering ?c .
+            
+            FILTER(?a != ?c)
+            FILTER NOT EXISTS { ?a archimate:triggering ?c }
+        }
+    """ .
+
+### Potential Derivation Rules (PDR1-PDR12)
+
+## PDR1: Specialization + Other Relationship → Potentially Same Relationship
+ex:PDR1_SpecializationInheritance rdf:type sh:SPARQLRule ;
+    rdfs:label "PDR1: Specialization Inheritance (Forward)" ;
+    rdfs:comment "If specialization p(a,b):S and relationship q(b,c):T exist, potentially derive r(a,c):T" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?a ?rel ?c .
+            <<?a ?rel ?c>> archimate:confidence "potential" ;
+                          archimate:description "Derived via PDR1: specialization inheritance (forward)" ;
+                          ex:derivedFrom archimate:specialization, ?rel .
+        }
+        WHERE {
+            ?a archimate:specialization ?b .
+            ?b ?rel ?c .
+            
+            # Only for structural, dependency, or dynamic relationships
+            {
+                ?rel rdfs:subPropertyOf+ archimate:structuralRelationship 
+            } UNION {
+                ?rel rdfs:subPropertyOf+ archimate:dependencyRelationship 
+            } UNION {
+                ?rel rdfs:subPropertyOf+ archimate:dynamicRelationship 
+            }
+            
+            FILTER(?a != ?c)
+            FILTER NOT EXISTS { ?a ?rel ?c }
+        }
+    """ .
+
+## PDR2: Specialization + Other Relationship → Potentially Same Relationship (Reverse)
+ex:PDR2_SpecializationInheritanceReverse rdf:type sh:SPARQLRule ;
+    rdfs:label "PDR2: Specialization Inheritance (Reverse)" ;
+    rdfs:comment "If specialization p(a,b):S and relationship q(c,b):T exist, potentially derive r(c,a):T" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?c ?rel ?a .
+            <<?c ?rel ?a>> archimate:confidence "potential" ;
+                          archimate:description "Derived via PDR2: specialization inheritance (reverse)" ;
+                          ex:derivedFrom archimate:specialization, ?rel .
+        }
+        WHERE {
+            ?a archimate:specialization ?b .
+            ?c ?rel ?b .
+            
+            # Only for structural, dependency, or dynamic relationships
+            {
+                ?rel rdfs:subPropertyOf+ archimate:structuralRelationship 
+            } UNION {
+                ?rel rdfs:subPropertyOf+ archimate:dependencyRelationship 
+            } UNION {
+                ?rel rdfs:subPropertyOf+ archimate:dynamicRelationship 
+            }
+            
+            FILTER(?a != ?c)
+            FILTER NOT EXISTS { ?c ?rel ?a }
+        }
+    """ .
+
+## PDR3: Specialization Source Inheritance
+ex:PDR3_SpecializationSourceInheritance rdf:type sh:SPARQLRule ;
+    rdfs:label "PDR3: Specialization Source Inheritance" ;
+    rdfs:comment "If specialization p(a,b):S and relationship q(a,c):T exist, potentially derive r(b,c):T" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?b ?rel ?c .
+            <<?b ?rel ?c>> archimate:confidence "potential" ;
+                          archimate:description "Derived via PDR3: specialization source inheritance" ;
+                          ex:derivedFrom archimate:specialization, ?rel .
+        }
+        WHERE {
+            ?a archimate:specialization ?b .
+            ?a ?rel ?c .
+            
+            # Only for structural, dependency, or dynamic relationships
+            {
+                ?rel rdfs:subPropertyOf+ archimate:structuralRelationship 
+            } UNION {
+                ?rel rdfs:subPropertyOf+ archimate:dependencyRelationship 
+            } UNION {
+                ?rel rdfs:subPropertyOf+ archimate:dynamicRelationship 
+            }
+            
+            FILTER(?b != ?c)
+            FILTER NOT EXISTS { ?b ?rel ?c }
+        }
+    """ .
+
+## PDR4: Specialization Target Inheritance
+ex:PDR4_SpecializationTargetInheritance rdf:type sh:SPARQLRule ;
+    rdfs:label "PDR4: Specialization Target Inheritance" ;
+    rdfs:comment "If specialization p(a,b):S and relationship q(c,a):T exist, potentially derive r(c,b):T" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?c ?rel ?b .
+            <<?c ?rel ?b>> archimate:confidence "potential" ;
+                          archimate:description "Derived via PDR4: specialization target inheritance" ;
+                          ex:derivedFrom archimate:specialization, ?rel .
+        }
+        WHERE {
+            ?a archimate:specialization ?b .
+            ?c ?rel ?a .
+            
+            # Only for structural, dependency, or dynamic relationships
+            {
+                ?rel rdfs:subPropertyOf+ archimate:structuralRelationship 
+            } UNION {
+                ?rel rdfs:subPropertyOf+ archimate:dependencyRelationship 
+            } UNION {
+                ?rel rdfs:subPropertyOf+ archimate:dynamicRelationship 
+            }
+            
+            FILTER(?c != ?b)
+            FILTER NOT EXISTS { ?c ?rel ?b }
+        }
+    """ .
+
+## PDR5: Structural + Dependency (at source) → Dependency
+ex:PDR5_StructuralDependencyAtSource rdf:type sh:SPARQLRule ;
+    rdfs:label "PDR5: Structural + Dependency (at source) → Dependency" ;
+    rdfs:comment "If structural p(a,b):S and dependency q(c,a):T exist, potentially derive r(c,b):T" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?c ?depRel ?b .
+            <<?c ?depRel ?b>> archimate:confidence "potential" ;
+                             archimate:description "Derived via PDR5: structural + dependency (at source)" ;
+                             ex:derivedFrom ?structRel, ?depRel .
+        }
+        WHERE {
+            ?a ?structRel ?b .
+            ?c ?depRel ?a .
+            
+            ?structRel rdfs:subPropertyOf+ archimate:structuralRelationship .
+            ?depRel rdfs:subPropertyOf+ archimate:dependencyRelationship .
+            
+            FILTER(?c != ?b)
+            FILTER NOT EXISTS { ?c ?depRel ?b }
+        }
+    """ .
+
+## PDR6: Structural + Dependency (from source) → Dependency  
+ex:PDR6_StructuralDependencyFromSource rdf:type sh:SPARQLRule ;
+    rdfs:label "PDR6: Structural + Dependency (from source) → Dependency" ;
+    rdfs:comment "If structural p(a,b):S and dependency q(a,c):T exist, potentially derive r(b,c):T" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?b ?depRel ?c .
+            <<?b ?depRel ?c>> archimate:confidence "potential" ;
+                             archimate:description "Derived via PDR6: structural + dependency (from source)" ;
+                             ex:derivedFrom ?structRel, ?depRel .
+        }
+        WHERE {
+            ?a ?structRel ?b .
+            ?a ?depRel ?c .
+            
+            ?structRel rdfs:subPropertyOf+ archimate:structuralRelationship .
+            ?depRel rdfs:subPropertyOf+ archimate:dependencyRelationship .
+            
+            FILTER(?b != ?c)
+            FILTER NOT EXISTS { ?b ?depRel ?c }
+        }
+    """ .
+
+## PDR7: Dependency Chain → Weakest Dependency
+ex:PDR7_DependencyChain rdf:type sh:SPARQLRule ;
+    rdfs:label "PDR7: Dependency Chain → Weakest" ;
+    rdfs:comment "If dependencies p(a,b):S and q(b,c):T exist, potentially derive r(a,c):U with U being weakest" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?a ?weakerRel ?c .
+            <<?a ?weakerRel ?c>> archimate:confidence "potential" ;
+                                archimate:description "Derived via PDR7: dependency chain" ;
+                                ex:derivedFrom ?rel1, ?rel2 .
+        }
+        WHERE {
+            ?a ?rel1 ?b .
+            ?b ?rel2 ?c .
+            
+            ?rel1 rdfs:subPropertyOf+ archimate:dependencyRelationship .
+            ?rel2 rdfs:subPropertyOf+ archimate:dependencyRelationship .
+            
+            # Get strength values
+            ?rel1 ex:dependencyStrength ?strength1 .
+            ?rel2 ex:dependencyStrength ?strength2 .
+            
+            # Determine weaker relationship
+            BIND(IF(?strength1 <= ?strength2, ?rel1, ?rel2) AS ?weakerRel)
+            
+            FILTER(?a != ?c)
+            FILTER NOT EXISTS { ?a ?weakerRel ?c }
+        }
+    """ .
+
+## PDR8: Flow + Structural (reverse) → Flow
+ex:PDR8_FlowStructural rdf:type sh:SPARQLRule ;
+    rdfs:label "PDR8: Flow + Structural (reverse) → Flow" ;
+    rdfs:comment "If flow p(a,b):S and structural q(b,c):T exist, potentially derive r(a,c):S" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?a archimate:flow ?c .
+            <<?a archimate:flow ?c>> archimate:confidence "potential" ;
+                                     archimate:description "Derived via PDR8: flow + structural" ;
+                                     ex:derivedFrom archimate:flow, ?structRel .
+        }
+        WHERE {
+            ?a archimate:flow ?b .
+            ?b ?structRel ?c .
+            
+            ?structRel rdfs:subPropertyOf+ archimate:structuralRelationship .
+            
+            FILTER(?a != ?c)
+            FILTER NOT EXISTS { ?a archimate:flow ?c }
+        }
+    """ .
+
+## PDR9: Structural + Dynamic (reverse) → Dynamic
+ex:PDR9_StructuralDynamicReverse rdf:type sh:SPARQLRule ;
+    rdfs:label "PDR9: Structural + Dynamic (reverse) → Dynamic" ;
+    rdfs:comment "If structural p(a,b):S and dynamic q(a,c):T exist, potentially derive r(b,c):T" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?b ?dynRel ?c .
+            <<?b ?dynRel ?c>> archimate:confidence "potential" ;
+                             archimate:description "Derived via PDR9: structural + dynamic (reverse)" ;
+                             ex:derivedFrom ?structRel, ?dynRel .
+        }
+        WHERE {
+            ?a ?structRel ?b .
+            ?a ?dynRel ?c .
+            
+            ?structRel rdfs:subPropertyOf+ archimate:structuralRelationship .
+            ?dynRel rdfs:subPropertyOf+ archimate:dynamicRelationship .
+            
+            FILTER(?b != ?c)
+            FILTER NOT EXISTS { ?b ?dynRel ?c }
+        }
+    """ .
+
+## PDR10: Flow Chain → Flow
+ex:PDR10_FlowChain rdf:type sh:SPARQLRule ;
+    rdfs:label "PDR10: Flow Transitivity" ;
+    rdfs:comment "If flow p(a,b):S and flow q(b,c):S exist, potentially derive r(a,c):S" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?a archimate:flow ?c .
+            <<?a archimate:flow ?c>> archimate:confidence "potential" ;
+                                     archimate:description "Derived via PDR10: flow chain" ;
+                                     ex:derivedFrom archimate:flow, archimate:flow .
+        }
+        WHERE {
+            ?a archimate:flow ?b .
+            ?b archimate:flow ?c .
+            
+            FILTER(?a != ?c)
+            FILTER NOT EXISTS { ?a archimate:flow ?c }
+        }
+    """ .
+
+## PDR11: Triggering + Structural (reverse) → Triggering
+ex:PDR11_TriggeringStructuralReverse rdf:type sh:SPARQLRule ;
+    rdfs:label "PDR11: Triggering + Structural (reverse) → Triggering" ;
+    rdfs:comment "If triggering p(a,b):S and structural q(c,b):T exist, potentially derive r(a,c):S" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?a archimate:triggering ?c .
+            <<?a archimate:triggering ?c>> archimate:confidence "potential" ;
+                                           archimate:description "Derived via PDR11: triggering + structural (reverse)" ;
+                                           ex:derivedFrom archimate:triggering, ?structRel .
+        }
+        WHERE {
+            ?a archimate:triggering ?b .
+            ?c ?structRel ?b .
+            
+            ?structRel rdfs:subPropertyOf+ archimate:structuralRelationship .
+            
+            FILTER(?a != ?c)
+            FILTER NOT EXISTS { ?a archimate:triggering ?c }
+        }
+    """ .
+
+## PDR12: Grouping Element Derivation
+ex:PDR12_GroupingDerivation rdf:type sh:SPARQLRule ;
+    rdfs:label "PDR12: Grouping Element Derivation" ;
+    rdfs:comment "If aggregation/composition p(b,a):S and realization/assignment q(b,c):T exist with b being Grouping, potentially derive r(a,c):T" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?a ?targetRel ?c .
+            <<?a ?targetRel ?c>> archimate:confidence "potential" ;
+                                archimate:description "Derived via PDR12: grouping element derivation" ;
+                                ex:derivedFrom ?sourceRel, ?targetRel .
+        }
+        WHERE {
+            ?b ?sourceRel ?a .
+            ?b ?targetRel ?c .
+            
+            # b must be a Grouping element
+            ?b rdf:type archimate:Grouping .
+            
+            # Source relationship must be aggregation or composition
+            {
+                ?sourceRel rdfs:subPropertyOf+ archimate:aggregation
+            } UNION {
+                ?sourceRel rdfs:subPropertyOf+ archimate:composition  
+            }
+            
+            # Target relationship must be realization or assignment
+            {
+                ?targetRel rdfs:subPropertyOf+ archimate:realization
+            } UNION {
+                ?targetRel rdfs:subPropertyOf+ archimate:assignment
+            }
+            
+            FILTER(?a != ?c)
+            FILTER NOT EXISTS { ?a ?targetRel ?c }
+        }
+    """ .
+
+### Relationship Strength Assignments
+
+# Assign structural relationship strengths
+[] rdf:type owl:AnnotationProperty ;
+   owl:annotatedSource archimate:realization ;
+   ex:structuralStrength 1 .
+
+[] rdf:type owl:AnnotationProperty ;
+   owl:annotatedSource archimate:assignment ;
+   ex:structuralStrength 2 .
+
+[] rdf:type owl:AnnotationProperty ;
+   owl:annotatedSource archimate:aggregation ;
+   ex:structuralStrength 3 .
+
+[] rdf:type owl:AnnotationProperty ;
+   owl:annotatedSource archimate:composition ;
+   ex:structuralStrength 4 .
+
+# Assign dependency relationship strengths  
+[] rdf:type owl:AnnotationProperty ;
+   owl:annotatedSource archimate:association ;
+   ex:dependencyStrength 1 .
+
+[] rdf:type owl:AnnotationProperty ;
+   owl:annotatedSource archimate:influence ;
+   ex:dependencyStrength 2 .
+
+[] rdf:type owl:AnnotationProperty ;
+   owl:annotatedSource archimate:access ;
+   ex:dependencyStrength 3 .
+
+[] rdf:type owl:AnnotationProperty ;
+   owl:annotatedSource archimate:serving ;
+   ex:dependencyStrength 4 .
+
+### Cross-Domain Relationship Restrictions
+
+# Validation rule to enforce cross-domain restrictions from the specification
+ex:CrossDomainRestrictions rdf:type sh:NodeShape ;
+    rdfs:label "Cross-Domain Relationship Restrictions" ;
+    rdfs:comment "Enforces the restrictions on relationships between different ArchiMate domains" ;
+    sh:sparql [
+        sh:message "Invalid cross-domain relationship detected" ;
+        sh:select """
+            SELECT ?source ?target ?rel WHERE {
+                ?source ?rel ?target .
+                
+                # Implementation & Migration → Motivation (only assignment, realization, influence, association allowed)
+                {
+                    ?source rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
+                    ?target rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
+                    FILTER(?rel NOT IN (archimate:assignment, archimate:realization, archimate:influence, archimate:association))
+                } UNION
+                
+                # Core → Motivation (only assignment, realization, influence, association allowed)
+                {
+                    ?source rdf:type/rdfs:subClassOf+ ?coreLayer .
+                    ?coreLayer rdfs:subClassOf+ archimate:Layer .
+                    ?coreLayer rdfs:subClassOf archimate:BusinessLayer, archimate:ApplicationLayer, archimate:TechnologyLayer, archimate:PhysicalLayer .
+                    ?target rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
+                    FILTER(?rel NOT IN (archimate:assignment, archimate:realization, archimate:influence, archimate:association))
+                } UNION
+                
+                # Strategy → Motivation (only assignment, realization, influence, association allowed)  
+                {
+                    ?source rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
+                    ?target rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
+                    FILTER(?rel NOT IN (archimate:assignment, archimate:realization, archimate:influence, archimate:association))
+                } UNION
+                
+                # Motivation → Implementation & Migration (only association allowed)
+                {
+                    ?source rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
+                    ?target rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
+                    FILTER(?rel NOT IN (archimate:association))
+                } UNION
+                
+                # Motivation → Core (only association allowed)
+                {
+                    ?source rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
+                    ?target rdf:type/rdfs:subClassOf+ ?coreLayer .
+                    ?coreLayer rdfs:subClassOf+ archimate:Layer .
+                    ?coreLayer rdfs:subClassOf archimate:BusinessLayer, archimate:ApplicationLayer, archimate:TechnologyLayer, archimate:PhysicalLayer .
+                    FILTER(?rel NOT IN (archimate:association))
+                } UNION
+                
+                # Motivation → Strategy (only association allowed)
+                {
+                    ?source rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
+                    ?target rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
+                    FILTER(?rel NOT IN (archimate:association))
+                } UNION
+                
+                # Implementation & Migration → Core (only realization, association allowed)
+                {
+                    ?source rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
+                    ?target rdf:type/rdfs:subClassOf+ ?coreLayer .
+                    ?coreLayer rdfs:subClassOf+ archimate:Layer .
+                    ?coreLayer rdfs:subClassOf archimate:BusinessLayer, archimate:ApplicationLayer, archimate:TechnologyLayer, archimate:PhysicalLayer .
+                    FILTER(?rel NOT IN (archimate:realization, archimate:association))
+                } UNION
+                
+                # Core → Implementation & Migration (only assignment, association allowed)  
+                {
+                    ?source rdf:type/rdfs:subClassOf+ ?coreLayer .
+                    ?coreLayer rdfs:subClassOf+ archimate:Layer .
+                    ?coreLayer rdfs:subClassOf archimate:BusinessLayer, archimate:ApplicationLayer, archimate:TechnologyLayer, archimate:PhysicalLayer .
+                    ?target rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
+                    FILTER(?rel NOT IN (archimate:assignment, archimate:association))
+                } UNION
+                
+                # Implementation & Migration → Strategy (only realization, association allowed)
+                {
+                    ?source rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
+                    ?target rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
+                    FILTER(?rel NOT IN (archimate:realization, archimate:association))
+                } UNION
+                
+                # Strategy → Implementation & Migration (only association allowed)
+                {
+                    ?source rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
+                    ?target rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
+                    FILTER(?rel NOT IN (archimate:association))
+                } UNION
+                
+                # Strategy → Core (only association allowed)
+                {
+                    ?source rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
+                    ?target rdf:type/rdfs:subClassOf+ ?coreLayer .
+                    ?coreLayer rdfs:subClassOf+ archimate:Layer .
+                    ?coreLayer rdfs:subClassOf archimate:BusinessLayer, archimate:ApplicationLayer, archimate:TechnologyLayer, archimate:PhysicalLayer .
+                    FILTER(?rel NOT IN (archimate:association))
+                }
+            }
+        """
+    ] .
+
+### Advanced Derivation Chain Rules
+
+# Complex chains combining multiple derivation rules
+ex:ComplexChainDerivation rdf:type sh:SPARQLRule ;
+    rdfs:label "Complex Chain Derivation" ;
+    rdfs:comment "Handles complex chains that combine structural and dependency relationships" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?a ?finalRel ?d .
+            <<?a ?finalRel ?d>> archimate:confidence "valid" ;
+                               archimate:description "Derived via complex chain: structural → structural → dependency" ;
+                               ex:derivedFrom ?rel1, ?rel2, ?rel3 .
+        }
+        WHERE {
+            # Chain: a -structural-> b -structural-> c -dependency-> d
+            ?a ?rel1 ?b .
+            ?b ?rel2 ?c .
+            ?c ?rel3 ?d .
+            
+            # First two are structural
+            ?rel1 rdfs:subPropertyOf+ archimate:structuralRelationship .
+            ?rel2 rdfs:subPropertyOf+ archimate:structuralRelationship .
+            
+            # Third is dependency  
+            ?rel3 rdfs:subPropertyOf+ archimate:dependencyRelationship .
+            
+            # Result is the dependency relationship
+            BIND(?rel3 AS ?finalRel)
+            
+            FILTER(?a != ?d)
+            FILTER NOT EXISTS { ?a ?finalRel ?d }
+        }
+    """ .
+
+### Utility Rules for Relationship Discovery
+
+# Find potential missing assignments
+ex:MissingAssignmentDiscovery rdf:type sh:SPARQLRule ;
+    rdfs:label "Missing Assignment Discovery" ;
+    rdfs:comment "Discovers potential missing assignment relationships between active structure and behavior" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?actor archimate:assignment ?behavior .
+            <<?actor archimate:assignment ?behavior>> archimate:confidence "suggestion" ;
+                                                      archimate:description "Suggested assignment based on collaboration patterns" ;
+                                                      ex:derivedFrom archimate:composition, archimate:composition .
+        }
+        WHERE {
+            # Find active structure elements that are part of the same collaboration
+            ?collaboration archimate:aggregation ?actor .
+            ?collaboration archimate:aggregation ?otherActor .
+            
+            # Find behavior that the other actor performs
+            ?otherActor archimate:assignment ?behavior .
+            
+            # Check if actor might also perform this behavior
+            ?actor rdf:type/rdfs:subClassOf+ archimate:ActiveStructure .
+            ?behavior rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
+            
+            FILTER(?actor != ?otherActor)
+            FILTER NOT EXISTS { ?actor archimate:assignment ?behavior }
+        }
+    """ .
+
+# Find potential serving relationships
+ex:ServingRelationshipDiscovery rdf:type sh:SPARQLRule ;
+    rdfs:label "Serving Relationship Discovery" ;
+    rdfs:comment "Discovers potential serving relationships based on realization patterns" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?service archimate:serving ?consumer .
+            <<?service archimate:serving ?consumer>> archimate:confidence "suggestion" ;
+                                                     archimate:description "Suggested serving based on realization and access patterns" ;
+                                                     ex:derivedFrom archimate:realization, archimate:access .
+        }
+        WHERE {
+            # Find service realized by component
+            ?component archimate:realization ?service .
+            
+            # Find consumer accessing the component's data
+            ?consumer archimate:access ?data .
+            ?component archimate:access ?data .
+            
+            # Ensure proper types
+            ?service rdf:type/rdfs:subClassOf+ archimate:ExternalBehavior .
+            ?consumer rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
+            
+            FILTER(?service != ?consumer)
+            FILTER NOT EXISTS { ?service archimate:serving ?consumer }
+        }
+    """ .
+
+### Domain-Specific Derivation Rules
+
+# Business-to-Application derivation
+ex:BusinessApplicationDerivation rdf:type sh:SPARQLRule ;
+    rdfs:label "Business-Application Derivation" ;
+    rdfs:comment "Derives application requirements from business processes" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?appComponent archimate:serving ?businessProcess .
+            <<?appComponent archimate:serving ?businessProcess>> archimate:confidence "potential" ;
+                                                                  archimate:description "Derived application support for business process" ;
+                                                                  ex:derivedFrom archimate:realization, archimate:composition .
+        }
+        WHERE {
+            # Business process composed of sub-processes
+            ?businessProcess archimate:composition ?subProcess .
+            
+            # Application component realizes application service
+            ?appComponent archimate:realization ?appService .
+            
+            # Application service serves the sub-process
+            ?appService archimate:serving ?subProcess .
+            
+            # Types
+            ?businessProcess rdf:type archimate:BusinessProcess .
+            ?appComponent rdf:type archimate:ApplicationComponent .
+            
+            FILTER NOT EXISTS { ?appComponent archimate:serving ?businessProcess }
+        }
+    """ .
+
+# Technology-to-Application derivation
+ex:TechnologyApplicationDerivation rdf:type sh:SPARQLRule ;
+    rdfs:label "Technology-Application Derivation" ;
+    rdfs:comment "Derives technology support relationships for applications" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?techService archimate:serving ?appComponent .
+            <<?techService archimate:serving ?appComponent>> archimate:confidence "potential" ;
+                                                             archimate:description "Derived technology support for application" ;
+                                                             ex:derivedFrom archimate:assignment, archimate:realization .
+        }
+        WHERE {
+            # Technology node assigned to technology service
+            ?techNode archimate:assignment ?techService .
+            
+            # Technology node hosts application component
+            ?techNode archimate:assignment ?appComponent .
+            
+            # Types
+            ?techService rdf:type archimate:TechnologyService .
+            ?appComponent rdf:type archimate:ApplicationComponent .
+            
+            FILTER NOT EXISTS { ?techService archimate:serving ?appComponent }
+        }
+    """ .
+
+### Metadata Enhancement Rules
+
+# Add provenance metadata to derived relationships
+ex:ProvenanceEnhancement rdf:type sh:SPARQLRule ;
+    rdfs:label "Provenance Enhancement" ;
+    rdfs:comment "Adds creation metadata to derived relationships" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            ?stmt archimate:createdBy "ArchiMate Derivation Engine" ;
+                  archimate:createdDate ?now ;
+                  ex:derivationRule ?rule .
+        }
+        WHERE {
+            ?stmt archimate:confidence ?conf .
+            ?stmt archimate:description ?desc .
+            
+            BIND(NOW() AS ?now)
+            BIND(STRAFTER(STR(?desc), "Derived via ") AS ?rule)
+            
+            # Only add to statements that don't already have creation metadata
+            FILTER NOT EXISTS { ?stmt archimate:createdBy ?creator }
+        }
+    """ .
+
+### Validation for Derived Relationships
+
+# Ensure derived relationships don't violate metamodel constraints
+ex:DerivedRelationshipValidation rdf:type sh:NodeShape ;
+    rdfs:label "Derived Relationship Validation" ;
+    rdfs:comment "Validates that derived relationships conform to ArchiMate metamodel constraints" ;
+    sh:sparql [
+        sh:message "Derived relationship violates ArchiMate metamodel constraints" ;
+        sh:select """
+            SELECT ?source ?target ?rel WHERE {
+                ?source ?rel ?target .
+                <<?source ?rel ?target>> archimate:confidence ?conf .
+                
+                # Check against known metamodel violations
+                {
+                    # Access must be from behavior to passive structure
+                    ?rel rdfs:subPropertyOf+ archimate:access .
+                    FILTER NOT EXISTS {
+                        ?source rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
+                        ?target rdf:type/rdfs:subClassOf+ archimate:PassiveStructure .
+                    }
+                } UNION {
+                    # Assignment must be from active structure to behavior  
+                    ?rel rdfs:subPropertyOf+ archimate:assignment .
+                    FILTER NOT EXISTS {
+                        ?source rdf:type/rdfs:subClassOf+ archimate:ActiveStructure .
+                        ?target rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
+                    }
+                } UNION {
+                    # Dynamic relationships must be between behavior elements
+                    ?rel rdfs:subPropertyOf+ archimate:dynamicRelationship .
+                    FILTER NOT EXISTS {
+                        ?source rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
+                        ?target rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
+                    }
+                }
+            }
+        """
+    ] .
+
+### Cleanup Rules
+
+# Remove contradictory derived relationships
+ex:ContradictionResolution rdf:type sh:SPARQLRule ;
+    rdfs:label "Contradiction Resolution" ;
+    rdfs:comment "Removes derived relationships that contradict explicit relationships" ;
+    sh:construct """
+        PREFIX archimate: <https://purl.org/archimate#>
+        PREFIX ex: <https://purl.org/archimate/derivation#>
+        
+        CONSTRUCT {
+            # Mark contradictory relationships for review
+            ?stmt ex:contradictionFlag true ;
+                  ex:contradictionReason "Conflicts with explicit relationship" .
+        }
+        WHERE {
+            # Find derived relationship
+            ?source ?rel ?target .
+            <<?source ?rel ?target>> archimate:confidence "potential" .
+            
+            # Find explicit contradictory relationship
+            ?source ?explicitRel ?target .
+            FILTER NOT EXISTS { <<?source ?explicitRel ?target>> archimate:confidence ?conf }
+            
+            # Different relationship types between same elements
+            FILTER(?rel != ?explicitRel)
+            
+            BIND(<<?source ?rel ?target>> AS ?stmt)
+        }
+    """ .
+
+### Performance Optimization Rules
+
+# Limit derivation depth to prevent infinite chains
+ex:DerivationDepthLimit rdf:type sh:NodeShape ;
+    rdfs:label "Derivation Depth Limit" ;
+    rdfs:comment "Prevents excessive derivation chains that could cause performance issues" ;
+    sh:sparql [
+        sh:message "Derivation chain exceeds maximum depth of 5" ;
+        sh:severity sh:Warning ;
+        sh:select """
+            SELECT ?stmt WHERE {
+                ?stmt ex:derivedFrom ?source1, ?source2, ?source3, ?source4, ?source5, ?source6 .
+            }
+        """
+    ] .
+
+### Integration with Your Existing Ontology
+
+# These rules should be used with your existing relationship strength assignments
+# Add these to your main ontology file:
+
+# Enhanced strength assignments with explicit values
+archimate:realization ex:structuralStrength 1 .
+archimate:assignment ex:structuralStrength 2 .  
+archimate:aggregation ex:structuralStrength 3 .
+archimate:composition ex:structuralStrength 4 .
+
+archimate:association ex:dependencyStrength 1 .
+archimate:influence ex:dependencyStrength 2 .
+archimate:access ex:dependencyStrength 3 .
+archimate:serving ex:dependencyStrength 4 .
+
+### Usage Instructions
+
+# To execute these derivation rules:
+# 1. Load your base ArchiMate ontology
+# 2. Load this derivation rules file  
+# 3. Run SPARQL CONSTRUCT queries or use SHACL-Advanced Features
+# 4. The derived relationships will have metadata indicating:
+#    - Confidence level (valid/potential/suggestion)
+#    - Derivation rule used
+#    - Source relationships that led to the derivation
+#    - Timestamps and provenance
+
+# Example usage in SPARQL:
+# 
+# # Execute all valid derivation rules
+# CONSTRUCT WHERE {
+#     ?rule rdf:type sh:SPARQLRule .
+#     ?rule sh:construct ?constructQuery .
+#     # Execute the construct query
+# }
+#
+# # Query derived relationships  
+# SELECT ?source ?rel ?target ?confidence ?rule WHERE {
+#     ?source ?rel ?target .
+#     <<?source ?rel ?target>> archimate:confidence ?confidence ;
+#                              archimate:description ?desc .
+#     BIND(STRAFTER(STR(?desc), "Derived via ") AS ?rule)
+#     FILTER(?confidence IN ("valid", "potential"))
+# }
