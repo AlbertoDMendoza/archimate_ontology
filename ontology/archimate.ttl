@@ -136,20 +136,17 @@
 
 
 # Aspects
-<#Aspect> rdf:type owl:Class ;
-    rdfs:label "Aspect" ;
-    rdfs:comment "different perspectives or views of the enterprise architecture that help in structuring and focusing on specific concerns." ;
-    rdfs:subClassOf <#Concept> .
+# Note: <#Aspect> is already defined above in section 1.0
 
-<#BehaviorAspect> rdf:type owl:Class ;
-    rdfs:label "Structure Element" ;
-    rdfs:comment "" ;
+<#StructureAspect> rdf:type owl:Class ;
+    rdfs:label "Structure Aspect" ;
+    rdfs:comment "Represents the structural elements of the enterprise architecture, including active and passive structure elements." ;
     rdfs:subClassOf <#Aspect> .
 
 <#ActiveStructure> rdf:type owl:Class ;
     rdfs:label "Active Structure" ;
     rdfs:comment "A category of elements that perform behavior and collaborate to provide services." ;
-    rdfs:subClassOf <#BehaviorAspect> .
+    rdfs:subClassOf <#StructureAspect> .
 	
 <#ExternalActiveStructure> rdf:type owl:Class ;
     rdfs:label "External Active Structure" ;
@@ -164,7 +161,7 @@
 <#PassiveStructure> rdf:type owl:Class ;
     rdfs:label "Passive Structure" ;
     rdfs:comment "Represents structural elements that are used or produced by behavior elements." ;
-    rdfs:subClassOf <#BehaviorAspect> .
+    rdfs:subClassOf <#StructureAspect> .
 
 <#BehaviorAspect> rdf:type owl:Class ;
     rdfs:label "Behavior" ;
@@ -411,7 +408,7 @@
     rdfs:subClassOf <#Element> .
 
 <#BusinessContract> rdf:type owl:Class ;
-    rdfs:label "Business Constract" ;
+    rdfs:label "Business Contract" ;
     rdfs:comment "Represents a formal or informal specification of an agreement between a provider and a consumer that specifies the rights and obligations associated with a product and establishes functional and non-functional parameters for interaction." ;
     rdfs:subClassOf <#PassiveStructure> ;
     rdfs:subClassOf <#BusinessLayer> ;
@@ -450,7 +447,7 @@
     rdfs:subClassOf <#Element> .
 
 <#ApplicationInterface> rdf:type owl:Class ;
-    rdfs:label "Application Interface`" ;
+    rdfs:label "Application Interface" ;
     rdfs:comment "Represents a point of access where application services are made available to a user, another application component, or a node." ;
     rdfs:subClassOf <#ActiveStructure> ;
     rdfs:subClassOf <#ApplicationLayer> ;
@@ -473,7 +470,7 @@
 	
 <#ApplicationProcess> rdf:type owl:Class ;
     rdfs:label "Application Process" ;
-    rdfs:comment " Addresses a set of related concerns and is tailored for specific stakeholders.  A View is specified by means of a Viewpoint, which prescribes the concepts, models, analysis techniques, and visualizations that are provided by the View.  The same elements from the Model Tree can be re-used multiple times in the same or different View." ;
+    rdfs:comment "A sequence of application behaviors that achieves a specific result." ;
     rdfs:subClassOf <#InternalBehavior> ;
     rdfs:subClassOf <#ApplicationLayer> ;
     rdfs:subClassOf <#Element> .
@@ -534,7 +531,7 @@
 	
 <#TechnologyInterface> rdf:type owl:Class ;
     rdfs:label "Technology Interface" ;
-    rdfs:comment "A technology collaboration represents an aggregate of two or more technology internal active structure elements that work together to perform collective technology behavior." ;
+    rdfs:comment "A point of access where technology services offered by a node can be accessed." ;
     rdfs:subClassOf <#ActiveStructure> ;
     rdfs:subClassOf <#TechnologyLayer> ;
     rdfs:subClassOf <#Element> .	
