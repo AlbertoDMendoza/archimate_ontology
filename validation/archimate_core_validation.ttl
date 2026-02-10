@@ -21,7 +21,7 @@ ex:RealizedElementShape rdf:type sh:NodeShape ;
     sh:targetClass archimate:Element ;
     rdfs:label "Realized Element Requirements" ;
     sh:property [
-        sh:path archimate:identifier ;
+        sh:path archimate:Identifier ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:datatype xsd:string ;
@@ -29,7 +29,7 @@ ex:RealizedElementShape rdf:type sh:NodeShape ;
         sh:message "All realized elements must have exactly one valid identifier (must start with letter or underscore, then alphanumeric, underscore, hyphen)"
     ] ;
     sh:property [
-        sh:path archimate:name ;
+        sh:path archimate:Name ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:datatype xsd:string ;
@@ -37,7 +37,7 @@ ex:RealizedElementShape rdf:type sh:NodeShape ;
         sh:message "All realized elements must have exactly one non-empty name"
     ] ;
     sh:property [
-        sh:path archimate:documentation ;
+        sh:path archimate:Documentation ;
         sh:minCount 1 ;
         sh:datatype xsd:string ;
         sh:minLength 1 ;
@@ -55,7 +55,7 @@ ex:RealizedRelationshipShape rdf:type sh:NodeShape ;
     sh:targetClass archimate:Relationship ;
     rdfs:label "Realized Relationship Requirements" ;
     sh:property [
-        sh:path archimate:identifier ;
+        sh:path archimate:Identifier ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:datatype xsd:string ;
@@ -63,7 +63,7 @@ ex:RealizedRelationshipShape rdf:type sh:NodeShape ;
         sh:message "All realized relationships must have exactly one valid identifier (must start with letter or underscore, then alphanumeric, underscore, hyphen)"
     ] ;
     sh:property [
-        sh:path archimate:name ;
+        sh:path archimate:Name ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:datatype xsd:string ;
@@ -71,7 +71,7 @@ ex:RealizedRelationshipShape rdf:type sh:NodeShape ;
         sh:message "All realized relationships must have exactly one non-empty name"
     ] ;
     sh:property [
-        sh:path archimate:documentation ;
+        sh:path archimate:Documentation ;
         sh:minCount 1 ;
         sh:datatype xsd:string ;
         sh:minLength 1 ;
@@ -112,8 +112,8 @@ ex:UniqueIdentifierShape rdf:type sh:NodeShape ;
         sh:message "Element identifiers must be unique across the model" ;
         sh:select """
             SELECT $this ?other WHERE {
-                $this archimate:identifier ?id .
-                ?other archimate:identifier ?id .
+                $this archimate:Identifier ?id .
+                ?other archimate:Identifier ?id .
                 FILTER($this != ?other)
             }
         """

@@ -39,7 +39,7 @@ ex:BusinessProcessOutcome rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessProcess ;
     rdfs:label "Business Process Outcome" ;
     sh:property [
-        sh:path archimate:documentation ;
+        sh:path archimate:Documentation ;
         sh:minCount 1 ;
         sh:minLength 10 ;
         sh:message "Business processes must have documentation describing their outcomes"
@@ -69,78 +69,6 @@ ex:BusinessServiceRealization rdf:type sh:NodeShape ;
                 FILTER NOT EXISTS {
                     { ?process archimate:realization $this . ?process rdf:type archimate:BusinessProcess } UNION
                     { ?function archimate:realization $this . ?function rdf:type archimate:BusinessFunction }
-                }
-            }
-        """
-    ] .
-
-### 2. Strategy Layer Requirements
-
-# Capabilities should be linked to business elements
-ex:CapabilityLinkage rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Capability ;
-    rdfs:label "Capability Business Linkage" ;
-    sh:sparql [
-        sh:message "Capabilities should be realized by business processes, functions, or services" ;
-        sh:severity sh:Info ;
-        sh:select """
-            SELECT $this WHERE {
-                FILTER NOT EXISTS {
-                    { ?element archimate:realization $this . 
-                      ?element rdf:type ?type .
-                      ?type rdfs:subClassOf archimate:BusinessLayer }
-                }
-            }
-        """
-    ] .
-
-# Value Streams should connect to business processes
-ex:ValueStreamConnection rdf:type sh:NodeShape ;
-    sh:targetClass archimate:ValueStream ;
-    rdfs:label "Value Stream Process Connection" ;
-    sh:sparql [
-        sh:message "Value streams should aggregate or be realized by business processes or capabilities" ;
-        sh:select """
-            SELECT $this WHERE {
-                FILTER NOT EXISTS {
-                    { $this archimate:aggregation ?process . ?process rdf:type archimate:BusinessProcess } UNION
-                    { ?process archimate:realization $this . ?process rdf:type archimate:BusinessProcess }
-                }
-            }
-        """
-    ] .
-
-### 3. Motivation Element Requirements
-
-# Goals should have measurable outcomes
-ex:GoalMeasurability rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Goal ;
-    rdfs:label "Goal Measurability" ;
-    sh:sparql [
-        sh:message "Goals should be associated with measurable outcomes" ;
-        sh:severity sh:Warning ;
-        sh:select """
-            SELECT $this WHERE {
-                FILTER NOT EXISTS {
-                    $this archimate:realization ?outcome .
-                    ?outcome rdf:type archimate:Outcome
-                }
-            }
-        """
-    ] .
-
-# Requirements should trace to architectural elements
-ex:RequirementTraceability rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Requirement ;
-    rdfs:label "Requirement Traceability" ;
-    sh:sparql [
-        sh:message "Requirements should influence at least one architectural element" ;
-        sh:severity sh:Info ;
-        sh:select """
-            SELECT $this WHERE {
-                FILTER NOT EXISTS {
-                    $this archimate:influence ?element .
-                    ?element rdf:type ?type .
                 }
             }
         """
@@ -228,7 +156,7 @@ ex:BusinessNamingConvention rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessActor ;
     rdfs:label "Business Actor Naming Convention" ;
     sh:property [
-        sh:path archimate:name ;
+        sh:path archimate:Name ;
         sh:pattern "^[A-Z][a-zA-Z\\s]+$" ;
         sh:message "Business actor names should start with capital letter and contain only letters and spaces"
     ] .
@@ -237,7 +165,7 @@ ex:BusinessProcessNaming rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessProcess ;
     rdfs:label "Business Process Naming Convention" ;
     sh:property [
-        sh:path archimate:name ;
+        sh:path archimate:Name ;
         sh:pattern "^(Manage|Create|Update|Delete|Process|Handle|Execute|Perform)\\s.+" ;
         sh:message "Business process names should start with action verbs (Manage, Create, Update, Delete, Process, Handle, Execute, Perform)"
     ] .
@@ -246,7 +174,7 @@ ex:BusinessServiceNaming rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessService ;
     rdfs:label "Business Service Naming Convention" ;
     sh:property [
-        sh:path archimate:name ;
+        sh:path archimate:Name ;
         sh:pattern ".+\\sService$" ;
         sh:message "Business service names should end with 'Service'"
     ] .
