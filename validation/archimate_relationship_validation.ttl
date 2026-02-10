@@ -55,7 +55,7 @@
 ### 1. UNIVERSAL RELATIONSHIP REQUIREMENTS
 
 ## All realized relationships must have required metadata
-<#>RealizedRelationshipRequirements rdf:type sh:NodeShape ;
+<#RealizedRelationshipRequirements> rdf:type sh:NodeShape ;
     rdfs:label "Realized Relationship Requirements" ;
     rdfs:comment "All relationship instances must have identifier, name, documentation, and specialization" ;
     sh:sparql [
@@ -79,7 +79,7 @@
     ] .
 
 ## Relationship identifiers must be unique
-<#>UniqueRelationshipIdentifier rdf:type sh:NodeShape ;
+<#UniqueRelationshipIdentifier> rdf:type sh:NodeShape ;
     rdfs:label "Unique Relationship Identifier" ;
     sh:sparql [
         sh:message "Relationship identifiers must be unique across the model" ;
@@ -108,7 +108,7 @@
 ## 2.1 Composition Relationships
 
 # No self-composition
-<#>NoSelfComposition rdf:type sh:NodeShape ;
+<#NoSelfComposition> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Element ;
     rdfs:label "No Self-Composition" ;
     sh:sparql [
@@ -122,7 +122,7 @@
     ] .
 
 # No circular composition
-<#>NoCircularComposition rdf:type sh:NodeShape ;
+<#NoCircularComposition> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Element ;
     rdfs:label "No Circular Composition" ;
     sh:sparql [
@@ -136,7 +136,7 @@
     ] .
 
 # Composition part uniqueness: a part can only belong to one whole
-<#>CompositionPartUniqueness rdf:type sh:NodeShape ;
+<#CompositionPartUniqueness> rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:composition ;
     rdfs:label "Composition Part Uniqueness" ;
     sh:sparql [
@@ -159,7 +159,7 @@
 ## 2.2 Aggregation Relationships
 
 # No self-aggregation
-<#>NoSelfAggregation rdf:type sh:NodeShape ;
+<#NoSelfAggregation> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Element ;
     rdfs:label "No Self-Aggregation" ;
     sh:sparql [
@@ -173,7 +173,7 @@
     ] .
 
 # No circular aggregation
-<#>NoCircularAggregation rdf:type sh:NodeShape ;
+<#NoCircularAggregation> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Element ;
     rdfs:label "No Circular Aggregation" ;
     sh:sparql [
@@ -190,7 +190,7 @@
 ## 2.3 Assignment Relationships
 
 # Assignment must be from active structure to behavior
-<#>AssignmentDomainConstraint rdf:type sh:NodeShape ;
+<#AssignmentDomainConstraint> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:assignment ;
     rdfs:label "Assignment Source: Active Structure" ;
     sh:sparql [
@@ -206,7 +206,7 @@
         """
     ] .
 
-<#>AssignmentRangeConstraint rdf:type sh:NodeShape ;
+<#AssignmentRangeConstraint> rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:assignment ;
     rdfs:label "Assignment Target: Behavior" ;
     sh:sparql [
@@ -226,7 +226,7 @@
 ## 2.4 Realization Relationships
 
 # Realization direction: concrete realizes abstract, lower layer realizes higher layer
-<#>RealizationDirection rdf:type sh:NodeShape ;
+<#RealizationDirection> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:realization ;
     rdfs:label "Realization Direction" ;
     rdfs:comment "Realization should flow from more concrete to more abstract, typically from lower to higher layers" ;
@@ -239,7 +239,7 @@
 ## 3.1 Serving Relationships
 
 # Serving direction: lower layers serve higher layers
-<#>ServingLayerDirection rdf:type sh:NodeShape ;
+<#ServingLayerDirection> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:serving ;
     rdfs:label "Serving Layer Direction" ;
     sh:sparql [
@@ -278,7 +278,7 @@
 ## 3.2 Access Relationships
 
 # Access must be from behavior to passive structure
-<#>AccessDomainConstraint rdf:type sh:NodeShape ;
+<#AccessDomainConstraint> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:access ;
     rdfs:label "Access Source: Behavior" ;
     sh:sparql [
@@ -294,7 +294,7 @@
         """
     ] .
 
-<#>AccessRangeConstraint rdf:type sh:NodeShape ;
+<#AccessRangeConstraint> rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:access ;
     rdfs:label "Access Target: Passive Structure" ;
     sh:sparql [
@@ -311,7 +311,7 @@
     ] .
 
 # Access type validation (RDF-Star metadata)
-<#>AccessTypeValidation rdf:type sh:NodeShape ;
+<#AccessTypeValidation> rdf:type sh:NodeShape ;
     rdfs:label "Access Type Validation" ;
     sh:sparql [
         sh:message "Access relationships with accessType metadata must have valid values: read, write, readwrite, or unspecified" ;
@@ -330,7 +330,7 @@
 ## 3.3 Influence Relationships
 
 # Influence sign validation (RDF-Star metadata)
-<#>InfluenceSignValidation rdf:type sh:NodeShape ;
+<#InfluenceSignValidation> rdf:type sh:NodeShape ;
     rdfs:label "Influence Sign Validation" ;
     sh:sparql [
         sh:message "Influence relationships with influenceSign metadata must have valid values: positive, negative, or unspecified" ;
@@ -346,7 +346,7 @@
     ] .
 
 # Influence strength validation (RDF-Star metadata)
-<#>InfluenceStrengthValidation rdf:type sh:NodeShape ;
+<#InfluenceStrengthValidation> rdf:type sh:NodeShape ;
     rdfs:label "Influence Strength Validation" ;
     sh:sparql [
         sh:message "Influence relationships with influenceStrength metadata must have valid values: weak, moderate, strong, or unspecified" ;
@@ -373,7 +373,7 @@
 ## 4.1 Triggering Relationships
 
 # Triggering must be between behavior elements
-<#>TriggeringDomainConstraint rdf:type sh:NodeShape ;
+<#TriggeringDomainConstraint> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:triggering ;
     rdfs:label "Triggering Source: Behavior" ;
     sh:sparql [
@@ -389,7 +389,7 @@
         """
     ] .
 
-<#>TriggeringRangeConstraint rdf:type sh:NodeShape ;
+<#TriggeringRangeConstraint> rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:triggering ;
     rdfs:label "Triggering Target: Behavior" ;
     sh:sparql [
@@ -409,7 +409,7 @@
 ## 4.2 Flow Relationships
 
 # Flow must be between behavior elements
-<#>FlowDomainConstraint rdf:type sh:NodeShape ;
+<#FlowDomainConstraint> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:flow ;
     rdfs:label "Flow Source: Behavior" ;
     sh:sparql [
@@ -425,7 +425,7 @@
         """
     ] .
 
-<#>FlowRangeConstraint rdf:type sh:NodeShape ;
+<#FlowRangeConstraint> rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:flow ;
     rdfs:label "Flow Target: Behavior" ;
     sh:sparql [
@@ -442,7 +442,7 @@
     ] .
 
 # Flow type validation (RDF-Star metadata)
-<#>FlowTypeValidation rdf:type sh:NodeShape ;
+<#FlowTypeValidation> rdf:type sh:NodeShape ;
     rdfs:label "Flow Type Validation" ;
     sh:sparql [
         sh:message "Flow relationships with flowType metadata must have valid values: information, material, energy, or unspecified" ;
@@ -461,7 +461,7 @@
 ### 5. RDF-STAR RELATIONSHIP METADATA VALIDATION
 
 ## Relationship metadata must follow proper patterns
-<#>RelationshipMetadataPattern rdf:type sh:NodeShape ;
+<#RelationshipMetadataPattern> rdf:type sh:NodeShape ;
     rdfs:label "Relationship Metadata Pattern" ;
     sh:sparql [
         sh:message "Relationship metadata must be attached to quoted triples using RDF-Star syntax" ;
@@ -482,7 +482,7 @@
     ] .
 
 ## Validate relationship identifier format
-<#>RelationshipIdentifierFormat rdf:type sh:NodeShape ;
+<#RelationshipIdentifierFormat> rdf:type sh:NodeShape ;
     rdfs:label "Relationship Identifier Format" ;
     sh:sparql [
         sh:message "Relationship identifiers must start with letter or underscore, followed by alphanumeric, underscore, or hyphen" ;
@@ -501,7 +501,7 @@
 ### 6. CROSS-LAYER RELATIONSHIP CONSTRAINTS
 
 ## Strategy-to-Core relationships
-<#>StrategyToCoreRelationships rdf:type sh:NodeShape ;
+<#StrategyToCoreRelationships> rdf:type sh:NodeShape ;
     rdfs:label "Strategy to Core Layer Relationships" ;
     sh:sparql [
         sh:message "Only association relationships allowed from Strategy to Core layers" ;
@@ -537,7 +537,7 @@
     ] .
 
 ## Core-to-Strategy relationships
-<#>CoreToStrategyRelationships rdf:type sh:NodeShape ;
+<#CoreToStrategyRelationships> rdf:type sh:NodeShape ;
     rdfs:label "Core to Strategy Layer Relationships" ;
     sh:sparql [
         sh:message "Only association relationships allowed from Core to Strategy layer" ;
@@ -592,7 +592,7 @@
 ### 8. JUNCTION VALIDATION
 
 ## Junction type validation
-<#>JunctionTypeValidation rdf:type sh:NodeShape ;
+<#JunctionTypeValidation> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Junction ;
     rdfs:label "Junction Type Validation" ;
     sh:property [
@@ -602,7 +602,7 @@
     ] .
 
 ## Junctions must connect relationships of the same type
-<#>JunctionRelationshipHomogeneity rdf:type sh:NodeShape ;
+<#JunctionRelationshipHomogeneity> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Junction ;
     rdfs:label "Junction Relationship Homogeneity" ;
     sh:sparql [
@@ -628,7 +628,7 @@
 ### 9. RELATIONSHIP QUALITY CHECKS
 
 ## Check for redundant relationships
-<#>RedundantRelationshipCheck rdf:type sh:NodeShape ;
+<#RedundantRelationshipCheck> rdf:type sh:NodeShape ;
     rdfs:label "Redundant Relationship Check" ;
     sh:severity sh:Info ;
     sh:sparql [
@@ -653,7 +653,7 @@
     ] .
 
 ## Check for potentially missing relationship metadata
-<#>MissingRelationshipMetadataWarning rdf:type sh:NodeShape ;
+<#MissingRelationshipMetadataWarning> rdf:type sh:NodeShape ;
     rdfs:label "Missing Relationship Metadata Warning" ;
     sh:severity sh:Warning ;
     sh:sparql [

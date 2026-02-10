@@ -29,7 +29,7 @@
     skos:editorialNote "Concepts in this vocabulary are maintained in parallel with the OWL ontology. Changes to concept definitions, scope, or structure should be coordinated between both representations."@en .
 
 ### Change Notes for Version Control
-<#> skos:changeNote "2026-02-10: Fixed namespace references (archimate → arch-owl), added missing 11 elements (Junction, TechnologyCollaboration, TechnologyInterface, TechnologyInteraction, TechnologyEvent, CommunicationNetwork, Path, Location, AndJunction, OrJunction, Grouping), corrected all class names to match OWL ontology exactly."@en ;
+<#> skos:changeNote "2026-02-10: Fixed namespace references (archimate → arch-owl), added missing 11 elements (Junction, TechnologyCollaboration, TechnologyInterface, TechnologyInteraction, TechnologyEvent, CommunicationNetwork, Path, Location, AndJunction, OrJunction, Grouping), corrected all class names to match OWL ontology exactly."@en .
 <#> skos:changeNote "2025-07-04: Split from combined OWL/SKOS file into dedicated SKOS vocabulary. Added multilingual labels, collections, and cross-references to OWL ontology."@en .
 
 ### Top-Level Concepts
