@@ -3,7 +3,6 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix arch-owl: <https://purl.org/archimate/owl#> .
 @base <https://purl.org/archimate/skos#> .
 
 ### Vocabulary Declaration
@@ -19,17 +18,19 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14" ;
-    dct:modified "2025-07-04" ;
+    dct:modified "2026-02-10" ;
     dct:subject "Enterprise Architecture, ArchiMate, Modeling Language" ;
-    dct:conformsTo <https://www.opengroup.org/archimate-forum/archimate-overview> ;
+    dct:conformsTo <https://pubs.opengroup.org/architecture/archimate3-doc/> ;
     skos:hasTopConcept <#ArchiMate> .
 
 ### Editorial Notes for Ontology Maintenance
-<#> skos:editorialNote "This SKOS vocabulary is automatically synchronized with the OWL ontology at https://purl.org/archimate/owl. Changes should be coordinated between both representations."@en .
+<#> skos:editorialNote "This SKOS vocabulary provides terminological and classification support for ArchiMate 3.2 concepts. It is designed for use in content management systems, taxonomies, and semantic indexing. While SKOS concept URIs use the /skos# namespace, they represent the same conceptual entities as the OWL ontology classes at https://purl.org/archimate#."@en ;
+    skos:editorialNote "For formal ontological semantics (classes, properties, restrictions), refer to the OWL ontology at https://purl.org/archimate/owl. For controlled vocabulary, multilingual labels, and concept hierarchies, use this SKOS vocabulary."@en ;
+    skos:editorialNote "Concepts in this vocabulary are maintained in parallel with the OWL ontology. Changes to concept definitions, scope, or structure should be coordinated between both representations."@en .
 
 ### Change Notes for Version Control
+<#> skos:changeNote "2026-02-10: Fixed namespace references (archimate → arch-owl), added missing 11 elements (Junction, TechnologyCollaboration, TechnologyInterface, TechnologyInteraction, TechnologyEvent, CommunicationNetwork, Path, Location, AndJunction, OrJunction, Grouping), corrected all class names to match OWL ontology exactly."@en ;
 <#> skos:changeNote "2025-07-04: Split from combined OWL/SKOS file into dedicated SKOS vocabulary. Added multilingual labels, collections, and cross-references to OWL ontology."@en .
-<#ArchiMate> skos:changeNote "2025-07-04: Added exactMatch to OWL representation for semantic alignment."@en .
 
 ### Top-Level Concepts
 
@@ -39,8 +40,7 @@
     skos:definition "A visual language for enterprise architecture with a set of default iconography for describing, analyzing, and communicating many concerns of Enterprise Architectures as they change over time."@en ;
     skos:scopeNote "ArchiMate is an open and independent enterprise architecture modeling language maintained by The Open Group."@en ;
     skos:inScheme <#> ;
-    skos:topConceptOf <#> ;
-    skos:exactMatch arch-owl:ArchiMate .
+    skos:topConceptOf <#> .
 
 ### Framework Structure Concepts
 
@@ -69,52 +69,38 @@
     skos:prefLabel "Strategy Layer"@en ;
     skos:definition "Represents elements that define an organization's strategic direction and choices."@en ;
     skos:broader <#Layer> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:StrategyLayer .
+    skos:inScheme <#> .
 
 <#BusinessLayer> rdf:type skos:Concept ;
     skos:prefLabel "Business Layer"@en ;
     skos:definition "Represents elements and relationships that describe the organization's business functions and processes."@en ;
     skos:broader <#Layer> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:BusinessLayer .
+    skos:inScheme <#> .
 
 <#ApplicationLayer> rdf:type skos:Concept ;
     skos:prefLabel "Application Layer"@en ;
     skos:definition "Represents the software applications and their components that support business processes and provide services to users and other applications."@en ;
     skos:broader <#Layer> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:ApplicationLayer .
+    skos:inScheme <#> .
 
 <#TechnologyLayer> rdf:type skos:Concept ;
     skos:prefLabel "Technology Layer"@en ;
     skos:definition "Represents the physical and software infrastructure that supports the Application Layer and, ultimately, the Business Layer."@en ;
     skos:broader <#Layer> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:TechnologyLayer .
+    skos:inScheme <#> .
 
 <#PhysicalLayer> rdf:type skos:Concept ;
     skos:prefLabel "Physical Layer"@en ;
     skos:definition "Represents physical equipment, materials, and distribution networks used to carry out business activities."@en ;
     skos:broader <#Layer> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:PhysicalLayer .
+    skos:inScheme <#> .
 
 <#ImplementationAndMigrationLayer> rdf:type skos:Concept ;
     skos:prefLabel "Implementation and Migration Layer"@en ;
     skos:altLabel "Implementation Layer"@en, "Migration Layer"@en ;
     skos:definition "Represents elements related to projects, programs, and transition architectures."@en ;
     skos:broader <#Layer> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:ImplementationAndMigrationLayer .
-
-<#MotivationAspect> rdf:type skos:Concept ;
-    skos:prefLabel "Motivation"@en ;
-    skos:altLabel "Motivation Aspect"@en ;
-    skos:definition "A cross-cutting aspect that represents drivers, goals, requirements, and principles in an enterprise architecture."@en ;
-    skos:broader <#Aspect> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Motivation .
+    skos:inScheme <#> .
 
 ### Aspect Concepts
 
@@ -123,24 +109,28 @@
     skos:altLabel "Active Structure Aspect"@en ;
     skos:definition "A category of elements that perform behavior and collaborate to provide services."@en ;
     skos:broader <#Aspect> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:ActiveStructure .
+    skos:inScheme <#> .
 
-<#Behavior> rdf:type skos:Concept ;
+<#BehaviorAspect> rdf:type skos:Concept ;
     skos:prefLabel "Behavior"@en ;
     skos:altLabel "Behavior Aspect"@en ;
     skos:definition "Represents elements that define the behavior performed by active structure elements."@en ;
     skos:broader <#Aspect> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Behavior .
+    skos:inScheme <#> .
 
 <#PassiveStructure> rdf:type skos:Concept ;
     skos:prefLabel "Passive Structure"@en ;
     skos:altLabel "Passive Structure Aspect"@en ;
     skos:definition "Represents structural elements that are used or produced by behavior elements."@en ;
     skos:broader <#Aspect> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:PassiveStructure .
+    skos:inScheme <#> .
+
+<#MotivationAspect> rdf:type skos:Concept ;
+    skos:prefLabel "Motivation"@en ;
+    skos:altLabel "Motivation Aspect"@en ;
+    skos:definition "A cross-cutting aspect that represents drivers, goals, requirements, and principles in an enterprise architecture."@en ;
+    skos:broader <#Aspect> ;
+    skos:inScheme <#> .
 
 ### Motivation Elements
 
@@ -148,71 +138,61 @@
     skos:prefLabel "Stakeholder"@en ;
     skos:definition "An individual or group with an interest in the architecture."@en ;
     skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Stakeholder .
+    skos:inScheme <#> .
 
 <#Driver> rdf:type skos:Concept ;
     skos:prefLabel "Driver"@en ;
     skos:definition "An external or internal factor that influences architecture decisions."@en ;
     skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Driver .
+    skos:inScheme <#> .
 
 <#Assessment> rdf:type skos:Concept ;
     skos:prefLabel "Assessment"@en ;
     skos:definition "An evaluation of an architecture driver, such as a SWOT analysis."@en ;
     skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Assessment .
+    skos:inScheme <#> .
 
 <#Goal> rdf:type skos:Concept ;
     skos:prefLabel "Goal"@en ;
     skos:definition "A high-level outcome that an enterprise aims to achieve."@en ;
     skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Goal .
+    skos:inScheme <#> .
 
 <#Outcome> rdf:type skos:Concept ;
     skos:prefLabel "Outcome"@en ;
     skos:definition "A measurable result that contributes to achieving a goal."@en ;
     skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Outcome .
+    skos:inScheme <#> .
 
 <#Principle> rdf:type skos:Concept ;
     skos:prefLabel "Principle"@en ;
     skos:definition "A fundamental guideline for architecture decision-making."@en ;
     skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Principle .
+    skos:inScheme <#> .
 
 <#Requirement> rdf:type skos:Concept ;
     skos:prefLabel "Requirement"@en ;
     skos:definition "A specific need that must be met by the architecture."@en ;
     skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Requirement .
+    skos:inScheme <#> .
 
 <#Constraint> rdf:type skos:Concept ;
     skos:prefLabel "Constraint"@en ;
     skos:definition "A limitation or restriction affecting architecture decisions."@en ;
     skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Constraint .
+    skos:inScheme <#> .
 
 <#Value> rdf:type skos:Concept ;
     skos:prefLabel "Value"@en ;
     skos:definition "The importance or worth of a concept in the enterprise."@en ;
     skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Value .
+    skos:inScheme <#> .
 
 <#Meaning> rdf:type skos:Concept ;
     skos:prefLabel "Meaning"@en ;
     skos:definition "The definition or interpretation of a concept in a specific context."@en ;
     skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Meaning .
+    skos:inScheme <#> .
 
 ### Strategy Layer Elements
 
@@ -226,29 +206,25 @@
     skos:prefLabel "Resource"@en ;
     skos:definition "An asset owned or controlled by an individual or organization."@en ;
     skos:broader <#StrategyElements> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:ResourceElement .
+    skos:inScheme <#> .
 
 <#Capability> rdf:type skos:Concept ;
     skos:prefLabel "Capability"@en ;
     skos:definition "An ability that an active structure element possesses."@en ;
     skos:broader <#StrategyElements> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Capability .
+    skos:inScheme <#> .
 
 <#CourseOfAction> rdf:type skos:Concept ;
     skos:prefLabel "Course of Action"@en ;
     skos:definition "An approach or plan for configuring some capabilities and resources of the enterprise."@en ;
     skos:broader <#StrategyElements> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:CourseOfAction .
+    skos:inScheme <#> .
 
 <#ValueStream> rdf:type skos:Concept ;
     skos:prefLabel "Value Stream"@en ;
     skos:definition "A sequence of activities that create an overall result for a customer, stakeholder, or end user."@en ;
     skos:broader <#StrategyElements> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:ValueStream .
+    skos:inScheme <#> .
 
 ### Business Layer Elements
 
@@ -270,72 +246,66 @@
     skos:prefLabel "Business Actor"@en ;
     skos:definition "An organizational entity that is capable of performing behavior."@en ;
     skos:broader <#BusinessActiveStructure> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:BusinessActor .
+    skos:inScheme <#> .
 
 <#BusinessRole> rdf:type skos:Concept ;
     skos:prefLabel "Business Role"@en ;
     skos:definition "The responsibility for performing specific behavior, to which an actor can be assigned."@en ;
     skos:broader <#BusinessActiveStructure> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:BusinessRole .
+    skos:inScheme <#> .
 
 <#BusinessCollaboration> rdf:type skos:Concept ;
     skos:prefLabel "Business Collaboration"@en ;
     skos:definition "An aggregate of two or more business roles that work together to perform collective behavior."@en ;
     skos:broader <#BusinessActiveStructure> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:BusinessCollaboration .
+    skos:inScheme <#> .
 
 <#BusinessInterface> rdf:type skos:Concept ;
     skos:prefLabel "Business Interface"@en ;
     skos:definition "A point of access where a business service is made available to the environment."@en ;
     skos:broader <#BusinessActiveStructure> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:BusinessInterface .
+    skos:inScheme <#> .
 
 ## Business Behavior
 <#BusinessBehavior> rdf:type skos:Concept ;
     skos:prefLabel "Business Behavior"@en ;
     skos:definition "Business elements that represent behavior."@en ;
     skos:broader <#BusinessElements> ;
-    skos:related <#Behavior> ;
+    skos:related <#BehaviorAspect> ;
     skos:inScheme <#> .
 
 <#BusinessProcess> rdf:type skos:Concept ;
     skos:prefLabel "Business Process"@en ;
+    skos:altLabel "Business Workflow"@en, "Process"@en ;
     skos:definition "A sequence of business behaviors that achieve a specific outcome."@en ;
+    skos:scopeNote "Use to model sequences of business activities that deliver value to customers or stakeholders. Typically implemented by business actors or roles."@en ;
     skos:broader <#BusinessBehavior> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:BusinessProcess .
+    skos:inScheme <#> .
 
 <#BusinessFunction> rdf:type skos:Concept ;
     skos:prefLabel "Business Function"@en ;
     skos:definition "A collection of business behavior based on a chosen set of criteria, closely aligned to an organization."@en ;
     skos:broader <#BusinessBehavior> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:BusinessFunction .
+    skos:inScheme <#> .
 
 <#BusinessService> rdf:type skos:Concept ;
     skos:prefLabel "Business Service"@en ;
+    skos:altLabel "Service"@en ;
     skos:definition "An explicitly defined exposed business behavior."@en ;
     skos:broader <#BusinessBehavior> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:BusinessService .
+    skos:inScheme <#> .
 
 <#BusinessInteraction> rdf:type skos:Concept ;
     skos:prefLabel "Business Interaction"@en ;
     skos:definition "A unit of collective business behavior performed by two or more business actors, roles, or collaborations."@en ;
     skos:broader <#BusinessBehavior> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:BusinessInteraction .
+    skos:inScheme <#> .
 
 <#BusinessEvent> rdf:type skos:Concept ;
     skos:prefLabel "Business Event"@en ;
     skos:definition "Represents a business-related state change."@en ;
     skos:broader <#BusinessBehavior> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:BusinessEvent .
+    skos:inScheme <#> .
 
 ## Business Passive Structure
 <#BusinessPassiveStructure> rdf:type skos:Concept ;
@@ -349,29 +319,26 @@
     skos:prefLabel "Business Object"@en ;
     skos:definition "Represents a concept used within a particular business domain."@en ;
     skos:broader <#BusinessPassiveStructure> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:BusinessObject .
+    skos:inScheme <#> .
 
-<#Contract> rdf:type skos:Concept ;
-    skos:prefLabel "Contract"@en ;
+<#BusinessContract> rdf:type skos:Concept ;
+    skos:prefLabel "Business Contract"@en ;
+    skos:altLabel "Contract"@en ;
     skos:definition "A formal or informal specification of an agreement between a provider and a consumer."@en ;
     skos:broader <#BusinessPassiveStructure> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Contract .
+    skos:inScheme <#> .
 
 <#Representation> rdf:type skos:Concept ;
     skos:prefLabel "Representation"@en ;
     skos:definition "A perceptible form of the information carried by a business object."@en ;
     skos:broader <#BusinessPassiveStructure> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Representation .
+    skos:inScheme <#> .
 
 <#Product> rdf:type skos:Concept ;
     skos:prefLabel "Product"@en ;
     skos:definition "A coherent collection of services and/or passive structure elements, offered as a whole to customers."@en ;
     skos:broader <#BusinessPassiveStructure> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Product .
+    skos:inScheme <#> .
 
 ### Application Layer Elements
 
@@ -391,67 +358,62 @@
 
 <#ApplicationComponent> rdf:type skos:Concept ;
     skos:prefLabel "Application Component"@en ;
+    skos:altLabel "Software Component"@en, "Application"@en ;
     skos:definition "An encapsulation of application functionality aligned to implementation structure, which is modular and replaceable."@en ;
+    skos:scopeNote "Use to model cohesive units of application functionality. Should align with implementation boundaries and be independently deployable when possible."@en ;
     skos:broader <#ApplicationActiveStructure> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:ApplicationComponent .
+    skos:inScheme <#> .
 
 <#ApplicationCollaboration> rdf:type skos:Concept ;
     skos:prefLabel "Application Collaboration"@en ;
     skos:definition "An aggregate of two or more application internal active structure elements that work together to perform collective application behavior."@en ;
     skos:broader <#ApplicationActiveStructure> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:ApplicationCollaboration .
+    skos:inScheme <#> .
 
 <#ApplicationInterface> rdf:type skos:Concept ;
     skos:prefLabel "Application Interface"@en ;
     skos:definition "A point of access where application services are made available to a user, another application component, or a node."@en ;
     skos:broader <#ApplicationActiveStructure> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:ApplicationInterface .
+    skos:inScheme <#> .
 
 ## Application Behavior
 <#ApplicationBehavior> rdf:type skos:Concept ;
     skos:prefLabel "Application Behavior"@en ;
     skos:definition "Application elements that represent automated behavior."@en ;
     skos:broader <#ApplicationElements> ;
-    skos:related <#Behavior> ;
+    skos:related <#BehaviorAspect> ;
     skos:inScheme <#> .
 
 <#ApplicationFunction> rdf:type skos:Concept ;
     skos:prefLabel "Application Function"@en ;
     skos:definition "Automated behavior that can be performed by an application component."@en ;
     skos:broader <#ApplicationBehavior> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:ApplicationFunction .
+    skos:inScheme <#> .
 
 <#ApplicationInteraction> rdf:type skos:Concept ;
     skos:prefLabel "Application Interaction"@en ;
     skos:definition "A unit of collective application behavior performed by two or more application components."@en ;
     skos:broader <#ApplicationBehavior> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:ApplicationInteraction .
+    skos:inScheme <#> .
 
 <#ApplicationProcess> rdf:type skos:Concept ;
     skos:prefLabel "Application Process"@en ;
     skos:definition "A sequence of application behaviors that achieves a specific result."@en ;
     skos:broader <#ApplicationBehavior> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:ApplicationProcess .
+    skos:inScheme <#> .
 
 <#ApplicationService> rdf:type skos:Concept ;
     skos:prefLabel "Application Service"@en ;
+    skos:altLabel "Software Service"@en, "API"@en ;
     skos:definition "An explicitly defined exposed application behavior."@en ;
     skos:broader <#ApplicationBehavior> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:ApplicationService .
+    skos:inScheme <#> .
 
 <#ApplicationEvent> rdf:type skos:Concept ;
     skos:prefLabel "Application Event"@en ;
     skos:definition "An application state change."@en ;
     skos:broader <#ApplicationBehavior> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:ApplicationEvent .
+    skos:inScheme <#> .
 
 ## Application Passive Structure
 <#ApplicationPassiveStructure> rdf:type skos:Concept ;
@@ -463,10 +425,10 @@
 
 <#DataObject> rdf:type skos:Concept ;
     skos:prefLabel "Data Object"@en ;
+    skos:altLabel "Data"@en, "Information Object"@en ;
     skos:definition "Data structured for automated processing."@en ;
     skos:broader <#ApplicationPassiveStructure> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:DataObject .
+    skos:inScheme <#> .
 
 ### Technology Layer Elements
 
@@ -488,51 +450,83 @@
     skos:prefLabel "Node"@en ;
     skos:definition "A computational or physical resource that hosts, manipulates, or interacts with other computational or physical resources."@en ;
     skos:broader <#TechnologyActiveStructure> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Node .
+    skos:inScheme <#> .
 
 <#Device> rdf:type skos:Concept ;
     skos:prefLabel "Device"@en ;
     skos:definition "A physical IT resource upon which system software and artifacts may be stored or deployed for execution."@en ;
     skos:broader <#TechnologyActiveStructure> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Device .
+    skos:inScheme <#> .
 
 <#SystemSoftware> rdf:type skos:Concept ;
     skos:prefLabel "System Software"@en ;
     skos:definition "Software that provides or contributes to an environment for storing, executing, and using software or data deployed within it."@en ;
     skos:broader <#TechnologyActiveStructure> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:SystemSoftware .
+    skos:inScheme <#> .
+
+<#TechnologyCollaboration> rdf:type skos:Concept ;
+    skos:prefLabel "Technology Collaboration"@en ;
+    skos:definition "An aggregate of two or more technology internal active structure elements that work together to perform collective technology behavior."@en ;
+    skos:broader <#TechnologyActiveStructure> ;
+    skos:inScheme <#> .
+
+<#TechnologyInterface> rdf:type skos:Concept ;
+    skos:prefLabel "Technology Interface"@en ;
+    skos:definition "A point of access where technology services offered by a node can be accessed."@en ;
+    skos:broader <#TechnologyActiveStructure> ;
+    skos:inScheme <#> .
+
+<#Path> rdf:type skos:Concept ;
+    skos:prefLabel "Path"@en ;
+    skos:definition "A link between two or more technology internal active structure elements, through which these elements can exchange data, energy, or material."@en ;
+    skos:broader <#TechnologyActiveStructure> ;
+    skos:inScheme <#> .
+
+<#CommunicationNetwork> rdf:type skos:Concept ;
+    skos:prefLabel "Communication Network"@en ;
+    skos:definition "A set of structures that connects devices or system software for transmission, routing, and reception of data."@en ;
+    skos:broader <#TechnologyActiveStructure> ;
+    skos:inScheme <#> .
 
 ## Technology Behavior
 <#TechnologyBehavior> rdf:type skos:Concept ;
     skos:prefLabel "Technology Behavior"@en ;
     skos:definition "Technology elements that represent infrastructure behavior."@en ;
     skos:broader <#TechnologyElements> ;
-    skos:related <#Behavior> ;
+    skos:related <#BehaviorAspect> ;
     skos:inScheme <#> .
 
 <#TechnologyFunction> rdf:type skos:Concept ;
     skos:prefLabel "Technology Function"@en ;
     skos:definition "A collection of technology behavior that can be performed by a technology internal active structure element."@en ;
     skos:broader <#TechnologyBehavior> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:TechnologyFunction .
+    skos:inScheme <#> .
 
 <#TechnologyProcess> rdf:type skos:Concept ;
     skos:prefLabel "Technology Process"@en ;
     skos:definition "A sequence of technology behaviors that achieves a specific result."@en ;
     skos:broader <#TechnologyBehavior> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:TechnologyProcess .
+    skos:inScheme <#> .
+
+<#TechnologyInteraction> rdf:type skos:Concept ;
+    skos:prefLabel "Technology Interaction"@en ;
+    skos:definition "A unit of collective technology behavior performed by (a collaboration of) two or more technology internal active structure elements."@en ;
+    skos:broader <#TechnologyBehavior> ;
+    skos:inScheme <#> .
+
+<#TechnologyEvent> rdf:type skos:Concept ;
+    skos:prefLabel "Technology Event"@en ;
+    skos:definition "A technology state change."@en ;
+    skos:broader <#TechnologyBehavior> ;
+    skos:inScheme <#> .
 
 <#TechnologyService> rdf:type skos:Concept ;
     skos:prefLabel "Technology Service"@en ;
+    skos:altLabel "Infrastructure Service"@en, "Technical Service"@en ;
     skos:definition "An explicitly defined exposed technology behavior."@en ;
+    skos:scopeNote "Use to model infrastructure capabilities that are exposed to applications or other technology elements. Examples include database services, messaging services, or compute services."@en ;
     skos:broader <#TechnologyBehavior> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:TechnologyService .
+    skos:inScheme <#> .
 
 ## Technology Passive Structure
 <#TechnologyPassiveStructure> rdf:type skos:Concept ;
@@ -544,10 +538,100 @@
 
 <#Artifact> rdf:type skos:Concept ;
     skos:prefLabel "Artifact"@en ;
+    skos:altLabel "Software Artifact"@en, "Deployment Unit"@en ;
     skos:definition "A piece of data that is used or produced in a software development process, or by deployment and operation of an IT system."@en ;
     skos:broader <#TechnologyPassiveStructure> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Artifact .
+    skos:inScheme <#> .
+
+### Physical Layer Elements
+
+<#PhysicalElements> rdf:type skos:Concept ;
+    skos:prefLabel "Physical Elements"@en ;
+    skos:definition "Elements that represent physical infrastructure and materials."@en ;
+    skos:broader <#PhysicalLayer> ;
+    skos:inScheme <#> .
+
+<#Equipment> rdf:type skos:Concept ;
+    skos:prefLabel "Equipment"@en ;
+    skos:definition "One or more physical machines, tools, or instruments that can create, use, store, move, or transform materials."@en ;
+    skos:broader <#PhysicalElements> ;
+    skos:inScheme <#> .
+
+<#Facility> rdf:type skos:Concept ;
+    skos:prefLabel "Facility"@en ;
+    skos:definition "A physical structure or environment."@en ;
+    skos:broader <#PhysicalElements> ;
+    skos:inScheme <#> .
+
+<#DistributionNetwork> rdf:type skos:Concept ;
+    skos:prefLabel "Distribution Network"@en ;
+    skos:definition "A physical network used to transport materials or energy."@en ;
+    skos:broader <#PhysicalElements> ;
+    skos:inScheme <#> .
+
+<#Material> rdf:type skos:Concept ;
+    skos:prefLabel "Material"@en ;
+    skos:definition "Tangible physical matter or physical elements."@en ;
+    skos:broader <#PhysicalElements> ;
+    skos:inScheme <#> .
+
+### Implementation and Migration Elements
+
+<#ImplementationAndMigrationElements> rdf:type skos:Concept ;
+    skos:prefLabel "Implementation and Migration Elements"@en ;
+    skos:definition "Elements related to implementing and migrating architectures."@en ;
+    skos:broader <#ImplementationAndMigrationLayer> ;
+    skos:inScheme <#> .
+
+<#WorkPackage> rdf:type skos:Concept ;
+    skos:prefLabel "Work Package"@en ;
+    skos:definition "A series of actions identified and designed to achieve specific results."@en ;
+    skos:broader <#ImplementationAndMigrationElements> ;
+    skos:inScheme <#> .
+
+<#ImplementationEvent> rdf:type skos:Concept ;
+    skos:prefLabel "Implementation Event"@en ;
+    skos:definition "A state change related to implementation or migration."@en ;
+    skos:broader <#ImplementationAndMigrationElements> ;
+    skos:inScheme <#> .
+
+<#Deliverable> rdf:type skos:Concept ;
+    skos:prefLabel "Deliverable"@en ;
+    skos:definition "A precisely-defined outcome of a work package."@en ;
+    skos:broader <#ImplementationAndMigrationElements> ;
+    skos:inScheme <#> .
+
+<#Gap> rdf:type skos:Concept ;
+    skos:prefLabel "Gap"@en ;
+    skos:definition "A statement of difference between two states."@en ;
+    skos:broader <#ImplementationAndMigrationElements> ;
+    skos:inScheme <#> .
+
+<#Plateau> rdf:type skos:Concept ;
+    skos:prefLabel "Plateau"@en ;
+    skos:definition "A relatively stable state of the architecture that exists during a limited period of time."@en ;
+    skos:broader <#ImplementationAndMigrationElements> ;
+    skos:inScheme <#> .
+
+### Composite Elements
+
+<#CompositeElements> rdf:type skos:Concept ;
+    skos:prefLabel "Composite Elements"@en ;
+    skos:definition "Elements that do not fit in a single aspect of the framework but may combine two or more aspects."@en ;
+    skos:broader <#ArchiMate> ;
+    skos:inScheme <#> .
+
+<#Grouping> rdf:type skos:Concept ;
+    skos:prefLabel "Grouping"@en ;
+    skos:definition "An element that aggregates or composes concepts that belong together based on some common characteristic."@en ;
+    skos:broader <#CompositeElements> ;
+    skos:inScheme <#> .
+
+<#Location> rdf:type skos:Concept ;
+    skos:prefLabel "Location"@en ;
+    skos:definition "A conceptual or physical place or position where concepts are located or performed."@en ;
+    skos:broader <#CompositeElements> ;
+    skos:inScheme <#> .
 
 ### Relationship Concepts
 
@@ -567,29 +651,26 @@
     skos:prefLabel "Assignment"@en ;
     skos:definition "Links active structure elements with behavior that they perform or roles they fulfill."@en ;
     skos:broader <#StructuralRelationships> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:assignment .
+    skos:inScheme <#> .
 
 <#Aggregation> rdf:type skos:Concept ;
     skos:prefLabel "Aggregation"@en ;
     skos:definition "Models a whole-part relationship where parts can exist independently."@en ;
     skos:broader <#StructuralRelationships> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:aggregation .
+    skos:inScheme <#> .
 
 <#Composition> rdf:type skos:Concept ;
     skos:prefLabel "Composition"@en ;
     skos:definition "Models a whole-part relationship where parts cannot exist without the whole."@en ;
     skos:broader <#StructuralRelationships> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:composition .
+    skos:inScheme <#> .
 
 <#Realization> rdf:type skos:Concept ;
     skos:prefLabel "Realization"@en ;
     skos:definition "Indicates that an entity realizes or implements another entity."@en ;
+    skos:scopeNote "Use when a more concrete element implements or fulfills the purpose of a more abstract element. Common in layer transitions (e.g., application process realizing business process)."@en ;
     skos:broader <#StructuralRelationships> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:realization .
+    skos:inScheme <#> .
 
 <#DependencyRelationships> rdf:type skos:Concept ;
     skos:prefLabel "Dependency Relationships"@en ;
@@ -600,30 +681,27 @@
 <#Serving> rdf:type skos:Concept ;
     skos:prefLabel "Serving"@en ;
     skos:definition "Models that an element provides functionality to another element."@en ;
+    skos:scopeNote "Use when one element provides functionality, data, or capabilities to another element. Can cross architectural layers (e.g., application serving business)."@en ;
     skos:broader <#DependencyRelationships> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:serving .
+    skos:inScheme <#> .
 
 <#Access> rdf:type skos:Concept ;
     skos:prefLabel "Access"@en ;
     skos:definition "Models access of behavior elements to passive structure elements."@en ;
     skos:broader <#DependencyRelationships> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:access .
+    skos:inScheme <#> .
 
 <#Influence> rdf:type skos:Concept ;
     skos:prefLabel "Influence"@en ;
     skos:definition "Models how one element influences another element."@en ;
     skos:broader <#DependencyRelationships> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:influence .
+    skos:inScheme <#> .
 
 <#Association> rdf:type skos:Concept ;
     skos:prefLabel "Association"@en ;
     skos:definition "Models a relationship not covered by other specific relationship types."@en ;
     skos:broader <#DependencyRelationships> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:association .
+    skos:inScheme <#> .
 
 <#DynamicRelationships> rdf:type skos:Concept ;
     skos:prefLabel "Dynamic Relationships"@en ;
@@ -635,15 +713,13 @@
     skos:prefLabel "Triggering"@en ;
     skos:definition "Models temporal or causal relationships where one behavior triggers another."@en ;
     skos:broader <#DynamicRelationships> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:triggering .
+    skos:inScheme <#> .
 
 <#Flow> rdf:type skos:Concept ;
     skos:prefLabel "Flow"@en ;
     skos:definition "Models transfer of information, materials, or energy between behavior elements."@en ;
     skos:broader <#DynamicRelationships> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:flow .
+    skos:inScheme <#> .
 
 <#OtherRelationships> rdf:type skos:Concept ;
     skos:prefLabel "Other Relationships"@en ;
@@ -656,117 +732,42 @@
     skos:altLabel "Generalization"@en ;
     skos:definition "Indicates that an element is a more specific form of another element."@en ;
     skos:broader <#OtherRelationships> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:specialization .
-
-### Physical Layer Elements
-
-<#PhysicalElements> rdf:type skos:Concept ;
-    skos:prefLabel "Physical Elements"@en ;
-    skos:definition "Elements that represent physical infrastructure and materials."@en ;
-    skos:broader <#PhysicalLayer> ;
     skos:inScheme <#> .
 
-<#Equipment> rdf:type skos:Concept ;
-    skos:prefLabel "Equipment"@en ;
-    skos:definition "One or more physical machines, tools, or instruments that can create, use, store, move, or transform materials."@en ;
-    skos:broader <#PhysicalElements> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Equipment .
+### Relationship Connectors
 
-<#Facility> rdf:type skos:Concept ;
-    skos:prefLabel "Facility"@en ;
-    skos:definition "A physical structure or environment."@en ;
-    skos:broader <#PhysicalElements> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Facility .
-
-<#DistributionNetwork> rdf:type skos:Concept ;
-    skos:prefLabel "Distribution Network"@en ;
-    skos:definition "A physical network used to transport materials or energy."@en ;
-    skos:broader <#PhysicalElements> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:DistributionNetwork .
-
-<#Material> rdf:type skos:Concept ;
-    skos:prefLabel "Material"@en ;
-    skos:definition "Tangible physical matter or physical elements."@en ;
-    skos:broader <#PhysicalElements> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Material .
-
-### Implementation and Migration Elements
-
-<#ImplementationAndMigrationElements> rdf:type skos:Concept ;
-    skos:prefLabel "Implementation and Migration Elements"@en ;
-    skos:definition "Elements related to implementing and migrating architectures."@en ;
-    skos:broader <#ImplementationAndMigrationLayer> ;
+<#RelationshipConnectors> rdf:type skos:Concept ;
+    skos:prefLabel "Relationship Connectors"@en ;
+    skos:definition "Elements that connect relationships of the same type."@en ;
+    skos:broader <#Relationships> ;
     skos:inScheme <#> .
 
-<#WorkPackage> rdf:type skos:Concept ;
-    skos:prefLabel "Work Package"@en ;
-    skos:definition "A series of actions identified and designed to achieve specific results."@en ;
-    skos:broader <#ImplementationAndMigrationElements> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:WorkPackage .
+<#Junction> rdf:type skos:Concept ;
+    skos:prefLabel "Junction"@en ;
+    skos:definition "Used to connect relationships of the same type. Junctions model logical AND or OR operations when combining or splitting relationships."@en ;
+    skos:broader <#RelationshipConnectors> ;
+    skos:inScheme <#> .
 
-<#ImplementationEvent> rdf:type skos:Concept ;
-    skos:prefLabel "Implementation Event"@en ;
-    skos:definition "A state change related to implementation or migration."@en ;
-    skos:broader <#ImplementationAndMigrationElements> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:ImplementationEvent .
+<#AndJunction> rdf:type skos:Concept ;
+    skos:prefLabel "And Junction"@en ;
+    skos:definition "A junction where all connected relationships must be satisfied (logical AND)."@en ;
+    skos:broader <#Junction> ;
+    skos:inScheme <#> .
 
-<#Deliverable> rdf:type skos:Concept ;
-    skos:prefLabel "Deliverable"@en ;
-    skos:definition "A precisely-defined outcome of a work package."@en ;
-    skos:broader <#ImplementationAndMigrationElements> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Deliverable .
+<#OrJunction> rdf:type skos:Concept ;
+    skos:prefLabel "Or Junction"@en ;
+    skos:definition "A junction where at least one connected relationship must be satisfied (logical OR)."@en ;
+    skos:broader <#Junction> ;
+    skos:inScheme <#> .
 
-<#Gap> rdf:type skos:Concept ;
-    skos:prefLabel "Gap"@en ;
-    skos:definition "A statement of difference between two states."@en ;
-    skos:broader <#ImplementationAndMigrationElements> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Gap .
-
-<#Plateau> rdf:type skos:Concept ;
-    skos:prefLabel "Plateau"@en ;
-    skos:definition "A relatively stable state of the architecture that exists during a limited period of time."@en ;
-    skos:broader <#ImplementationAndMigrationElements> ;
-    skos:inScheme <#> ;
-    skos:exactMatch arch-owl:Plateau .
-
-### Alternative Labels and Synonyms
-
-## Add alternative labels for better findability
-<#BusinessProcess> skos:altLabel "Business Workflow"@en, "Process"@en .
-<#BusinessService> skos:altLabel "Service"@en .
-<#ApplicationComponent> skos:altLabel "Software Component"@en, "Application"@en .
-<#ApplicationService> skos:altLabel "Software Service"@en, "API"@en .
-<#TechnologyService> skos:altLabel "Infrastructure Service"@en, "Technical Service"@en .
-<#DataObject> skos:altLabel "Data"@en, "Information Object"@en .
-<#Artifact> skos:altLabel "Software Artifact"@en, "Deployment Unit"@en .
-
-### Multilingual Labels (Example - Spanish)
+### Multilingual Labels (Spanish)
 
 <#ArchiMate> skos:prefLabel "ArchiMate"@es .
 <#BusinessProcess> skos:prefLabel "Proceso de Negocio"@es .
 <#ApplicationComponent> skos:prefLabel "Componente de Aplicación"@es .
 <#TechnologyService> skos:prefLabel "Servicio de Tecnología"@es .
-
-### Usage Notes and Scope Notes
-
-<#BusinessProcess> skos:scopeNote "Use to model sequences of business activities that deliver value to customers or stakeholders. Typically implemented by business actors or roles."@en .
-
-<#ApplicationComponent> skos:scopeNote "Use to model cohesive units of application functionality. Should align with implementation boundaries and be independently deployable when possible."@en .
-
-<#TechnologyService> skos:scopeNote "Use to model infrastructure capabilities that are exposed to applications or other technology elements. Examples include database services, messaging services, or compute services."@en .
-
-<#Serving> skos:scopeNote "Use when one element provides functionality, data, or capabilities to another element. Can cross architectural layers (e.g., application serving business)."@en .
-
-<#Realization> skos:scopeNote "Use when a more concrete element implements or fulfills the purpose of a more abstract element. Common in layer transitions (e.g., application process realizing business process)."@en .
+<#BusinessActor> skos:prefLabel "Actor de Negocio"@es .
+<#DataObject> skos:prefLabel "Objeto de Datos"@es .
 
 ### Related Concepts from Other Vocabularies
 
@@ -777,7 +778,7 @@
 
 <#TechnologyService> skos:related <http://www.w3.org/ns/dcat#DataService> .
 
-### Collection Concepts for Easier Navigation
+### Collections for Easier Navigation
 
 <#CoreElements> rdf:type skos:Collection ;
     skos:prefLabel "Core ArchiMate Elements"@en ;
@@ -802,4 +803,3 @@
     skos:prefLabel "Information Elements"@en ;
     skos:definition "ArchiMate elements that represent information and data."@en ;
     skos:member <#BusinessObject>, <#Representation>, <#DataObject>, <#Artifact> .
-

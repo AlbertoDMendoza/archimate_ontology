@@ -21,7 +21,7 @@
 ## Person Shape
 archimate-prof:Person a sh:NodeShape ;
     sh:property [
-        sh:path archimate:Name ;
+        sh:path archimate:name ;
         sh:name "Name" ;
         sh:datatype xsd:string ;
         sh:minCount 1 ;
@@ -41,7 +41,7 @@ archimate-prof:Person a sh:NodeShape ;
         sh:order 3
     ] ;
     sh:property [
-        sh:path archimate:Documentation ;
+        sh:path archimate:documentation ;
         sh:name "Documentation" ;
         sh:datatype xsd:string ;
         sh:order 4
@@ -50,14 +50,14 @@ archimate-prof:Person a sh:NodeShape ;
 ## Organization Shape
 archimate-prof:Organization a sh:NodeShape ;
     sh:property [
-        sh:path archimate:Name ;
+        sh:path archimate:name ;
         sh:name "Name" ;
         sh:datatype xsd:string ;
         sh:minCount 1 ;
         sh:order 1
     ] ;
     sh:property [
-        sh:path archimate:Documentation ;
+        sh:path archimate:documentation ;
         sh:name "Documentation" ;
         sh:datatype xsd:string ;
         sh:order 2

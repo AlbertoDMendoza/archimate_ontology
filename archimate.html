@@ -49,14 +49,23 @@
 		</p>
 		<h1>ArchiMate Ontology</h1>
 	</div>
-	<p>This is the namespace for use with ArchiMate 3.2. Ontology</p>
+	<p>This is the namespace for ArchiMate 3.2, an open and independent enterprise architecture modeling language maintained by The Open Group.</p>
+	
+	<h2>Available Formats</h2>
+	<p>The ArchiMate ontology is available in multiple machine-readable and human-readable formats:</p>
+	<ul>
+		<li><strong>HTML Documentation:</strong> <a href="https://purl.org/archimate">https://purl.org/archimate</a> (this page) - Human-readable reference guide</li>
+		<li><strong>OWL Ontology:</strong> <a href="https://purl.org/archimate/owl">https://purl.org/archimate/owl</a> - Formal ontology for reasoning, inference, and semantic web applications</li>
+		<li><strong>SKOS Vocabulary:</strong> <a href="https://purl.org/archimate/skos">https://purl.org/archimate/skos</a> - Controlled vocabulary for taxonomy, classification, and content management systems</li>
+	</ul>
+	<p><em>Note:</em> Legacy URL <code>https://purl.org/archimate/rdf</code> redirects to the OWL ontology for backwards compatibility.</p>
+	
+	<h2>Namespace Declaration</h2>
+	<p>When using ArchiMate in RDF/OWL, declare the namespace as follows:</p>
+	<pre><code>@prefix archimate: &lt;https://purl.org/archimate#&gt; .</code></pre>
 	
 	<h2>Versioning</h2>
-	<p>Version of the ontology can be found in the OWL attribute owl:versionInfo</p>
-	<p>Root namespace will resolve to the latest version of the the ontology and specification.  Alternative versions can be found in the following folders.</p>
-	<p>https://purl.org/archimate/html</p> (this site)
-	<p>https://purl.org/archimate/skos</p> (Thesaurus) 
-	<p>https://purl.org/archimate/rdf</p> (Ontology)
+	<p>Version information for the ontology can be found in the OWL attribute <code>owl:versionInfo</code>. The root namespace (<code>https://purl.org/archimate#</code>) resolves to the latest version of the ontology and specification.</p>
 
 	<h2>General Definitions</h2>
 	

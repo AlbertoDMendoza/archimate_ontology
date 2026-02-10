@@ -1,0 +1,118 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix archimate: <https://purl.org/archimate#> .
+@prefix archimate-prof: <https://purl.org/archimate/profile#> .
+@base <https://purl.org/archimate/profile#> .
+
+### ArchiMate Specialization Profile Examples
+<#> rdf:type owl:Ontology ;
+    owl:imports <https://purl.org/archimate/owl> ;
+    rdfs:label "ArchiMate Profile Examples" ;
+    rdfs:comment "Example specialization profiles for ArchiMate elements. These demonstrate how to create custom subtypes of standard ArchiMate elements using the profile pattern." ;
+    dct:description "Profile classes are owl:Class that specialize standard ArchiMate elements via rdfs:subClassOf and archimate:specialization. SHACL shapes for these profiles are defined in validation/archimate_profiles.ttl." ;
+    dct:creator "Alberto D. Mendoza" ;
+    dct:created "2026-02-10"^^xsd:date ;
+    owl:versionInfo "Alpha" .
+
+# DESIGN NOTES
+# ArchiMate profiles allow user-defined subtypes of standard elements,
+# e.g. BusinessActor → Person, Organization. In native RDF, we model them as real OWL
+# classes in the specialization hierarchy:
+#
+#   archimate-prof:Person a owl:Class ;
+#       rdfs:subClassOf archimate:BusinessActor ;
+#       archimate:specialization archimate:BusinessActor .
+#
+# Why this works:
+# - rdfs:subClassOf gives OWL inference (a archimate-prof:Person is-a archimate:BusinessActor)
+# - archimate:specialization (owl:TransitiveProperty) enables derivation rules (PDR1-4)
+# - Profile classes can have SHACL shapes defined in validation/archimate_profiles.ttl
+# - The profile class IS the shape (implicit target pattern) — no separate shape needed
+# - Profile shapes can define domain-specific properties (e.g. dateOfBirth, email)
+# - Profiles nest naturally: Employee → Person → BusinessActor
+#
+# These are example profiles (not part of the ArchiMate specification).
+# Common specializations by element type:
+#   BusinessActor    → Person, Organization, Department, Team, Committee
+#   BusinessRole     → Manager, Analyst, Developer, Auditor
+#   BusinessProcess  → CoreProcess, SupportProcess, ManagementProcess
+#   BusinessObject   → Contract, Invoice, Policy, Report
+#   ApplicationComponent → Microservice, Database, WebApplication, API
+#   Node             → Server, VM, Container, CloudInstance
+#   Artifact         → SourceCode, Configuration, LogFile, Schema
+
+
+### 1. BusinessActor Profile Classes
+
+archimate-prof:Person rdf:type owl:Class ;
+    rdfs:subClassOf archimate:BusinessActor ;
+    archimate:specialization archimate:BusinessActor ;
+    rdfs:label "Person" ;
+    rdfs:comment "A BusinessActor representing an individual person." .
+
+archimate-prof:Organization rdf:type owl:Class ;
+    rdfs:subClassOf archimate:BusinessActor ;
+    archimate:specialization archimate:BusinessActor ;
+    rdfs:label "Organization" ;
+    rdfs:comment "A BusinessActor representing a group of people or organizational unit." .
+
+
+### 2. Profile-Specific Properties
+
+## Person Properties
+archimate-prof:dateOfBirth rdf:type owl:DatatypeProperty ;
+    rdfs:label "date of birth" ;
+    rdfs:comment "Date of birth for a Person profile." ;
+    rdfs:domain archimate-prof:Person ;
+    rdfs:range xsd:date .
+
+archimate-prof:email rdf:type owl:DatatypeProperty ;
+    rdfs:label "email" ;
+    rdfs:comment "Email address for a Person profile." ;
+    rdfs:domain archimate-prof:Person ;
+    rdfs:range xsd:anyURI .
+
+
+### 3. Additional Profile Examples (Commented Out - Expand As Needed)
+
+# ## BusinessRole Profiles
+# archimate-prof:Manager rdf:type owl:Class ;
+#     rdfs:subClassOf archimate:BusinessRole ;
+#     archimate:specialization archimate:BusinessRole ;
+#     rdfs:label "Manager" ;
+#     rdfs:comment "A BusinessRole representing a managerial function." .
+#
+# archimate-prof:Developer rdf:type owl:Class ;
+#     rdfs:subClassOf archimate:BusinessRole ;
+#     archimate:specialization archimate:BusinessRole ;
+#     rdfs:label "Developer" ;
+#     rdfs:comment "A BusinessRole representing a software development function." .
+
+# ## ApplicationComponent Profiles
+# archimate-prof:Microservice rdf:type owl:Class ;
+#     rdfs:subClassOf archimate:ApplicationComponent ;
+#     archimate:specialization archimate:ApplicationComponent ;
+#     rdfs:label "Microservice" ;
+#     rdfs:comment "An ApplicationComponent following microservice architecture patterns." .
+#
+# archimate-prof:Database rdf:type owl:Class ;
+#     rdfs:subClassOf archimate:ApplicationComponent ;
+#     archimate:specialization archimate:ApplicationComponent ;
+#     rdfs:label "Database" ;
+#     rdfs:comment "An ApplicationComponent that provides data storage and retrieval." .
+
+# ## Node Profiles
+# archimate-prof:Server rdf:type owl:Class ;
+#     rdfs:subClassOf archimate:Node ;
+#     archimate:specialization archimate:Node ;
+#     rdfs:label "Server" ;
+#     rdfs:comment "A Node representing a physical or virtual server." .
+#
+# archimate-prof:Container rdf:type owl:Class ;
+#     rdfs:subClassOf archimate:Node ;
+#     archimate:specialization archimate:Node ;
+#     rdfs:label "Container" ;
+#     rdfs:comment "A Node representing a containerized execution environment." .

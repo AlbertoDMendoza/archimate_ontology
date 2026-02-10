@@ -1,0 +1,698 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix archimate: <https://purl.org/archimate#> .
+@base <https://purl.org/archimate/validation#> .
+
+### SHACL Validation for ArchiMate Relationships
+<#> rdf:type owl:Ontology ;
+    owl:imports <https://purl.org/archimate#> ;
+    rdfs:label "ArchiMate Relationship Validation Rules" ;
+    rdfs:comment "Comprehensive SHACL validation constraints for all ArchiMate relationships, their valid sources/targets, and metamodel rules." ;
+    dct:description "This file contains all relationship-specific validation rules including: valid relationship combinations per element type, cross-layer relationship constraints, relationship metadata validation (RDF-Star), and ArchiMate metamodel conformance." ;
+    dct:creator "Alberto D. Mendoza" ;
+    dct:created "2026-02-10"^^xsd:date ;
+    owl:versionInfo "Alpha" .
+
+### DESIGN NOTES
+#
+# This validation file enforces ArchiMate 3.2 metamodel rules for relationships:
+#
+# 1. VALID RELATIONSHIP COMBINATIONS
+#    Each element type can only have specific relationships with specific target types.
+#    Example: BusinessActor can have assignment to BusinessProcess, but not to DataObject.
+#    We use SHACL property shapes on each element class to define allowed relationships.
+#
+# 2. RELATIONSHIP METADATA (RDF-Star)
+#    Relationships can have metadata: identifier, name, documentation, accessType, etc.
+#    We validate that metadata values conform to ArchiMate specifications.
+#
+# 3. CROSS-LAYER CONSTRAINTS
+#    Certain relationships have direction constraints across architectural layers.
+#    Example: Serving relationships flow upward (Technology → Application → Business)
+#
+# 4. STRUCTURAL CONSTRAINTS
+#    - No self-relationships (except association in special cases)
+#    - No circular composition/aggregation
+#    - Composition parts cannot exist in multiple wholes
+#
+# 5. JUNCTION RULES
+#    Junctions connect relationships of the same type and implement AND/OR logic.
+#
+# Organization:
+# - Section 1: Universal Relationship Requirements
+# - Section 2: Structural Relationship Validation (composition, aggregation, assignment, realization)
+# - Section 3: Dependency Relationship Validation (serving, access, influence, association)
+# - Section 4: Dynamic Relationship Validation (triggering, flow)
+# - Section 5: RDF-Star Relationship Metadata Validation
+# - Section 6: Cross-Layer Relationship Constraints
+# - Section 7: Valid Relationship Combinations (per element type)
+# - Section 8: Junction Validation
+
+
+### 1. UNIVERSAL RELATIONSHIP REQUIREMENTS
+
+## All realized relationships must have required metadata
+<#>RealizedRelationshipRequirements rdf:type sh:NodeShape ;
+    rdfs:label "Realized Relationship Requirements" ;
+    rdfs:comment "All relationship instances must have identifier, name, documentation, and specialization" ;
+    sh:sparql [
+        sh:message "All relationships must have identifier, name, documentation, and declare their specialization type" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source ?target WHERE {
+                ?source ?rel ?target .
+                ?rel rdfs:subPropertyOf+ archimate:structuralRelationship .
+                
+                # Must have metadata via RDF-Star
+                FILTER NOT EXISTS {
+                    <<?source ?rel ?target>> archimate:identifier ?id .
+                    <<?source ?rel ?target>> archimate:name ?name .
+                    <<?source ?rel ?target>> archimate:documentation ?doc .
+                    <<?source ?rel ?target>> archimate:specialization ?spec .
+                }
+            }
+        """
+    ] .
+
+## Relationship identifiers must be unique
+<#>UniqueRelationshipIdentifier rdf:type sh:NodeShape ;
+    rdfs:label "Unique Relationship Identifier" ;
+    sh:sparql [
+        sh:message "Relationship identifiers must be unique across the model" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source1 ?target1 ?source2 ?target2 WHERE {
+                ?source1 ?rel1 ?target1 .
+                ?source2 ?rel2 ?target2 .
+                
+                <<?source1 ?rel1 ?target1>> archimate:identifier ?id .
+                <<?source2 ?rel2 ?target2>> archimate:identifier ?id .
+                
+                FILTER(
+                    ?source1 != ?source2 || 
+                    ?target1 != ?target2 || 
+                    ?rel1 != ?rel2
+                )
+            }
+        """
+    ] .
+
+
+### 2. STRUCTURAL RELATIONSHIP VALIDATION
+
+## 2.1 Composition Relationships
+
+# No self-composition
+<#>NoSelfComposition rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "No Self-Composition" ;
+    sh:sparql [
+        sh:message "Elements cannot compose themselves" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                $this archimate:composition $this
+            }
+        """
+    ] .
+
+# No circular composition
+<#>NoCircularComposition rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "No Circular Composition" ;
+    sh:sparql [
+        sh:message "Circular composition relationships are not allowed (A composes B, B composes C, C composes A)" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                $this archimate:composition+ $this
+            }
+        """
+    ] .
+
+# Composition part uniqueness: a part can only belong to one whole
+<#>CompositionPartUniqueness rdf:type sh:NodeShape ;
+    sh:targetObjectsOf archimate:composition ;
+    rdfs:label "Composition Part Uniqueness" ;
+    sh:sparql [
+        sh:message "A composed part can only belong to one whole (composition implies exclusive ownership)" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                ?whole1 archimate:composition $this .
+                ?whole2 archimate:composition $this .
+                FILTER(?whole1 != ?whole2)
+            }
+        """
+    ] .
+
+# Composition valid types (enforce metamodel rules)
+# TODO: Add specific constraints for which elements can compose which others
+# Example: BusinessProcess can compose BusinessProcess, but not DataObject
+
+
+## 2.2 Aggregation Relationships
+
+# No self-aggregation
+<#>NoSelfAggregation rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "No Self-Aggregation" ;
+    sh:sparql [
+        sh:message "Elements cannot aggregate themselves" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                $this archimate:aggregation $this
+            }
+        """
+    ] .
+
+# No circular aggregation
+<#>NoCircularAggregation rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "No Circular Aggregation" ;
+    sh:sparql [
+        sh:message "Circular aggregation relationships are not allowed" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                $this archimate:aggregation+ $this
+            }
+        """
+    ] .
+
+
+## 2.3 Assignment Relationships
+
+# Assignment must be from active structure to behavior
+<#>AssignmentDomainConstraint rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:assignment ;
+    rdfs:label "Assignment Source: Active Structure" ;
+    sh:sparql [
+        sh:message "Assignment relationships can only originate from active structure elements" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                $this archimate:assignment ?target .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf+ archimate:ActiveStructure
+                }
+            }
+        """
+    ] .
+
+<#>AssignmentRangeConstraint rdf:type sh:NodeShape ;
+    sh:targetObjectsOf archimate:assignment ;
+    rdfs:label "Assignment Target: Behavior" ;
+    sh:sparql [
+        sh:message "Assignment relationships can only target behavior elements" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                ?source archimate:assignment $this .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect
+                }
+            }
+        """
+    ] .
+
+
+## 2.4 Realization Relationships
+
+# Realization direction: concrete realizes abstract, lower layer realizes higher layer
+<#>RealizationDirection rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:realization ;
+    rdfs:label "Realization Direction" ;
+    rdfs:comment "Realization should flow from more concrete to more abstract, typically from lower to higher layers" ;
+    sh:severity sh:Info .
+    # Note: This is informational because there are valid exceptions
+
+
+### 3. DEPENDENCY RELATIONSHIP VALIDATION
+
+## 3.1 Serving Relationships
+
+# Serving direction: lower layers serve higher layers
+<#>ServingLayerDirection rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:serving ;
+    rdfs:label "Serving Layer Direction" ;
+    sh:sparql [
+        sh:message "Serving relationships should flow upward from lower to higher layers (Technology → Application → Business)" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT $this ?target WHERE {
+                $this archimate:serving ?target .
+                
+                # Get layer classifications
+                $this rdf:type/rdfs:subClassOf+ ?sourceLayer .
+                ?target rdf:type/rdfs:subClassOf+ ?targetLayer .
+                ?sourceLayer rdfs:subClassOf archimate:Layer .
+                ?targetLayer rdfs:subClassOf archimate:Layer .
+                
+                # Flag violations: higher layer serving lower layer
+                {
+                    # Business serving Application (should be opposite)
+                    ?sourceLayer rdfs:subClassOf archimate:BusinessLayer .
+                    ?targetLayer rdfs:subClassOf archimate:ApplicationLayer .
+                } UNION {
+                    # Business serving Technology (should be opposite)
+                    ?sourceLayer rdfs:subClassOf archimate:BusinessLayer .
+                    ?targetLayer rdfs:subClassOf archimate:TechnologyLayer .
+                } UNION {
+                    # Application serving Technology (should be opposite)
+                    ?sourceLayer rdfs:subClassOf archimate:ApplicationLayer .
+                    ?targetLayer rdfs:subClassOf archimate:TechnologyLayer .
+                }
+            }
+        """
+    ] .
+
+
+## 3.2 Access Relationships
+
+# Access must be from behavior to passive structure
+<#>AccessDomainConstraint rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:access ;
+    rdfs:label "Access Source: Behavior" ;
+    sh:sparql [
+        sh:message "Access relationships can only originate from behavior elements" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                $this archimate:access ?target .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect
+                }
+            }
+        """
+    ] .
+
+<#>AccessRangeConstraint rdf:type sh:NodeShape ;
+    sh:targetObjectsOf archimate:access ;
+    rdfs:label "Access Target: Passive Structure" ;
+    sh:sparql [
+        sh:message "Access relationships can only target passive structure elements" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                ?source archimate:access $this .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf+ archimate:PassiveStructure
+                }
+            }
+        """
+    ] .
+
+# Access type validation (RDF-Star metadata)
+<#>AccessTypeValidation rdf:type sh:NodeShape ;
+    rdfs:label "Access Type Validation" ;
+    sh:sparql [
+        sh:message "Access relationships with accessType metadata must have valid values: read, write, readwrite, or unspecified" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source ?target WHERE {
+                ?source archimate:access ?target .
+                <<?source archimate:access ?target>> archimate:accessType ?accessType .
+                FILTER(?accessType NOT IN ("read", "write", "readwrite", "unspecified"))
+            }
+        """
+    ] .
+
+
+## 3.3 Influence Relationships
+
+# Influence sign validation (RDF-Star metadata)
+<#>InfluenceSignValidation rdf:type sh:NodeShape ;
+    rdfs:label "Influence Sign Validation" ;
+    sh:sparql [
+        sh:message "Influence relationships with influenceSign metadata must have valid values: positive, negative, or unspecified" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source ?target WHERE {
+                ?source archimate:influence ?target .
+                <<?source archimate:influence ?target>> archimate:influenceSign ?sign .
+                FILTER(?sign NOT IN ("positive", "negative", "unspecified"))
+            }
+        """
+    ] .
+
+# Influence strength validation (RDF-Star metadata)
+<#>InfluenceStrengthValidation rdf:type sh:NodeShape ;
+    rdfs:label "Influence Strength Validation" ;
+    sh:sparql [
+        sh:message "Influence relationships with influenceStrength metadata must have valid values: weak, moderate, strong, or unspecified" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source ?target WHERE {
+                ?source archimate:influence ?target .
+                <<?source archimate:influence ?target>> archimate:influenceStrength ?strength .
+                FILTER(?strength NOT IN ("weak", "moderate", "strong", "unspecified"))
+            }
+        """
+    ] .
+
+
+## 3.4 Association Relationships
+
+# Association is the most permissive relationship - minimal constraints
+# Used when no other relationship type is appropriate
+
+
+### 4. DYNAMIC RELATIONSHIP VALIDATION
+
+## 4.1 Triggering Relationships
+
+# Triggering must be between behavior elements
+<#>TriggeringDomainConstraint rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:triggering ;
+    rdfs:label "Triggering Source: Behavior" ;
+    sh:sparql [
+        sh:message "Triggering relationships can only originate from behavior elements" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                $this archimate:triggering ?target .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect
+                }
+            }
+        """
+    ] .
+
+<#>TriggeringRangeConstraint rdf:type sh:NodeShape ;
+    sh:targetObjectsOf archimate:triggering ;
+    rdfs:label "Triggering Target: Behavior" ;
+    sh:sparql [
+        sh:message "Triggering relationships can only target behavior elements" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                ?source archimate:triggering $this .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect
+                }
+            }
+        """
+    ] .
+
+
+## 4.2 Flow Relationships
+
+# Flow must be between behavior elements
+<#>FlowDomainConstraint rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:flow ;
+    rdfs:label "Flow Source: Behavior" ;
+    sh:sparql [
+        sh:message "Flow relationships can only originate from behavior elements" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                $this archimate:flow ?target .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect
+                }
+            }
+        """
+    ] .
+
+<#>FlowRangeConstraint rdf:type sh:NodeShape ;
+    sh:targetObjectsOf archimate:flow ;
+    rdfs:label "Flow Target: Behavior" ;
+    sh:sparql [
+        sh:message "Flow relationships can only target behavior elements" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                ?source archimate:flow $this .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect
+                }
+            }
+        """
+    ] .
+
+# Flow type validation (RDF-Star metadata)
+<#>FlowTypeValidation rdf:type sh:NodeShape ;
+    rdfs:label "Flow Type Validation" ;
+    sh:sparql [
+        sh:message "Flow relationships with flowType metadata must have valid values: information, material, energy, or unspecified" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source ?target WHERE {
+                ?source archimate:flow ?target .
+                <<?source archimate:flow ?target>> archimate:flowType ?flowType .
+                FILTER(?flowType NOT IN ("information", "material", "energy", "unspecified"))
+            }
+        """
+    ] .
+
+
+### 5. RDF-STAR RELATIONSHIP METADATA VALIDATION
+
+## Relationship metadata must follow proper patterns
+<#>RelationshipMetadataPattern rdf:type sh:NodeShape ;
+    rdfs:label "Relationship Metadata Pattern" ;
+    sh:sparql [
+        sh:message "Relationship metadata must be attached to quoted triples using RDF-Star syntax" ;
+        sh:severity sh:Info ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source ?target WHERE {
+                ?source ?rel ?target .
+                ?rel rdfs:subPropertyOf+ archimate:structuralRelationship .
+                
+                # Relationship exists but has no metadata
+                FILTER NOT EXISTS {
+                    <<?source ?rel ?target>> ?metaProp ?metaValue .
+                }
+            }
+        """
+    ] .
+
+## Validate relationship identifier format
+<#>RelationshipIdentifierFormat rdf:type sh:NodeShape ;
+    rdfs:label "Relationship Identifier Format" ;
+    sh:sparql [
+        sh:message "Relationship identifiers must start with letter or underscore, followed by alphanumeric, underscore, or hyphen" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source ?target WHERE {
+                ?source ?rel ?target .
+                <<?source ?rel ?target>> archimate:identifier ?id .
+                FILTER(!REGEX(?id, "^[a-zA-Z_][a-zA-Z0-9_-]*$"))
+            }
+        """
+    ] .
+
+
+### 6. CROSS-LAYER RELATIONSHIP CONSTRAINTS
+
+## Strategy-to-Core relationships
+<#>StrategyToCoreRelationships rdf:type sh:NodeShape ;
+    rdfs:label "Strategy to Core Layer Relationships" ;
+    sh:sparql [
+        sh:message "Only association relationships allowed from Strategy to Core layers" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source ?target WHERE {
+                ?source ?rel ?target .
+                
+                # Source is Strategy layer
+                ?source rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
+                
+                # Target is Core layer (Business, Application, Technology, Physical)
+                ?target rdf:type/rdfs:subClassOf+ ?coreLayer .
+                ?coreLayer rdfs:subClassOf archimate:Layer .
+                VALUES ?coreLayer {
+                    archimate:BusinessLayer 
+                    archimate:ApplicationLayer 
+                    archimate:TechnologyLayer 
+                    archimate:PhysicalLayer
+                }
+                
+                # Relationship is NOT association
+                ?rel rdfs:subPropertyOf+ ?relType .
+                VALUES ?relType {
+                    archimate:structuralRelationship
+                    archimate:dependencyRelationship
+                    archimate:dynamicRelationship
+                }
+                FILTER(?rel != archimate:association)
+            }
+        """
+    ] .
+
+## Core-to-Strategy relationships
+<#>CoreToStrategyRelationships rdf:type sh:NodeShape ;
+    rdfs:label "Core to Strategy Layer Relationships" ;
+    sh:sparql [
+        sh:message "Only association relationships allowed from Core to Strategy layer" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source ?target WHERE {
+                ?source ?rel ?target .
+                
+                # Source is Core layer
+                ?source rdf:type/rdfs:subClassOf+ ?coreLayer .
+                ?coreLayer rdfs:subClassOf archimate:Layer .
+                VALUES ?coreLayer {
+                    archimate:BusinessLayer 
+                    archimate:ApplicationLayer 
+                    archimate:TechnologyLayer 
+                    archimate:PhysicalLayer
+                }
+                
+                # Target is Strategy layer
+                ?target rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
+                
+                # Relationship is NOT association
+                ?rel rdfs:subPropertyOf+ ?relType .
+                VALUES ?relType {
+                    archimate:structuralRelationship
+                    archimate:dependencyRelationship
+                    archimate:dynamicRelationship
+                }
+                FILTER(?rel != archimate:association)
+            }
+        """
+    ] .
+
+## Motivation element relationships
+# TODO: Add constraints for Motivation aspect relationships with other layers
+
+
+### 7. VALID RELATIONSHIP COMBINATIONS
+
+## This section defines which specific element types can have which relationships
+## with which target element types, per the ArchiMate 3.2 specification
+
+# TODO: Add comprehensive relationship combination rules for each element type
+# Examples to implement:
+# - BusinessActor can assign to BusinessProcess, BusinessFunction, BusinessInteraction
+# - BusinessProcess can compose BusinessProcess, BusinessEvent, BusinessFunction
+# - ApplicationComponent can realize ApplicationService
+# - Node can assign to TechnologyFunction, TechnologyProcess, Device, SystemSoftware
+
+
+### 8. JUNCTION VALIDATION
+
+## Junction type validation
+<#>JunctionTypeValidation rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Junction ;
+    rdfs:label "Junction Type Validation" ;
+    sh:property [
+        sh:path archimate:junctionType ;
+        sh:in ( "and" "or" ) ;
+        sh:message "Junction type must be either 'and' or 'or'"
+    ] .
+
+## Junctions must connect relationships of the same type
+<#>JunctionRelationshipHomogeneity rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Junction ;
+    rdfs:label "Junction Relationship Homogeneity" ;
+    sh:sparql [
+        sh:message "Junctions can only connect relationships of the same type" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT $this WHERE {
+                # Incoming relationships to junction
+                ?source1 ?rel1 $this .
+                ?source2 ?rel2 $this .
+                
+                # Outgoing relationship from junction
+                $this ?rel3 ?target .
+                
+                # Check that all relationship types are the same
+                FILTER(?rel1 != ?rel2 || ?rel1 != ?rel3 || ?rel2 != ?rel3)
+            }
+        """
+    ] .
+
+
+### 9. RELATIONSHIP QUALITY CHECKS
+
+## Check for redundant relationships
+<#>RedundantRelationshipCheck rdf:type sh:NodeShape ;
+    rdfs:label "Redundant Relationship Check" ;
+    sh:severity sh:Info ;
+    sh:sparql [
+        sh:message "Redundant relationship detected: same relationship type between same elements exists multiple times" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source ?target WHERE {
+                ?source ?rel ?target .
+                
+                # Count how many times this exact relationship exists
+                {
+                    SELECT ?source ?rel ?target (COUNT(*) AS ?count) WHERE {
+                        ?source ?rel ?target .
+                    }
+                    GROUP BY ?source ?rel ?target
+                }
+                
+                FILTER(?count > 1)
+            }
+        """
+    ] .
+
+## Check for potentially missing relationship metadata
+<#>MissingRelationshipMetadataWarning rdf:type sh:NodeShape ;
+    rdfs:label "Missing Relationship Metadata Warning" ;
+    sh:severity sh:Warning ;
+    sh:sparql [
+        sh:message "Relationship exists but is missing name or documentation (only identifier present)" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source ?target WHERE {
+                ?source ?rel ?target .
+                <<?source ?rel ?target>> archimate:identifier ?id .
+                
+                FILTER NOT EXISTS {
+                    <<?source ?rel ?target>> archimate:name ?name .
+                }
+                FILTER NOT EXISTS {
+                    <<?source ?rel ?target>> archimate:documentation ?doc .
+                }
+            }
+        """
+    ] .
+
+
+### USAGE NOTES
+
+# This validation file should be used with the base ArchiMate ontology to:
+# 1. Validate that relationships conform to ArchiMate metamodel rules
+# 2. Ensure RDF-Star metadata is properly formatted
+# 3. Check cross-layer relationship constraints
+# 4. Identify potential modeling issues (warnings and info)
+#
+# Severity levels used:
+# - sh:Violation (default): Hard constraint violations that break the metamodel
+# - sh:Warning: Potential issues that should be reviewed but may be intentional
+# - sh:Info: Informational notices about model quality or completeness
+#
+# To execute validation:
+# 1. Load base ArchiMate ontology (archimate.ttl)
+# 2. Load this validation file
+# 3. Load your model data
+# 4. Run SHACL validation
+# 5. Review violations, warnings, and info messages
+

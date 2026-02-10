@@ -4,24 +4,35 @@
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix archimate: <https://purl.org/archimate#> .
-@prefix ex: <https://purl.org/archimate/validation#> .
 @base <https://purl.org/archimate/validation#> .
 
 ### SHACL Validation for ArchiMate Basic Constraints
 <#> rdf:type owl:Ontology ;
     owl:imports <https://purl.org/archimate#> ;
     rdfs:label "ArchiMate Basic Validation Rules" ;
-    rdfs:comment "SHACL validation constraints for basic ArchiMate model quality and consistency." ;
+    rdfs:comment "SHACL validation constraints for basic ArchiMate model quality and consistency. Focus on element-level constraints. For relationship-specific validation, see archimate_relationship_validation.ttl" ;
     owl:versionInfo "Alpha" .
 
-### 1. Universal Element and Relationship Requirements
+### NOTES
+# This file focuses on:
+# - Universal element requirements (identifier, name, documentation, specialization)
+# - Element uniqueness constraints
+# - Specialization validation
+# - Layer consistency for elements
+# - Model completeness checks
+#
+# For relationship-specific validation, see: archimate_relationship_validation.ttl
+# For derivation rules, see: archimate_derivation.ttl
+# For profile validation, see: archimate_profiles.ttl
+
+### 1. Universal Element Requirements
 
 # All realized elements must have required attributes
-ex:RealizedElementShape rdf:type sh:NodeShape ;
+<#RealizedElementShape> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Element ;
     rdfs:label "Realized Element Requirements" ;
     sh:property [
-        sh:path archimate:Identifier ;
+        sh:path archimate:identifier ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:datatype xsd:string ;
@@ -29,7 +40,7 @@ ex:RealizedElementShape rdf:type sh:NodeShape ;
         sh:message "All realized elements must have exactly one valid identifier (must start with letter or underscore, then alphanumeric, underscore, hyphen)"
     ] ;
     sh:property [
-        sh:path archimate:Name ;
+        sh:path archimate:name ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:datatype xsd:string ;
@@ -37,7 +48,7 @@ ex:RealizedElementShape rdf:type sh:NodeShape ;
         sh:message "All realized elements must have exactly one non-empty name"
     ] ;
     sh:property [
-        sh:path archimate:Documentation ;
+        sh:path archimate:documentation ;
         sh:minCount 1 ;
         sh:datatype xsd:string ;
         sh:minLength 1 ;
@@ -50,127 +61,43 @@ ex:RealizedElementShape rdf:type sh:NodeShape ;
         sh:message "All realized elements must declare their specialization (what ArchiMate element type they represent)"
     ] .
 
-# All realized relationships must have required attributes
-ex:RealizedRelationshipShape rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Relationship ;
-    rdfs:label "Realized Relationship Requirements" ;
-    sh:property [
-        sh:path archimate:Identifier ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:datatype xsd:string ;
-        sh:pattern "^[a-zA-Z_][a-zA-Z0-9_-]*$" ;
-        sh:message "All realized relationships must have exactly one valid identifier (must start with letter or underscore, then alphanumeric, underscore, hyphen)"
-    ] ;
-    sh:property [
-        sh:path archimate:Name ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:datatype xsd:string ;
-        sh:minLength 1 ;
-        sh:message "All realized relationships must have exactly one non-empty name"
-    ] ;
-    sh:property [
-        sh:path archimate:Documentation ;
-        sh:minCount 1 ;
-        sh:datatype xsd:string ;
-        sh:minLength 1 ;
-        sh:message "All realized relationships must have documentation"
-    ] ;
-    sh:property [
-        sh:path archimate:specialization ;
-        sh:minCount 1 ;
-        sh:message "All realized relationships must declare their specialization (what ArchiMate relationship type they represent)"
-    ] .
-
-# Validate that specialization points to valid ArchiMate types
-ex:ValidSpecializationShape rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Element, archimate:Relationship ;
-    rdfs:label "Valid Specialization Target" ;
+# Validate that specialization points to valid ArchiMate element types
+<#ValidElementSpecialization> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "Valid Element Specialization Target" ;
     sh:sparql [
-        sh:message "Specialization must point to a valid ArchiMate element or relationship type defined in the ontology" ;
+        sh:message "Element specialization must point to a valid ArchiMate element type defined in the ontology" ;
         sh:select """
             SELECT $this WHERE {
                 $this archimate:specialization ?type .
                 FILTER NOT EXISTS {
                     ?type rdf:type owl:Class .
-                    { 
-                        ?type rdfs:subClassOf+ archimate:Element 
-                    } UNION { 
-                        ?type rdfs:subClassOf+ archimate:Relationship 
-                    }
+                    ?type rdfs:subClassOf+ archimate:Element 
                 }
             }
         """
     ] .
 
 # Unique identifier constraint across all elements
-ex:UniqueIdentifierShape rdf:type sh:NodeShape ;
+<#UniqueElementIdentifier> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Element ;
-    rdfs:label "Unique Identifier Constraint" ;
+    rdfs:label "Unique Element Identifier Constraint" ;
     sh:sparql [
         sh:message "Element identifiers must be unique across the model" ;
         sh:select """
             SELECT $this ?other WHERE {
-                $this archimate:Identifier ?id .
-                ?other archimate:Identifier ?id .
+                $this archimate:identifier ?id .
+                ?other archimate:identifier ?id .
                 FILTER($this != ?other)
             }
         """
     ] .
 
-### 2. Relationship Validation
 
-# Basic relationship structure validation
-ex:RelationshipShape rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Relationship ;
-    rdfs:label "Relationship Basic Structure" ;
-    sh:property [
-        sh:path [ sh:inversePath rdf:subject ] ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:class archimate:Element ;
-        sh:message "All relationships must have exactly one source element"
-    ] ;
-    sh:property [
-        sh:path [ sh:inversePath rdf:object ] ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:class archimate:Element ;
-        sh:message "All relationships must have exactly one target element"
-    ] .
-
-# No self-relationships for composition and aggregation
-ex:NoSelfCompositionShape rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Element ;
-    rdfs:label "No Self-Composition" ;
-    sh:sparql [
-        sh:message "Elements cannot compose or aggregate themselves" ;
-        sh:select """
-            SELECT $this WHERE {
-                { $this archimate:composition $this } UNION
-                { $this archimate:aggregation $this }
-            }
-        """
-    ] .
-
-# No circular composition
-ex:NoCircularCompositionShape rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Element ;
-    rdfs:label "No Circular Composition" ;
-    sh:sparql [
-        sh:message "Circular composition relationships are not allowed" ;
-        sh:select """
-            SELECT $this WHERE {
-                $this archimate:composition+ $this
-            }
-        """
-    ] .
-
-### 3. Layer Consistency Validation
+### 2. Layer Consistency Validation
 
 # Elements should primarily belong to one layer
-ex:LayerConsistencyShape rdf:type sh:NodeShape ;
+<#LayerConsistencyShape> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Element ;
     rdfs:label "Layer Consistency" ;
     sh:sparql [
@@ -178,8 +105,9 @@ ex:LayerConsistencyShape rdf:type sh:NodeShape ;
         sh:select """
             SELECT $this WHERE {
                 {
-                    SELECT $this (COUNT(?layer) AS ?layerCount) WHERE {
-                        $this rdf:type ?layer .
+                    SELECT $this (COUNT(DISTINCT ?layer) AS ?layerCount) WHERE {
+                        $this rdf:type ?elementType .
+                        ?elementType rdfs:subClassOf+ ?layer .
                         ?layer rdfs:subClassOf archimate:Layer .
                     }
                     GROUP BY $this
@@ -189,109 +117,41 @@ ex:LayerConsistencyShape rdf:type sh:NodeShape ;
         """
     ] .
 
-# Cross-layer relationships should follow ArchiMate guidelines
-ex:CrossLayerRelationshipShape rdf:type sh:NodeShape ;
-    sh:targetSubjectsOf archimate:serving ;
-    rdfs:label "Cross-Layer Serving Relationships" ;
+
+### 3. Aspect Consistency Validation
+
+# Elements should primarily belong to one aspect within their layer
+<#AspectConsistencyShape> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "Aspect Consistency" ;
+    sh:severity sh:Info ;
     sh:sparql [
-        sh:message "Serving relationships should generally flow from lower to higher layers" ;
+        sh:message "Elements typically belong to one primary aspect (Active Structure, Behavior, or Passive Structure)" ;
         sh:select """
-            SELECT $this ?target WHERE {
-                $this archimate:serving ?target .
-                
-                # Check if this is violating layer hierarchy
+            SELECT $this WHERE {
                 {
-                    $this rdf:type/rdfs:subClassOf archimate:BusinessLayer .
-                    ?target rdf:type/rdfs:subClassOf archimate:ApplicationLayer .
-                } UNION {
-                    $this rdf:type/rdfs:subClassOf archimate:BusinessLayer .
-                    ?target rdf:type/rdfs:subClassOf archimate:TechnologyLayer .
-                } UNION {
-                    $this rdf:type/rdfs:subClassOf archimate:ApplicationLayer .
-                    ?target rdf:type/rdfs:subClassOf archimate:TechnologyLayer .
+                    SELECT $this (COUNT(DISTINCT ?aspect) AS ?aspectCount) WHERE {
+                        $this rdf:type ?elementType .
+                        ?elementType rdfs:subClassOf+ ?aspect .
+                        VALUES ?aspect {
+                            archimate:ActiveStructure 
+                            archimate:BehaviorAspect 
+                            archimate:PassiveStructure
+                            archimate:MotivationAspect
+                        }
+                    }
+                    GROUP BY $this
                 }
+                FILTER(?aspectCount > 1)
             }
         """
     ] .
 
-### 4. Access Relationship Validation
 
-# Access relationships must be from behavior to passive structure
-ex:AccessRelationshipShape rdf:type sh:NodeShape ;
-    sh:targetSubjectsOf archimate:access ;
-    rdfs:label "Access Relationship Domain" ;
-    sh:class archimate:BehaviorElement ;
-    sh:message "Access relationships can only originate from behavior elements" .
-
-ex:AccessRelationshipRangeShape rdf:type sh:NodeShape ;
-    sh:targetObjectsOf archimate:access ;
-    rdfs:label "Access Relationship Range" ;
-    sh:class archimate:PassiveStructure ;
-    sh:message "Access relationships can only target passive structure elements" .
-
-### 5. Assignment Relationship Validation
-
-# Assignment relationships must be from active structure to behavior
-ex:AssignmentRelationshipShape rdf:type sh:NodeShape ;
-    sh:targetSubjectsOf archimate:assignment ;
-    rdfs:label "Assignment Relationship Domain" ;
-    sh:class archimate:ActiveStructure ;
-    sh:message "Assignment relationships can only originate from active structure elements" .
-
-ex:AssignmentRelationshipRangeShape rdf:type sh:NodeShape ;
-    sh:targetObjectsOf archimate:assignment ;
-    rdfs:label "Assignment Relationship Range" ;
-    sh:class archimate:BehaviorElement ;
-    sh:message "Assignment relationships can only target behavior elements" .
-
-### 6. RDF-Star Relationship Metadata Validation
-
-# Validate access type values for RDF-Star statements
-ex:AccessTypeValidation rdf:type sh:NodeShape ;
-    rdfs:label "Access Type Validation" ;
-    sh:sparql [
-        sh:message "Access relationships must have valid access types: read, write, readwrite, or unspecified" ;
-        sh:select """
-            SELECT ?subject ?object WHERE {
-                <<?subject archimate:access ?object>> ?statement .
-                ?statement archimate:accessType ?accessType .
-                FILTER(?accessType NOT IN ("read", "write", "readwrite", "unspecified"))
-            }
-        """
-    ] .
-
-# Validate influence sign values  
-ex:InfluenceSignValidation rdf:type sh:NodeShape ;
-    rdfs:label "Influence Sign Validation" ;
-    sh:sparql [
-        sh:message "Influence relationships must have valid signs: positive, negative, or unspecified" ;
-        sh:select """
-            SELECT ?subject ?object WHERE {
-                <<?subject archimate:influence ?object>> ?statement .
-                ?statement archimate:influenceSign ?sign .
-                FILTER(?sign NOT IN ("positive", "negative", "unspecified"))
-            }
-        """
-    ] .
-
-# Validate flow type values
-ex:FlowTypeValidation rdf:type sh:NodeShape ;
-    rdfs:label "Flow Type Validation" ;
-    sh:sparql [
-        sh:message "Flow relationships must have valid types: information, material, energy, or unspecified" ;
-        sh:select """
-            SELECT ?subject ?object WHERE {
-                <<?subject archimate:flow ?object>> ?statement .
-                ?statement archimate:flowType ?flowType .
-                FILTER(?flowType NOT IN ("information", "material", "energy", "unspecified"))
-            }
-        """
-    ] .
-
-### 7. Model Completeness Validation
+### 4. Model Completeness Validation
 
 # Check for orphaned elements (no relationships)
-ex:OrphanedElementShape rdf:type sh:NodeShape ;
+<#OrphanedElementShape> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Element ;
     rdfs:label "Connected Elements" ;
     sh:sparql [
@@ -299,6 +159,15 @@ ex:OrphanedElementShape rdf:type sh:NodeShape ;
         sh:severity sh:Info ;
         sh:select """
             SELECT $this WHERE {
+                # Exclude Grouping and Location elements (they can exist independently)
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* archimate:Grouping
+                }
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* archimate:Location
+                }
+                
+                # Check if element has any relationships
                 FILTER NOT EXISTS {
                     { $this ?p ?o . ?p rdfs:subPropertyOf+ archimate:structuralRelationship } UNION
                     { $this ?p ?o . ?p rdfs:subPropertyOf+ archimate:dependencyRelationship } UNION
@@ -310,3 +179,166 @@ ex:OrphanedElementShape rdf:type sh:NodeShape ;
             }
         """
     ] .
+
+# Check for singleton elements (only one instance of an element type)
+<#SingletonElementCheck> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "Singleton Element Check" ;
+    sh:severity sh:Info ;
+    sh:sparql [
+        sh:message "Only one instance of this element type exists in the model - consider if this is intentional" ;
+        sh:select """
+            SELECT $this WHERE {
+                $this rdf:type ?elementType .
+                ?elementType rdfs:subClassOf+ archimate:Element .
+                
+                # Count instances of this element type
+                {
+                    SELECT ?elementType (COUNT(?instance) AS ?instanceCount) WHERE {
+                        ?instance rdf:type ?elementType .
+                    }
+                    GROUP BY ?elementType
+                }
+                
+                FILTER(?instanceCount = 1)
+            }
+        """
+    ] .
+
+
+### 5. Naming Convention Validation
+
+# Check for elements with generic or placeholder names
+<#GenericNameCheck> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "Generic Name Check" ;
+    sh:severity sh:Warning ;
+    sh:sparql [
+        sh:message "Element has a generic or placeholder name - consider using a more descriptive name" ;
+        sh:select """
+            SELECT $this WHERE {
+                $this archimate:name ?name .
+                
+                # Generic patterns to flag
+                FILTER(
+                    REGEX(?name, "^(test|temp|TODO|TBD|XXX|placeholder|example|sample)", "i") ||
+                    REGEX(?name, "^(Element|Component|Process|Service|Actor)\\s*[0-9]*$", "i") ||
+                    REGEX(?name, "^(Untitled|New|Default)", "i")
+                )
+            }
+        """
+    ] .
+
+# Check for very short element names (less than 3 characters)
+<#ShortNameCheck> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "Short Name Check" ;
+    sh:severity sh:Info ;
+    sh:sparql [
+        sh:message "Element has a very short name (less than 3 characters) - consider if this is descriptive enough" ;
+        sh:select """
+            SELECT $this WHERE {
+                $this archimate:name ?name .
+                FILTER(STRLEN(?name) < 3)
+            }
+        """
+    ] .
+
+
+### 6. Documentation Quality Validation
+
+# Check for elements with minimal documentation
+<#MinimalDocumentationCheck> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "Minimal Documentation Check" ;
+    sh:severity sh:Info ;
+    sh:sparql [
+        sh:message "Element has very brief documentation (less than 20 characters) - consider adding more detail" ;
+        sh:select """
+            SELECT $this WHERE {
+                $this archimate:documentation ?doc .
+                FILTER(STRLEN(?doc) < 20)
+            }
+        """
+    ] .
+
+# Check for documentation that just repeats the name
+<#RedundantDocumentationCheck> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "Redundant Documentation Check" ;
+    sh:severity sh:Warning ;
+    sh:sparql [
+        sh:message "Element documentation appears to just repeat the name - consider adding more descriptive content" ;
+        sh:select """
+            SELECT $this WHERE {
+                $this archimate:name ?name .
+                $this archimate:documentation ?doc .
+                FILTER(LCASE(?name) = LCASE(?doc))
+            }
+        """
+    ] .
+
+
+### 7. Specialization Chain Validation
+
+# Check for overly deep specialization chains
+<#DeepSpecializationCheck> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "Deep Specialization Chain Check" ;
+    sh:severity sh:Info ;
+    sh:sparql [
+        sh:message "Element has a deep specialization chain (4+ levels) - consider if this complexity is necessary" ;
+        sh:select """
+            SELECT $this WHERE {
+                # Check specialization depth via transitive property
+                $this archimate:specialization+ ?type1 .
+                ?type1 archimate:specialization+ ?type2 .
+                ?type2 archimate:specialization+ ?type3 .
+                ?type3 archimate:specialization+ ?type4 .
+            }
+        """
+    ] .
+
+
+### 8. Type Consistency Validation
+
+# Ensure element types are consistent with their specialization
+<#TypeSpecializationConsistency> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "Type-Specialization Consistency" ;
+    sh:sparql [
+        sh:message "Element type (rdf:type) is not consistent with its declared specialization" ;
+        sh:select """
+            SELECT $this WHERE {
+                $this rdf:type ?actualType .
+                $this archimate:specialization ?declaredType .
+                
+                # Actual type should be a subclass of declared type or the declared type itself
+                FILTER NOT EXISTS {
+                    { ?actualType rdfs:subClassOf* ?declaredType }
+                    UNION
+                    { ?actualType = ?declaredType }
+                }
+            }
+        """
+    ] .
+
+
+### USAGE NOTES
+
+# This validation file should be used alongside:
+# - archimate_relationship_validation.ttl (for relationship-specific constraints)
+# - archimate_derivation.ttl (for derivation rules)
+# - archimate_profiles.ttl (for profile-specific shapes)
+#
+# Validation severity levels:
+# - sh:Violation (default): Hard constraint violations
+# - sh:Warning: Issues that should be reviewed
+# - sh:Info: Quality suggestions and informational notices
+#
+# To execute validation:
+# 1. Load base ArchiMate ontology (archimate.ttl)
+# 2. Load this validation file
+# 3. Load archimate_relationship_validation.ttl
+# 4. Load your model data
+# 5. Run SHACL validation
