@@ -5,7 +5,7 @@ This is a namespace to use with the Archimate 3.2 Ontology.
   https://purl.org/archimate#
   
 ### Last Updated Date
-  2024-06-15
+  2026-02-10
   
 ### Author
   Alberto D. Mendoza
