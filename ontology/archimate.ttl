@@ -6,8 +6,11 @@
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix shui: <http://www.w3.org/ns/shacl-ui#> .
 @prefix base: <https://purl.org/archimate#> .
 @prefix archimate-skos: <https://purl.org/archimate/skos#> .
+@prefix archimate-prof: <https://purl.org/archimate/profile#> .
 @base <https://purl.org/archimate#> .
 
 ### Ontology Declaration
@@ -25,7 +28,7 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2025-07-16"^^xsd:date .
+    dct:modified "2026-02-10"^^xsd:date .
 
 # NOTES 
 # This is a Work in Progress and not remotely a complete ontology file for ArchiMate. 
@@ -36,9 +39,29 @@
 
 # TODO
 # Add *All* Derivation Rules <-- the whole reason why I'm trying to do this.
-# Figure out Specializations and Profiles
+
+# SPECIALIZATIONS AND PROFILES — DESIGN DECISION
+#
+# ArchiMate profiles allow user-defined subtypes of standard elements,
+# e.g. BusinessActor → Person, Organization. In native RDF, we model them as real OWL
+# classes in the specialization hierarchy:
+#
+#   archimate-prof:Person a owl:Class, sh:NodeShape ;
+#       rdfs:subClassOf archimate:BusinessActor ;
+#       archimate:specialization archimate:BusinessActor .
+#
+# Why this works:
+# - rdfs:subClassOf gives OWL inference (a archimate-prof:Person is-a archimate:BusinessActor)
+# - archimate:specialization (owl:TransitiveProperty) enables derivation rules (PDR1-4)
+# - sh:NodeShape on the profile class defines typed attributes as SHACL properties
+# - The profile class IS the shape (implicit target pattern) — no separate shape needed
+# - Profile shapes can define domain-specific properties (e.g. dateOfBirth, email)
+# - Profiles nest naturally: Employee → Person → BusinessActor
+#
+# See Section 4 below for example profile definitions.
 
 # UPDATES
+# 2026-02-10 Added Specializations/Profiles design pattern with SHACL shapes (Section 4)
 # 2025-07-16 Separated validation rules following OWL/SHACL separation guidelines
 # 2025-07-04 Redid Relationships with RDF-Star, added SHACL for relationships. changed version to Alpha
 # 2025-06-04 Added DR1.
@@ -858,3 +881,46 @@
     rdfs:range xsd:string .
 
 
+### 4. Specialization Profiles
+#
+# Profile classes are owl:Class that specialize standard ArchiMate elements.
+# They sit in the rdfs:subClassOf hierarchy and link via archimate:specialization.
+# SHACL shapes for profiles are defined in validation/archimate_profiles.ttl.
+#
+# These are example profiles (not part of the ArchiMate specification).
+# Common specializations by element type:
+#   BusinessActor    → Person, Organization, Department, Team, Committee
+#   BusinessRole     → Manager, Analyst, Developer, Auditor
+#   BusinessProcess  → CoreProcess, SupportProcess, ManagementProcess
+#   BusinessObject   → Contract, Invoice, Policy, Report
+#   ApplicationComponent → Microservice, Database, WebApplication, API
+#   Node             → Server, VM, Container, CloudInstance
+#   Artifact         → SourceCode, Configuration, LogFile, Schema
+
+## 4.1 BusinessActor Profiles
+
+archimate-prof:Person rdf:type owl:Class ;
+    rdfs:subClassOf <#BusinessActor> ;
+    <#specialization> <#BusinessActor> ;
+    rdfs:label "Person" ;
+    rdfs:comment "A BusinessActor representing an individual person." .
+
+archimate-prof:Organization rdf:type owl:Class ;
+    rdfs:subClassOf <#BusinessActor> ;
+    <#specialization> <#BusinessActor> ;
+    rdfs:label "Organization" ;
+    rdfs:comment "A BusinessActor representing a group of people or organizational unit." .
+
+## 4.2 Profile Properties
+
+archimate-prof:dateOfBirth rdf:type owl:DatatypeProperty ;
+    rdfs:label "date of birth" ;
+    rdfs:comment "Date of birth for a Person profile." ;
+    rdfs:domain archimate-prof:Person ;
+    rdfs:range xsd:date .
+
+archimate-prof:email rdf:type owl:DatatypeProperty ;
+    rdfs:label "email" ;
+    rdfs:comment "Email address for a Person profile." ;
+    rdfs:domain archimate-prof:Person ;
+    rdfs:range xsd:anyURI .

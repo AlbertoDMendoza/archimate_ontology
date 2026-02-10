@@ -1,0 +1,71 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix shui: <http://www.w3.org/ns/shacl-ui#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix archimate: <https://purl.org/archimate#> .
+@prefix archimate-prof: <https://purl.org/archimate/profile#> .
+
+### SHACL Shapes for ArchiMate Specialization Profiles
+#
+# Profile classes (defined in ontology/archimate.ttl) are owl:Class that specialize
+# standard ArchiMate elements via rdfs:subClassOf and archimate:specialization.
+# This file defines their SHACL shapes — typed attributes that give profiles meaning.
+#
+# The profile class IS the shape (implicit target pattern: class URI = shape URI).
+# Applications discover profile shapes via sh:property, same as any other shape.
+
+### 1. BusinessActor Profile Shapes
+
+## Person Shape
+archimate-prof:Person a sh:NodeShape ;
+    sh:property [
+        sh:path archimate:Name ;
+        sh:name "Name" ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:order 1
+    ] ;
+    sh:property [
+        sh:path archimate-prof:dateOfBirth ;
+        sh:name "Date of Birth" ;
+        sh:datatype xsd:date ;
+        sh:order 2
+    ] ;
+    sh:property [
+        sh:path archimate-prof:email ;
+        sh:name "Email" ;
+        sh:datatype xsd:anyURI ;
+        shui:viewer shui:HyperlinkViewer ;
+        sh:order 3
+    ] ;
+    sh:property [
+        sh:path archimate:Documentation ;
+        sh:name "Documentation" ;
+        sh:datatype xsd:string ;
+        sh:order 4
+    ] .
+
+## Organization Shape
+archimate-prof:Organization a sh:NodeShape ;
+    sh:property [
+        sh:path archimate:Name ;
+        sh:name "Name" ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:order 1
+    ] ;
+    sh:property [
+        sh:path archimate:Documentation ;
+        sh:name "Documentation" ;
+        sh:datatype xsd:string ;
+        sh:order 2
+    ] ;
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:name "Members" ;
+        sh:class archimate-prof:Person ;
+        shui:viewer shui:ValueTableViewer ;
+        sh:order 3
+    ] .
