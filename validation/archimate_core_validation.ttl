@@ -25,6 +25,25 @@
 # For derivation rules, see: archimate_derivation.ttl
 # For profile validation, see: archimate_profiles.ttl
 
+### Usage Notes
+# This validation file should be used alongside:
+# - archimate_relationship_validation.ttl (for relationship-specific constraints)
+# - archimate_derivation.ttl (for derivation rules)
+# - archimate_profiles.ttl (for profile-specific shapes)
+#
+# Validation severity levels:
+# - sh:Violation (default): Hard constraint violations
+# - sh:Warning: Issues that should be reviewed
+# - sh:Info: Quality suggestions and informational notices
+#
+# To execute validation:
+# 1. Load base ArchiMate ontology (archimate.ttl)
+# 2. Load this validation file
+# 3. Load archimate_relationship_validation.ttl
+# 4. Load your model data
+# 5. Run SHACL validation
+
+
 ### 1. Universal Element Requirements
 
 # All realized elements must have required attributes
@@ -322,23 +341,3 @@
             }
         """
     ] .
-
-
-### USAGE NOTES
-
-# This validation file should be used alongside:
-# - archimate_relationship_validation.ttl (for relationship-specific constraints)
-# - archimate_derivation.ttl (for derivation rules)
-# - archimate_profiles.ttl (for profile-specific shapes)
-#
-# Validation severity levels:
-# - sh:Violation (default): Hard constraint violations
-# - sh:Warning: Issues that should be reviewed
-# - sh:Info: Quality suggestions and informational notices
-#
-# To execute validation:
-# 1. Load base ArchiMate ontology (archimate.ttl)
-# 2. Load this validation file
-# 3. Load archimate_relationship_validation.ttl
-# 4. Load your model data
-# 5. Run SHACL validation
