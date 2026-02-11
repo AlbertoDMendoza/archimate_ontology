@@ -32,17 +32,19 @@ This repository models the language itself, not a specific tool implementation.
   albertodmendoza.net
 
 ## Repo Structure
-ontology/
-    archimate.ttl            <-- main ontology file   <-- purl.org/archimate/owl 
-    archimate_skos.ttl       <-- vocabulary           <-- purl.org/archimate/skos 
-    archimate.html           <-- vocabulary in HTML   <-- purl.org/archimate# 
-    archimate_profile_exampes.ttl    <-- self explanatory
+<pre>
+ontology/ 
+├── archimate.ttl                     # Main ontology file (purl.org/archimate/owl)
+├── archimate_skos.ttl                # Vocabulary (purl.org/archimate/skos)
+├── archimate.html                    # Human-readable vocabulary (purl.org/archimate#)
+└── archimate_profile_examples.ttl    # Profile examples
 
 validation/
-    archimate_core_validation.ttl
-    archimate_relationship_validation.ttl
-    archimate_derivation.ttl
-    archimate_profiles.ttl
+├── archimate_core_validation.ttl
+├── archimate_relationship_validation.ttl
+├── archimate_derivation.ttl
+└── archimate_profiles.ttl
+</pre>
 
 ## Specification 
 This Ontology is a rendition of The Open Group® ArchiMate® 3.2 Specification. See the full specification at https://pubs.opengroup.org/architecture/archimate3-doc/. 
