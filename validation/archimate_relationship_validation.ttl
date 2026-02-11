@@ -8,7 +8,7 @@
 
 ### SHACL Validation for ArchiMate Relationships
 <#> rdf:type owl:Ontology ;
-    owl:imports <https://purl.org/archimate#> ;
+    owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Relationship Validation Rules" ;
     rdfs:comment "Comprehensive SHACL validation constraints for all ArchiMate relationships, their valid sources/targets, and metamodel rules." ;
     dct:description "This file contains all relationship-specific validation rules including: valid relationship combinations per element type, cross-layer relationship constraints, relationship metadata validation (RDF-Star), and ArchiMate metamodel conformance." ;
