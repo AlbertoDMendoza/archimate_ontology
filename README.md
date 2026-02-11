@@ -28,8 +28,8 @@ This repository models the language itself, not a specific tool implementation.
   2026-02-10
   
 ### Author
-  Alberto D. Mendoza
-  albertodmendoza.net
+  Alberto D. Mendoza  
+  https://albertodmendoza.net
 
 ## Repo Structure
 <pre>
