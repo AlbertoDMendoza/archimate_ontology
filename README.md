@@ -29,6 +29,7 @@ This repository models the language itself, not a specific tool implementation.
   
 ### Author
   Alberto D. Mendoza
+  albertodmendoza.net
 
 ## Repo Structure
 ontology/
