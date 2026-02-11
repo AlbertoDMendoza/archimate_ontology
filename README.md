@@ -1,7 +1,27 @@
-# Archimate Ontology
-This is a namespace to use with the Archimate 3.2 Ontology.  
+# Archimate Ontology (OWL + SHACL)
+An OWL/RDF formalization of the ArchiMate® 3.2 Specification, including executable validation using SHACL.
 
-### Permanent URL
+This repository provides:
+* OWL ontology of ArchiMate enterprise architecture language
+* SHACL constraints that enforce the ArchiMate metamodel
+* Support for custom profiles and specializations
+* Derivation rules
+
+The goal of this project is to provide a semantically rigorous, standards-faithful representation of ArchiMate suitable for:
+* Enterprise architecture modeling on RDF graphs
+* Semantic querying and reasoning
+* Automated model validation and conformance checking
+* Knowledge graph integration with enterprise systems
+* Tool-independent architecture repositories
+* Advanced impact and dependency analysis
+* Architecture governance automation
+* Ontology alignment and research
+* Controlled language extensions and profiling
+* Foundations for enterprise digital twins and AI-assisted architecture
+
+This repository models the language itself, not a specific tool implementation.
+
+### Namespace - Permanent URL
   https://purl.org/archimate#
   
 ### Last Updated Date
@@ -10,11 +30,23 @@ This is a namespace to use with the Archimate 3.2 Ontology.
 ### Author
   Alberto D. Mendoza
 
-## Status of this Document
-This vocabulary is a rendition of The Open Group® ArchiMate® 3.2 Specification. See the full specification at https://pubs.opengroup.org/architecture/archimate3-doc/. 
+## Repo Structure
+ontology/
+    archimate.ttl            <-- main ontology file   <-- purl.org/archimate/owl 
+    archimate_skos.ttl       <-- vocabulary           <-- purl.org/archimate/skos 
+    archimate.html           <-- vocabulary in HTML   <-- purl.org/archimate# 
+    archimate_profile_exampes.ttl    <-- self explanatory
 
-## Serialisations
-The vocabulary is published both in human- and machine-readable forms: HTML, RDF (Turtle), and RDF/XML  
+validation/
+    archimate_core_validation.ttl
+    archimate_relationship_validation.ttl
+    archimate_derivation.ttl
+    archimate_profiles.ttl
+
+## Specification 
+This Ontology is a rendition of The Open Group® ArchiMate® 3.2 Specification. See the full specification at https://pubs.opengroup.org/architecture/archimate3-doc/. 
+The model tries to remain faithful to the ArchiMate 3.2 specification. No semantic reinterpretation is introduced at the base ontology level.
 
 ### Disclaimer
-This is an experimental project.  All trademarks and copyrights belong to The Open Group
+ArchiMate is a registered trademark of The Open Group.
+This project is an independent formalization and is not an official Open Group publication.
