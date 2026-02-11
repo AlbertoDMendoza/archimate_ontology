@@ -3,6 +3,7 @@ An OWL/RDF formalization of the ArchiMate® 3.2 Specification, including executa
 
 This repository provides:
 * OWL ontology of ArchiMate enterprise architecture language
+* SKOS file with ArchiMate vocabulary, published as HTML
 * SHACL constraints that enforce the ArchiMate metamodel
 * Support for custom profiles and specializations
 * Derivation rules
