@@ -14,6 +14,47 @@
     owl:versionInfo "Alpha" ;
     rdfs:seeAlso <https://digital-portfolio.opengroup.org/archimate-specs/latest/99-appendices/02-relationships-normative.html> .
 
+### Integration with ArchiMate Ontology
+# Integration with other validation files:
+# - archimate_core_validation.ttl: Element-level validation
+# - archimate_relationship_validation.ttl: Relationship metamodel constraints
+# - archimate_profiles.ttl: Profile-specific shapes
+#
+# Derived relationships are marked with confidence levels:
+# - "valid": Definitely correct per ArchiMate spec (DR1-DR8)
+# - "potential": Possibly correct, needs review (PDR1-PDR12)
+# - "suggestion": Modeling pattern suggestion (utility rules)
+#
+
+### Usage Instructions
+# To execute these derivation rules:
+# 1. Load your base ArchiMate ontology
+# 2. Load this derivation rules file  
+# 3. Run SPARQL CONSTRUCT queries or use SHACL-Advanced Features
+# 4. The derived relationships will have metadata indicating:
+#    - Confidence level (valid/potential/suggestion)
+#    - Derivation rule used
+#    - Source relationships that led to the derivation
+#    - Timestamps and provenance
+
+# Example usage in SPARQL:
+# # Execute all valid derivation rules
+# CONSTRUCT WHERE {
+#     ?rule rdf:type sh:SPARQLRule .
+#     ?rule sh:construct ?constructQuery .
+#     # Execute the construct query
+# }
+#
+# # Query derived relationships  
+# SELECT ?source ?rel ?target ?confidence ?rule WHERE {
+#     ?source ?rel ?target .
+#     <<?source ?rel ?target>> archimate:confidence ?confidence ;
+#                              archimate:description ?desc .
+#     BIND(STRAFTER(STR(?desc), "Derived via ") AS ?rule)
+#     FILTER(?confidence IN ("valid", "potential"))
+# }
+
+
 ### TODO
 # TESTING:
 #   - Create test cases for each derivation rule (DR1-DR8, PDR1-PDR12)
@@ -603,6 +644,9 @@
     """ .
 
 ### Relationship Strength Assignments
+# The rules work with the relationship strength assignments defined below.
+# The strength values enable derivation rules to determine which relationship
+# type to use when combining relationships (always use the weaker relationship).
 
 # Assign structural relationship strengths (directly queryable in SPARQL)
 archimate:realization <#structuralStrength> 1 .
@@ -996,48 +1040,4 @@ archimate:serving <#dependencyStrength> 4 .
         """
     ] .
 
-### Integration with ArchiMate Ontology
 
-# These rules work with the relationship strength assignments defined above.
-# The strength values enable derivation rules to determine which relationship
-# type to use when combining relationships (always use the weaker relationship).
-#
-# Integration with other validation files:
-# - archimate_core_validation.ttl: Element-level validation
-# - archimate_relationship_validation.ttl: Relationship metamodel constraints
-# - archimate_profiles.ttl: Profile-specific shapes
-#
-# Derived relationships are marked with confidence levels:
-# - "valid": Definitely correct per ArchiMate spec (DR1-DR8)
-# - "potential": Possibly correct, needs review (PDR1-PDR12)
-# - "suggestion": Modeling pattern suggestion (utility rules)
-
-### Usage Instructions
-
-# To execute these derivation rules:
-# 1. Load your base ArchiMate ontology
-# 2. Load this derivation rules file  
-# 3. Run SPARQL CONSTRUCT queries or use SHACL-Advanced Features
-# 4. The derived relationships will have metadata indicating:
-#    - Confidence level (valid/potential/suggestion)
-#    - Derivation rule used
-#    - Source relationships that led to the derivation
-#    - Timestamps and provenance
-
-# Example usage in SPARQL:
-# 
-# # Execute all valid derivation rules
-# CONSTRUCT WHERE {
-#     ?rule rdf:type sh:SPARQLRule .
-#     ?rule sh:construct ?constructQuery .
-#     # Execute the construct query
-# }
-#
-# # Query derived relationships  
-# SELECT ?source ?rel ?target ?confidence ?rule WHERE {
-#     ?source ?rel ?target .
-#     <<?source ?rel ?target>> archimate:confidence ?confidence ;
-#                              archimate:description ?desc .
-#     BIND(STRAFTER(STR(?desc), "Derived via ") AS ?rule)
-#     FILTER(?confidence IN ("valid", "potential"))
-# }
