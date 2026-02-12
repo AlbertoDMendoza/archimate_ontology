@@ -11,7 +11,7 @@
 ### Ontology Declaration
 <#> rdf:type owl:Ontology ;
     owl:versionInfo "Alpha" ;
-    rdf:label "ArchiMate Ontology - RDF-Star Edition" ;
+    rdfs:label "ArchiMate Ontology - RDF-Star Edition" ;
     rdfs:comment "An RDF-Star compliant ontology for the ArchiMate modeling language with relationship metadata support." ;
     dct:title "ArchiMate Ontology" ;
     dct:description "An RDF-Star based ontology for the ArchiMate modeling language supporting relationship attributes." ;
