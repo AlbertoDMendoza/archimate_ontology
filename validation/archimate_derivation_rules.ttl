@@ -3,6 +3,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
 @prefix archimate: <https://purl.org/archimate#> .
 @base <https://purl.org/archimate/derivation#> .
 
@@ -11,6 +12,8 @@
     owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Derivation Rules" ;
     rdfs:comment "Complete implementation of ArchiMate derivation rules DR1-DR8 and PDR1-PDR12 using SPARQL CONSTRUCT rules." ;
+    dct:creator "Alberto D. Mendoza" ;
+    dct:created "2026-02-15"^^xsd:date ;
     owl:versionInfo "Alpha" ;
     rdfs:seeAlso <https://digital-portfolio.opengroup.org/archimate-specs/latest/99-appendices/02-relationships-normative.html> .
 

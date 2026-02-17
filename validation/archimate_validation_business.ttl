@@ -3,8 +3,9 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
 @prefix archimate: <https://purl.org/archimate#> .
-@base <https://purl.org/archimate/validation/rel#> .
+@base <https://purl.org/archimate/validation/business#> .
 
 ### SHACL Validation: Business Layer Valid Relationship Combinations
 ### ArchiMate 3.2 Specification - Appendix B Relationship Matrix
@@ -34,7 +35,31 @@
     owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Relationship Validation - Business Layer" ;
     rdfs:comment "Valid relationship combinations for Business layer elements per ArchiMate 3.2." ;
+    dct:creator "Alberto D. Mendoza" ;
+    dct:created "2026-02-15"^^xsd:date ;
     owl:versionInfo "Alpha" .
+
+
+### NOTES
+# Level 3 Validation — Per-element-type relationship combinations.
+#
+# Generated from relationships.xml matrix (ArchiMate 3.2 Appendix B).
+# Each shape validates that all outgoing relationships from an element
+# target only the element types permitted by the specification.
+#
+# This validation file should be used alongside:
+# - archimate_validation_core.ttl (Level 1: graph integrity, concept requirements)
+# - archimate_validation_metamodel.ttl (Level 2: abstract metamodel pattern rules)
+# - archimate_derivation_rules.ttl (derivation rules)
+# - archimate_validation_profiles.ttl (profile-specific shapes)
+#
+# To execute validation:
+# 1. Load base ArchiMate ontology (archimate.ttl)
+# 2. Load archimate_validation_core.ttl (Level 1)
+# 3. Load archimate_validation_metamodel.ttl (Level 2)
+# 4. Load this file and other Level 3 files (Level 3)
+# 5. Load your model data
+# 6. Run SHACL validation
 
 
 ### BusinessActor

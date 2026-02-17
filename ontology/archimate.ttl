@@ -9,7 +9,10 @@
 @base <https://purl.org/archimate#> .
 
 ### Ontology Declaration
-<#> rdf:type owl:Ontology ;
+# The ontology IRI uses /archimate/owl (the PURL that serves this Turtle file).
+# The @base remains <https://purl.org/archimate#> for the term namespace.
+# Validation files import this ontology via: owl:imports <https://purl.org/archimate/owl> .
+<https://purl.org/archimate/owl> rdf:type owl:Ontology ;
     owl:versionInfo "Alpha" ;
     rdfs:label "ArchiMate Ontology - RDF-Star Edition" ;
     rdfs:comment "An RDF-Star compliant ontology for the ArchiMate modeling language with relationship metadata support." ;
