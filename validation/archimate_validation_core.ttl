@@ -14,6 +14,7 @@
     rdfs:comment "Level 1 Core Validation: universal model quality and graph integrity constraints. Validates concept requirements (identifier, name, documentation, specialization), relationship structural integrity (composition/aggregation rules, RDF-Star metadata), and model quality checks. For metamodel pattern rules, see archimate_validation_metamodel.ttl. For per-element-type relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-10"^^xsd:date ;
+    dct:modified "2026-02-17"^^xsd:date ;
     owl:versionInfo "Alpha" ;
     sh:declare [
         sh:prefix "archimate" ;
@@ -34,13 +35,12 @@
 # Level 1 Core Validation — Universal model quality and graph integrity.
 #
 # This file focuses on:
-# - Universal element requirements (identifier, name, documentation, specialization)
-# - Element uniqueness constraints
+# - Universal concept requirements (identifier, name, documentation, specialization)
+# - Concept uniqueness constraints
 # - Specialization validation
 # - Model completeness checks (orphaned elements, singletons)
 # - Relationship structural integrity (no circular/self composition/aggregation,
-#   composition part uniqueness, junction rules)
-# - Relationship metadata requirements (RDF-Star identifier, name, documentation)
+#   composition part uniqueness)
 # - Relationship quality checks (redundant relationships, missing metadata)
 #
 # Organization:
@@ -48,10 +48,8 @@
 # - Section 2: Model Completeness Quality Check
 # - Section 3: Specialization Type Consistency Quality Check
 # - Section 4: Specialization Depth Quality Check
-# - Section 5: Universal Relationship Requirements
-# - Section 6: Relationship Structural Integrity (composition, aggregation)
-# - Section 7: Relationship Metadata Validation (RDF-Star)
-# - Section 8: Relationship Quality Checks
+# - Section 5: Relationship Structural Integrity (composition, aggregation)
+# - Section 6: Relationship Quality Checks
 #
 # This validation file should be used alongside:
 # - archimate_validation_metamodel.ttl (Level 2: abstract metamodel pattern rules)
@@ -134,13 +132,13 @@
         """
     ] .
 
-# Unique identifier constraint across all elements
-<#UniqueElementIdentifier> rdf:type sh:NodeShape ;
+# Unique identifier constraint across all concepts
+<#UniqueConceptIdentifier> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Concept ;
     rdfs:label "Unique Concept Identifier Constraint" ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "Element and Relationship identifiers must be unique across the model" ;
+        sh:message "Concept identifiers must be unique across the model" ;
         sh:select """
             SELECT $this ?other WHERE {
                 $this archimate:identifier ?id .
@@ -171,7 +169,7 @@
                 FILTER NOT EXISTS {
                     $this rdf:type/rdfs:subClassOf* archimate:Location
                 }
-                
+
                 # Check if element has any relationships
                 FILTER NOT EXISTS {
                     { $this ?p ?o . ?p rdfs:subPropertyOf+ archimate:structuralRelationship } UNION
@@ -197,7 +195,7 @@
             SELECT $this WHERE {
                 $this rdf:type ?elementType .
                 ?elementType rdfs:subClassOf+ archimate:Element .
-                
+
                 # Count instances of this element type
                 {
                     SELECT ?elementType (COUNT(?instance) AS ?instanceCount) WHERE {
@@ -205,7 +203,7 @@
                     }
                     GROUP BY ?elementType
                 }
-                
+
                 FILTER(?instanceCount = 1)
             }
         """
@@ -262,61 +260,9 @@
 
 
 
+### 5. Structural Relationship Validation
 
-### 5. Universal Relationship Requirements
-
-## All realized relationships must have required metadata
-<#RealizedRelationshipRequirements> rdf:type sh:NodeShape ;
-    rdfs:label "Realized Relationship Requirements" ;
-    rdfs:comment "All relationship instances must have identifier, name, documentation, and specialization" ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "All relationships must have identifier, name, documentation, and declare their specialization type" ;
-        sh:select """
-            SELECT ?source ?target WHERE {
-                ?source ?rel ?target .
-                {?rel rdfs:subPropertyOf+ archimate:structuralRelationship} UNION
-                {?rel rdfs:subPropertyOf+ archimate:dependencyRelationship} UNION
-                {?rel rdfs:subPropertyOf+ archimate:dynamicRelationship} .
-
-                # Must have metadata via RDF-Star
-                FILTER NOT EXISTS {
-                    <<?source ?rel ?target>> archimate:identifier ?id .
-                    <<?source ?rel ?target>> archimate:name ?name .
-                    <<?source ?rel ?target>> archimate:documentation ?doc .
-                    <<?source ?rel ?target>> archimate:specialization ?spec .
-                }
-            }
-        """
-    ] .
-
-## Relationship identifiers must be unique
-<#UniqueRelationshipIdentifier> rdf:type sh:NodeShape ;
-    rdfs:label "Unique Relationship Identifier" ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "Relationship identifiers must be unique across the model" ;
-        sh:select """
-            SELECT ?source1 ?target1 ?source2 ?target2 WHERE {
-                ?source1 ?rel1 ?target1 .
-                ?source2 ?rel2 ?target2 .
-                
-                <<?source1 ?rel1 ?target1>> archimate:identifier ?id .
-                <<?source2 ?rel2 ?target2>> archimate:identifier ?id .
-                
-                FILTER(
-                    ?source1 != ?source2 || 
-                    ?target1 != ?target2 || 
-                    ?rel1 != ?rel2
-                )
-            }
-        """
-    ] .
-
-
-### 6. Structural Relationship Validation
-
-## 6.1 Composition Relationships
+## 5.1 Composition Relationships
 
 # No self-composition
 <#NoSelfComposition> rdf:type sh:NodeShape ;
@@ -363,7 +309,7 @@
     ] .
 
 
-## 6.2 Aggregation Relationships
+## 5.2 Aggregation Relationships
 
 # No self-aggregation
 <#NoSelfAggregation> rdf:type sh:NodeShape ;
@@ -395,51 +341,11 @@
 
 
 
-### 7. RDF-Star Relationship Metadata Validation
-
-## Relationship metadata must follow proper patterns
-<#RelationshipMetadataPattern> rdf:type sh:NodeShape ;
-    rdfs:label "Relationship Metadata Pattern" ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "Relationship metadata must be attached to quoted triples using RDF-Star syntax" ;
-        sh:severity sh:Info ;
-        sh:select """
-            SELECT ?source ?target WHERE {
-                ?source ?rel ?target .
-                {?rel rdfs:subPropertyOf+ archimate:structuralRelationship} UNION
-                {?rel rdfs:subPropertyOf+ archimate:dependencyRelationship} UNION
-                {?rel rdfs:subPropertyOf+ archimate:dynamicRelationship} .
-
-                # Relationship exists but has no metadata
-                FILTER NOT EXISTS {
-                    <<?source ?rel ?target>> ?metaProp ?metaValue .
-                }
-            }
-        """
-    ] .
-
-## Validate relationship identifier format
-<#RelationshipIdentifierFormat> rdf:type sh:NodeShape ;
-    rdfs:label "Relationship Identifier Format" ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "Relationship identifiers must start with letter or underscore, followed by alphanumeric, underscore, or hyphen" ;
-        sh:select """
-            SELECT ?source ?target WHERE {
-                ?source ?rel ?target .
-                <<?source ?rel ?target>> archimate:identifier ?id .
-                FILTER(!REGEX(?id, "^[a-zA-Z_][a-zA-Z0-9_-]*$"))
-            }
-        """
-    ] .
-
-
-
-### 8. Relationship Quality Checks
+### 6. Relationship Quality Checks
 
 ## Check for redundant relationships
 <#RedundantRelationshipCheck> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Concept ;
     rdfs:label "Redundant Relationship Check" ;
     sh:severity sh:Info ;
     sh:sparql [
@@ -448,7 +354,7 @@
         sh:select """
             SELECT ?source ?target WHERE {
                 ?source ?rel ?target .
-                
+
                 # Count how many times this exact relationship exists
                 {
                     SELECT ?source ?rel ?target (COUNT(*) AS ?count) WHERE {
@@ -456,7 +362,7 @@
                     }
                     GROUP BY ?source ?rel ?target
                 }
-                
+
                 FILTER(?count > 1)
             }
         """
@@ -464,6 +370,7 @@
 
 ## Check for potentially missing relationship metadata
 <#MissingRelationshipMetadataWarning> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Concept ;
     rdfs:label "Missing Relationship Metadata Warning" ;
     sh:severity sh:Warning ;
     sh:sparql [
@@ -473,7 +380,7 @@
             SELECT ?source ?target WHERE {
                 ?source ?rel ?target .
                 <<?source ?rel ?target>> archimate:identifier ?id .
-                
+
                 FILTER NOT EXISTS {
                     <<?source ?rel ?target>> archimate:name ?name .
                 }

@@ -37,6 +37,7 @@
     rdfs:comment "Valid relationship combinations for Strategy layer elements per ArchiMate 3.2." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-15"^^xsd:date ;
+    dct:modified "2026-02-17"^^xsd:date ;
     owl:versionInfo "Alpha" .
 
 

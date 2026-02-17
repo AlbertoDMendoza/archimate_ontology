@@ -12,9 +12,10 @@
     owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Profile Examples" ;
     rdfs:comment "Example specialization profiles for ArchiMate elements. These demonstrate how to create custom subtypes of standard ArchiMate elements using the profile pattern." ;
-    dct:description "Profile classes are owl:Class that specialize standard ArchiMate elements via rdfs:subClassOf and archimate:specialization. SHACL shapes for these profiles are defined in validation/archimate_profile_examples_validation.ttl." ;
+    dct:description "Profile classes are owl:Class that specialize standard ArchiMate elements via rdfs:subClassOf and archimate:specialization. SHACL shapes for these profiles are defined in validation/archimate_validation_profiles.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-10"^^xsd:date ;
+    dct:modified "2026-02-17"^^xsd:date ;
     owl:versionInfo "Alpha" .
 
 # DESIGN NOTES
@@ -29,7 +30,7 @@
 # Why this works:
 # - rdfs:subClassOf gives OWL inference (a archimate-prof:Person is-a archimate:BusinessActor)
 # - archimate:specialization (owl:TransitiveProperty) enables derivation rules (PDR1-4)
-# - Profile classes can have SHACL shapes defined in validation/archimate_profile_examples_validation.ttl
+# - Profile classes can have SHACL shapes defined in validation/archimate_validation_profiles.ttl
 # - The profile class IS the shape (implicit target pattern) — no separate shape needed
 # - Profile shapes can define domain-specific properties (e.g. dateOfBirth, email)
 # - Profiles nest naturally: Employee → Person → BusinessActor

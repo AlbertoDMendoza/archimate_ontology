@@ -2,7 +2,6 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
-@prefix shui: <http://www.w3.org/ns/shacl-ui#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix archimate: <https://purl.org/archimate#> .
@@ -16,6 +15,7 @@
     rdfs:comment "SHACL shapes for ArchiMate specialization profiles. Profile classes are owl:Class that specialize standard ArchiMate elements; this file defines their typed attributes." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-15"^^xsd:date ;
+    dct:modified "2026-02-17"^^xsd:date ;
     owl:versionInfo "Alpha" .
 
 ### NOTES
@@ -53,7 +53,6 @@ archimate-prof:Person a sh:NodeShape ;
         sh:path archimate-prof:email ;
         sh:name "Email" ;
         sh:datatype xsd:anyURI ;
-        shui:viewer shui:HyperlinkViewer ;
         sh:order 3
     ] ;
     sh:property [
@@ -82,6 +81,5 @@ archimate-prof:Organization a sh:NodeShape ;
         sh:path archimate:aggregation ;
         sh:name "Members" ;
         sh:class archimate-prof:Person ;
-        shui:viewer shui:ValueTableViewer ;
         sh:order 3
     ] .

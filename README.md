@@ -41,10 +41,12 @@ ontology/
 └── archimate_profile_examples.ttl    # Profile examples
 
 validation/
-├── archimate_core_validation.ttl
-├── archimate_relationship_validation.ttl
-├── archimate_derivation.ttl
-└── archimate_profiles.ttl
+├── archimate_validation_core.ttl            # Level 1: graph integrity, concept requirements
+├── archimate_validation_metamodel.ttl       # Level 2: metamodel pattern rules
+├── archimate_validation_strategy.ttl        # Level 3: Strategy layer relationship matrix
+├── archimate_validation_business.ttl        # Level 3: Business layer relationship matrix
+├── archimate_validation_profiles.ttl        # Profile-specific SHACL shapes
+└── archimate_derivation_rules.ttl           # DR1-DR8, PDR1-PDR12 derivation rules
 </pre>
 
 ## Specification 

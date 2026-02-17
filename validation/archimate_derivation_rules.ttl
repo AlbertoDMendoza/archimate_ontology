@@ -15,6 +15,7 @@
     rdfs:comment "Complete implementation of ArchiMate derivation rules DR1-DR8 and PDR1-PDR12 using SPARQL CONSTRUCT rules." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-15"^^xsd:date ;
+    dct:modified "2026-02-17"^^xsd:date ;
     owl:versionInfo "Alpha" ;
     sh:declare [
         sh:prefix "archimate" ;
@@ -660,91 +661,86 @@ archimate:serving <#dependencyStrength> 4 .
         sh:select """
             SELECT ?source ?target ?rel WHERE {
                 ?source ?rel ?target .
-                
+
                 # Implementation & Migration → Motivation (only assignment, realization, influence, association allowed)
                 {
                     ?source rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
                     ?target rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
                     FILTER(?rel NOT IN (archimate:assignment, archimate:realization, archimate:influence, archimate:association))
                 } UNION
-                
+
                 # Core → Motivation (only assignment, realization, influence, association allowed)
                 {
-                    ?source rdf:type/rdfs:subClassOf+ ?coreLayer .
-                    ?coreLayer rdfs:subClassOf+ archimate:Layer .
-                    ?coreLayer rdfs:subClassOf archimate:BusinessLayer, archimate:ApplicationLayer, archimate:TechnologyLayer, archimate:PhysicalLayer .
+                    VALUES ?coreLayer { archimate:BusinessLayer archimate:ApplicationLayer archimate:TechnologyLayer archimate:PhysicalLayer }
+                    ?source rdf:type/rdfs:subClassOf* ?coreLayer .
                     ?target rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
                     FILTER(?rel NOT IN (archimate:assignment, archimate:realization, archimate:influence, archimate:association))
                 } UNION
-                
-                # Strategy → Motivation (only assignment, realization, influence, association allowed)  
+
+                # Strategy → Motivation (only assignment, realization, influence, association allowed)
                 {
                     ?source rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
                     ?target rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
                     FILTER(?rel NOT IN (archimate:assignment, archimate:realization, archimate:influence, archimate:association))
                 } UNION
-                
+
                 # Motivation → Implementation & Migration (only association allowed)
                 {
                     ?source rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
                     ?target rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
                     FILTER(?rel NOT IN (archimate:association))
                 } UNION
-                
+
                 # Motivation → Core (only association allowed)
                 {
+                    VALUES ?coreLayer { archimate:BusinessLayer archimate:ApplicationLayer archimate:TechnologyLayer archimate:PhysicalLayer }
                     ?source rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
-                    ?target rdf:type/rdfs:subClassOf+ ?coreLayer .
-                    ?coreLayer rdfs:subClassOf+ archimate:Layer .
-                    ?coreLayer rdfs:subClassOf archimate:BusinessLayer, archimate:ApplicationLayer, archimate:TechnologyLayer, archimate:PhysicalLayer .
+                    ?target rdf:type/rdfs:subClassOf* ?coreLayer .
                     FILTER(?rel NOT IN (archimate:association))
                 } UNION
-                
+
                 # Motivation → Strategy (only association allowed)
                 {
                     ?source rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
                     ?target rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
                     FILTER(?rel NOT IN (archimate:association))
                 } UNION
-                
+
                 # Implementation & Migration → Core (only realization, association allowed)
                 {
+                    VALUES ?coreLayer { archimate:BusinessLayer archimate:ApplicationLayer archimate:TechnologyLayer archimate:PhysicalLayer }
                     ?source rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
-                    ?target rdf:type/rdfs:subClassOf+ ?coreLayer .
-                    ?coreLayer rdfs:subClassOf+ archimate:Layer .
-                    ?coreLayer rdfs:subClassOf archimate:BusinessLayer, archimate:ApplicationLayer, archimate:TechnologyLayer, archimate:PhysicalLayer .
+                    ?target rdf:type/rdfs:subClassOf* ?coreLayer .
                     FILTER(?rel NOT IN (archimate:realization, archimate:association))
                 } UNION
-                
-                # Core → Implementation & Migration (only assignment, association allowed)  
+
+                # Core → Implementation & Migration (only assignment, association allowed)
                 {
-                    ?source rdf:type/rdfs:subClassOf+ ?coreLayer .
-                    ?coreLayer rdfs:subClassOf+ archimate:Layer .
-                    ?coreLayer rdfs:subClassOf archimate:BusinessLayer, archimate:ApplicationLayer, archimate:TechnologyLayer, archimate:PhysicalLayer .
+                    VALUES ?coreLayer { archimate:BusinessLayer archimate:ApplicationLayer archimate:TechnologyLayer archimate:PhysicalLayer }
+                    ?source rdf:type/rdfs:subClassOf* ?coreLayer .
                     ?target rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
                     FILTER(?rel NOT IN (archimate:assignment, archimate:association))
                 } UNION
-                
+
                 # Implementation & Migration → Strategy (only realization, association allowed)
                 {
                     ?source rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
                     ?target rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
                     FILTER(?rel NOT IN (archimate:realization, archimate:association))
                 } UNION
-                
+
                 # Strategy → Implementation & Migration (only association allowed)
                 {
                     ?source rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
                     ?target rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
                     FILTER(?rel NOT IN (archimate:association))
                 } UNION
-                
+
                 # Strategy → Core (only association allowed)
                 {
+                    VALUES ?coreLayer { archimate:BusinessLayer archimate:ApplicationLayer archimate:TechnologyLayer archimate:PhysicalLayer }
                     ?source rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
-                    ?target rdf:type/rdfs:subClassOf+ ?coreLayer .
-                    ?coreLayer rdfs:subClassOf+ archimate:Layer .
-                    ?coreLayer rdfs:subClassOf archimate:BusinessLayer, archimate:ApplicationLayer, archimate:TechnologyLayer, archimate:PhysicalLayer .
+                    ?target rdf:type/rdfs:subClassOf* ?coreLayer .
                     FILTER(?rel NOT IN (archimate:association))
                 }
             }

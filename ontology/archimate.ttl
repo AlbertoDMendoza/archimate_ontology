@@ -26,7 +26,7 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2026-02-10"^^xsd:date .
+    dct:modified "2026-02-17"^^xsd:date .
 
 # NOTES 
 # Ontology file now 100% complete with ArchiMate 3.2 spec --61 elements, 11 relationships, relationship connectors (junctions). 
@@ -39,9 +39,9 @@
 
 # TODO
 # VALIDATION:
-#   - Define *All* Valid relationships in SHACL (in archimate_relationship_validation.ttl Section 7)
+#   - Define *All* Valid relationships in SHACL (in archimate_validation_<layer>.ttl files)
 #   - Add element-specific relationship combinations (e.g., BusinessActor can assign to which element types)
-#   - Add Motivation aspect cross-layer relationship constraints to archimate_relationship_validation.ttl
+#   - Add Motivation aspect cross-layer relationship constraints to archimate_validation_metamodel.ttl
 # 
 # VIEWPOINTS:
 #   - Add common ArchiMate viewpoint definitions (Organization, Application Usage, Business Process Cooperation, etc.)
@@ -145,7 +145,7 @@
 
 # UPDATES
 # 2026-02-10 Added Junction element (Relationship Connector)
-# 2026-02-10 Added Specializations/Profiles design pattern with SHACL shapes (validation/archimate_profiles.ttl)
+# 2026-02-10 Added Specializations/Profiles design pattern with SHACL shapes (validation/archimate_validation_profiles.ttl)
 # 2025-07-16 Separated validation rules following OWL/SHACL separation guidelines
 # 2025-07-04 Redid Relationships with RDF-Star, added SHACL for relationships. changed version to Alpha
 # 2025-06-04 Added DR1.
@@ -160,22 +160,13 @@
     rdfs:subClassOf owl:Thing ;
     skos:exactMatch archimate-skos:ArchiMate .
 
-<#ArchiMateCoreFramework> rdf:type skos:Concept ;
-    rdfs:label "ArchiMate Core Framework" ;
-    rdfs:comment "A reference structure used to classify elements of the ArchiMate Core language. It consists of three layers and three aspects." ;
-    rdfs:subClassOf <#ArchiMate> .
 
-<#ArchiMateCoreLanguage> rdf:type skos:Concept ;
-    rdfs:label "ArchiMate Core Language";
-    rdfs:comment "The central part of the ArchiMate language that defines the concepts to model Enterprise Architectures. It includes concepts from three layers: Business, Application, and Technology (including Physical).";
-    rdfs:subClassOf <#ArchiMate> .
-
-<#ArchimateView> rdf:type owl:Class ;
+<#ArchiMateView> rdf:type owl:Class ;
     rdfs:label "Architecture View";
     rdfs:comment "A representation of a system from the perspective of a related set of concerns.";
     rdfs:subClassOf <#ArchiMate> .
 
-<#ArchimateViewpoint> rdf:type owl:Class ;
+<#ArchiMateViewpoint> rdf:type owl:Class ;
     rdfs:label "Architecture Viewpoint";
     rdfs:comment "A specification of the conventions for a particular kind of architecture view.";
     rdfs:subClassOf <#ArchiMate> .
@@ -227,7 +218,7 @@
     rdfs:comment "Indicates what ArchiMate element or relationship type this instance represents. Links realized instances to their abstract types." ;
     rdfs:domain <#Concept> ;
     rdfs:range <#Concept> ;
-    rdf:type owl:FunctionalProperty, owl:TransitiveProperty .
+    rdf:type owl:TransitiveProperty .
 
 <#Element> rdf:type owl:Class ;
     rdfs:label "Element" ;
@@ -241,8 +232,8 @@
 
 <#RelationshipConnector> rdf:type owl:Class ;
     rdfs:label "Relationship Connector" ;
-    rdfs:comment "A connector element that connects relationships between elements." ;
-    rdfs:subClassOf <#Concept> .
+    rdfs:comment "A connector that connects relationships of the same type between elements." ;
+    rdfs:subClassOf <#Relationship> .
 
 
 # Aspects
@@ -574,7 +565,7 @@
 
 <#ApplicationInteraction> rdf:type owl:Class ;
     rdfs:label "Application Interaction" ;
-    rdfs:comment "an encapsulation of application functionality aligned to implementation structure, which is modular and replaceable." ;
+    rdfs:comment "A unit of collective application behavior performed by (a collaboration of) two or more application components." ;
     rdfs:subClassOf <#CollectiveBehavior> ;
     rdfs:subClassOf <#ApplicationLayer> ;
     rdfs:subClassOf <#Element> .	
@@ -617,7 +608,7 @@
     rdfs:comment "A computational or physical resource that hosts, manipulates, or interacts with other computational or physical resources." ;
     rdfs:subClassOf <#ActiveStructure> ;
     rdfs:subClassOf <#TechnologyLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf <#CompositeElement> .
 
 <#Device> rdf:type owl:Class ;
     rdfs:label "Device" ;
@@ -745,7 +736,7 @@
 <#WorkPackage> rdf:type owl:Class ;
     rdfs:label "Work Package" ;
     rdfs:comment "A series of actions identified and designed to achieve specific results." ;
-    rdfs:subClassOf <#ActiveStructure> ;
+    rdfs:subClassOf <#InternalBehavior> ;
     rdfs:subClassOf <#ImplementationAndMigrationLayer> ;
     rdfs:subClassOf <#Element> .
 
@@ -906,8 +897,7 @@
 <#Junction> rdf:type owl:Class ;
     rdfs:label "Junction" ;
     rdfs:comment "Used to connect relationships of the same type. Junctions model logical AND or OR operations when combining or splitting relationships in an ArchiMate model." ;
-    rdfs:subClassOf <#RelationshipConnector> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf <#RelationshipConnector> .
 
 <#junctionType> rdf:type owl:DatatypeProperty ;
     rdfs:label "junction type" ;

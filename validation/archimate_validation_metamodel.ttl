@@ -14,6 +14,7 @@
     rdfs:comment "Level 2 Metamodel Validation: abstract ArchiMate metamodel pattern rules using the ontology's class hierarchy (aspect x layer intersections). Encodes Figures 5, 46, and 51 from ArchiMate 3.2. For graph integrity, see archimate_validation_core.ttl. For per-element relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-16"^^xsd:date ;
+    dct:modified "2026-02-17"^^xsd:date ;
     owl:versionInfo "Alpha" ;
     sh:declare [
         sh:prefix "archimate" ;
