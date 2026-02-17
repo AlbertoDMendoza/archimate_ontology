@@ -14,7 +14,20 @@
     rdfs:comment "Level 1 Core Validation: universal model quality and graph integrity constraints. Validates concept requirements (identifier, name, documentation, specialization), relationship structural integrity (composition/aggregation rules, RDF-Star metadata), and model quality checks. For metamodel pattern rules, see archimate_validation_metamodel.ttl. For per-element-type relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-10"^^xsd:date ;
-    owl:versionInfo "Alpha" .
+    owl:versionInfo "Alpha" ;
+    sh:declare [
+        sh:prefix "archimate" ;
+        sh:namespace "https://purl.org/archimate#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "rdf" ;
+        sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "rdfs" ;
+        sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "owl" ;
+        sh:namespace "http://www.w3.org/2002/07/owl#"^^xsd:anyURI ;
+    ] .
 
 
 ### NOTES
@@ -108,6 +121,7 @@
     sh:targetClass archimate:Concept ;
     rdfs:label "Valid Concept Specialization Target" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Elements and Relationship specializations must point to a valid ArchiMate element or relationship type defined in the ontology" ;
         sh:select """
             SELECT $this WHERE {
@@ -125,6 +139,7 @@
     sh:targetClass archimate:Concept ;
     rdfs:label "Unique Concept Identifier Constraint" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Element and Relationship identifiers must be unique across the model" ;
         sh:select """
             SELECT $this ?other WHERE {
@@ -144,6 +159,7 @@
     sh:targetClass archimate:Element ;
     rdfs:label "Connected Elements" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Elements should participate in at least one relationship" ;
         sh:severity sh:Info ;
         sh:select """
@@ -175,6 +191,7 @@
     rdfs:label "Singleton Element Check" ;
     sh:severity sh:Info ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Only one instance of this element type exists in the model - consider if this is intentional" ;
         sh:select """
             SELECT $this WHERE {
@@ -203,6 +220,7 @@
     sh:targetClass archimate:Concept ;
     rdfs:label "Type-Specialization Consistency" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Element or Relationship type (rdf:type) is not consistent with its declared specialization" ;
         sh:select """
             SELECT $this WHERE {
@@ -228,6 +246,7 @@
     rdfs:label "Deep Specialization Chain Check" ;
     sh:severity sh:Info ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Element or Relationship has a deep specialization chain (5+ levels) - consider if this complexity is necessary" ;
         sh:select """
             SELECT $this WHERE {
@@ -251,10 +270,9 @@
     rdfs:label "Realized Relationship Requirements" ;
     rdfs:comment "All relationship instances must have identifier, name, documentation, and specialization" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "All relationships must have identifier, name, documentation, and declare their specialization type" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
-            
             SELECT ?source ?target WHERE {
                 ?source ?rel ?target .
                 {?rel rdfs:subPropertyOf+ archimate:structuralRelationship} UNION
@@ -276,10 +294,9 @@
 <#UniqueRelationshipIdentifier> rdf:type sh:NodeShape ;
     rdfs:label "Unique Relationship Identifier" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Relationship identifiers must be unique across the model" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
-            
             SELECT ?source1 ?target1 ?source2 ?target2 WHERE {
                 ?source1 ?rel1 ?target1 .
                 ?source2 ?rel2 ?target2 .
@@ -306,9 +323,9 @@
     sh:targetClass archimate:Element ;
     rdfs:label "No Self-Composition" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Elements cannot compose themselves" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT $this WHERE {
                 $this archimate:composition $this
             }
@@ -320,9 +337,9 @@
     sh:targetClass archimate:Element ;
     rdfs:label "No Circular Composition" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Circular composition relationships are not allowed (A composes B, B composes C, C composes A)" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT $this WHERE {
                 $this archimate:composition+ $this
             }
@@ -334,9 +351,9 @@
     sh:targetObjectsOf archimate:composition ;
     rdfs:label "Composition Part Uniqueness" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "A composed part can only belong to one whole (composition implies exclusive ownership)" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT $this WHERE {
                 ?whole1 archimate:composition $this .
                 ?whole2 archimate:composition $this .
@@ -353,9 +370,9 @@
     sh:targetClass archimate:Element ;
     rdfs:label "No Self-Aggregation" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Elements cannot aggregate themselves" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT $this WHERE {
                 $this archimate:aggregation $this
             }
@@ -367,9 +384,9 @@
     sh:targetClass archimate:Element ;
     rdfs:label "No Circular Aggregation" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Circular aggregation relationships are not allowed" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT $this WHERE {
                 $this archimate:aggregation+ $this
             }
@@ -384,11 +401,10 @@
 <#RelationshipMetadataPattern> rdf:type sh:NodeShape ;
     rdfs:label "Relationship Metadata Pattern" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Relationship metadata must be attached to quoted triples using RDF-Star syntax" ;
         sh:severity sh:Info ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
-            
             SELECT ?source ?target WHERE {
                 ?source ?rel ?target .
                 {?rel rdfs:subPropertyOf+ archimate:structuralRelationship} UNION
@@ -407,10 +423,9 @@
 <#RelationshipIdentifierFormat> rdf:type sh:NodeShape ;
     rdfs:label "Relationship Identifier Format" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Relationship identifiers must start with letter or underscore, followed by alphanumeric, underscore, or hyphen" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
-            
             SELECT ?source ?target WHERE {
                 ?source ?rel ?target .
                 <<?source ?rel ?target>> archimate:identifier ?id .
@@ -428,10 +443,9 @@
     rdfs:label "Redundant Relationship Check" ;
     sh:severity sh:Info ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Redundant relationship detected: same relationship type between same elements exists multiple times" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
-            
             SELECT ?source ?target WHERE {
                 ?source ?rel ?target .
                 
@@ -453,10 +467,9 @@
     rdfs:label "Missing Relationship Metadata Warning" ;
     sh:severity sh:Warning ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Relationship exists but is missing name or documentation (only identifier present)" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
-            
             SELECT ?source ?target WHERE {
                 ?source ?rel ?target .
                 <<?source ?rel ?target>> archimate:identifier ?id .

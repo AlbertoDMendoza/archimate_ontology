@@ -5,6 +5,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix archimate: <https://purl.org/archimate#> .
+@prefix deriv: <https://purl.org/archimate/derivation#> .
 @base <https://purl.org/archimate/derivation#> .
 
 ### ArchiMate Derivation Rules Implementation
@@ -15,6 +16,19 @@
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-15"^^xsd:date ;
     owl:versionInfo "Alpha" ;
+    sh:declare [
+        sh:prefix "archimate" ;
+        sh:namespace "https://purl.org/archimate#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "rdf" ;
+        sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "rdfs" ;
+        sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "deriv" ;
+        sh:namespace "https://purl.org/archimate/derivation#"^^xsd:anyURI ;
+    ] ;
     rdfs:seeAlso <https://digital-portfolio.opengroup.org/archimate-specs/latest/99-appendices/02-relationships-normative.html> .
 
 ### Integration with ArchiMate Ontology
@@ -118,15 +132,13 @@
 <#DR2_StructuralChain> rdf:type sh:SPARQLRule ;
     rdfs:label "DR2: Structural Relationship Chain Derivation" ;
     rdfs:comment "If two structural relationships p(a,b):S and q(b,c):T exist, derive r(a,c):U with U being the weakest of S and T." ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?a ?weakerRel ?c .
             <<?a ?weakerRel ?c>> archimate:confidence "valid" ;
                                 archimate:description "Derived via DR2: structural relationship chain" ;
-                                <#derivedFrom> ?rel1, ?rel2 .
+                                deriv:derivedFrom ?rel1, ?rel2 .
         }
         WHERE {
             # Find chain of two structural relationships
@@ -138,8 +150,8 @@
             ?rel2 rdfs:subPropertyOf+ archimate:structuralRelationship .
             
             # Get strength values
-            ?rel1 <#structuralStrength> ?strength1 .
-            ?rel2 <#structuralStrength> ?strength2 .
+            ?rel1 deriv:structuralStrength ?strength1 .
+            ?rel2 deriv:structuralStrength ?strength2 .
             
             # Determine weaker relationship
             BIND(IF(?strength1 <= ?strength2, ?rel1, ?rel2) AS ?weakerRel)
@@ -154,15 +166,13 @@
 <#DR3_StructuralDependency> rdf:type sh:SPARQLRule ;
     rdfs:label "DR3: Structural + Dependency → Dependency" ;
     rdfs:comment "If structural p(a,b):S and dependency q(b,c):T exist, derive r(a,c):T" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?a ?depRel ?c .
             <<?a ?depRel ?c>> archimate:confidence "valid" ;
                              archimate:description "Derived via DR3: structural + dependency" ;
-                             <#derivedFrom> ?structRel, ?depRel .
+                             deriv:derivedFrom ?structRel, ?depRel .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -180,15 +190,13 @@
 <#DR4_OpposingStructuralDependency> rdf:type sh:SPARQLRule ;
     rdfs:label "DR4: Opposing Structural + Dependency → Dependency" ;
     rdfs:comment "If structural p(a,b):S and dependency q(c,b):T exist, derive r(c,a):T" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?c ?depRel ?a .
             <<?c ?depRel ?a>> archimate:confidence "valid" ;
                              archimate:description "Derived via DR4: opposing structural + dependency" ;
-                             <#derivedFrom> ?structRel, ?depRel .
+                             deriv:derivedFrom ?structRel, ?depRel .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -206,15 +214,13 @@
 <#DR5_StructuralDynamic> rdf:type sh:SPARQLRule ;
     rdfs:label "DR5: Structural + Dynamic → Dynamic" ;
     rdfs:comment "If structural p(a,b):S and dynamic q(b,c):T exist, derive r(a,c):T" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?a ?dynRel ?c .
             <<?a ?dynRel ?c>> archimate:confidence "valid" ;
                              archimate:description "Derived via DR5: structural + dynamic" ;
-                             <#derivedFrom> ?structRel, ?dynRel .
+                             deriv:derivedFrom ?structRel, ?dynRel .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -232,15 +238,13 @@
 <#DR6_StructuralFlow> rdf:type sh:SPARQLRule ;
     rdfs:label "DR6: Structural + Flow (opposite) → Flow" ;
     rdfs:comment "If structural p(a,b):S and flow q(c,b):T exist, derive r(c,a):T" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?c archimate:flow ?a .
             <<?c archimate:flow ?a>> archimate:confidence "valid" ;
                                      archimate:description "Derived via DR6: structural + flow (opposite)" ;
-                                     <#derivedFrom> ?structRel, archimate:flow .
+                                     deriv:derivedFrom ?structRel, archimate:flow .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -257,15 +261,13 @@
 <#DR7_TriggeringStructural> rdf:type sh:SPARQLRule ;
     rdfs:label "DR7: Triggering + Structural → Triggering" ;
     rdfs:comment "If triggering p(a,b):S and structural q(b,c):T exist, derive r(a,c):S" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?a archimate:triggering ?c .
             <<?a archimate:triggering ?c>> archimate:confidence "valid" ;
                                            archimate:description "Derived via DR7: triggering + structural" ;
-                                           <#derivedFrom> archimate:triggering, ?structRel .
+                                           deriv:derivedFrom archimate:triggering, ?structRel .
         }
         WHERE {
             ?a archimate:triggering ?b .
@@ -282,15 +284,13 @@
 <#DR8_TriggeringTransitivity> rdf:type sh:SPARQLRule ;
     rdfs:label "DR8: Triggering Transitivity" ;
     rdfs:comment "If triggering p(a,b):S and triggering q(b,c):S exist, derive r(a,c):S" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?a archimate:triggering ?c .
             <<?a archimate:triggering ?c>> archimate:confidence "valid" ;
                                            archimate:description "Derived via DR8: triggering transitivity" ;
-                                           <#derivedFrom> archimate:triggering, archimate:triggering .
+                                           deriv:derivedFrom archimate:triggering, archimate:triggering .
         }
         WHERE {
             ?a archimate:triggering ?b .
@@ -307,15 +307,13 @@
 <#PDR1_SpecializationInheritance> rdf:type sh:SPARQLRule ;
     rdfs:label "PDR1: Specialization Inheritance (Forward)" ;
     rdfs:comment "If specialization p(a,b):S and relationship q(b,c):T exist, potentially derive r(a,c):T" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?a ?rel ?c .
             <<?a ?rel ?c>> archimate:confidence "potential" ;
                           archimate:description "Derived via PDR1: specialization inheritance (forward)" ;
-                          <#derivedFrom> archimate:specialization, ?rel .
+                          deriv:derivedFrom archimate:specialization, ?rel .
         }
         WHERE {
             ?a archimate:specialization ?b .
@@ -339,15 +337,13 @@
 <#PDR2_SpecializationInheritanceReverse> rdf:type sh:SPARQLRule ;
     rdfs:label "PDR2: Specialization Inheritance (Reverse)" ;
     rdfs:comment "If specialization p(a,b):S and relationship q(c,b):T exist, potentially derive r(c,a):T" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?c ?rel ?a .
             <<?c ?rel ?a>> archimate:confidence "potential" ;
                           archimate:description "Derived via PDR2: specialization inheritance (reverse)" ;
-                          <#derivedFrom> archimate:specialization, ?rel .
+                          deriv:derivedFrom archimate:specialization, ?rel .
         }
         WHERE {
             ?a archimate:specialization ?b .
@@ -371,15 +367,13 @@
 <#PDR3_SpecializationSourceInheritance> rdf:type sh:SPARQLRule ;
     rdfs:label "PDR3: Specialization Source Inheritance" ;
     rdfs:comment "If specialization p(a,b):S and relationship q(a,c):T exist, potentially derive r(b,c):T" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?b ?rel ?c .
             <<?b ?rel ?c>> archimate:confidence "potential" ;
                           archimate:description "Derived via PDR3: specialization source inheritance" ;
-                          <#derivedFrom> archimate:specialization, ?rel .
+                          deriv:derivedFrom archimate:specialization, ?rel .
         }
         WHERE {
             ?a archimate:specialization ?b .
@@ -403,15 +397,13 @@
 <#PDR4_SpecializationTargetInheritance> rdf:type sh:SPARQLRule ;
     rdfs:label "PDR4: Specialization Target Inheritance" ;
     rdfs:comment "If specialization p(a,b):S and relationship q(c,a):T exist, potentially derive r(c,b):T" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?c ?rel ?b .
             <<?c ?rel ?b>> archimate:confidence "potential" ;
                           archimate:description "Derived via PDR4: specialization target inheritance" ;
-                          <#derivedFrom> archimate:specialization, ?rel .
+                          deriv:derivedFrom archimate:specialization, ?rel .
         }
         WHERE {
             ?a archimate:specialization ?b .
@@ -435,15 +427,13 @@
 <#PDR5_StructuralDependencyAtSource> rdf:type sh:SPARQLRule ;
     rdfs:label "PDR5: Structural + Dependency (at source) → Dependency" ;
     rdfs:comment "If structural p(a,b):S and dependency q(c,a):T exist, potentially derive r(c,b):T" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?c ?depRel ?b .
             <<?c ?depRel ?b>> archimate:confidence "potential" ;
                              archimate:description "Derived via PDR5: structural + dependency (at source)" ;
-                             <#derivedFrom> ?structRel, ?depRel .
+                             deriv:derivedFrom ?structRel, ?depRel .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -461,15 +451,13 @@
 <#PDR6_StructuralDependencyFromSource> rdf:type sh:SPARQLRule ;
     rdfs:label "PDR6: Structural + Dependency (from source) → Dependency" ;
     rdfs:comment "If structural p(a,b):S and dependency q(a,c):T exist, potentially derive r(b,c):T" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?b ?depRel ?c .
             <<?b ?depRel ?c>> archimate:confidence "potential" ;
                              archimate:description "Derived via PDR6: structural + dependency (from source)" ;
-                             <#derivedFrom> ?structRel, ?depRel .
+                             deriv:derivedFrom ?structRel, ?depRel .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -487,15 +475,13 @@
 <#PDR7_DependencyChain> rdf:type sh:SPARQLRule ;
     rdfs:label "PDR7: Dependency Chain → Weakest" ;
     rdfs:comment "If dependencies p(a,b):S and q(b,c):T exist, potentially derive r(a,c):U with U being weakest" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?a ?weakerRel ?c .
             <<?a ?weakerRel ?c>> archimate:confidence "potential" ;
                                 archimate:description "Derived via PDR7: dependency chain" ;
-                                <#derivedFrom> ?rel1, ?rel2 .
+                                deriv:derivedFrom ?rel1, ?rel2 .
         }
         WHERE {
             ?a ?rel1 ?b .
@@ -505,8 +491,8 @@
             ?rel2 rdfs:subPropertyOf+ archimate:dependencyRelationship .
             
             # Get strength values
-            ?rel1 <#dependencyStrength> ?strength1 .
-            ?rel2 <#dependencyStrength> ?strength2 .
+            ?rel1 deriv:dependencyStrength ?strength1 .
+            ?rel2 deriv:dependencyStrength ?strength2 .
             
             # Determine weaker relationship
             BIND(IF(?strength1 <= ?strength2, ?rel1, ?rel2) AS ?weakerRel)
@@ -520,15 +506,13 @@
 <#PDR8_FlowStructural> rdf:type sh:SPARQLRule ;
     rdfs:label "PDR8: Flow + Structural (reverse) → Flow" ;
     rdfs:comment "If flow p(a,b):S and structural q(b,c):T exist, potentially derive r(a,c):S" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?a archimate:flow ?c .
             <<?a archimate:flow ?c>> archimate:confidence "potential" ;
                                      archimate:description "Derived via PDR8: flow + structural" ;
-                                     <#derivedFrom> archimate:flow, ?structRel .
+                                     deriv:derivedFrom archimate:flow, ?structRel .
         }
         WHERE {
             ?a archimate:flow ?b .
@@ -545,15 +529,13 @@
 <#PDR9_StructuralDynamicReverse> rdf:type sh:SPARQLRule ;
     rdfs:label "PDR9: Structural + Dynamic (reverse) → Dynamic" ;
     rdfs:comment "If structural p(a,b):S and dynamic q(a,c):T exist, potentially derive r(b,c):T" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?b ?dynRel ?c .
             <<?b ?dynRel ?c>> archimate:confidence "potential" ;
                              archimate:description "Derived via PDR9: structural + dynamic (reverse)" ;
-                             <#derivedFrom> ?structRel, ?dynRel .
+                             deriv:derivedFrom ?structRel, ?dynRel .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -571,15 +553,13 @@
 <#PDR10_FlowChain> rdf:type sh:SPARQLRule ;
     rdfs:label "PDR10: Flow Transitivity" ;
     rdfs:comment "If flow p(a,b):S and flow q(b,c):S exist, potentially derive r(a,c):S" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?a archimate:flow ?c .
             <<?a archimate:flow ?c>> archimate:confidence "potential" ;
                                      archimate:description "Derived via PDR10: flow chain" ;
-                                     <#derivedFrom> archimate:flow, archimate:flow .
+                                     deriv:derivedFrom archimate:flow, archimate:flow .
         }
         WHERE {
             ?a archimate:flow ?b .
@@ -594,15 +574,13 @@
 <#PDR11_TriggeringStructuralReverse> rdf:type sh:SPARQLRule ;
     rdfs:label "PDR11: Triggering + Structural (reverse) → Triggering" ;
     rdfs:comment "If triggering p(a,b):S and structural q(c,b):T exist, potentially derive r(a,c):S" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?a archimate:triggering ?c .
             <<?a archimate:triggering ?c>> archimate:confidence "potential" ;
                                            archimate:description "Derived via PDR11: triggering + structural (reverse)" ;
-                                           <#derivedFrom> archimate:triggering, ?structRel .
+                                           deriv:derivedFrom archimate:triggering, ?structRel .
         }
         WHERE {
             ?a archimate:triggering ?b .
@@ -619,15 +597,13 @@
 <#PDR12_GroupingDerivation> rdf:type sh:SPARQLRule ;
     rdfs:label "PDR12: Grouping Element Derivation" ;
     rdfs:comment "If aggregation/composition p(b,a):S and realization/assignment q(b,c):T exist with b being Grouping, potentially derive r(a,c):T" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?a ?targetRel ?c .
             <<?a ?targetRel ?c>> archimate:confidence "potential" ;
                                 archimate:description "Derived via PDR12: grouping element derivation" ;
-                                <#derivedFrom> ?sourceRel, ?targetRel .
+                                deriv:derivedFrom ?sourceRel, ?targetRel .
         }
         WHERE {
             ?b ?sourceRel ?a .
@@ -679,6 +655,7 @@ archimate:serving <#dependencyStrength> 4 .
     rdfs:label "Cross-Domain Relationship Restrictions" ;
     rdfs:comment "Enforces the restrictions on relationships between different ArchiMate domains" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Invalid cross-domain relationship detected" ;
         sh:select """
             SELECT ?source ?target ?rel WHERE {
@@ -780,15 +757,13 @@ archimate:serving <#dependencyStrength> 4 .
 <#ComplexChainDerivation> rdf:type sh:SPARQLRule ;
     rdfs:label "Complex Chain Derivation" ;
     rdfs:comment "Handles complex chains that combine structural and dependency relationships" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?a ?finalRel ?d .
             <<?a ?finalRel ?d>> archimate:confidence "valid" ;
                                archimate:description "Derived via complex chain: structural → structural → dependency" ;
-                               <#derivedFrom> ?rel1, ?rel2, ?rel3 .
+                               deriv:derivedFrom ?rel1, ?rel2, ?rel3 .
         }
         WHERE {
             # Chain: a -structural-> b -structural-> c -dependency-> d
@@ -817,15 +792,13 @@ archimate:serving <#dependencyStrength> 4 .
 <#MissingAssignmentDiscovery> rdf:type sh:SPARQLRule ;
     rdfs:label "Missing Assignment Discovery" ;
     rdfs:comment "Discovers potential missing assignment relationships between active structure and behavior" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?actor archimate:assignment ?behavior .
             <<?actor archimate:assignment ?behavior>> archimate:confidence "suggestion" ;
                                                       archimate:description "Suggested assignment based on collaboration patterns" ;
-                                                      <#derivedFrom> archimate:composition, archimate:composition .
+                                                      deriv:derivedFrom archimate:composition, archimate:composition .
         }
         WHERE {
             # Find active structure elements that are part of the same collaboration
@@ -848,15 +821,13 @@ archimate:serving <#dependencyStrength> 4 .
 <#ServingRelationshipDiscovery> rdf:type sh:SPARQLRule ;
     rdfs:label "Serving Relationship Discovery" ;
     rdfs:comment "Discovers potential serving relationships based on realization patterns" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?service archimate:serving ?consumer .
             <<?service archimate:serving ?consumer>> archimate:confidence "suggestion" ;
                                                      archimate:description "Suggested serving based on realization and access patterns" ;
-                                                     <#derivedFrom> archimate:realization, archimate:access .
+                                                     deriv:derivedFrom archimate:realization, archimate:access .
         }
         WHERE {
             # Find service realized by component
@@ -881,15 +852,13 @@ archimate:serving <#dependencyStrength> 4 .
 <#BusinessApplicationDerivation> rdf:type sh:SPARQLRule ;
     rdfs:label "Business-Application Derivation" ;
     rdfs:comment "Derives application requirements from business processes" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?appComponent archimate:serving ?businessProcess .
             <<?appComponent archimate:serving ?businessProcess>> archimate:confidence "potential" ;
                                                                   archimate:description "Derived application support for business process" ;
-                                                                  <#derivedFrom> archimate:realization, archimate:composition .
+                                                                  deriv:derivedFrom archimate:realization, archimate:composition .
         }
         WHERE {
             # Business process composed of sub-processes
@@ -913,15 +882,13 @@ archimate:serving <#dependencyStrength> 4 .
 <#TechnologyApplicationDerivation> rdf:type sh:SPARQLRule ;
     rdfs:label "Technology-Application Derivation" ;
     rdfs:comment "Derives technology support relationships for applications" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?techService archimate:serving ?appComponent .
             <<?techService archimate:serving ?appComponent>> archimate:confidence "potential" ;
                                                              archimate:description "Derived technology support for application" ;
-                                                             <#derivedFrom> archimate:assignment, archimate:realization .
+                                                             deriv:derivedFrom archimate:assignment, archimate:realization .
         }
         WHERE {
             # Technology node assigned to technology service
@@ -944,14 +911,12 @@ archimate:serving <#dependencyStrength> 4 .
 <#ProvenanceEnhancement> rdf:type sh:SPARQLRule ;
     rdfs:label "Provenance Enhancement" ;
     rdfs:comment "Adds creation metadata to derived relationships" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             ?stmt archimate:createdBy "ArchiMate Derivation Engine" ;
                   archimate:createdDate ?now ;
-                  <#derivationRule> ?rule .
+                  deriv:derivationRule ?rule .
         }
         WHERE {
             ?stmt archimate:confidence ?conf .
@@ -972,6 +937,7 @@ archimate:serving <#dependencyStrength> 4 .
     rdfs:label "Derived Relationship Validation" ;
     rdfs:comment "Validates that derived relationships conform to ArchiMate metamodel constraints" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Derived relationship violates ArchiMate metamodel constraints" ;
         sh:select """
             SELECT ?source ?target ?rel WHERE {
@@ -1035,14 +1001,12 @@ archimate:serving <#dependencyStrength> 4 .
 <#ContradictionResolution> rdf:type sh:SPARQLRule ;
     rdfs:label "Contradiction Resolution" ;
     rdfs:comment "Removes derived relationships that contradict explicit relationships" ;
+    sh:prefixes <#> ;
     sh:construct """
-        PREFIX archimate: <https://purl.org/archimate#>
-        PREFIX <#> <https://purl.org/archimate/derivation#>
-        
         CONSTRUCT {
             # Mark contradictory relationships for review
-            ?stmt <#contradictionFlag> true ;
-                  <#contradictionReason> "Conflicts with explicit relationship" .
+            ?stmt deriv:contradictionFlag true ;
+                  deriv:contradictionReason "Conflicts with explicit relationship" .
         }
         WHERE {
             # Find derived relationship
@@ -1067,11 +1031,12 @@ archimate:serving <#dependencyStrength> 4 .
     rdfs:label "Derivation Depth Limit" ;
     rdfs:comment "Prevents excessive derivation chains that could cause performance issues" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Derivation chain exceeds maximum depth of 5" ;
         sh:severity sh:Warning ;
         sh:select """
             SELECT ?stmt WHERE {
-                ?stmt <#derivedFrom> ?source1, ?source2, ?source3, ?source4, ?source5, ?source6 .
+                ?stmt deriv:derivedFrom ?source1, ?source2, ?source3, ?source4, ?source5, ?source6 .
             }
         """
     ] .

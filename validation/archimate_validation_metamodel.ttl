@@ -14,7 +14,17 @@
     rdfs:comment "Level 2 Metamodel Validation: abstract ArchiMate metamodel pattern rules using the ontology's class hierarchy (aspect x layer intersections). Encodes Figures 5, 46, and 51 from ArchiMate 3.2. For graph integrity, see archimate_validation_core.ttl. For per-element relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-16"^^xsd:date ;
-    owl:versionInfo "Alpha" .
+    owl:versionInfo "Alpha" ;
+    sh:declare [
+        sh:prefix "archimate" ;
+        sh:namespace "https://purl.org/archimate#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "rdf" ;
+        sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "rdfs" ;
+        sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
+    ] .
 
 
 ### NOTES
@@ -100,9 +110,9 @@
     sh:targetSubjectsOf archimate:assignment ;
     rdfs:label "Assignment Source: Active Structure" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Assignment relationships can only originate from active structure elements" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT $this WHERE {
                 $this archimate:assignment ?target .
                 FILTER NOT EXISTS {
@@ -120,9 +130,9 @@
     sh:targetObjectsOf archimate:assignment ;
     rdfs:label "Assignment Target: Behavior" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Assignment relationships can only target behavior elements" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT $this WHERE {
                 ?source archimate:assignment $this .
                 FILTER NOT EXISTS {
@@ -149,9 +159,9 @@
     sh:targetSubjectsOf archimate:access ;
     rdfs:label "Access Source: Behavior" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Access relationships can only originate from behavior elements" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT $this WHERE {
                 $this archimate:access ?target .
                 FILTER NOT EXISTS {
@@ -165,9 +175,9 @@
     sh:targetObjectsOf archimate:access ;
     rdfs:label "Access Target: Passive Structure" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Access relationships can only target passive structure elements" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT $this WHERE {
                 ?source archimate:access $this .
                 FILTER NOT EXISTS {
@@ -185,9 +195,9 @@
     rdfs:label "Serving Layer Direction" ;
     sh:severity sh:Warning ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Serving relationships should flow upward from lower to higher layers (Technology → Application → Business)" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT $this ?target WHERE {
                 $this archimate:serving ?target .
                 {
@@ -219,9 +229,9 @@
     sh:targetSubjectsOf archimate:triggering ;
     rdfs:label "Triggering Source: Behavior" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Triggering relationships can only originate from behavior elements" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT $this WHERE {
                 $this archimate:triggering ?target .
                 FILTER NOT EXISTS {
@@ -239,9 +249,9 @@
     sh:targetObjectsOf archimate:triggering ;
     rdfs:label "Triggering Target: Behavior" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Triggering relationships can only target behavior elements" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT $this WHERE {
                 ?source archimate:triggering $this .
                 FILTER NOT EXISTS {
@@ -262,9 +272,9 @@
     sh:targetSubjectsOf archimate:flow ;
     rdfs:label "Flow Source: Behavior" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Flow relationships can only originate from behavior elements" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT $this WHERE {
                 $this archimate:flow ?target .
                 FILTER NOT EXISTS {
@@ -282,9 +292,9 @@
     sh:targetObjectsOf archimate:flow ;
     rdfs:label "Flow Target: Behavior" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Flow relationships can only target behavior elements" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT $this WHERE {
                 ?source archimate:flow $this .
                 FILTER NOT EXISTS {
@@ -323,9 +333,9 @@
 <#StrategyAssignmentTarget> rdf:type sh:NodeShape ;
     rdfs:label "Strategy Assignment: Resource → Capability/ValueStream" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Within the Strategy layer, Resource can only be assigned to Capability or ValueStream (not CourseOfAction)" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT ?source ?target WHERE {
                 ?source archimate:assignment ?target .
                 # Source is Strategy StructureAspect (Resource)
@@ -353,9 +363,9 @@
     sh:severity sh:Info ;
     rdfs:comment "Within Strategy layer, realization flows from Capability/ValueStream toward CourseOfAction, not the reverse." ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "CourseOfAction should not realize Capability or ValueStream — realization flows the other direction per Figure 46" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT ?source ?target WHERE {
                 ?source archimate:realization ?target .
                 # Source is CourseOfAction
@@ -404,9 +414,9 @@
     sh:severity sh:Info ;
     rdfs:comment "Per Figure 51: internal and external behavior elements from Core layers (Business, Application, Technology) may realize Strategy behavior elements (Capability, ValueStream). This shape validates the pattern is used correctly — source should be Core behavior, target should be Strategy behavior." ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "When realizing Strategy behavior from Core, source should be a Core behavior element (process, function, service, etc.)" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT ?source ?target WHERE {
                 ?source archimate:realization ?target .
                 # Target is Strategy BehaviorAspect
@@ -438,9 +448,9 @@
     sh:severity sh:Info ;
     rdfs:comment "Active and passive structure elements from Core layers may realize Resource. This shape validates the pattern — source should be Core structure, target should be Resource." ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "When realizing Resource from Core, source should be a Core active or passive structure element" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT ?source ?target WHERE {
                 ?source archimate:realization ?target .
                 # Target is Resource (StructureAspect ∩ StrategyLayer)
@@ -477,9 +487,9 @@
 <#StrategyRealizationTarget> rdf:type sh:NodeShape ;
     rdfs:label "Strategy Realization Target" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Strategy elements can only realize other Strategy elements or Motivation elements — not Core layer elements" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT ?source ?target WHERE {
                 ?source archimate:realization ?target .
                 # Source is Strategy layer
@@ -522,9 +532,9 @@
     sh:targetClass archimate:Junction ;
     rdfs:label "Junction Relationship Homogeneity" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "All relationships connected to a junction must be of the same type" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT $this WHERE {
                 # Get any two relationships touching this junction
                 { ?a ?rel1 $this . ?b ?rel2 $this . }
@@ -557,9 +567,9 @@
 <#AccessTypeValidation> rdf:type sh:NodeShape ;
     rdfs:label "Access Type Validation" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Access type must be: read, write, readwrite, or unspecified" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT ?source ?target WHERE {
                 ?source archimate:access ?target .
                 <<?source archimate:access ?target>> archimate:accessType ?val .
@@ -574,9 +584,9 @@
 <#InfluenceSignValidation> rdf:type sh:NodeShape ;
     rdfs:label "Influence Sign Validation" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Influence sign must be: positive, negative, or unspecified" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT ?source ?target WHERE {
                 ?source archimate:influence ?target .
                 <<?source archimate:influence ?target>> archimate:influenceSign ?val .
@@ -591,9 +601,9 @@
 <#InfluenceStrengthValidation> rdf:type sh:NodeShape ;
     rdfs:label "Influence Strength Validation" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Influence strength must be: weak, moderate, strong, or unspecified" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT ?source ?target WHERE {
                 ?source archimate:influence ?target .
                 <<?source archimate:influence ?target>> archimate:influenceStrength ?val .
@@ -608,9 +618,9 @@
 <#FlowTypeValidation> rdf:type sh:NodeShape ;
     rdfs:label "Flow Type Validation" ;
     sh:sparql [
+        sh:prefixes <#> ;
         sh:message "Flow type must be: information, material, energy, or unspecified" ;
         sh:select """
-            PREFIX archimate: <https://purl.org/archimate#>
             SELECT ?source ?target WHERE {
                 ?source archimate:flow ?target .
                 <<?source archimate:flow ?target>> archimate:flowType ?val .
