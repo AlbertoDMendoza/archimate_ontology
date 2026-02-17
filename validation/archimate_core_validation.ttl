@@ -3,33 +3,48 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
 @prefix archimate: <https://purl.org/archimate#> .
 @base <https://purl.org/archimate/validation#> .
 
 ### SHACL Validation for ArchiMate Basic Constraints
 <#> rdf:type owl:Ontology ;
-    owl:imports <https://purl.org/archimate#> ;
+    owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Basic Validation Rules" ;
-    rdfs:comment "SHACL validation constraints for basic ArchiMate model quality and consistency. Focus on element-level constraints. For relationship-specific validation, see archimate_relationship_validation.ttl" ;
+    rdfs:comment "Level 1 Core Validation: universal model quality and graph integrity constraints. Validates concept requirements (identifier, name, documentation, specialization), relationship structural integrity (composition/aggregation rules, RDF-Star metadata), and model quality checks. For metamodel pattern rules, see archimate_metamodel_validation.ttl. For per-element-type relationship combinations, see archimate_rel_<layer>.ttl." ;
+	dct:creator "Alberto D. Mendoza" ;
+    dct:created "2026-02-10"^^xsd:date ;
     owl:versionInfo "Alpha" .
-
+	
+	
 ### NOTES
+# Level 1 Core Validation — Universal model quality and graph integrity.
+#
 # This file focuses on:
 # - Universal element requirements (identifier, name, documentation, specialization)
 # - Element uniqueness constraints
 # - Specialization validation
-# - Layer consistency for elements
-# - Model completeness checks
+# - Model completeness checks (orphaned elements, singletons)
+# - Relationship structural integrity (no circular/self composition/aggregation,
+#   composition part uniqueness, junction rules)
+# - Relationship metadata requirements (RDF-Star identifier, name, documentation)
+# - Relationship quality checks (redundant relationships, missing metadata)
 #
-# For relationship-specific validation, see: archimate_relationship_validation.ttl
-# For derivation rules, see: archimate_derivation.ttl
-# For profile validation, see: archimate_profiles.ttl
-
-### Usage Notes
+# Organization:
+# - Section 1: Universal Concept Requirements
+# - Section 2: Model Completeness Quality Check
+# - Section 3: Specialization Type Consistency Quality Check
+# - Section 4: Specialization Depth Quality Check
+# - Section 5: Universal Relationship Requirements
+# - Section 6: Relationship Structural Integrity (composition, aggregation)
+# - Section 7: Relationship Metadata Validation (RDF-Star)
+# - Section 8: Relationship Quality Checks
+#
 # This validation file should be used alongside:
-# - archimate_relationship_validation.ttl (for relationship-specific constraints)
-# - archimate_derivation.ttl (for derivation rules)
-# - archimate_profiles.ttl (for profile-specific shapes)
+# - archimate_metamodel_validation.ttl (Level 2: abstract metamodel pattern rules)
+# - archimate_rel_<layer>.ttl (Level 3: per-element-type relationship combinations)
+# - archimate_derivation.ttl (derivation rules)
+# - archimate_profile_examples_validation.ttl (profile-specific shapes)
 #
 # Validation severity levels:
 # - sh:Violation (default): Hard constraint violations
@@ -38,71 +53,72 @@
 #
 # To execute validation:
 # 1. Load base ArchiMate ontology (archimate.ttl)
-# 2. Load this validation file
-# 3. Load archimate_relationship_validation.ttl
-# 4. Load your model data
-# 5. Run SHACL validation
+# 2. Load this validation file (Level 1)
+# 3. Load archimate_metamodel_validation.ttl (Level 2)
+# 4. Load archimate_rel_<layer>.ttl files (Level 3, optional)
+# 5. Load your model data
+# 6. Run SHACL validation
 
 
-### 1. Universal Element Requirements
+### 1. Universal Concepts Requirements
 
-# All realized elements must have required attributes
-<#RealizedElementShape> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Element ;
-    rdfs:label "Realized Element Requirements" ;
+# All realized elements and relationships must have required attributes
+<#RealizedConceptShape> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Concept ;
+    rdfs:label "Realized Concept Requirements" ;
     sh:property [
         sh:path archimate:identifier ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:datatype xsd:string ;
         sh:pattern "^[a-zA-Z_][a-zA-Z0-9_-]*$" ;
-        sh:message "All realized elements must have exactly one valid identifier (must start with letter or underscore, then alphanumeric, underscore, hyphen)"
+        sh:message "All realized concepts must have exactly one valid identifier"
     ] ;
     sh:property [
         sh:path archimate:name ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:datatype xsd:string ;
-        sh:minLength 1 ;
-        sh:message "All realized elements must have exactly one non-empty name"
+        sh:message "All realized concepts must have exactly one name"
     ] ;
     sh:property [
         sh:path archimate:documentation ;
         sh:minCount 1 ;
+        sh:maxCount 1 ;
         sh:datatype xsd:string ;
-        sh:minLength 1 ;
-        sh:message "All realized elements must have documentation"
+        sh:message "All realized concepts must have exactly one documentation value"
     ] ;
     sh:property [
         sh:path archimate:specialization ;
         sh:minCount 1 ;
-        sh:class archimate:Element ;
-        sh:message "All realized elements must declare their specialization (what ArchiMate element type they represent)"
+        sh:maxCount 1 ;
+        sh:class archimate:Concept ;
+        sh:message "All realized concepts must declare exactly one specialization type"
     ] .
 
 # Validate that specialization points to valid ArchiMate element types
 <#ValidElementSpecialization> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Element ;
-    rdfs:label "Valid Element Specialization Target" ;
+    sh:targetClass archimate:Concept ;
+    rdfs:label "Valid Concept Specialization Target" ;
     sh:sparql [
-        sh:message "Element specialization must point to a valid ArchiMate element type defined in the ontology" ;
+        sh:message "Elements and Relationship specializations must point to a valid ArchiMate element or relationship type defined in the ontology" ;
         sh:select """
             SELECT $this WHERE {
                 $this archimate:specialization ?type .
-                FILTER NOT EXISTS {
-                    ?type rdf:type owl:Class .
-                    ?type rdfs:subClassOf+ archimate:Element 
-                }
+				FILTER NOT EXISTS {
+					?type rdf:type owl:Class .
+					?type rdfs:subClassOf+ archimate:Concept 
+				}
             }
         """
     ] .
 
 # Unique identifier constraint across all elements
 <#UniqueElementIdentifier> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Element ;
-    rdfs:label "Unique Element Identifier Constraint" ;
+    sh:targetClass archimate:Concept ;
+    rdfs:label "Unique Concept Identifier Constraint" ;
     sh:sparql [
-        sh:message "Element identifiers must be unique across the model" ;
+        sh:message "Element and Relationship identifiers must be unique across the model" ;
         sh:select """
             SELECT $this ?other WHERE {
                 $this archimate:identifier ?id .
@@ -113,61 +129,8 @@
     ] .
 
 
-### 2. Layer Consistency Validation
 
-# Elements should primarily belong to one layer
-<#LayerConsistencyShape> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Element ;
-    rdfs:label "Layer Consistency" ;
-    sh:sparql [
-        sh:message "Elements should belong to exactly one primary layer" ;
-        sh:select """
-            SELECT $this WHERE {
-                {
-                    SELECT $this (COUNT(DISTINCT ?layer) AS ?layerCount) WHERE {
-                        $this rdf:type ?elementType .
-                        ?elementType rdfs:subClassOf+ ?layer .
-                        ?layer rdfs:subClassOf archimate:Layer .
-                    }
-                    GROUP BY $this
-                }
-                FILTER(?layerCount > 1)
-            }
-        """
-    ] .
-
-
-### 3. Aspect Consistency Validation
-
-# Elements should primarily belong to one aspect within their layer
-<#AspectConsistencyShape> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Element ;
-    rdfs:label "Aspect Consistency" ;
-    sh:severity sh:Info ;
-    sh:sparql [
-        sh:message "Elements typically belong to one primary aspect (Active Structure, Behavior, or Passive Structure)" ;
-        sh:select """
-            SELECT $this WHERE {
-                {
-                    SELECT $this (COUNT(DISTINCT ?aspect) AS ?aspectCount) WHERE {
-                        $this rdf:type ?elementType .
-                        ?elementType rdfs:subClassOf+ ?aspect .
-                        VALUES ?aspect {
-                            archimate:ActiveStructure 
-                            archimate:BehaviorAspect 
-                            archimate:PassiveStructure
-                            archimate:MotivationAspect
-                        }
-                    }
-                    GROUP BY $this
-                }
-                FILTER(?aspectCount > 1)
-            }
-        """
-    ] .
-
-
-### 4. Model Completeness Validation
+### 2. Model Completeness Validation
 
 # Check for orphaned elements (no relationships)
 <#OrphanedElementShape> rdf:type sh:NodeShape ;
@@ -225,108 +188,15 @@
     ] .
 
 
-### 5. Naming Convention Validation
 
-# Check for elements with generic or placeholder names
-<#GenericNameCheck> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Element ;
-    rdfs:label "Generic Name Check" ;
-    sh:severity sh:Warning ;
-    sh:sparql [
-        sh:message "Element has a generic or placeholder name - consider using a more descriptive name" ;
-        sh:select """
-            SELECT $this WHERE {
-                $this archimate:name ?name .
-                
-                # Generic patterns to flag
-                FILTER(
-                    REGEX(?name, "^(test|temp|TODO|TBD|XXX|placeholder|example|sample)", "i") ||
-                    REGEX(?name, "^(Element|Component|Process|Service|Actor)\\s*[0-9]*$", "i") ||
-                    REGEX(?name, "^(Untitled|New|Default)", "i")
-                )
-            }
-        """
-    ] .
+### 3. Type Consistency Validation
 
-# Check for very short element names (less than 3 characters)
-<#ShortNameCheck> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Element ;
-    rdfs:label "Short Name Check" ;
-    sh:severity sh:Info ;
-    sh:sparql [
-        sh:message "Element has a very short name (less than 3 characters) - consider if this is descriptive enough" ;
-        sh:select """
-            SELECT $this WHERE {
-                $this archimate:name ?name .
-                FILTER(STRLEN(?name) < 3)
-            }
-        """
-    ] .
-
-
-### 6. Documentation Quality Validation
-
-# Check for elements with minimal documentation
-<#MinimalDocumentationCheck> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Element ;
-    rdfs:label "Minimal Documentation Check" ;
-    sh:severity sh:Info ;
-    sh:sparql [
-        sh:message "Element has very brief documentation (less than 20 characters) - consider adding more detail" ;
-        sh:select """
-            SELECT $this WHERE {
-                $this archimate:documentation ?doc .
-                FILTER(STRLEN(?doc) < 20)
-            }
-        """
-    ] .
-
-# Check for documentation that just repeats the name
-<#RedundantDocumentationCheck> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Element ;
-    rdfs:label "Redundant Documentation Check" ;
-    sh:severity sh:Warning ;
-    sh:sparql [
-        sh:message "Element documentation appears to just repeat the name - consider adding more descriptive content" ;
-        sh:select """
-            SELECT $this WHERE {
-                $this archimate:name ?name .
-                $this archimate:documentation ?doc .
-                FILTER(LCASE(?name) = LCASE(?doc))
-            }
-        """
-    ] .
-
-
-### 7. Specialization Chain Validation
-
-# Check for overly deep specialization chains
-<#DeepSpecializationCheck> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Element ;
-    rdfs:label "Deep Specialization Chain Check" ;
-    sh:severity sh:Info ;
-    sh:sparql [
-        sh:message "Element has a deep specialization chain (4+ levels) - consider if this complexity is necessary" ;
-        sh:select """
-            SELECT $this WHERE {
-                # Check specialization depth via transitive property
-                $this archimate:specialization+ ?type1 .
-                ?type1 archimate:specialization+ ?type2 .
-                ?type2 archimate:specialization+ ?type3 .
-                ?type3 archimate:specialization+ ?type4 .
-            }
-        """
-    ] .
-
-
-### 8. Type Consistency Validation
-
-# Ensure element types are consistent with their specialization
+# Ensure element and relationship types are consistent with their specialization
 <#TypeSpecializationConsistency> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Element ;
+    sh:targetClass archimate:Concept ;
     rdfs:label "Type-Specialization Consistency" ;
     sh:sparql [
-        sh:message "Element type (rdf:type) is not consistent with its declared specialization" ;
+        sh:message "Element or Relationship type (rdf:type) is not consistent with its declared specialization" ;
         sh:select """
             SELECT $this WHERE {
                 $this rdf:type ?actualType .
@@ -337,6 +207,257 @@
                     { ?actualType rdfs:subClassOf* ?declaredType }
                     UNION
                     { ?actualType = ?declaredType }
+                }
+            }
+        """
+    ] .
+
+### 4. Specialization Chain Validation
+
+# Check for overly deep specialization chains
+<#DeepSpecializationCheck> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Concept ;
+    rdfs:label "Deep Specialization Chain Check" ;
+    sh:severity sh:Info ;
+    sh:sparql [
+        sh:message "Element or Relationship has a deep specialization chain (5+ levels) - consider if this complexity is necessary" ;
+        sh:select """
+            SELECT $this WHERE {
+                # Check specialization depth via transitive property
+                $this archimate:specialization+ ?type1 .
+                ?type1 archimate:specialization+ ?type2 .
+                ?type2 archimate:specialization+ ?type3 .
+                ?type3 archimate:specialization+ ?type4 .
+				?type4 archimate:specialization+ ?type5 .	
+            }
+        """
+    ] .
+
+
+
+
+### 5. Universal Relationship Requirements
+
+## All realized relationships must have required metadata
+<#RealizedRelationshipRequirements> rdf:type sh:NodeShape ;
+    rdfs:label "Realized Relationship Requirements" ;
+    rdfs:comment "All relationship instances must have identifier, name, documentation, and specialization" ;
+    sh:sparql [
+        sh:message "All relationships must have identifier, name, documentation, and declare their specialization type" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source ?target WHERE {
+                ?source ?rel ?target .
+                {?rel rdfs:subPropertyOf+ archimate:structuralRelationship} UNION
+				{?rel rdfs:subPropertyOf+ archimate:dependencyRelationship} UNION
+				{?rel rdfs:subPropertyOf+ archimate:dynamicRelationship} .
+                
+                # Must have metadata via RDF-Star
+                FILTER NOT EXISTS {
+                    <<?source ?rel ?target>> archimate:identifier ?id .
+                    <<?source ?rel ?target>> archimate:name ?name .
+                    <<?source ?rel ?target>> archimate:documentation ?doc .
+                    <<?source ?rel ?target>> archimate:specialization ?spec .
+                }
+            }
+        """
+    ] .
+
+## Relationship identifiers must be unique
+<#UniqueRelationshipIdentifier> rdf:type sh:NodeShape ;
+    rdfs:label "Unique Relationship Identifier" ;
+    sh:sparql [
+        sh:message "Relationship identifiers must be unique across the model" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source1 ?target1 ?source2 ?target2 WHERE {
+                ?source1 ?rel1 ?target1 .
+                ?source2 ?rel2 ?target2 .
+                
+                <<?source1 ?rel1 ?target1>> archimate:identifier ?id .
+                <<?source2 ?rel2 ?target2>> archimate:identifier ?id .
+                
+                FILTER(
+                    ?source1 != ?source2 || 
+                    ?target1 != ?target2 || 
+                    ?rel1 != ?rel2
+                )
+            }
+        """
+    ] .
+
+
+### 6. Structural Relationship Validation
+
+## 6.1 Composition Relationships
+
+# No self-composition
+<#NoSelfComposition> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "No Self-Composition" ;
+    sh:sparql [
+        sh:message "Elements cannot compose themselves" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                $this archimate:composition $this
+            }
+        """
+    ] .
+
+# No circular composition
+<#NoCircularComposition> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "No Circular Composition" ;
+    sh:sparql [
+        sh:message "Circular composition relationships are not allowed (A composes B, B composes C, C composes A)" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                $this archimate:composition+ $this
+            }
+        """
+    ] .
+
+# Composition part uniqueness: a part can only belong to one whole
+<#CompositionPartUniqueness> rdf:type sh:NodeShape ;
+    sh:targetObjectsOf archimate:composition ;
+    rdfs:label "Composition Part Uniqueness" ;
+    sh:sparql [
+        sh:message "A composed part can only belong to one whole (composition implies exclusive ownership)" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                ?whole1 archimate:composition $this .
+                ?whole2 archimate:composition $this .
+                FILTER(?whole1 != ?whole2)
+            }
+        """
+    ] .
+
+
+## 6.2 Aggregation Relationships
+
+# No self-aggregation
+<#NoSelfAggregation> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "No Self-Aggregation" ;
+    sh:sparql [
+        sh:message "Elements cannot aggregate themselves" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                $this archimate:aggregation $this
+            }
+        """
+    ] .
+
+# No circular aggregation
+<#NoCircularAggregation> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "No Circular Aggregation" ;
+    sh:sparql [
+        sh:message "Circular aggregation relationships are not allowed" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            SELECT $this WHERE {
+                $this archimate:aggregation+ $this
+            }
+        """
+    ] .
+
+
+
+### 7. RDF-Star Relationship Metadata Validation
+
+## Relationship metadata must follow proper patterns
+<#RelationshipMetadataPattern> rdf:type sh:NodeShape ;
+    rdfs:label "Relationship Metadata Pattern" ;
+    sh:sparql [
+        sh:message "Relationship metadata must be attached to quoted triples using RDF-Star syntax" ;
+        sh:severity sh:Info ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source ?target WHERE {
+                ?source ?rel ?target .
+                {?rel rdfs:subPropertyOf+ archimate:structuralRelationship} UNION
+				{?rel rdfs:subPropertyOf+ archimate:dependencyRelationship} UNION
+				{?rel rdfs:subPropertyOf+ archimate:dynamicRelationship} .
+                
+                # Relationship exists but has no metadata
+                FILTER NOT EXISTS {
+                    <<?source ?rel ?target>> ?metaProp ?metaValue .
+                }
+            }
+        """
+    ] .
+
+## Validate relationship identifier format
+<#RelationshipIdentifierFormat> rdf:type sh:NodeShape ;
+    rdfs:label "Relationship Identifier Format" ;
+    sh:sparql [
+        sh:message "Relationship identifiers must start with letter or underscore, followed by alphanumeric, underscore, or hyphen" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source ?target WHERE {
+                ?source ?rel ?target .
+                <<?source ?rel ?target>> archimate:identifier ?id .
+                FILTER(!REGEX(?id, "^[a-zA-Z_][a-zA-Z0-9_-]*$"))
+            }
+        """
+    ] .
+
+
+
+### 8. Relationship Quality Checks
+
+## Check for redundant relationships
+<#RedundantRelationshipCheck> rdf:type sh:NodeShape ;
+    rdfs:label "Redundant Relationship Check" ;
+    sh:severity sh:Info ;
+    sh:sparql [
+        sh:message "Redundant relationship detected: same relationship type between same elements exists multiple times" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source ?target WHERE {
+                ?source ?rel ?target .
+                
+                # Count how many times this exact relationship exists
+                {
+                    SELECT ?source ?rel ?target (COUNT(*) AS ?count) WHERE {
+                        ?source ?rel ?target .
+                    }
+                    GROUP BY ?source ?rel ?target
+                }
+                
+                FILTER(?count > 1)
+            }
+        """
+    ] .
+
+## Check for potentially missing relationship metadata
+<#MissingRelationshipMetadataWarning> rdf:type sh:NodeShape ;
+    rdfs:label "Missing Relationship Metadata Warning" ;
+    sh:severity sh:Warning ;
+    sh:sparql [
+        sh:message "Relationship exists but is missing name or documentation (only identifier present)" ;
+        sh:select """
+            PREFIX archimate: <https://purl.org/archimate#>
+            
+            SELECT ?source ?target WHERE {
+                ?source ?rel ?target .
+                <<?source ?rel ?target>> archimate:identifier ?id .
+                
+                FILTER NOT EXISTS {
+                    <<?source ?rel ?target>> archimate:name ?name .
+                }
+                FILTER NOT EXISTS {
+                    <<?source ?rel ?target>> archimate:documentation ?doc .
                 }
             }
         """

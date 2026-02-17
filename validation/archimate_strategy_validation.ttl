@@ -1,0 +1,480 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix archimate: <https://purl.org/archimate#> .
+@base <https://purl.org/archimate/validation/rel#> .
+
+### SHACL Validation: Strategy Layer Valid Relationship Combinations
+### ArchiMate 3.2 Specification - Appendix B Relationship Matrix
+###
+### Elements in this file:
+###   Resource, Capability, CourseOfAction, ValueStream
+###
+### Relationship codes:
+###   a=access, c=composition, f=flow, g=aggregation, i=assignment,
+###   n=influence, o=association, r=realization, s=specialization,
+###   t=triggering, v=serving
+###
+### Generated from relationships.xml matrix
+### Each shape validates that all outgoing relationships from an element
+### target only the element types permitted by the ArchiMate 3.2 spec.
+
+<#> rdf:type owl:Ontology ;
+    owl:imports <https://purl.org/archimate#> ;
+    rdfs:label "ArchiMate Relationship Validation - Strategy Layer" ;
+    rdfs:comment "Valid relationship combinations for Strategy layer elements per ArchiMate 3.2." ;
+    owl:versionInfo "Alpha" .
+
+
+### Resource
+
+<#ResourceRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Resource ;
+    rdfs:label "Resource Valid Relationships" ;
+    rdfs:comment "Validates all outgoing relationships from Resource elements." ;
+
+    # composition (c): Resource
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Resource ]
+        ) ;
+        sh:message "Resource: composition is only valid to Resource."
+    ] ;
+
+    # aggregation (g): Resource
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Resource ]
+        ) ;
+        sh:message "Resource: aggregation is only valid to Resource."
+    ] ;
+
+    # assignment (i): Capability, ValueStream
+    sh:property [
+        sh:path archimate:assignment ;
+        sh:or (
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Resource: assignment is only valid to Capability, ValueStream."
+    ] ;
+
+    # realization (r): CourseOfAction, Grouping, Requirement
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "Resource: realization is only valid to CourseOfAction, Grouping, Requirement."
+    ] ;
+
+    # serving (v): Capability, CourseOfAction, Grouping, ValueStream
+    sh:property [
+        sh:path archimate:serving ;
+        sh:or (
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Resource: serving is only valid to Capability, CourseOfAction, Grouping, ValueStream."
+    ] ;
+
+    # flow (f): Capability, CourseOfAction, Grouping, ValueStream
+    sh:property [
+        sh:path archimate:flow ;
+        sh:or (
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Resource: flow is only valid to Capability, CourseOfAction, Grouping, ValueStream."
+    ] ;
+
+    # triggering (t): Capability, CourseOfAction, Grouping, ValueStream
+    sh:property [
+        sh:path archimate:triggering ;
+        sh:or (
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Resource: triggering is only valid to Capability, CourseOfAction, Grouping, ValueStream."
+    ] ;
+
+    # influence (n): Assessment, Constraint, Driver, Goal, Grouping, Meaning, Outcome, Principle, Requirement, Stakeholder, Value
+    sh:property [
+        sh:path archimate:influence ;
+        sh:or (
+            [ sh:class archimate:Assessment ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Driver ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Meaning ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:Value ]
+        ) ;
+        sh:message "Resource: influence is only valid to Motivation elements and Grouping."
+    ] ;
+
+    # specialization (s): Resource
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:or (
+            [ sh:class archimate:Resource ]
+        ) ;
+        sh:message "Resource: specialization is only valid to Resource."
+    ] ;
+
+    # access (a): not valid for Resource as source
+    # (Resource has no 'a' codes in the matrix except to Junction/Grouping via association)
+
+    .
+
+
+### Capability
+
+<#CapabilityRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Capability ;
+    rdfs:label "Capability Valid Relationships" ;
+    rdfs:comment "Validates all outgoing relationships from Capability elements." ;
+
+    # composition (c): Capability, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "Capability: composition is only valid to Capability, Grouping."
+    ] ;
+
+    # aggregation (g): Capability, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "Capability: aggregation is only valid to Capability, Grouping."
+    ] ;
+
+    # assignment (i): none explicitly listed
+    # (no 'i' codes appear for Capability as source)
+
+    # realization (r): Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "Capability: realization is only valid to Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement."
+    ] ;
+
+    # serving (v): Capability, CourseOfAction, Grouping, Resource, ValueStream
+    sh:property [
+        sh:path archimate:serving ;
+        sh:or (
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Capability: serving is only valid to Capability, CourseOfAction, Grouping, Resource, ValueStream."
+    ] ;
+
+    # flow (f): CourseOfAction, Grouping, Resource, ValueStream
+    sh:property [
+        sh:path archimate:flow ;
+        sh:or (
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Capability: flow is only valid to CourseOfAction, Grouping, Resource, ValueStream."
+    ] ;
+
+    # triggering (t): CourseOfAction, Grouping, Resource, ValueStream
+    sh:property [
+        sh:path archimate:triggering ;
+        sh:or (
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Capability: triggering is only valid to CourseOfAction, Grouping, Resource, ValueStream."
+    ] ;
+
+    # influence (n): Assessment, Constraint, Driver, Goal, Grouping, Meaning, Outcome, Principle, Requirement, Stakeholder, Value
+    sh:property [
+        sh:path archimate:influence ;
+        sh:or (
+            [ sh:class archimate:Assessment ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Driver ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Meaning ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:Value ]
+        ) ;
+        sh:message "Capability: influence is only valid to Motivation elements and Grouping."
+    ] ;
+
+    # specialization (s): Capability
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:or (
+            [ sh:class archimate:Capability ]
+        ) ;
+        sh:message "Capability: specialization is only valid to Capability."
+    ] ;
+
+    .
+
+
+### CourseOfAction
+
+<#CourseOfActionRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:CourseOfAction ;
+    rdfs:label "CourseOfAction Valid Relationships" ;
+    rdfs:comment "Validates all outgoing relationships from CourseOfAction elements." ;
+
+    # composition (c): CourseOfAction, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "CourseOfAction: composition is only valid to CourseOfAction, Grouping."
+    ] ;
+
+    # aggregation (g): CourseOfAction, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "CourseOfAction: aggregation is only valid to CourseOfAction, Grouping."
+    ] ;
+
+    # realization (r): Constraint, Goal, Grouping, Outcome, Principle, Requirement
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "CourseOfAction: realization is only valid to Constraint, Goal, Grouping, Outcome, Principle, Requirement."
+    ] ;
+
+    # serving (v): Capability, CourseOfAction, Grouping, Resource, ValueStream
+    sh:property [
+        sh:path archimate:serving ;
+        sh:or (
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "CourseOfAction: serving is only valid to Capability, CourseOfAction, Grouping, Resource, ValueStream."
+    ] ;
+
+    # flow (f): Capability, CourseOfAction, Grouping, Resource, ValueStream
+    sh:property [
+        sh:path archimate:flow ;
+        sh:or (
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "CourseOfAction: flow is only valid to Capability, CourseOfAction, Grouping, Resource, ValueStream."
+    ] ;
+
+    # triggering (t): Capability, CourseOfAction, Grouping, Resource, ValueStream
+    sh:property [
+        sh:path archimate:triggering ;
+        sh:or (
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "CourseOfAction: triggering is only valid to Capability, CourseOfAction, Grouping, Resource, ValueStream."
+    ] ;
+
+    # influence (n): Assessment, Constraint, Driver, Goal, Grouping, Meaning, Outcome, Principle, Requirement, Stakeholder, Value
+    sh:property [
+        sh:path archimate:influence ;
+        sh:or (
+            [ sh:class archimate:Assessment ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Driver ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Meaning ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:Value ]
+        ) ;
+        sh:message "CourseOfAction: influence is only valid to Motivation elements and Grouping."
+    ] ;
+
+    # specialization (s): CourseOfAction
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:or (
+            [ sh:class archimate:CourseOfAction ]
+        ) ;
+        sh:message "CourseOfAction: specialization is only valid to CourseOfAction."
+    ] ;
+
+    .
+
+
+### ValueStream
+
+<#ValueStreamRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:ValueStream ;
+    rdfs:label "ValueStream Valid Relationships" ;
+    rdfs:comment "Validates all outgoing relationships from ValueStream elements." ;
+
+    # composition (c): Grouping, ValueStream
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "ValueStream: composition is only valid to Grouping, ValueStream."
+    ] ;
+
+    # aggregation (g): Grouping, ValueStream
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "ValueStream: aggregation is only valid to Grouping, ValueStream."
+    ] ;
+
+    # realization (r): Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "ValueStream: realization is only valid to Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement."
+    ] ;
+
+    # serving (v): Capability, CourseOfAction, Grouping, Resource, ValueStream
+    sh:property [
+        sh:path archimate:serving ;
+        sh:or (
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "ValueStream: serving is only valid to Capability, CourseOfAction, Grouping, Resource, ValueStream."
+    ] ;
+
+    # flow (f): Capability, CourseOfAction, Grouping, Resource, ValueStream
+    sh:property [
+        sh:path archimate:flow ;
+        sh:or (
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "ValueStream: flow is only valid to Capability, CourseOfAction, Grouping, Resource, ValueStream."
+    ] ;
+
+    # triggering (t): Capability, CourseOfAction, Grouping, Resource, ValueStream
+    sh:property [
+        sh:path archimate:triggering ;
+        sh:or (
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "ValueStream: triggering is only valid to Capability, CourseOfAction, Grouping, Resource, ValueStream."
+    ] ;
+
+    # influence (n): Assessment, Constraint, Driver, Goal, Grouping, Meaning, Outcome, Principle, Requirement, Stakeholder, Value
+    sh:property [
+        sh:path archimate:influence ;
+        sh:or (
+            [ sh:class archimate:Assessment ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Driver ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Meaning ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:Value ]
+        ) ;
+        sh:message "ValueStream: influence is only valid to Motivation elements and Grouping."
+    ] ;
+
+    # specialization (s): ValueStream
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:or (
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "ValueStream: specialization is only valid to ValueStream."
+    ] ;
+
+    .

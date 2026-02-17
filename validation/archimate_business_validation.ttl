@@ -1,0 +1,2075 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix archimate: <https://purl.org/archimate#> .
+@base <https://purl.org/archimate/validation/rel#> .
+
+### SHACL Validation: Business Layer Valid Relationship Combinations
+### ArchiMate 3.2 Specification - Appendix B Relationship Matrix
+###
+### Elements in this file:
+###   BusinessActor, BusinessRole, BusinessCollaboration, BusinessInterface,
+###   BusinessProcess, BusinessFunction, BusinessService, BusinessInteraction,
+###   BusinessEvent, BusinessObject, BusinessContract, Representation, Product
+###
+### Relationship codes:
+###   a=access, c=composition, f=flow, g=aggregation, i=assignment,
+###   n=influence, o=association, r=realization, s=specialization,
+###   t=triggering, v=serving
+###
+### Generated from relationships.xml matrix
+
+<#> rdf:type owl:Ontology ;
+    owl:imports <https://purl.org/archimate#> ;
+    rdfs:label "ArchiMate Relationship Validation - Business Layer" ;
+    rdfs:comment "Valid relationship combinations for Business layer elements per ArchiMate 3.2." ;
+    owl:versionInfo "Alpha" .
+
+
+### BusinessActor
+
+<#BusinessActorRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessActor ;
+    rdfs:label "BusinessActor Valid Relationships" ;
+
+    # composition (c): BusinessActor, BusinessInterface, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessActor: composition is only valid to BusinessActor, BusinessInterface, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessActor, BusinessInterface, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessActor: aggregation is only valid to BusinessActor, BusinessInterface, Grouping."
+    ] ;
+
+    # assignment (i): BusinessEvent, BusinessFunction, BusinessInteraction, BusinessInterface, BusinessProcess, BusinessRole, BusinessService, ImplementationEvent, Stakeholder, WorkPackage
+    sh:property [
+        sh:path archimate:assignment ;
+        sh:or (
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:ImplementationEvent ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:WorkPackage ]
+        ) ;
+        sh:message "BusinessActor: assignment is only valid to BusinessEvent, BusinessFunction, BusinessInteraction, BusinessInterface, BusinessProcess, BusinessRole, BusinessService, ImplementationEvent, Stakeholder, WorkPackage."
+    ] ;
+
+    # realization (r): BusinessCollaboration, BusinessEvent, BusinessFunction, BusinessInteraction, BusinessInterface, BusinessService, Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, Resource, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessActor: realization is only valid to business behavior/interface, motivation, and strategy elements."
+    ] ;
+
+    # serving (v): ApplicationCollaboration, ApplicationComponent, ApplicationEvent, ApplicationFunction, ApplicationInteraction, ApplicationInterface, ApplicationProcess, ApplicationService, BusinessActor, BusinessCollaboration, BusinessEvent, BusinessFunction, BusinessInteraction, BusinessInterface, BusinessProcess, BusinessRole, BusinessService, CommunicationNetwork, Device, DistributionNetwork, Equipment, Facility, Grouping, Location, Node, Path, Product, SystemSoftware, TechnologyCollaboration, TechnologyEvent, TechnologyFunction, TechnologyInteraction, TechnologyInterface, TechnologyProcess, TechnologyService
+    sh:property [
+        sh:path archimate:serving ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessActor: serving target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # flow (f): ApplicationCollaboration, ApplicationComponent, ApplicationEvent, ApplicationFunction, ApplicationInteraction, ApplicationInterface, ApplicationProcess, ApplicationService, BusinessActor, BusinessCollaboration, BusinessEvent, BusinessFunction, BusinessInteraction, BusinessInterface, BusinessProcess, BusinessRole, BusinessService, CommunicationNetwork, Device, DistributionNetwork, Equipment, Facility, Grouping, Location, Node, Path, Product, SystemSoftware, TechnologyCollaboration, TechnologyEvent, TechnologyFunction, TechnologyInteraction, TechnologyInterface, TechnologyProcess, TechnologyService
+    sh:property [
+        sh:path archimate:flow ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessActor: flow target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # triggering (t): ApplicationCollaboration, ApplicationComponent, ApplicationEvent, ApplicationFunction, ApplicationInteraction, ApplicationInterface, ApplicationProcess, ApplicationService, BusinessActor, BusinessCollaboration, BusinessEvent, BusinessFunction, BusinessInteraction, BusinessInterface, BusinessProcess, BusinessRole, BusinessService, CommunicationNetwork, Device, DistributionNetwork, Equipment, Facility, Grouping, Location, Node, Path, Product, SystemSoftware, TechnologyCollaboration, TechnologyEvent, TechnologyFunction, TechnologyInteraction, TechnologyInterface, TechnologyProcess, TechnologyService
+    sh:property [
+        sh:path archimate:triggering ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessActor: triggering target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # access (a): Artifact, BusinessObject, Contract, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessActor: access is only valid to passive structure elements and Grouping."
+    ] ;
+
+    # influence (n): Assessment, Constraint, Driver, Goal, Grouping, Meaning, Outcome, Principle, Requirement, Stakeholder, Value
+    sh:property [
+        sh:path archimate:influence ;
+        sh:or (
+            [ sh:class archimate:Assessment ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Driver ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Meaning ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:Value ]
+        ) ;
+        sh:message "BusinessActor: influence is only valid to Motivation elements and Grouping."
+    ] ;
+
+    # specialization (s): BusinessActor
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:or (
+            [ sh:class archimate:BusinessActor ]
+        ) ;
+        sh:message "BusinessActor: specialization is only valid to BusinessActor."
+    ] ;
+
+    .
+
+
+### BusinessRole
+
+<#BusinessRoleRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessRole ;
+    rdfs:label "BusinessRole Valid Relationships" ;
+
+    # composition (c): BusinessInterface, BusinessRole, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessRole: composition is only valid to BusinessInterface, BusinessRole, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessInterface, BusinessRole, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessRole: aggregation is only valid to BusinessInterface, BusinessRole, Grouping."
+    ] ;
+
+    # assignment (i): BusinessEvent, BusinessFunction, BusinessInteraction, BusinessProcess, BusinessRole, BusinessService, ImplementationEvent, Stakeholder, WorkPackage
+    sh:property [
+        sh:path archimate:assignment ;
+        sh:or (
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:ImplementationEvent ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:WorkPackage ]
+        ) ;
+        sh:message "BusinessRole: assignment is only valid to business behavior, BusinessRole, BusinessService, ImplementationEvent, Stakeholder, WorkPackage."
+    ] ;
+
+    # realization (r): BusinessCollaboration, BusinessEvent, BusinessFunction, BusinessInteraction, BusinessInterface, BusinessService, Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, Resource, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessRole: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # serving (v): ApplicationCollaboration, ApplicationComponent, ApplicationEvent, ApplicationFunction, ApplicationInteraction, ApplicationInterface, ApplicationProcess, ApplicationService, BusinessActor, BusinessCollaboration, BusinessEvent, BusinessFunction, BusinessInteraction, BusinessInterface, BusinessProcess, BusinessRole, BusinessService, CommunicationNetwork, Device, DistributionNetwork, Equipment, Facility, Grouping, Location, Node, Path, Product, SystemSoftware, TechnologyCollaboration, TechnologyEvent, TechnologyFunction, TechnologyInteraction, TechnologyInterface, TechnologyProcess, TechnologyService
+    sh:property [
+        sh:path archimate:serving ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessRole: serving target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # flow (f): same targets as serving for BusinessRole
+    sh:property [
+        sh:path archimate:flow ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessRole: flow target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # triggering (t): same targets as flow for BusinessRole
+    sh:property [
+        sh:path archimate:triggering ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessRole: triggering target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # access (a): Artifact, BusinessObject, Contract, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessRole: access is only valid to passive structure elements and Grouping."
+    ] ;
+
+    # influence (n): Assessment, Constraint, Driver, Goal, Grouping, Meaning, Outcome, Principle, Requirement, Stakeholder, Value
+    sh:property [
+        sh:path archimate:influence ;
+        sh:or (
+            [ sh:class archimate:Assessment ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Driver ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Meaning ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:Value ]
+        ) ;
+        sh:message "BusinessRole: influence is only valid to Motivation elements and Grouping."
+    ] ;
+
+    # specialization (s): BusinessRole
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:or (
+            [ sh:class archimate:BusinessRole ]
+        ) ;
+        sh:message "BusinessRole: specialization is only valid to BusinessRole."
+    ] ;
+
+    .
+
+
+### BusinessCollaboration
+
+<#BusinessCollaborationRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessCollaboration ;
+    rdfs:label "BusinessCollaboration Valid Relationships" ;
+
+    # composition (c): BusinessCollaboration, BusinessInterface, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessCollaboration: composition is only valid to BusinessCollaboration, BusinessInterface, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessActor, BusinessCollaboration, BusinessInterface, BusinessRole, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessCollaboration: aggregation is only valid to BusinessActor, BusinessCollaboration, BusinessInterface, BusinessRole, Grouping."
+    ] ;
+
+    # assignment (i): BusinessEvent, BusinessFunction, BusinessInteraction, BusinessInterface, BusinessProcess, BusinessRole, BusinessService, ImplementationEvent, Stakeholder, WorkPackage
+    sh:property [
+        sh:path archimate:assignment ;
+        sh:or (
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:ImplementationEvent ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:WorkPackage ]
+        ) ;
+        sh:message "BusinessCollaboration: assignment target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # realization (r): BusinessCollaboration, BusinessEvent, BusinessFunction, BusinessInteraction, BusinessInterface, BusinessService, Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, Resource, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessCollaboration: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # serving (v): ApplicationCollaboration, ApplicationComponent, ApplicationEvent, ApplicationFunction, ApplicationInteraction, ApplicationInterface, ApplicationProcess, ApplicationService, BusinessActor, BusinessCollaboration, BusinessEvent, BusinessFunction, BusinessInteraction, BusinessInterface, BusinessProcess, BusinessRole, BusinessService, CommunicationNetwork, Device, DistributionNetwork, Equipment, Facility, Grouping, Location, Node, Path, Product, SystemSoftware, TechnologyCollaboration, TechnologyEvent, TechnologyFunction, TechnologyInteraction, TechnologyInterface, TechnologyProcess, TechnologyService
+    sh:property [
+        sh:path archimate:serving ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessCollaboration: serving target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # flow (f): same as serving
+    sh:property [
+        sh:path archimate:flow ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessCollaboration: flow target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # triggering (t): same as flow
+    sh:property [
+        sh:path archimate:triggering ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessCollaboration: triggering target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # access (a): Artifact, BusinessObject, Contract, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessCollaboration: access is only valid to passive structure elements and Grouping."
+    ] ;
+
+    # influence (n): Assessment, Constraint, Driver, Goal, Grouping, Meaning, Outcome, Principle, Requirement, Stakeholder, Value
+    sh:property [
+        sh:path archimate:influence ;
+        sh:or (
+            [ sh:class archimate:Assessment ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Driver ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Meaning ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:Value ]
+        ) ;
+        sh:message "BusinessCollaboration: influence is only valid to Motivation elements and Grouping."
+    ] ;
+
+    # specialization (s): BusinessCollaboration
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:or (
+            [ sh:class archimate:BusinessCollaboration ]
+        ) ;
+        sh:message "BusinessCollaboration: specialization is only valid to BusinessCollaboration."
+    ] ;
+
+    .
+
+
+### BusinessInterface
+
+<#BusinessInterfaceRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessInterface ;
+    rdfs:label "BusinessInterface Valid Relationships" ;
+
+    # composition (c): BusinessInterface, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessInterface: composition is only valid to BusinessInterface, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessInterface, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessInterface: aggregation is only valid to BusinessInterface, Grouping."
+    ] ;
+
+    # assignment (i): BusinessService, Grouping
+    sh:property [
+        sh:path archimate:assignment ;
+        sh:or (
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessInterface: assignment is only valid to BusinessService, Grouping."
+    ] ;
+
+    # realization (r): BusinessInterface, BusinessService, Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, Resource, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessInterface: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # serving (v): all core layer elements + Grouping, Location, Product (same broad set as other active structure)
+    sh:property [
+        sh:path archimate:serving ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessInterface: serving target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # flow (f): same broad set
+    sh:property [
+        sh:path archimate:flow ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessInterface: flow target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # triggering (t): same broad set
+    sh:property [
+        sh:path archimate:triggering ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessInterface: triggering target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # access (a): Artifact, BusinessObject, Contract, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessInterface: access is only valid to passive structure elements and Grouping."
+    ] ;
+
+    # influence (n): Assessment, Constraint, Driver, Goal, Grouping, Meaning, Outcome, Principle, Requirement, Stakeholder, Value
+    sh:property [
+        sh:path archimate:influence ;
+        sh:or (
+            [ sh:class archimate:Assessment ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Driver ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Meaning ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:Value ]
+        ) ;
+        sh:message "BusinessInterface: influence is only valid to Motivation elements and Grouping."
+    ] ;
+
+    # specialization (s): BusinessInterface
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:or (
+            [ sh:class archimate:BusinessInterface ]
+        ) ;
+        sh:message "BusinessInterface: specialization is only valid to BusinessInterface."
+    ] ;
+
+    .
+
+
+### BusinessProcess
+
+<#BusinessProcessRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessProcess ;
+    rdfs:label "BusinessProcess Valid Relationships" ;
+
+    # composition (c): BusinessFunction, BusinessInteraction, BusinessProcess, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessProcess: composition is only valid to BusinessFunction, BusinessInteraction, BusinessProcess, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessFunction, BusinessInteraction, BusinessProcess, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessProcess: aggregation is only valid to BusinessFunction, BusinessInteraction, BusinessProcess, Grouping."
+    ] ;
+
+    # realization (r): BusinessService, Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessProcess: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # serving (v): all core active structure + behavior + Grouping, Location, Product
+    sh:property [
+        sh:path archimate:serving ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessProcess: serving target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # flow (f): same broad set
+    sh:property [
+        sh:path archimate:flow ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessProcess: flow target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # triggering (t): same broad set
+    sh:property [
+        sh:path archimate:triggering ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessProcess: triggering target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # access (a): Artifact, BusinessObject, Contract, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessProcess: access is only valid to passive structure elements and Grouping."
+    ] ;
+
+    # influence (n): Assessment, Constraint, Driver, Goal, Grouping, Meaning, Outcome, Principle, Requirement, Stakeholder, Value
+    sh:property [
+        sh:path archimate:influence ;
+        sh:or (
+            [ sh:class archimate:Assessment ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Driver ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Meaning ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:Value ]
+        ) ;
+        sh:message "BusinessProcess: influence is only valid to Motivation elements and Grouping."
+    ] ;
+
+    # specialization (s): BusinessProcess
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:or (
+            [ sh:class archimate:BusinessProcess ]
+        ) ;
+        sh:message "BusinessProcess: specialization is only valid to BusinessProcess."
+    ] ;
+
+    .
+
+
+### BusinessFunction
+
+<#BusinessFunctionRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessFunction ;
+    rdfs:label "BusinessFunction Valid Relationships" ;
+
+    # composition (c): BusinessFunction, BusinessInteraction, BusinessProcess, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessFunction: composition is only valid to BusinessFunction, BusinessInteraction, BusinessProcess, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessFunction, BusinessInteraction, BusinessProcess, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessFunction: aggregation is only valid to BusinessFunction, BusinessInteraction, BusinessProcess, Grouping."
+    ] ;
+
+    # realization (r): BusinessService, Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessFunction: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # serving (v): same broad set as BusinessProcess
+    sh:property [
+        sh:path archimate:serving ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessFunction: serving target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # flow (f): same broad set
+    sh:property [
+        sh:path archimate:flow ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessFunction: flow target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # triggering (t): same broad set
+    sh:property [
+        sh:path archimate:triggering ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessFunction: triggering target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # access (a): Artifact, BusinessObject, Contract, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessFunction: access is only valid to passive structure elements and Grouping."
+    ] ;
+
+    # influence (n): Assessment, Constraint, Driver, Goal, Grouping, Meaning, Outcome, Principle, Requirement, Stakeholder, Value
+    sh:property [
+        sh:path archimate:influence ;
+        sh:or (
+            [ sh:class archimate:Assessment ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Driver ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Meaning ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:Value ]
+        ) ;
+        sh:message "BusinessFunction: influence is only valid to Motivation elements and Grouping."
+    ] ;
+
+    # specialization (s): BusinessFunction
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:or (
+            [ sh:class archimate:BusinessFunction ]
+        ) ;
+        sh:message "BusinessFunction: specialization is only valid to BusinessFunction."
+    ] ;
+
+    .
+
+
+### BusinessService
+
+<#BusinessServiceRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessService ;
+    rdfs:label "BusinessService Valid Relationships" ;
+
+    # composition (c): BusinessService, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessService: composition is only valid to BusinessService, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessService, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessService: aggregation is only valid to BusinessService, Grouping."
+    ] ;
+
+    # realization (r): BusinessService, Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessService: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # serving (v): same broad set
+    sh:property [
+        sh:path archimate:serving ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessService: serving target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # flow (f): same broad set
+    sh:property [
+        sh:path archimate:flow ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessService: flow target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # triggering (t): same broad set
+    sh:property [
+        sh:path archimate:triggering ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessService: triggering target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # access (a): Artifact, BusinessObject, Contract, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessService: access is only valid to passive structure elements and Grouping."
+    ] ;
+
+    # influence (n): Assessment, Constraint, Driver, Goal, Grouping, Meaning, Outcome, Principle, Requirement, Stakeholder, Value
+    sh:property [
+        sh:path archimate:influence ;
+        sh:or (
+            [ sh:class archimate:Assessment ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Driver ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Meaning ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:Value ]
+        ) ;
+        sh:message "BusinessService: influence is only valid to Motivation elements and Grouping."
+    ] ;
+
+    # specialization (s): BusinessService
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:or (
+            [ sh:class archimate:BusinessService ]
+        ) ;
+        sh:message "BusinessService: specialization is only valid to BusinessService."
+    ] ;
+
+    .
+
+
+### BusinessInteraction
+
+<#BusinessInteractionRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessInteraction ;
+    rdfs:label "BusinessInteraction Valid Relationships" ;
+
+    # composition (c): BusinessFunction, BusinessInteraction, BusinessProcess, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessInteraction: composition is only valid to BusinessFunction, BusinessInteraction, BusinessProcess, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessFunction, BusinessInteraction, BusinessProcess, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessInteraction: aggregation is only valid to BusinessFunction, BusinessInteraction, BusinessProcess, Grouping."
+    ] ;
+
+    # realization (r): BusinessService, Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessInteraction: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # serving, flow, triggering: same broad set as BusinessProcess
+    sh:property [
+        sh:path archimate:serving ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ] [ sh:class archimate:ApplicationComponent ] [ sh:class archimate:ApplicationEvent ] [ sh:class archimate:ApplicationFunction ] [ sh:class archimate:ApplicationInteraction ] [ sh:class archimate:ApplicationInterface ] [ sh:class archimate:ApplicationProcess ] [ sh:class archimate:ApplicationService ] [ sh:class archimate:BusinessActor ] [ sh:class archimate:BusinessCollaboration ] [ sh:class archimate:BusinessEvent ] [ sh:class archimate:BusinessFunction ] [ sh:class archimate:BusinessInteraction ] [ sh:class archimate:BusinessInterface ] [ sh:class archimate:BusinessProcess ] [ sh:class archimate:BusinessRole ] [ sh:class archimate:BusinessService ] [ sh:class archimate:CommunicationNetwork ] [ sh:class archimate:Device ] [ sh:class archimate:DistributionNetwork ] [ sh:class archimate:Equipment ] [ sh:class archimate:Facility ] [ sh:class archimate:Grouping ] [ sh:class archimate:Location ] [ sh:class archimate:Node ] [ sh:class archimate:Path ] [ sh:class archimate:Product ] [ sh:class archimate:SystemSoftware ] [ sh:class archimate:TechnologyCollaboration ] [ sh:class archimate:TechnologyEvent ] [ sh:class archimate:TechnologyFunction ] [ sh:class archimate:TechnologyInteraction ] [ sh:class archimate:TechnologyInterface ] [ sh:class archimate:TechnologyProcess ] [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessInteraction: serving target is not valid per ArchiMate 3.2."
+    ] ;
+
+    sh:property [
+        sh:path archimate:flow ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ] [ sh:class archimate:ApplicationComponent ] [ sh:class archimate:ApplicationEvent ] [ sh:class archimate:ApplicationFunction ] [ sh:class archimate:ApplicationInteraction ] [ sh:class archimate:ApplicationInterface ] [ sh:class archimate:ApplicationProcess ] [ sh:class archimate:ApplicationService ] [ sh:class archimate:BusinessActor ] [ sh:class archimate:BusinessCollaboration ] [ sh:class archimate:BusinessEvent ] [ sh:class archimate:BusinessFunction ] [ sh:class archimate:BusinessInteraction ] [ sh:class archimate:BusinessInterface ] [ sh:class archimate:BusinessProcess ] [ sh:class archimate:BusinessRole ] [ sh:class archimate:BusinessService ] [ sh:class archimate:CommunicationNetwork ] [ sh:class archimate:Device ] [ sh:class archimate:DistributionNetwork ] [ sh:class archimate:Equipment ] [ sh:class archimate:Facility ] [ sh:class archimate:Grouping ] [ sh:class archimate:Location ] [ sh:class archimate:Node ] [ sh:class archimate:Path ] [ sh:class archimate:Product ] [ sh:class archimate:SystemSoftware ] [ sh:class archimate:TechnologyCollaboration ] [ sh:class archimate:TechnologyEvent ] [ sh:class archimate:TechnologyFunction ] [ sh:class archimate:TechnologyInteraction ] [ sh:class archimate:TechnologyInterface ] [ sh:class archimate:TechnologyProcess ] [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessInteraction: flow target is not valid per ArchiMate 3.2."
+    ] ;
+
+    sh:property [
+        sh:path archimate:triggering ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ] [ sh:class archimate:ApplicationComponent ] [ sh:class archimate:ApplicationEvent ] [ sh:class archimate:ApplicationFunction ] [ sh:class archimate:ApplicationInteraction ] [ sh:class archimate:ApplicationInterface ] [ sh:class archimate:ApplicationProcess ] [ sh:class archimate:ApplicationService ] [ sh:class archimate:BusinessActor ] [ sh:class archimate:BusinessCollaboration ] [ sh:class archimate:BusinessEvent ] [ sh:class archimate:BusinessFunction ] [ sh:class archimate:BusinessInteraction ] [ sh:class archimate:BusinessInterface ] [ sh:class archimate:BusinessProcess ] [ sh:class archimate:BusinessRole ] [ sh:class archimate:BusinessService ] [ sh:class archimate:CommunicationNetwork ] [ sh:class archimate:Device ] [ sh:class archimate:DistributionNetwork ] [ sh:class archimate:Equipment ] [ sh:class archimate:Facility ] [ sh:class archimate:Grouping ] [ sh:class archimate:Location ] [ sh:class archimate:Node ] [ sh:class archimate:Path ] [ sh:class archimate:Product ] [ sh:class archimate:SystemSoftware ] [ sh:class archimate:TechnologyCollaboration ] [ sh:class archimate:TechnologyEvent ] [ sh:class archimate:TechnologyFunction ] [ sh:class archimate:TechnologyInteraction ] [ sh:class archimate:TechnologyInterface ] [ sh:class archimate:TechnologyProcess ] [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessInteraction: triggering target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # access (a): Artifact, BusinessObject, Contract, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessInteraction: access is only valid to passive structure elements and Grouping."
+    ] ;
+
+    # influence (n): Assessment, Constraint, Driver, Goal, Grouping, Meaning, Outcome, Principle, Requirement, Stakeholder, Value
+    sh:property [
+        sh:path archimate:influence ;
+        sh:or (
+            [ sh:class archimate:Assessment ] [ sh:class archimate:Constraint ] [ sh:class archimate:Driver ] [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] [ sh:class archimate:Meaning ] [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ] [ sh:class archimate:Stakeholder ] [ sh:class archimate:Value ]
+        ) ;
+        sh:message "BusinessInteraction: influence is only valid to Motivation elements and Grouping."
+    ] ;
+
+    # specialization (s): BusinessInteraction
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:or ( [ sh:class archimate:BusinessInteraction ] ) ;
+        sh:message "BusinessInteraction: specialization is only valid to BusinessInteraction."
+    ] ;
+
+    .
+
+
+### BusinessEvent
+
+<#BusinessEventRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessEvent ;
+    rdfs:label "BusinessEvent Valid Relationships" ;
+
+    # composition (c): BusinessEvent, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:BusinessEvent ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessEvent: composition is only valid to BusinessEvent, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessEvent, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:BusinessEvent ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessEvent: aggregation is only valid to BusinessEvent, Grouping."
+    ] ;
+
+    # realization (r): BusinessEvent, BusinessService, Grouping
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or ( [ sh:class archimate:BusinessEvent ] [ sh:class archimate:BusinessService ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessEvent: realization is only valid to BusinessEvent, BusinessService, Grouping."
+    ] ;
+
+    # serving, flow, triggering: broad set (same as other business behavior)
+    sh:property [
+        sh:path archimate:serving ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ] [ sh:class archimate:ApplicationComponent ] [ sh:class archimate:ApplicationEvent ] [ sh:class archimate:ApplicationFunction ] [ sh:class archimate:ApplicationInteraction ] [ sh:class archimate:ApplicationInterface ] [ sh:class archimate:ApplicationProcess ] [ sh:class archimate:ApplicationService ] [ sh:class archimate:BusinessActor ] [ sh:class archimate:BusinessCollaboration ] [ sh:class archimate:BusinessEvent ] [ sh:class archimate:BusinessFunction ] [ sh:class archimate:BusinessInteraction ] [ sh:class archimate:BusinessInterface ] [ sh:class archimate:BusinessProcess ] [ sh:class archimate:BusinessRole ] [ sh:class archimate:BusinessService ] [ sh:class archimate:CommunicationNetwork ] [ sh:class archimate:Device ] [ sh:class archimate:DistributionNetwork ] [ sh:class archimate:Equipment ] [ sh:class archimate:Facility ] [ sh:class archimate:Grouping ] [ sh:class archimate:Location ] [ sh:class archimate:Node ] [ sh:class archimate:Path ] [ sh:class archimate:Product ] [ sh:class archimate:SystemSoftware ] [ sh:class archimate:TechnologyCollaboration ] [ sh:class archimate:TechnologyEvent ] [ sh:class archimate:TechnologyFunction ] [ sh:class archimate:TechnologyInteraction ] [ sh:class archimate:TechnologyInterface ] [ sh:class archimate:TechnologyProcess ] [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessEvent: serving target is not valid per ArchiMate 3.2."
+    ] ;
+
+    sh:property [
+        sh:path archimate:flow ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ] [ sh:class archimate:ApplicationComponent ] [ sh:class archimate:ApplicationEvent ] [ sh:class archimate:ApplicationFunction ] [ sh:class archimate:ApplicationInteraction ] [ sh:class archimate:ApplicationInterface ] [ sh:class archimate:ApplicationProcess ] [ sh:class archimate:ApplicationService ] [ sh:class archimate:BusinessActor ] [ sh:class archimate:BusinessCollaboration ] [ sh:class archimate:BusinessEvent ] [ sh:class archimate:BusinessFunction ] [ sh:class archimate:BusinessInteraction ] [ sh:class archimate:BusinessInterface ] [ sh:class archimate:BusinessProcess ] [ sh:class archimate:BusinessRole ] [ sh:class archimate:BusinessService ] [ sh:class archimate:CommunicationNetwork ] [ sh:class archimate:Device ] [ sh:class archimate:DistributionNetwork ] [ sh:class archimate:Equipment ] [ sh:class archimate:Facility ] [ sh:class archimate:Grouping ] [ sh:class archimate:Location ] [ sh:class archimate:Node ] [ sh:class archimate:Path ] [ sh:class archimate:Product ] [ sh:class archimate:SystemSoftware ] [ sh:class archimate:TechnologyCollaboration ] [ sh:class archimate:TechnologyEvent ] [ sh:class archimate:TechnologyFunction ] [ sh:class archimate:TechnologyInteraction ] [ sh:class archimate:TechnologyInterface ] [ sh:class archimate:TechnologyProcess ] [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessEvent: flow target is not valid per ArchiMate 3.2."
+    ] ;
+
+    sh:property [
+        sh:path archimate:triggering ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ] [ sh:class archimate:ApplicationComponent ] [ sh:class archimate:ApplicationEvent ] [ sh:class archimate:ApplicationFunction ] [ sh:class archimate:ApplicationInteraction ] [ sh:class archimate:ApplicationInterface ] [ sh:class archimate:ApplicationProcess ] [ sh:class archimate:ApplicationService ] [ sh:class archimate:BusinessActor ] [ sh:class archimate:BusinessCollaboration ] [ sh:class archimate:BusinessEvent ] [ sh:class archimate:BusinessFunction ] [ sh:class archimate:BusinessInteraction ] [ sh:class archimate:BusinessInterface ] [ sh:class archimate:BusinessProcess ] [ sh:class archimate:BusinessRole ] [ sh:class archimate:BusinessService ] [ sh:class archimate:CommunicationNetwork ] [ sh:class archimate:Device ] [ sh:class archimate:DistributionNetwork ] [ sh:class archimate:Equipment ] [ sh:class archimate:Facility ] [ sh:class archimate:Grouping ] [ sh:class archimate:Location ] [ sh:class archimate:Node ] [ sh:class archimate:Path ] [ sh:class archimate:Product ] [ sh:class archimate:SystemSoftware ] [ sh:class archimate:TechnologyCollaboration ] [ sh:class archimate:TechnologyEvent ] [ sh:class archimate:TechnologyFunction ] [ sh:class archimate:TechnologyInteraction ] [ sh:class archimate:TechnologyInterface ] [ sh:class archimate:TechnologyProcess ] [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "BusinessEvent: triggering target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # access (a): Artifact, BusinessObject, Contract, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessObject ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ] [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessEvent: access is only valid to passive structure elements and Grouping."
+    ] ;
+
+    # influence (n): Assessment, Constraint, Driver, Goal, Grouping, Meaning, Outcome, Principle, Requirement, Stakeholder, Value
+    sh:property [
+        sh:path archimate:influence ;
+        sh:or (
+            [ sh:class archimate:Assessment ] [ sh:class archimate:Constraint ] [ sh:class archimate:Driver ] [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] [ sh:class archimate:Meaning ] [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ] [ sh:class archimate:Stakeholder ] [ sh:class archimate:Value ]
+        ) ;
+        sh:message "BusinessEvent: influence is only valid to Motivation elements and Grouping."
+    ] ;
+
+    # specialization (s): BusinessEvent
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:or ( [ sh:class archimate:BusinessEvent ] ) ;
+        sh:message "BusinessEvent: specialization is only valid to BusinessEvent."
+    ] ;
+
+    .
+
+
+### BusinessObject
+
+<#BusinessObjectRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessObject ;
+    rdfs:label "BusinessObject Valid Relationships" ;
+
+    # composition (c): BusinessContract, BusinessObject, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessObject: composition is only valid to BusinessContract, BusinessObject, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessContract, BusinessObject, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessObject: aggregation is only valid to BusinessContract, BusinessObject, Grouping."
+    ] ;
+
+    # realization (r): Capability, CourseOfAction, Grouping, Resource, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessObject: realization is only valid to Capability, CourseOfAction, Grouping, Resource, ValueStream."
+    ] ;
+
+    # influence (n): Assessment, Constraint, Driver, Goal, Grouping, Meaning, Outcome, Principle, Requirement, Stakeholder, Value
+    sh:property [
+        sh:path archimate:influence ;
+        sh:or (
+            [ sh:class archimate:Assessment ] [ sh:class archimate:Constraint ] [ sh:class archimate:Driver ] [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] [ sh:class archimate:Meaning ] [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ] [ sh:class archimate:Stakeholder ] [ sh:class archimate:Value ]
+        ) ;
+        sh:message "BusinessObject: influence is only valid to Motivation elements and Grouping."
+    ] ;
+
+    # specialization (s): BusinessObject, BusinessContract
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:or (
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessContract ]
+        ) ;
+        sh:message "BusinessObject: specialization is only valid to BusinessObject, BusinessContract."
+    ] ;
+
+    # No serving, flow, triggering, access, assignment for BusinessObject as source
+
+    .
+
+
+### BusinessContract (Contract in XML)
+
+<#BusinessContractRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessContract ;
+    rdfs:label "BusinessContract Valid Relationships" ;
+
+    # composition (c): BusinessContract, BusinessObject, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessContract: composition is only valid to BusinessContract, BusinessObject, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessContract, BusinessObject, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessContract: aggregation is only valid to BusinessContract, BusinessObject, Grouping."
+    ] ;
+
+    # realization (r): Capability, CourseOfAction, Grouping, Resource, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessContract: realization is only valid to Capability, CourseOfAction, Grouping, Resource, ValueStream."
+    ] ;
+
+    # influence (n): Assessment, Constraint, Driver, Goal, Grouping, Meaning, Outcome, Principle, Requirement, Stakeholder, Value
+    sh:property [
+        sh:path archimate:influence ;
+        sh:or (
+            [ sh:class archimate:Assessment ] [ sh:class archimate:Constraint ] [ sh:class archimate:Driver ] [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] [ sh:class archimate:Meaning ] [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ] [ sh:class archimate:Stakeholder ] [ sh:class archimate:Value ]
+        ) ;
+        sh:message "BusinessContract: influence is only valid to Motivation elements and Grouping."
+    ] ;
+
+    # specialization (s): BusinessContract, BusinessObject
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:or (
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+        ) ;
+        sh:message "BusinessContract: specialization is only valid to BusinessContract, BusinessObject."
+    ] ;
+
+    .
+
+
+### Representation
+
+<#RepresentationRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Representation ;
+    rdfs:label "Representation Valid Relationships" ;
+
+    # composition (c): Grouping, Representation
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Representation ] ) ;
+        sh:message "Representation: composition is only valid to Grouping, Representation."
+    ] ;
+
+    # aggregation (g): Grouping, Representation
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Representation ] ) ;
+        sh:message "Representation: aggregation is only valid to Grouping, Representation."
+    ] ;
+
+    # realization (r): BusinessObject, Capability, BusinessContract, CourseOfAction, Grouping, Resource, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Representation: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # influence (n): Assessment, Constraint, Driver, Goal, Grouping, Meaning, Outcome, Principle, Requirement, Stakeholder, Value
+    sh:property [
+        sh:path archimate:influence ;
+        sh:or (
+            [ sh:class archimate:Assessment ] [ sh:class archimate:Constraint ] [ sh:class archimate:Driver ] [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] [ sh:class archimate:Meaning ] [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ] [ sh:class archimate:Stakeholder ] [ sh:class archimate:Value ]
+        ) ;
+        sh:message "Representation: influence is only valid to Motivation elements and Grouping."
+    ] ;
+
+    # specialization (s): Representation
+    sh:property [
+        sh:path archimate:specialization ;
+        sh:or ( [ sh:class archimate:Representation ] ) ;
+        sh:message "Representation: specialization is only valid to Representation."
+    ] ;
+
+    .
+
+
+### Product
+
+<#ProductRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Product ;
+    rdfs:label "Product Valid Relationships" ;
+
+    # composition (c): ApplicationService, Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Product, Representation
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "Product: composition target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # aggregation (g): ApplicationService, Artifact, BusinessContract, BusinessObject, BusinessService, DataObject, Grouping, Material, Product, Representation, TechnologyService
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:Representation ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "Product: aggregation target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # realization (r): ApplicationService, BusinessService, Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement,"
+}
