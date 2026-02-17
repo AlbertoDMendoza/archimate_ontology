@@ -987,18 +987,42 @@ archimate:serving <#dependencyStrength> 4 .
                         ?target rdf:type/rdfs:subClassOf+ archimate:PassiveStructure .
                     }
                 } UNION {
-                    # Assignment must be from active structure to behavior  
+                    # Assignment must be from active structure (or Resource) to behavior
                     ?rel rdfs:subPropertyOf+ archimate:assignment .
                     FILTER NOT EXISTS {
                         ?source rdf:type/rdfs:subClassOf+ archimate:ActiveStructure .
                         ?target rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
                     }
+                    # Resource (StructureAspect ∩ StrategyLayer) can also assign
+                    FILTER NOT EXISTS {
+                        ?source rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
+                        ?source rdf:type/rdfs:subClassOf* archimate:StructureAspect .
+                        ?target rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
+                    }
                 } UNION {
-                    # Dynamic relationships must be between behavior elements
+                    # Dynamic relationships must be between behavior elements (or Resource)
                     ?rel rdfs:subPropertyOf+ archimate:dynamicRelationship .
                     FILTER NOT EXISTS {
                         ?source rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
                         ?target rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
+                    }
+                    # Resource (StructureAspect ∩ StrategyLayer) has triggering/flow
+                    FILTER NOT EXISTS {
+                        ?source rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
+                        ?source rdf:type/rdfs:subClassOf* archimate:StructureAspect .
+                        ?target rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
+                    }
+                    FILTER NOT EXISTS {
+                        ?source rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
+                        ?target rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
+                        ?target rdf:type/rdfs:subClassOf* archimate:StructureAspect .
+                    }
+                    # Resource → Resource
+                    FILTER NOT EXISTS {
+                        ?source rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
+                        ?source rdf:type/rdfs:subClassOf* archimate:StructureAspect .
+                        ?target rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
+                        ?target rdf:type/rdfs:subClassOf* archimate:StructureAspect .
                     }
                 }
             }
