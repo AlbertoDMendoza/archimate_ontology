@@ -407,10 +407,12 @@
 ## 2.2 Strategy Elements
 
 # Active Structure Elements
+
+# NOTE: Per Spec: "Resources are realized by active and passive structure elements and are therefore classified as structures that are neither active nor passive."
 <#Resource> rdf:type owl:Class ;
     rdfs:label "Resource" ;
     rdfs:comment "An asset owned or controlled by an individual or organization." ;
-    rdfs:subClassOf <#ActiveStructure> ;
+    rdfs:subClassOf <#StructureAspect> ;
     rdfs:subClassOf <#StrategyLayer> ;
     rdfs:subClassOf <#Element> .
 
