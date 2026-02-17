@@ -20,9 +20,18 @@
 ###   t=triggering, v=serving
 ###
 ### Generated from relationships.xml matrix
+###
+### owl:imports note:
+### The ontology declares @base <https://purl.org/archimate#> so its IRI is
+### <https://purl.org/archimate#>. We import <https://purl.org/archimate/owl>
+### which is the PURL that redirects to the raw Turtle file. These URIs differ
+### but engines resolve owl:imports by dereferencing the URL, so the import
+### works. purl.org does not support content negotiation (Accept headers) —
+### separate PURLs are used for each representation (/archimate → SKOS HTML,
+### /archimate/owl → OWL Turtle).
 
 <#> rdf:type owl:Ontology ;
-    owl:imports <https://purl.org/archimate#> ;
+    owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Relationship Validation - Business Layer" ;
     rdfs:comment "Valid relationship combinations for Business layer elements per ArchiMate 3.2." ;
     owl:versionInfo "Alpha" .

@@ -11,7 +11,7 @@
 <#> rdf:type owl:Ontology ;
     owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Metamodel Validation Rules" ;
-    rdfs:comment "Level 2 Metamodel Validation: abstract ArchiMate metamodel pattern rules using the ontology's class hierarchy (aspect x layer intersections). Encodes Figures 5, 46, and 51 from ArchiMate 3.2. For graph integrity, see archimate_core_validation.ttl. For per-element relationship combinations, see archimate_rel_<layer>.ttl." ;
+    rdfs:comment "Level 2 Metamodel Validation: abstract ArchiMate metamodel pattern rules using the ontology's class hierarchy (aspect x layer intersections). Encodes Figures 5, 46, and 51 from ArchiMate 3.2. For graph integrity, see archimate_validation_core.ttl. For per-element relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-16"^^xsd:date ;
     owl:versionInfo "Alpha" .
@@ -39,13 +39,12 @@
 #     2.2 Capability/ValueStream realizes CourseOfAction
 #     2.3 CourseOfAction realizes Requirement/Outcome (MotivationAspect)
 
-# - Section 3: Strategy Layer Metamodel Patterns
-# - Section 4: Business Layer Metamodel Patterns
-# - Section 5: Application Layer Metamodel Patterns
-# - Section 6: Technology Layer Metamodel Patterns
-# - Section 7: Physical Layer Metamodel Patterns
-# - Section 8: Implementation and Migration Metamodel Patterns
-# - Section 9: Motivation Metamodel Patterns
+# - Section 3: Business Layer Metamodel Patterns
+# - Section 4: Application Layer Metamodel Patterns
+# - Section 5: Technology Layer Metamodel Patterns
+# - Section 6: Physical Layer Metamodel Patterns
+# - Section 7: Implementation and Migration Metamodel Patterns
+# - Section 8: Motivation Metamodel Patterns
 #
 # - Section 10: Strategy To Core Elements And Motivation Elements
 #     10.1 Core InternalBehavior realizes Strategy BehaviorAspect (Capability, ValueStream)
@@ -63,22 +62,31 @@
 #     12.4 Flow type validation (information/material/energy)
 #
 # This validation file should be used alongside:
-# - archimate_core_validation.ttl (Level 1: graph integrity, concept requirements)
-# - archimate_metamodel_validation.ttl (Level 2: metamodel validation) <--<this file>
-# - archimate_rel_<layer>.ttl (Level 3: per-element-type relationship combinations)
-# - archimate_derivation.ttl (derivation rules)
-# - archimate_profile_examples_validation.ttl (profile-specific shapes)
+# - archimate_validation_core.ttl (Level 1: graph integrity, concept requirements)
+# - archimate_validation_metamodel.ttl (Level 2: metamodel validation) <--<this file>
+# - archimate_validation_<layer>.ttl (Level 3: per-element-type relationship combinations)
+# - archimate_derivation_rules.ttl (derivation rules)
+# - archimate_validation_profiles.ttl (profile-specific shapes)
 #
 # Validation severity levels:
 # - sh:Violation (default): Hard constraint violations
 # - sh:Warning: Issues that should be reviewed
 # - sh:Info: Quality suggestions and informational notices
 #
+# owl:imports note:
+# The ontology declares @base <https://purl.org/archimate#> so its IRI is
+# <https://purl.org/archimate#>. We import <https://purl.org/archimate/owl>
+# which is the PURL that redirects to the raw Turtle file. These URIs differ
+# but engines resolve owl:imports by dereferencing the URL, so the import
+# works. purl.org does not support content negotiation (Accept headers) —
+# separate PURLs are used for each representation (/archimate → SKOS HTML,
+# /archimate/owl → OWL Turtle).
+#
 # To execute validation:
 # 1. Load base ArchiMate ontology (archimate.ttl)
-# 2. Load archimate_core_validation.ttl (Level 1)
+# 2. Load archimate_validation_core.ttl (Level 1)
 # 3. Load this validation file (Level 2)
-# 4. Load archimate_rel_<layer>.ttl files (Level 3, optional)
+# 4. Load archimate_validation_<layer>.ttl files (Level 3, optional)
 # 5. Load your model data
 # 6. Run SHACL validation
 
@@ -95,16 +103,16 @@
         sh:message "Assignment relationships can only originate from active structure elements" ;
         sh:select """
             PREFIX archimate: <https://purl.org/archimate#>
-			SELECT $this WHERE {
-				$this archimate:assignment ?target .
-				FILTER NOT EXISTS {
-					$this rdf:type/rdfs:subClassOf* archimate:ActiveStructure
-				}
-				FILTER NOT EXISTS {
-					$this rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
-					$this rdf:type/rdfs:subClassOf* archimate:StructureAspect .
-				}
-			}
+            SELECT $this WHERE {
+                $this archimate:assignment ?target .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* archimate:ActiveStructure
+                }
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
+                    $this rdf:type/rdfs:subClassOf* archimate:StructureAspect .
+                }
+            }
         """
     ] .
 
@@ -214,16 +222,16 @@
         sh:message "Triggering relationships can only originate from behavior elements" ;
         sh:select """
             PREFIX archimate: <https://purl.org/archimate#>
-			SELECT $this WHERE {
-				$this archimate:triggering ?target .
-				FILTER NOT EXISTS {
-					$this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
-				}
-				FILTER NOT EXISTS {
-					$this rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
-					$this rdf:type/rdfs:subClassOf* archimate:StructureAspect .
-				}
-			}
+            SELECT $this WHERE {
+                $this archimate:triggering ?target .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
+                }
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
+                    $this rdf:type/rdfs:subClassOf* archimate:StructureAspect .
+                }
+            }
         """
     ] .
 
@@ -234,16 +242,16 @@
         sh:message "Triggering relationships can only target behavior elements" ;
         sh:select """
             PREFIX archimate: <https://purl.org/archimate#>
-			SELECT $this WHERE {
-				?source archimate:triggering $this .
-				FILTER NOT EXISTS {
-					$this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
-				}
-				FILTER NOT EXISTS {
-					$this rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
-					$this rdf:type/rdfs:subClassOf* archimate:StructureAspect .
-				}
-			}
+            SELECT $this WHERE {
+                ?source archimate:triggering $this .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
+                }
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
+                    $this rdf:type/rdfs:subClassOf* archimate:StructureAspect .
+                }
+            }
         """
     ] .
 
@@ -257,16 +265,16 @@
         sh:message "Flow relationships can only originate from behavior elements" ;
         sh:select """
             PREFIX archimate: <https://purl.org/archimate#>
-			SELECT $this WHERE {
-				$this archimate:flow ?target .
-				FILTER NOT EXISTS {
-					$this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
-				}
-				FILTER NOT EXISTS {
-					$this rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
-					$this rdf:type/rdfs:subClassOf* archimate:StructureAspect .
-				}
-			}
+            SELECT $this WHERE {
+                $this archimate:flow ?target .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
+                }
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
+                    $this rdf:type/rdfs:subClassOf* archimate:StructureAspect .
+                }
+            }
         """
     ] .
 
@@ -277,16 +285,16 @@
         sh:message "Flow relationships can only target behavior elements" ;
         sh:select """
             PREFIX archimate: <https://purl.org/archimate#>
-			SELECT $this WHERE {
-				?source archimate:flow $this .
-				FILTER NOT EXISTS {
-					$this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
-				}
-				FILTER NOT EXISTS {
-					$this rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
-					$this rdf:type/rdfs:subClassOf* archimate:StructureAspect .
-				}
-			}
+            SELECT $this WHERE {
+                ?source archimate:flow $this .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
+                }
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
+                    $this rdf:type/rdfs:subClassOf* archimate:StructureAspect .
+                }
+            }
         """
     ] .
 
@@ -370,13 +378,12 @@
 # These are validated at Level 3 (per-element); included here as informational.
 
 
-# - Section 3: Strategy Layer Metamodel Patterns
-# - Section 4: Business Layer Metamodel Patterns
-# - Section 5: Application Layer Metamodel Patterns
-# - Section 6: Technology Layer Metamodel Patterns
-# - Section 7: Physical Layer Metamodel Patterns
-# - Section 8: Implementation and Migration Metamodel Patterns
-# - Section 9: Motivation Metamodel Patterns
+# - Section 3: Business Layer Metamodel Patterns
+# - Section 4: Application Layer Metamodel Patterns
+# - Section 5: Technology Layer Metamodel Patterns
+# - Section 6: Physical Layer Metamodel Patterns
+# - Section 7: Implementation and Migration Metamodel Patterns
+# - Section 8: Motivation Metamodel Patterns
 
 
 ### 10. Strategy To Core Elements And Motivation Elements
@@ -525,6 +532,16 @@
                 { $this ?rel1 ?a . $this ?rel2 ?b . }
                 UNION
                 { ?a ?rel1 $this . $this ?rel2 ?b . }
+
+                # Only consider ArchiMate relationship properties
+                { ?rel1 rdfs:subPropertyOf* archimate:structuralRelationship }
+                UNION { ?rel1 rdfs:subPropertyOf* archimate:dependencyRelationship }
+                UNION { ?rel1 rdfs:subPropertyOf* archimate:dynamicRelationship }
+
+                { ?rel2 rdfs:subPropertyOf* archimate:structuralRelationship }
+                UNION { ?rel2 rdfs:subPropertyOf* archimate:dependencyRelationship }
+                UNION { ?rel2 rdfs:subPropertyOf* archimate:dynamicRelationship }
+
                 FILTER(?rel1 != ?rel2)
             }
         """

@@ -15,10 +15,19 @@
     rdfs:seeAlso <https://digital-portfolio.opengroup.org/archimate-specs/latest/99-appendices/02-relationships-normative.html> .
 
 ### Integration with ArchiMate Ontology
+# owl:imports note:
+# The ontology declares @base <https://purl.org/archimate#> so its IRI is
+# <https://purl.org/archimate#>. We import <https://purl.org/archimate/owl>
+# which is the PURL that redirects to the raw Turtle file. These URIs differ
+# but engines resolve owl:imports by dereferencing the URL, so the import
+# works. purl.org does not support content negotiation (Accept headers) —
+# separate PURLs are used for each representation (/archimate → SKOS HTML,
+# /archimate/owl → OWL Turtle).
+#
 # Integration with other validation files:
-# - archimate_core_validation.ttl: Element-level validation
-# - archimate_relationship_validation.ttl: Relationship metamodel constraints
-# - archimate_profiles.ttl: Profile-specific shapes
+# - archimate_validation_core.ttl: Element-level validation
+# - archimate_validation_metamodel.ttl: Relationship metamodel constraints
+# - archimate_validation_profiles.ttl: Profile-specific shapes
 #
 # Derived relationships are marked with confidence levels:
 # - "valid": Definitely correct per ArchiMate spec (DR1-DR8)
