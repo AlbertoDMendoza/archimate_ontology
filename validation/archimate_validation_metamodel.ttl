@@ -11,10 +11,10 @@
 <#> rdf:type owl:Ontology ;
     owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Metamodel Validation Rules" ;
-    rdfs:comment "Level 2 Metamodel Validation: abstract ArchiMate metamodel pattern rules using the ontology's class hierarchy (aspect x layer intersections). Encodes Figures 5, 46, and 51 from ArchiMate 3.2. For graph integrity, see archimate_validation_core.ttl. For per-element relationship combinations, see archimate_validation_<layer>.ttl." ;
+    rdfs:comment "Level 2 Metamodel Validation: abstract ArchiMate metamodel pattern rules using the ontology's class hierarchy (aspect x layer intersections). Encodes Figures 5, 34, 45, 46, 51, 52, 70, 82, 99, 104, 105, and 106 from ArchiMate 3.2. For graph integrity, see archimate_validation_core.ttl. For per-element relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-16"^^xsd:date ;
-    dct:modified "2026-02-17"^^xsd:date ;
+    dct:modified "2026-02-19"^^xsd:date ;
     owl:versionInfo "Alpha" ;
     sh:declare [
         sh:prefix "archimate" ;
@@ -50,27 +50,41 @@
 #     2.2 Capability/ValueStream realizes CourseOfAction
 #     2.3 CourseOfAction realizes Requirement/Outcome (MotivationAspect)
 
-# - Section 3: Business Layer Metamodel Patterns
-# - Section 4: Application Layer Metamodel Patterns
-# - Section 5: Technology Layer Metamodel Patterns
-# - Section 6: Physical Layer Metamodel Patterns
-# - Section 7: Implementation and Migration Metamodel Patterns
-# - Section 8: Motivation Metamodel Patterns
+# - Section 3: Core Layer Patterns (Business, Application, Technology — Figures 52, 70, 82)
+#     3.1 Interface → Service assignment (interface exposes service, same layer)
+#     3.2 Service should not realize InternalBehavior (realization direction, same layer)
+#     3.3 Product/Node composition/aggregation targets (services + passive structure)
 #
-# - Section 10: Strategy To Core Elements And Motivation Elements
-#     10.1 Core InternalBehavior realizes Strategy BehaviorAspect (Capability, ValueStream)
-#     10.2 Core ActiveStructure/PassiveStructure realizes Resource
-#     10.3 Strategy elements realize/influence Motivation elements (Requirement, Outcome)
+# - Section 4: Cross-Layer Relationships (Chapter 11, Figures 104/105)
+#     4.1 No realization of Business ActiveStructure from App/Tech layers
 #
-# - Section 11: Junction Validation
-#     11.1 Junction type (and/or)
-#     11.2 Junction relationship homogeneity
+# - Section 5: Physical Layer Metamodel Patterns (Figure 99)
+#     5.1 Physical assignment source must be ActiveStructure
+#     5.2 Physical assignment target must be StructureAspect (active or passive)
 #
-# - Section 12: Relationship Attribute Constraints (RDF-Star metadata values)
-#     12.1 Access type validation (read/write/readwrite)
-#     12.2 Influence sign validation (positive/negative)
-#     12.3 Influence strength validation (weak/moderate/strong)
-#     12.4 Flow type validation (information/material/energy)
+# - Section 6: Implementation and Migration Metamodel Patterns (Figure 106)
+#     6.1 WorkPackage→Deliverable realization deprecated (sh:Warning)
+#     6.2 Gap should associate with Plateaus (sh:Warning)
+#
+# - Section 7: Motivation Metamodel Patterns (Figures 34, 45)
+#     7.1 Assignment into Motivation: only Business ActiveStructure → Stakeholder
+#     7.2 No triggering or flow for Motivation elements
+#     7.3 Motivation should not realize non-Motivation elements
+#
+# - Section 8: Strategy To Core Elements And Motivation Elements
+#     8.1 Core InternalBehavior realizes Strategy BehaviorAspect (Capability, ValueStream)
+#     8.2 Core ActiveStructure/PassiveStructure realizes Resource
+#     8.3 Strategy elements realize/influence Motivation elements (Requirement, Outcome)
+#
+# - Section 9: Junction Validation
+#     9.1 Junction type (and/or)
+#     9.2 Junction relationship homogeneity
+#
+# - Section 10: Relationship Attribute Constraints (RDF-Star metadata values)
+#     10.1 Access type validation (read/write/readwrite)
+#     10.2 Influence sign validation (positive/negative)
+#     10.3 Influence strength validation (weak/moderate/strong)
+#     10.4 Flow type validation (information/material/energy)
 #
 # This validation file should be used alongside:
 # - archimate_validation_core.ttl (Level 1: graph integrity, concept requirements)
@@ -104,24 +118,25 @@
 
 
 ### 1. Generic Metamodel - Behavior and Structure Elements Metamodel
+# Per spec Chapter 4: "This figure [Figure 5] is to be read as a generic template
+# for the layers of the ArchiMate core, but is not applied directly."
+# Scoped to CoreLayer (Business, Application, Technology) via the ontology's
+# layer hierarchy. Strategy, Physical, and I&M each have their own metamodel
+# patterns in Sections 2, 5, and 6.
 
-## 1.1 Assignment: ActiveStructure → BehaviorAspect
-# NOTE: Resource can be assigned to Capability and ValueStream (BehaviorAspect), but Resource is StructureAspect (not ActiveStructure nor PassiveStructure). Added a clause to exclude Strategy Structure Aspect elements (which in practice is only Resource).
+## 1.1 Assignment: ActiveStructure → BehaviorAspect (CoreLayer only)
 <#AssignmentSourceConstraint> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:assignment ;
-    rdfs:label "Assignment Source: Active Structure" ;
+    rdfs:label "Assignment Source: Active Structure (Core)" ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "Assignment relationships can only originate from active structure elements" ;
+        sh:message "In core layers, assignment can only originate from active structure elements" ;
         sh:select """
             SELECT $this WHERE {
                 $this archimate:assignment ?target .
+                $this rdf:type/rdfs:subClassOf* archimate:CoreLayer .
                 FILTER NOT EXISTS {
                     $this rdf:type/rdfs:subClassOf* archimate:ActiveStructure
-                }
-                FILTER NOT EXISTS {
-                    $this rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
-                    $this rdf:type/rdfs:subClassOf* archimate:StructureAspect .
                 }
             }
         """
@@ -129,13 +144,14 @@
 
 <#AssignmentTargetConstraint> rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:assignment ;
-    rdfs:label "Assignment Target: Behavior" ;
+    rdfs:label "Assignment Target: Behavior (Core)" ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "Assignment relationships can only target behavior elements" ;
+        sh:message "In core layers, assignment can only target behavior elements" ;
         sh:select """
             SELECT $this WHERE {
                 ?source archimate:assignment $this .
+                $this rdf:type/rdfs:subClassOf* archimate:CoreLayer .
                 FILTER NOT EXISTS {
                     $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
                 }
@@ -154,17 +170,18 @@
 
 
 
-## 1.3 Access: BehaviorAspect → PassiveStructure
+## 1.3 Access: BehaviorAspect → PassiveStructure (CoreLayer only)
 
 <#AccessSourceConstraint> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:access ;
-    rdfs:label "Access Source: Behavior" ;
+    rdfs:label "Access Source: Behavior (Core)" ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "Access relationships can only originate from behavior elements" ;
+        sh:message "In core layers, access can only originate from behavior elements" ;
         sh:select """
             SELECT $this WHERE {
                 $this archimate:access ?target .
+                $this rdf:type/rdfs:subClassOf* archimate:CoreLayer .
                 FILTER NOT EXISTS {
                     $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
                 }
@@ -174,13 +191,14 @@
 
 <#AccessTargetConstraint> rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:access ;
-    rdfs:label "Access Target: Passive Structure" ;
+    rdfs:label "Access Target: Passive Structure (Core)" ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "Access relationships can only target passive structure elements" ;
+        sh:message "In core layers, access can only target passive structure elements" ;
         sh:select """
             SELECT $this WHERE {
                 ?source archimate:access $this .
+                $this rdf:type/rdfs:subClassOf* archimate:CoreLayer .
                 FILTER NOT EXISTS {
                     $this rdf:type/rdfs:subClassOf* archimate:PassiveStructure
                 }
@@ -190,6 +208,8 @@
 
 
 ## 1.4 Serving direction: lower layers serve higher layers
+# Layer stack (bottom to top): Physical → Technology → Application → Business → Strategy
+# I&M is orthogonal (serves/served by all core layers).
 
 <#ServingLayerDirection> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:serving ;
@@ -197,7 +217,7 @@
     sh:severity sh:Warning ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "Serving relationships should flow upward from lower to higher layers (Technology → Application → Business)" ;
+        sh:message "Serving relationships should flow upward from lower to higher layers (Physical → Technology → Application → Business)" ;
         sh:select """
             SELECT $this ?target WHERE {
                 $this archimate:serving ?target .
@@ -210,9 +230,21 @@
                     $this rdf:type/rdfs:subClassOf* archimate:BusinessLayer .
                     ?target rdf:type/rdfs:subClassOf* archimate:TechnologyLayer .
                 } UNION {
+                    # Business serving Physical
+                    $this rdf:type/rdfs:subClassOf* archimate:BusinessLayer .
+                    ?target rdf:type/rdfs:subClassOf* archimate:PhysicalLayer .
+                } UNION {
                     # Application serving Technology
                     $this rdf:type/rdfs:subClassOf* archimate:ApplicationLayer .
                     ?target rdf:type/rdfs:subClassOf* archimate:TechnologyLayer .
+                } UNION {
+                    # Application serving Physical
+                    $this rdf:type/rdfs:subClassOf* archimate:ApplicationLayer .
+                    ?target rdf:type/rdfs:subClassOf* archimate:PhysicalLayer .
+                } UNION {
+                    # Technology serving Physical
+                    $this rdf:type/rdfs:subClassOf* archimate:TechnologyLayer .
+                    ?target rdf:type/rdfs:subClassOf* archimate:PhysicalLayer .
                 }
             }
         """
@@ -224,23 +256,19 @@
 # Motivation elements. No source constraint needed at metamodel level.
 
 
-## 1.6 Triggering: BehaviorAspect → BehaviorAspect
-# NOTE: Resource has triggering and flow relationships, but Resource is StructureAspect (not BehaviorAspect). Added a clause to exclude Strategy Structure Aspect elements (which in practice is only Resource).
+## 1.6 Triggering: BehaviorAspect → BehaviorAspect (CoreLayer only)
 <#TriggeringSourceConstraint> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:triggering ;
-    rdfs:label "Triggering Source: Behavior" ;
+    rdfs:label "Triggering Source: Behavior (Core)" ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "Triggering relationships can only originate from behavior elements" ;
+        sh:message "In core layers, triggering can only originate from behavior elements" ;
         sh:select """
             SELECT $this WHERE {
                 $this archimate:triggering ?target .
+                $this rdf:type/rdfs:subClassOf* archimate:CoreLayer .
                 FILTER NOT EXISTS {
                     $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
-                }
-                FILTER NOT EXISTS {
-                    $this rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
-                    $this rdf:type/rdfs:subClassOf* archimate:StructureAspect .
                 }
             }
         """
@@ -248,42 +276,35 @@
 
 <#TriggeringTargetConstraint> rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:triggering ;
-    rdfs:label "Triggering Target: Behavior" ;
+    rdfs:label "Triggering Target: Behavior (Core)" ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "Triggering relationships can only target behavior elements" ;
+        sh:message "In core layers, triggering can only target behavior elements" ;
         sh:select """
             SELECT $this WHERE {
                 ?source archimate:triggering $this .
+                $this rdf:type/rdfs:subClassOf* archimate:CoreLayer .
                 FILTER NOT EXISTS {
                     $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
-                }
-                FILTER NOT EXISTS {
-                    $this rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
-                    $this rdf:type/rdfs:subClassOf* archimate:StructureAspect .
                 }
             }
         """
     ] .
 
 
-## 1.7 Flow: BehaviorAspect → BehaviorAspect
-# NOTE: Resource has triggering and flow relationships, but Resource is StructureAspect (not BehaviorAspect). Added a clause to exclude Strategy Structure Aspect elements (which in practice is only Resource).
+## 1.7 Flow: BehaviorAspect → BehaviorAspect (CoreLayer only)
 <#FlowSourceConstraint> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:flow ;
-    rdfs:label "Flow Source: Behavior" ;
+    rdfs:label "Flow Source: Behavior (Core)" ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "Flow relationships can only originate from behavior elements" ;
+        sh:message "In core layers, flow can only originate from behavior elements" ;
         sh:select """
             SELECT $this WHERE {
                 $this archimate:flow ?target .
+                $this rdf:type/rdfs:subClassOf* archimate:CoreLayer .
                 FILTER NOT EXISTS {
                     $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
-                }
-                FILTER NOT EXISTS {
-                    $this rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
-                    $this rdf:type/rdfs:subClassOf* archimate:StructureAspect .
                 }
             }
         """
@@ -291,19 +312,16 @@
 
 <#FlowTargetConstraint> rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:flow ;
-    rdfs:label "Flow Target: Behavior" ;
+    rdfs:label "Flow Target: Behavior (Core)" ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "Flow relationships can only target behavior elements" ;
+        sh:message "In core layers, flow can only target behavior elements" ;
         sh:select """
             SELECT $this WHERE {
                 ?source archimate:flow $this .
+                $this rdf:type/rdfs:subClassOf* archimate:CoreLayer .
                 FILTER NOT EXISTS {
                     $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
-                }
-                FILTER NOT EXISTS {
-                    $this rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
-                    $this rdf:type/rdfs:subClassOf* archimate:StructureAspect .
                 }
             }
         """
@@ -318,7 +336,7 @@
 #   CourseOfAction (BehaviorAspect ∩ StrategyLayer, but NOT a "strategy
 #   behavior element" per spec — different relationship set).
 #
-# Figure 46 shows:
+# Business metamodel shows:
 #   Resource --assignment--> Capability, ValueStream
 #   Capability, ValueStream --realization--> CourseOfAction
 #   Capability <--serving--> ValueStream (mutual)
@@ -329,19 +347,20 @@
 
 
 ## 2.1 Resource assignment targets within Strategy layer
-# Per Figure 46: Resource is assigned to Capability and ValueStream only, NOT to CourseOfAction.
+# Resource is assigned to Capability and ValueStream only, NOT to CourseOfAction.
 
 <#StrategyAssignmentTarget> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:assignment ;
     rdfs:label "Strategy Assignment: Resource → Capability/ValueStream" ;
     sh:sparql [
         sh:prefixes <#> ;
         sh:message "Within the Strategy layer, Resource can only be assigned to Capability or ValueStream (not CourseOfAction)" ;
         sh:select """
-            SELECT ?source ?target WHERE {
-                ?source archimate:assignment ?target .
+            SELECT $this ?target WHERE {
+                $this archimate:assignment ?target .
                 # Source is Strategy StructureAspect (Resource)
-                ?source rdf:type/rdfs:subClassOf* archimate:StructureAspect .
-                ?source rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
+                $this rdf:type/rdfs:subClassOf* archimate:StructureAspect .
+                $this rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
                 # Target is Strategy layer
                 ?target rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
                 # Target must be Capability or ValueStream, not CourseOfAction
@@ -356,10 +375,10 @@
 
 
 ## 2.2 Capability/ValueStream realizes CourseOfAction
-# Per Figure 46: Capability and ValueStream can realize CourseOfAction.
-# CourseOfAction does NOT realize Capability/ValueStream (direction matters).
+# Capability and ValueStream can realize CourseOfAction. CourseOfAction does NOT realize Capability/ValueStream (direction matters).
 
 <#StrategyBehaviorRealizesCoA> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:realization ;
     rdfs:label "Strategy Realization: Capability/ValueStream → CourseOfAction" ;
     sh:severity sh:Info ;
     rdfs:comment "Within Strategy layer, realization flows from Capability/ValueStream toward CourseOfAction, not the reverse." ;
@@ -367,10 +386,10 @@
         sh:prefixes <#> ;
         sh:message "CourseOfAction should not realize Capability or ValueStream — realization flows the other direction per Figure 46" ;
         sh:select """
-            SELECT ?source ?target WHERE {
-                ?source archimate:realization ?target .
+            SELECT $this ?target WHERE {
+                $this archimate:realization ?target .
                 # Source is CourseOfAction
-                ?source rdf:type/rdfs:subClassOf* archimate:CourseOfAction .
+                $this rdf:type/rdfs:subClassOf* archimate:CourseOfAction .
                 # Target is Capability or ValueStream
                 {
                     ?target rdf:type/rdfs:subClassOf* archimate:Capability .
@@ -383,21 +402,442 @@
 
 
 ## 2.3 CourseOfAction realizes Motivation elements
-# Per Figure 46 + 51: CourseOfAction realizes Requirement and Outcome.
+# CourseOfAction realizes Requirement and Outcome.
 # Also: Capability, ValueStream, Resource realize Requirement.
 # All Strategy elements can influence Motivation elements.
 # These are validated at Level 3 (per-element); included here as informational.
 
 
-# - Section 3: Business Layer Metamodel Patterns
-# - Section 4: Application Layer Metamodel Patterns
-# - Section 5: Technology Layer Metamodel Patterns
-# - Section 6: Physical Layer Metamodel Patterns
-# - Section 7: Implementation and Migration Metamodel Patterns
-# - Section 8: Motivation Metamodel Patterns
+### 3. Core Layer Patterns (Business, Application, Technology)
+
+# The three core layers (Business, Application, Technology) share identical
+# metamodel structure per Figures 52, 70, and 82:
+#   - Interface (ActiveStructure) → assigned to → Service (ExternalBehavior)
+#   - InternalBehavior/CollectiveBehavior → realizes → Service (ExternalBehavior)
+#   - CompositeElement (Product, Node) → composes/aggregates → Services + PassiveStructure
+#
+# Physical Layer is excluded — it has no interfaces, services, or behavior elements.
+#
+# These rules use same-layer matching via VALUES to avoid per-layer duplication.
 
 
-### 10. Strategy To Core Elements And Motivation Elements
+## 3.1 Interface → Service assignment (same layer)
+# Per Figures 52/70/82: an interface may be assigned to a service within the
+# same layer, meaning the service is exposed through that interface.
+
+<#CoreInterfaceAssignmentTarget> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:assignment ;
+    rdfs:label "Core Interface Assignment: → Service" ;
+    sh:sparql [
+        sh:prefixes <#> ;
+        sh:message "Interface assignment target must be an external behavior element (service) in the same layer" ;
+        sh:select """
+            SELECT $this ?target WHERE {
+                $this archimate:assignment ?target .
+                # Source is an Interface element (Business, Application, or Technology)
+                VALUES ?interfaceType {
+                    archimate:BusinessInterface
+                    archimate:ApplicationInterface
+                    archimate:TechnologyInterface
+                }
+                $this rdf:type/rdfs:subClassOf* ?interfaceType .
+                # Source and target must share a core layer
+                VALUES ?layer {
+                    archimate:BusinessLayer
+                    archimate:ApplicationLayer
+                    archimate:TechnologyLayer
+                }
+                $this rdf:type/rdfs:subClassOf* ?layer .
+                # Target must be ExternalBehavior in the same layer
+                FILTER NOT EXISTS {
+                    ?target rdf:type/rdfs:subClassOf* archimate:ExternalBehavior .
+                    ?target rdf:type/rdfs:subClassOf* ?layer .
+                }
+            }
+        """
+    ] .
+
+
+## 3.2 Service should not realize InternalBehavior (same layer)
+# Per Figures 52/70/82: realization flows from internal/collective behavior
+# toward external behavior (service), not the reverse.
+
+<#CoreServiceRealizesInternalBehavior> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:realization ;
+    rdfs:label "Core Service Realization Direction" ;
+    sh:severity sh:Info ;
+    rdfs:comment "Within a core layer, realization should flow from internal/collective behavior to service, not the reverse." ;
+    sh:sparql [
+        sh:prefixes <#> ;
+        sh:message "Service should not realize internal behavior elements — realization flows from process/function/interaction toward service" ;
+        sh:select """
+            SELECT $this ?target WHERE {
+                $this archimate:realization ?target .
+                # Source is ExternalBehavior in a core layer
+                $this rdf:type/rdfs:subClassOf* archimate:ExternalBehavior .
+                VALUES ?layer {
+                    archimate:BusinessLayer
+                    archimate:ApplicationLayer
+                    archimate:TechnologyLayer
+                }
+                $this rdf:type/rdfs:subClassOf* ?layer .
+                # Target is non-external BehaviorAspect in the same layer
+                ?target rdf:type/rdfs:subClassOf* archimate:BehaviorAspect .
+                ?target rdf:type/rdfs:subClassOf* ?layer .
+                FILTER NOT EXISTS {
+                    ?target rdf:type/rdfs:subClassOf* archimate:ExternalBehavior
+                }
+            }
+        """
+    ] .
+
+
+## 3.3 CompositeElement composition/aggregation targets
+# Per Figures 52/82: Product and Node (CompositeElements) may aggregate or compose
+# services (ExternalBehavior) and passive structure elements, cross-layer.
+# They should NOT compose/aggregate active structure or internal behavior elements.
+
+<#CompositeElementCompositionTarget> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:CompositeElement ;
+    rdfs:label "CompositeElement Composition/Aggregation Targets" ;
+    sh:sparql [
+        sh:prefixes <#> ;
+        sh:message "CompositeElement (Product, Node) can only compose/aggregate services (ExternalBehavior) and passive structure elements — not active structure or internal behavior elements" ;
+        sh:select """
+            SELECT $this ?target WHERE {
+                {
+                    $this archimate:composition ?target .
+                } UNION {
+                    $this archimate:aggregation ?target .
+                }
+                # Target must be ExternalBehavior (services) or PassiveStructure
+                FILTER NOT EXISTS {
+                    ?target rdf:type/rdfs:subClassOf* archimate:ExternalBehavior
+                }
+                FILTER NOT EXISTS {
+                    ?target rdf:type/rdfs:subClassOf* archimate:PassiveStructure
+                }
+                # Exclude Grouping (universal target)
+                FILTER NOT EXISTS {
+                    ?target rdf:type/rdfs:subClassOf* archimate:Grouping
+                }
+                # Exclude CompositeElement itself (self-composition/aggregation is valid)
+                FILTER NOT EXISTS {
+                    ?target rdf:type/rdfs:subClassOf* archimate:CompositeElement
+                }
+            }
+        """
+    ] .
+
+
+### 4. Cross-Layer Relationships (Chapter 11)
+
+# Chapter 11 (Figures 104/105) defines how core layers relate to each other.
+# Most cross-layer patterns (serving, realization) are already permitted by
+# the Generic Metamodel (Section 1) and validated at Level 3.
+# This section encodes the key structural constraint from Chapter 11:
+# "There is no realization of business internal active structure elements by
+# application or technology elements because people cannot be realized by
+# applications or technology." (Section 11.1)
+
+
+## 4.1 No realization of Business ActiveStructure from Application/Technology
+# Per Section 11.1: Application and Technology elements cannot realize Business
+# active structure elements (actors, roles, collaborations, interfaces).
+# Only Business behavior can be realized by lower-layer behavior.
+
+<#NoRealizationOfBusinessActiveStructure> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:realization ;
+    rdfs:label "No Realization of Business Active Structure from Lower Layers" ;
+    sh:sparql [
+        sh:prefixes <#> ;
+        sh:message "Application and Technology elements cannot realize Business active structure elements — only Business behavior can be realized by lower layers" ;
+        sh:select """
+            SELECT $this ?target WHERE {
+                $this archimate:realization ?target .
+                # Target is Business ActiveStructure
+                ?target rdf:type/rdfs:subClassOf* archimate:ActiveStructure .
+                ?target rdf:type/rdfs:subClassOf* archimate:BusinessLayer .
+                # Source is Application or Technology layer
+                {
+                    $this rdf:type/rdfs:subClassOf* archimate:ApplicationLayer .
+                } UNION {
+                    $this rdf:type/rdfs:subClassOf* archimate:TechnologyLayer .
+                } UNION {
+                    $this rdf:type/rdfs:subClassOf* archimate:PhysicalLayer .
+                }
+            }
+        """
+    ] .
+
+
+### 5. Physical Layer Metamodel Patterns (Figure 99)
+
+# Physical elements: ActiveStructure (Equipment, Facility, Distribution Network),
+# PassiveStructure (Material). No behavior elements, no interfaces, no services.
+#
+# Physical deviates from the generic metamodel (Figure 5):
+#   - Assignment is ActiveStructure → ActiveStructure or ActiveStructure → PassiveStructure
+#     (not ActiveStructure → BehaviorAspect as in core layers)
+#   - Access is ActiveStructure → PassiveStructure (no behavior intermediary)
+#   - Material (PassiveStructure) may realize Equipment (ActiveStructure)
+#
+# Since Section 1 is scoped to CoreLayer, these patterns do not trigger false positives.
+
+
+## 5.1 Physical assignment source must be ActiveStructure
+# Per Figure 99: only active structure elements (Facility, Equipment) can be
+# assignment sources within the Physical layer.
+
+<#PhysicalAssignmentSource> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:assignment ;
+    rdfs:label "Physical Assignment Source: ActiveStructure" ;
+    sh:sparql [
+        sh:prefixes <#> ;
+        sh:message "In Physical layer, assignment can only originate from active structure elements" ;
+        sh:select """
+            SELECT $this WHERE {
+                $this archimate:assignment ?target .
+                $this rdf:type/rdfs:subClassOf* archimate:PhysicalLayer .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* archimate:ActiveStructure
+                }
+            }
+        """
+    ] .
+
+
+## 5.2 Physical assignment target must be StructureAspect (active or passive)
+# Per Figure 99: targets are Equipment (ActiveStructure) or Material (PassiveStructure).
+# No behavior elements exist in Physical layer.
+
+<#PhysicalAssignmentTarget> rdf:type sh:NodeShape ;
+    sh:targetObjectsOf archimate:assignment ;
+    rdfs:label "Physical Assignment Target: Structure" ;
+    sh:sparql [
+        sh:prefixes <#> ;
+        sh:message "In Physical layer, assignment can only target active or passive structure elements" ;
+        sh:select """
+            SELECT $this WHERE {
+                ?source archimate:assignment $this .
+                $this rdf:type/rdfs:subClassOf* archimate:PhysicalLayer .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* archimate:ActiveStructure
+                }
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* archimate:PassiveStructure
+                }
+            }
+        """
+    ] .
+
+
+### 6. Implementation and Migration Metamodel Patterns (Figure 106)
+
+# I&M elements: WorkPackage (InternalBehavior), ImplementationEvent (BehaviorAspect),
+# Deliverable (PassiveStructure), Plateau (PassiveStructure), Gap (PassiveStructure).
+#
+# No ActiveStructure, no ExternalBehavior (services), no interfaces in this layer.
+# I&M behavior relationships follow similar patterns to the generic metamodel but are
+# not validated by Section 1 (CoreLayer-scoped).
+#
+# Key I&M-specific constraints below.
+
+
+## 6.1 WorkPackage→Deliverable realization is deprecated
+# Per Figure 106 note: "The realization relationship from Work Package to Deliverable
+# is deprecated and may be removed in a future version. Use access instead."
+
+<#DeprecatedWorkPackageRealizesDeliverable> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:realization ;
+    rdfs:label "Deprecated: WorkPackage → Deliverable Realization" ;
+    sh:severity sh:Warning ;
+    sh:sparql [
+        sh:prefixes <#> ;
+        sh:message "WorkPackage → Deliverable realization is deprecated per ArchiMate 3.2 — use an access relationship instead" ;
+        sh:select """
+            SELECT $this ?target WHERE {
+                $this archimate:realization ?target .
+                $this rdf:type/rdfs:subClassOf* archimate:InternalBehavior .
+                $this rdf:type/rdfs:subClassOf* archimate:ImplementationAndMigrationLayer .
+                ?target rdf:type/rdfs:subClassOf* archimate:PassiveStructure .
+                ?target rdf:type/rdfs:subClassOf* archimate:ImplementationAndMigrationLayer .
+                FILTER NOT EXISTS {
+                    ?target rdf:type/rdfs:subClassOf* archimate:Plateau
+                }
+            }
+        """
+    ] .
+
+
+## 6.2 Gap should associate with Plateaus
+# Per Section 12.2.5: "A gap is associated with two plateaus and represents the
+# differences between these plateaus."
+
+<#GapPlateauAssociation> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Gap ;
+    rdfs:label "Gap Should Associate with Plateaus" ;
+    sh:severity sh:Warning ;
+    sh:sparql [
+        sh:prefixes <#> ;
+        sh:message "Gap should be associated with at least one Plateau — a gap represents a difference between two plateaus" ;
+        sh:select """
+            SELECT $this WHERE {
+                FILTER NOT EXISTS {
+                    {
+                        $this archimate:association ?plateau .
+                        ?plateau rdf:type/rdfs:subClassOf* archimate:Plateau .
+                    } UNION {
+                        ?plateau archimate:association $this .
+                        ?plateau rdf:type/rdfs:subClassOf* archimate:Plateau .
+                    }
+                }
+            }
+        """
+    ] .
+
+
+### 7. Motivation Metamodel Patterns (Figures 34, 45)
+
+# Motivation is a cross-cutting aspect, not a layer. Motivation elements
+# (Stakeholder, Driver, Assessment, Goal, Outcome, Principle, Requirement,
+# Constraint, Value, Meaning) relate to core and strategy elements primarily
+# via influence and realization relationships.
+#
+# Key patterns from Figure 34 (internal) and Figure 45 (core relationships):
+#   - Influence is the primary relationship among Motivation elements
+#   - Core structure/behavior → realization → Requirement (and indirectly Goal, Principle)
+#   - Business ActiveStructure → assignment → Stakeholder (only assignment into Motivation)
+#   - Meaning/Value → association → any element
+#   - Motivation elements do NOT participate in triggering or flow
+
+
+## 7.1 Assignment into Motivation: only Business ActiveStructure → Stakeholder
+# Per Section 6.6: "a business internal active structure element (i.e., business
+# actor, role, or collaboration) may be assigned to a stakeholder."
+# No other assignment relationships target Motivation elements.
+
+<#MotivationAssignmentSource> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:assignment ;
+    rdfs:label "Motivation Assignment: Only from Business ActiveStructure" ;
+    sh:sparql [
+        sh:prefixes <#> ;
+        sh:message "Only Business active structure elements (actor, role, collaboration) can be assigned to Motivation elements — and only to Stakeholder" ;
+        sh:select """
+            SELECT $this ?target WHERE {
+                $this archimate:assignment ?target .
+                ?target rdf:type/rdfs:subClassOf* archimate:MotivationAspect .
+                # Source must be Business ActiveStructure
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* archimate:ActiveStructure .
+                    $this rdf:type/rdfs:subClassOf* archimate:BusinessLayer .
+                }
+            }
+        """
+    ] .
+
+<#MotivationAssignmentTarget> rdf:type sh:NodeShape ;
+    sh:targetObjectsOf archimate:assignment ;
+    rdfs:label "Motivation Assignment Target: Only Stakeholder" ;
+    sh:sparql [
+        sh:prefixes <#> ;
+        sh:message "Assignment into Motivation can only target Stakeholder — not other Motivation elements" ;
+        sh:select """
+            SELECT $this WHERE {
+                ?source archimate:assignment $this .
+                $this rdf:type/rdfs:subClassOf* archimate:MotivationAspect .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* archimate:Stakeholder
+                }
+            }
+        """
+    ] .
+
+
+## 7.2 Motivation elements should not participate in triggering or flow
+# Triggering and flow are behavior relationships (Figure 5). Motivation elements
+# have no behavior aspect and should not be sources or targets of these.
+
+<#MotivationNoTriggeringSource> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:triggering ;
+    rdfs:label "Motivation: No Triggering (source)" ;
+    sh:sparql [
+        sh:prefixes <#> ;
+        sh:message "Motivation elements should not be sources of triggering relationships" ;
+        sh:select """
+            SELECT $this WHERE {
+                $this rdf:type/rdfs:subClassOf* archimate:MotivationAspect .
+            }
+        """
+    ] .
+
+<#MotivationNoTriggeringTarget> rdf:type sh:NodeShape ;
+    sh:targetObjectsOf archimate:triggering ;
+    rdfs:label "Motivation: No Triggering (target)" ;
+    sh:sparql [
+        sh:prefixes <#> ;
+        sh:message "Motivation elements should not be targets of triggering relationships" ;
+        sh:select """
+            SELECT $this WHERE {
+                $this rdf:type/rdfs:subClassOf* archimate:MotivationAspect .
+            }
+        """
+    ] .
+
+<#MotivationNoFlowSource> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:flow ;
+    rdfs:label "Motivation: No Flow (source)" ;
+    sh:sparql [
+        sh:prefixes <#> ;
+        sh:message "Motivation elements should not be sources of flow relationships" ;
+        sh:select """
+            SELECT $this WHERE {
+                $this rdf:type/rdfs:subClassOf* archimate:MotivationAspect .
+            }
+        """
+    ] .
+
+<#MotivationNoFlowTarget> rdf:type sh:NodeShape ;
+    sh:targetObjectsOf archimate:flow ;
+    rdfs:label "Motivation: No Flow (target)" ;
+    sh:sparql [
+        sh:prefixes <#> ;
+        sh:message "Motivation elements should not be targets of flow relationships" ;
+        sh:select """
+            SELECT $this WHERE {
+                $this rdf:type/rdfs:subClassOf* archimate:MotivationAspect .
+            }
+        """
+    ] .
+
+
+## 7.3 Motivation should not realize non-Motivation elements
+# Per Figure 45: realization flows FROM core/strategy elements TOWARD Motivation
+# (e.g., Process → realizes → Requirement). Motivation elements should not
+# realize core or strategy elements — only other Motivation elements.
+
+<#MotivationRealizationTarget> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:realization ;
+    rdfs:label "Motivation Realization Direction" ;
+    sh:sparql [
+        sh:prefixes <#> ;
+        sh:message "Motivation elements should not realize non-Motivation elements — realization flows from core/strategy toward Motivation" ;
+        sh:select """
+            SELECT $this ?target WHERE {
+                $this archimate:realization ?target .
+                $this rdf:type/rdfs:subClassOf* archimate:MotivationAspect .
+                FILTER NOT EXISTS {
+                    ?target rdf:type/rdfs:subClassOf* archimate:MotivationAspect
+                }
+                FILTER NOT EXISTS {
+                    ?target rdf:type/rdfs:subClassOf* archimate:Grouping
+                }
+            }
+        """
+    ] .
+
+
+### 8. Strategy To Core Elements And Motivation Elements
 # Internal and external behavior elements may realize strategy behavior elements (value streams and capabilities), while an active or passive structure element may realize a resource. Capabilities, 
 # value streams, courses of action, and resources may realize or influence requirements (and indirectly, as described in Section 5.7, also principles or goals), and a course of action may also 
 # realize or influence an outcome (and, indirectly, also a goal).
@@ -408,43 +848,45 @@
 #   Strategy elements --realization/influence--> Motivation (Requirement, Outcome)
 #
 
-## 10.1 Core behavior realizes Strategy behavior elements
+## 8.1 Core behavior realizes Strategy behavior elements
 
 <#CoreBehaviorRealizesStrategyBehavior> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:realization ;
     rdfs:label "Core Behavior → Strategy Behavior Realization" ;
     sh:severity sh:Info ;
-    rdfs:comment "Per Figure 51: internal and external behavior elements from Core layers (Business, Application, Technology) may realize Strategy behavior elements (Capability, ValueStream). This shape validates the pattern is used correctly — source should be Core behavior, target should be Strategy behavior." ;
+    rdfs:comment "Internal and external behavior elements from Core layers (Business, Application, Technology) may realize Strategy behavior elements (Capability, ValueStream). This shape validates the pattern is used correctly — source should be Core behavior, target should be Strategy behavior." ;
     sh:sparql [
         sh:prefixes <#> ;
         sh:message "When realizing Strategy behavior from Core, source should be a Core behavior element (process, function, service, etc.)" ;
         sh:select """
-            SELECT ?source ?target WHERE {
-                ?source archimate:realization ?target .
+            SELECT $this ?target WHERE {
+                $this archimate:realization ?target .
                 # Target is Strategy BehaviorAspect
                 ?target rdf:type/rdfs:subClassOf* archimate:BehaviorAspect .
                 ?target rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
                 # Source is Core layer
                 {
-                    ?source rdf:type/rdfs:subClassOf* archimate:BusinessLayer .
+                    $this rdf:type/rdfs:subClassOf* archimate:BusinessLayer .
                 } UNION {
-                    ?source rdf:type/rdfs:subClassOf* archimate:ApplicationLayer .
+                    $this rdf:type/rdfs:subClassOf* archimate:ApplicationLayer .
                 } UNION {
-                    ?source rdf:type/rdfs:subClassOf* archimate:TechnologyLayer .
+                    $this rdf:type/rdfs:subClassOf* archimate:TechnologyLayer .
                 } UNION {
-                    ?source rdf:type/rdfs:subClassOf* archimate:PhysicalLayer .
+                    $this rdf:type/rdfs:subClassOf* archimate:PhysicalLayer .
                 }
                 # Source must be BehaviorAspect (not structure)
                 FILTER NOT EXISTS {
-                    ?source rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
+                    $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
                 }
             }
         """
     ] .
 
 
-## 10.2 Core structure realizes Resource
+## 8.2 Core structure realizes Resource
 
 <#CoreStructureRealizesResource> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:realization ;
     rdfs:label "Core Structure → Resource Realization" ;
     sh:severity sh:Info ;
     rdfs:comment "Active and passive structure elements from Core layers may realize Resource. This shape validates the pattern — source should be Core structure, target should be Resource." ;
@@ -452,33 +894,33 @@
         sh:prefixes <#> ;
         sh:message "When realizing Resource from Core, source should be a Core active or passive structure element" ;
         sh:select """
-            SELECT ?source ?target WHERE {
-                ?source archimate:realization ?target .
+            SELECT $this ?target WHERE {
+                $this archimate:realization ?target .
                 # Target is Resource (StructureAspect ∩ StrategyLayer)
                 ?target rdf:type/rdfs:subClassOf* archimate:StructureAspect .
                 ?target rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
                 # Source is Core layer
                 {
-                    ?source rdf:type/rdfs:subClassOf* archimate:BusinessLayer .
+                    $this rdf:type/rdfs:subClassOf* archimate:BusinessLayer .
                 } UNION {
-                    ?source rdf:type/rdfs:subClassOf* archimate:ApplicationLayer .
+                    $this rdf:type/rdfs:subClassOf* archimate:ApplicationLayer .
                 } UNION {
-                    ?source rdf:type/rdfs:subClassOf* archimate:TechnologyLayer .
+                    $this rdf:type/rdfs:subClassOf* archimate:TechnologyLayer .
                 } UNION {
-                    ?source rdf:type/rdfs:subClassOf* archimate:PhysicalLayer .
+                    $this rdf:type/rdfs:subClassOf* archimate:PhysicalLayer .
                 }
                 # Source must be structure (active or passive), not behavior
                 FILTER NOT EXISTS {
-                    { ?source rdf:type/rdfs:subClassOf* archimate:ActiveStructure }
+                    { $this rdf:type/rdfs:subClassOf* archimate:ActiveStructure }
                     UNION
-                    { ?source rdf:type/rdfs:subClassOf* archimate:PassiveStructure }
+                    { $this rdf:type/rdfs:subClassOf* archimate:PassiveStructure }
                 }
             }
         """
     ] .
 
 
-## 10.3 Strategy → Motivation realization/influence
+## 8.3 Strategy → Motivation realization/influence
 # Per Figure 51: Capability, ValueStream, Resource realize Requirement.
 #   CourseOfAction realizes Requirement and Outcome.
 #   All strategy elements can influence Motivation elements.
@@ -486,15 +928,16 @@
 # Strategy elements should only realize MotivationAspect targets, not Core targets.
 
 <#StrategyRealizationTarget> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:realization ;
     rdfs:label "Strategy Realization Target" ;
     sh:sparql [
         sh:prefixes <#> ;
         sh:message "Strategy elements can only realize other Strategy elements or Motivation elements — not Core layer elements" ;
         sh:select """
-            SELECT ?source ?target WHERE {
-                ?source archimate:realization ?target .
+            SELECT $this ?target WHERE {
+                $this archimate:realization ?target .
                 # Source is Strategy layer
-                ?source rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
+                $this rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
                 # Target is Core layer (not Strategy, not Motivation)
                 FILTER NOT EXISTS {
                     ?target rdf:type/rdfs:subClassOf* archimate:StrategyLayer
@@ -512,10 +955,10 @@
 
 
 
-### 11. JUNCTION VALIDATION
+### 9. JUNCTION VALIDATION
 
 
-## 11.1 Junction type (and/or)
+## 9.1 Junction type (and/or)
 
 <#JunctionTypeValidation> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Junction ;
@@ -527,7 +970,7 @@
     ] .
 
 
-## 11.2 Junction relationship homogeneity
+## 9.2 Junction relationship homogeneity
 
 <#JunctionRelationshipHomogeneity> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Junction ;
@@ -560,71 +1003,75 @@
 
 
 
-### 12. RELATIONSHIP ATTRIBUTE CONSTRAINTS (RDF-Star metadata values)
+### 10. RELATIONSHIP ATTRIBUTE CONSTRAINTS (RDF-Star metadata values)
 
 
-## 12.1 Access type validation
+## 10.1 Access type validation
 
 <#AccessTypeValidation> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:access ;
     rdfs:label "Access Type Validation" ;
     sh:sparql [
         sh:prefixes <#> ;
         sh:message "Access type must be: read, write, readwrite, or unspecified" ;
         sh:select """
-            SELECT ?source ?target WHERE {
-                ?source archimate:access ?target .
-                <<?source archimate:access ?target>> archimate:accessType ?val .
+            SELECT $this ?target WHERE {
+                $this archimate:access ?target .
+                <<$this archimate:access ?target>> archimate:accessType ?val .
                 FILTER(?val NOT IN ("read", "write", "readwrite", "unspecified"))
             }
         """
     ] .
 
 
-## 12.2 Influence sign validation
+## 10.2 Influence sign validation
 
 <#InfluenceSignValidation> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:influence ;
     rdfs:label "Influence Sign Validation" ;
     sh:sparql [
         sh:prefixes <#> ;
         sh:message "Influence sign must be: positive, negative, or unspecified" ;
         sh:select """
-            SELECT ?source ?target WHERE {
-                ?source archimate:influence ?target .
-                <<?source archimate:influence ?target>> archimate:influenceSign ?val .
+            SELECT $this ?target WHERE {
+                $this archimate:influence ?target .
+                <<$this archimate:influence ?target>> archimate:influenceSign ?val .
                 FILTER(?val NOT IN ("positive", "negative", "unspecified"))
             }
         """
     ] .
 
 
-## 12.3 Influence strength validation
+## 10.3 Influence strength validation
 
 <#InfluenceStrengthValidation> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:influence ;
     rdfs:label "Influence Strength Validation" ;
     sh:sparql [
         sh:prefixes <#> ;
         sh:message "Influence strength must be: weak, moderate, strong, or unspecified" ;
         sh:select """
-            SELECT ?source ?target WHERE {
-                ?source archimate:influence ?target .
-                <<?source archimate:influence ?target>> archimate:influenceStrength ?val .
+            SELECT $this ?target WHERE {
+                $this archimate:influence ?target .
+                <<$this archimate:influence ?target>> archimate:influenceStrength ?val .
                 FILTER(?val NOT IN ("weak", "moderate", "strong", "unspecified"))
             }
         """
     ] .
 
 
-## 12.4 Flow type validation
+## 10.4 Flow type validation
 
 <#FlowTypeValidation> rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:flow ;
     rdfs:label "Flow Type Validation" ;
     sh:sparql [
         sh:prefixes <#> ;
         sh:message "Flow type must be: information, material, energy, or unspecified" ;
         sh:select """
-            SELECT ?source ?target WHERE {
-                ?source archimate:flow ?target .
-                <<?source archimate:flow ?target>> archimate:flowType ?val .
+            SELECT $this ?target WHERE {
+                $this archimate:flow ?target .
+                <<$this archimate:flow ?target>> archimate:flowType ?val .
                 FILTER(?val NOT IN ("information", "material", "energy", "unspecified"))
             }
         """

@@ -653,18 +653,19 @@ archimate:serving <#dependencyStrength> 4 .
 
 # Validation rule to enforce cross-domain restrictions from the specification
 <#CrossDomainRestrictions> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
     rdfs:label "Cross-Domain Relationship Restrictions" ;
     rdfs:comment "Enforces the restrictions on relationships between different ArchiMate domains" ;
     sh:sparql [
         sh:prefixes <#> ;
         sh:message "Invalid cross-domain relationship detected" ;
         sh:select """
-            SELECT ?source ?target ?rel WHERE {
-                ?source ?rel ?target .
+            SELECT $this WHERE {
+                $this ?rel ?target .
 
                 # Implementation & Migration → Motivation (only assignment, realization, influence, association allowed)
                 {
-                    ?source rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
+                    $this rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
                     ?target rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
                     FILTER(?rel NOT IN (archimate:assignment, archimate:realization, archimate:influence, archimate:association))
                 } UNION
@@ -672,21 +673,21 @@ archimate:serving <#dependencyStrength> 4 .
                 # Core → Motivation (only assignment, realization, influence, association allowed)
                 {
                     VALUES ?coreLayer { archimate:BusinessLayer archimate:ApplicationLayer archimate:TechnologyLayer archimate:PhysicalLayer }
-                    ?source rdf:type/rdfs:subClassOf* ?coreLayer .
+                    $this rdf:type/rdfs:subClassOf* ?coreLayer .
                     ?target rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
                     FILTER(?rel NOT IN (archimate:assignment, archimate:realization, archimate:influence, archimate:association))
                 } UNION
 
                 # Strategy → Motivation (only assignment, realization, influence, association allowed)
                 {
-                    ?source rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
+                    $this rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
                     ?target rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
                     FILTER(?rel NOT IN (archimate:assignment, archimate:realization, archimate:influence, archimate:association))
                 } UNION
 
                 # Motivation → Implementation & Migration (only association allowed)
                 {
-                    ?source rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
+                    $this rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
                     ?target rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
                     FILTER(?rel NOT IN (archimate:association))
                 } UNION
@@ -694,14 +695,14 @@ archimate:serving <#dependencyStrength> 4 .
                 # Motivation → Core (only association allowed)
                 {
                     VALUES ?coreLayer { archimate:BusinessLayer archimate:ApplicationLayer archimate:TechnologyLayer archimate:PhysicalLayer }
-                    ?source rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
+                    $this rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
                     ?target rdf:type/rdfs:subClassOf* ?coreLayer .
                     FILTER(?rel NOT IN (archimate:association))
                 } UNION
 
                 # Motivation → Strategy (only association allowed)
                 {
-                    ?source rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
+                    $this rdf:type/rdfs:subClassOf+ archimate:MotivationAspect .
                     ?target rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
                     FILTER(?rel NOT IN (archimate:association))
                 } UNION
@@ -709,7 +710,7 @@ archimate:serving <#dependencyStrength> 4 .
                 # Implementation & Migration → Core (only realization, association allowed)
                 {
                     VALUES ?coreLayer { archimate:BusinessLayer archimate:ApplicationLayer archimate:TechnologyLayer archimate:PhysicalLayer }
-                    ?source rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
+                    $this rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
                     ?target rdf:type/rdfs:subClassOf* ?coreLayer .
                     FILTER(?rel NOT IN (archimate:realization, archimate:association))
                 } UNION
@@ -717,21 +718,21 @@ archimate:serving <#dependencyStrength> 4 .
                 # Core → Implementation & Migration (only assignment, association allowed)
                 {
                     VALUES ?coreLayer { archimate:BusinessLayer archimate:ApplicationLayer archimate:TechnologyLayer archimate:PhysicalLayer }
-                    ?source rdf:type/rdfs:subClassOf* ?coreLayer .
+                    $this rdf:type/rdfs:subClassOf* ?coreLayer .
                     ?target rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
                     FILTER(?rel NOT IN (archimate:assignment, archimate:association))
                 } UNION
 
                 # Implementation & Migration → Strategy (only realization, association allowed)
                 {
-                    ?source rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
+                    $this rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
                     ?target rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
                     FILTER(?rel NOT IN (archimate:realization, archimate:association))
                 } UNION
 
                 # Strategy → Implementation & Migration (only association allowed)
                 {
-                    ?source rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
+                    $this rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
                     ?target rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
                     FILTER(?rel NOT IN (archimate:association))
                 } UNION
@@ -739,7 +740,7 @@ archimate:serving <#dependencyStrength> 4 .
                 # Strategy → Core (only association allowed)
                 {
                     VALUES ?coreLayer { archimate:BusinessLayer archimate:ApplicationLayer archimate:TechnologyLayer archimate:PhysicalLayer }
-                    ?source rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
+                    $this rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
                     ?target rdf:type/rdfs:subClassOf* ?coreLayer .
                     FILTER(?rel NOT IN (archimate:association))
                 }
@@ -1024,6 +1025,7 @@ archimate:serving <#dependencyStrength> 4 .
 
 # Limit derivation depth to prevent infinite chains
 <#DerivationDepthLimit> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
     rdfs:label "Derivation Depth Limit" ;
     rdfs:comment "Prevents excessive derivation chains that could cause performance issues" ;
     sh:sparql [
@@ -1031,7 +1033,9 @@ archimate:serving <#dependencyStrength> 4 .
         sh:message "Derivation chain exceeds maximum depth of 5" ;
         sh:severity sh:Warning ;
         sh:select """
-            SELECT ?stmt WHERE {
+            SELECT $this WHERE {
+                $this ?rel ?target .
+                BIND(<<$this ?rel ?target>> AS ?stmt)
                 ?stmt deriv:derivedFrom ?source1, ?source2, ?source3, ?source4, ?source5, ?source6 .
             }
         """
