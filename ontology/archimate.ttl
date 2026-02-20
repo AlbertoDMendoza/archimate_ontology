@@ -30,34 +30,27 @@
 
 # NOTES 
 # Ontology file now 100% complete with ArchiMate 3.2 spec --61 elements, 11 relationships, relationship connectors (junctions). 
-# SKOS file only has only definitions.  This one is a mix bag of Thesaurus and Ontology (I will separate SKOS into it's own file, just need to clean this file up).
+# SKOS file only has only definitions.  This one is a mix bag of Thesaurus and Ontology (I will separate SKOS into its own file, just need to clean this file up).
 # Includes Full Framework (SKOS file does not have the full framework *yet*).
 # Relationships to leverage RDF-Star which supports relationship attributes.
 # Specialization is purely a relationship (Section 5.4), not a concept property. Instance types use rdf:type.
 # Element Specializations are separate classes created via specialization relationships.
-# Profiles are defined by SHACL constrains
-# Separated SHACL constrains into its own files.
+# Profiles are defined by SHACL constraints
+# Separated SHACL constraints into its own files.
 
 # TODO
 # VALIDATION:
-#   - Define *All* Valid relationships in SHACL (in archimate_validation_<layer>.ttl files)
-#   - Add element-specific relationship combinations (e.g., BusinessActor can assign to which element types)
-#   - Add Motivation aspect cross-layer relationship constraints to archimate_validation_metamodel.ttl
-# 
+#   - Level 3 validation: Application, Technology, Physical, Motivation, Implementation & Migration layers
+#
 # VIEWPOINTS:
 #   - Add common ArchiMate viewpoint definitions (Organization, Application Usage, Business Process Cooperation, etc.)
 #   - Define allowed elements and relationships per viewpoint
-# 
+#
 # EXAMPLES:
 #   - Create example models demonstrating element instantiation, RDF-Star relationships, profiles, and derivations
-#   - Build comprehensive enterprise model example covering all layers
-# 
+#
 # PROFILES:
 #   - Add domain-specific example profiles (Manager, Developer, Microservice, Container, Server, etc.)
-# 
-# ENHANCEMENTS:
-#   - Add SHACL-AF rules for automated classification
-#   - Build SPARQL query library 
 #
 # DESIGN DECISIONS
 # 1) Naming Convention

@@ -15,7 +15,7 @@
     rdfs:comment "SHACL shapes for ArchiMate specialization profiles. Profile classes are owl:Class that specialize standard ArchiMate elements; this file defines their typed attributes." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-15"^^xsd:date ;
-    dct:modified "2026-02-17"^^xsd:date ;
+    dct:modified "2026-02-20"^^xsd:date ;
     owl:versionInfo "Alpha" .
 
 ### NOTES

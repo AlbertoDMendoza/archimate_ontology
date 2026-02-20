@@ -19,7 +19,7 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2026-02-17"^^xsd:date ;
+    dct:modified "2026-02-20"^^xsd:date ;
     dct:subject "Enterprise Architecture, ArchiMate, Modeling Language" ;
     dct:conformsTo <https://pubs.opengroup.org/architecture/archimate3-doc/> ;
     skos:hasTopConcept <#ArchiMate> .

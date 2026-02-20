@@ -15,7 +15,7 @@
     rdfs:comment "Complete implementation of ArchiMate derivation rules DR1-DR8 and PDR1-PDR12 using SPARQL CONSTRUCT rules." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-15"^^xsd:date ;
-    dct:modified "2026-02-17"^^xsd:date ;
+    dct:modified "2026-02-20"^^xsd:date ;
     owl:versionInfo "Alpha" ;
     sh:declare [
         sh:prefix "archimate" ;
@@ -611,7 +611,7 @@
             ?b ?targetRel ?c .
             
             # b must be a Grouping element
-            ?b rdf:type archimate:Grouping .
+            ?b rdf:type/rdfs:subClassOf* archimate:Grouping .
             
             # Source relationship must be aggregation or composition
             {
