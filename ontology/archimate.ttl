@@ -30,10 +30,9 @@
 
 # NOTES 
 # Ontology file now 100% complete with ArchiMate 3.2 spec --61 elements, 11 relationships, relationship connectors (junctions). 
-# SKOS file only has only definitions.  This one is a mix bag of Thesaurus and Ontology (I will separate SKOS into its own file, just need to clean this file up).
+# SKOS file only has only definitions.  
 # Includes Full Framework (SKOS file does not have the full framework *yet*).
 # Relationships to leverage RDF-Star which supports relationship attributes.
-# Specialization is purely a relationship (Section 5.4), not a concept property. Instance types use rdf:type.
 # Element Specializations are separate classes created via specialization relationships.
 # Profiles are defined by SHACL constraints
 # Separated SHACL constraints into its own files.
@@ -50,7 +49,7 @@
 #   - Create example models demonstrating element instantiation, RDF-Star relationships, profiles, and derivations
 #
 # PROFILES:
-#   - Add domain-specific example profiles (Manager, Developer, Microservice, Container, Server, etc.)
+#   - Add domain-specific example profiles
 #
 # DESIGN DECISIONS
 # 1) Naming Convention
@@ -64,7 +63,6 @@
 #	Example: "Business Actor", "Assignment"
 #
 # 2) RDF-STAR FOR RELATIONSHIP METADATA
-#
 # ArchiMate relationships can have metadata attributes (e.g., accessType for Access,
 # influenceSign for Influence). In traditional RDF, this requires reification which creates
 # verbose, complex models. RDF-Star solves this elegantly using quoted triples.
@@ -118,7 +116,6 @@
 #
 #
 # 3) SPECIALIZATION AND PROFILES
-#
 # archimate:specialization is purely an ArchiMate relationship (spec Section 5.4),
 # NOT a concept property. Instance-to-type mapping uses rdf:type.
 #
@@ -146,18 +143,11 @@
 #
 # See ontology/archimate_profile_examples.ttl for example profile definitions.
 
-# UPDATES
-# 2026-02-20 Separated specialization from concept properties — now purely a relationship (Section 5.4). Instance types use rdf:type.
-# 2026-02-10 Added Junction element (Relationship Connector)
-# 2026-02-10 Added Specializations/Profiles design pattern with SHACL shapes (validation/archimate_validation_profiles.ttl)
-# 2025-07-16 Separated validation rules following OWL/SHACL separation guidelines
-# 2025-07-04 Redid Relationships with RDF-Star, added SHACL for relationships. changed version to Alpha
-# 2025-06-04 Added DR1.
 
 
 ### 1. General ArchiMate Definitions
 
-## 1.0 ArchiMate General Definitions
+#### 1.0 ArchiMate General Definitions
 <#ArchiMate> rdf:type owl:Class ;
     rdfs:label "ArchiMate" ;
     rdfs:comment "ArchiMate Enterprise Architecture modeling language, a visual language with a set of default iconography for describing, analyzing, and communicating many concerns of Enterprise Architectures as they change over time. The standard provides a set of entities and relationships with their corresponding iconography for the representation of Architecture Descriptions." ;
@@ -197,8 +187,6 @@
 
 # Universal Properties for All ArchiMate Concepts (Elements and Relationships)
 # These properties apply to both Elements and Relationships
-# Note: Instance-to-type mapping uses rdf:type (e.g., :myActor rdf:type archimate:BusinessActor).
-# archimate:specialization is NOT a concept property — it is purely a relationship (see Section 5.4).
 
 <#identifier> rdf:type owl:DatatypeProperty ;
     rdfs:label "Identifier" ;
@@ -341,9 +329,9 @@
 
 
 
-### 2.0 ArchiMate Elements
+### 2. ArchiMate Elements
 
-## 2.1 Motivation Elements
+#### 2.1 Motivation Elements
 
 <#Stakeholder> rdf:type owl:Class ;
     rdfs:label "Stakeholder" ;
@@ -407,7 +395,7 @@
 
 
 
-## 2.2 Strategy Elements
+#### 2.2 Strategy Elements
 
 # Active Structure Elements
 
@@ -443,7 +431,7 @@
 
 
 
-## 2.3 Business Layer Elements
+#### 2.3 Business Layer Elements
 
 # Active Structure Elements
 <#BusinessActor> rdf:type owl:Class ;
@@ -540,7 +528,7 @@
     rdfs:subClassOf <#CompositeElement> .
 
 
-## 2.4 Application Layer Elements
+#### 2.4 Application Layer Elements
 
 # Active Structure Elements
 <#ApplicationComponent> rdf:type owl:Class ;
@@ -609,7 +597,7 @@
     rdfs:subClassOf <#Element> .		
 
 
-## 2.5 Technology Layer Elements
+#### 2.5 Technology Layer Elements
 
 # Active Structure Elements
 <#Node> rdf:type owl:Class ;
@@ -706,7 +694,7 @@
     rdfs:subClassOf <#Element> .
 
 
-## 2.6 Physical Elements
+#### 2.6 Physical Elements
 
 # Active Structure Elements
 <#Equipment> rdf:type owl:Class ;
@@ -739,7 +727,7 @@
     rdfs:subClassOf <#Element> .
 
 
-## 2.7 Implementation and Migration Elements
+#### 2.7 Implementation and Migration Elements
 
 # Behavior Elements
 <#WorkPackage> rdf:type owl:Class ;
@@ -779,7 +767,7 @@
     rdfs:subClassOf <#Element> .
 
 
-## 2.8 Composite Elements
+#### 2.8 Composite Elements
 
 <#Grouping> rdf:type owl:Class ;
     rdfs:label "Grouping" ;
@@ -796,7 +784,7 @@
 
 ### 3. Relationships
 
-## 3.1 Base Relationship Properties
+#### 3.1 Base Relationship Properties
 <#structuralRelationship> rdf:type owl:ObjectProperty ;
     rdfs:label "structural relationship" ;
     rdfs:comment "Base property for structural relationships that define static construction or composition." ;
@@ -822,7 +810,7 @@
     rdfs:range <#Concept> .
 
 
-## 3.2 Relationships
+#### 3.2 Relationships
 #
 # Design decision: All relationship properties use domain/range Element → Element.
 # The generic metamodel (Figure 5) suggests narrower typing (e.g., assignment:
@@ -914,7 +902,7 @@
     rdfs:range <#Concept> ;
     rdf:type owl:TransitiveProperty .
 
-## 3.3 Relationship Connectors
+#### 3.3 Relationship Connectors
 
 <#Junction> rdf:type owl:Class ;
     rdfs:label "Junction" ;
@@ -929,7 +917,7 @@
 		owl:oneOf ( "and" "or" ) 
 	] .
 
-## 3.4 RDF-Star Relationship Metadata Properties
+#### 3.4 RDF-Star Relationship Metadata Properties
 
 # General Relationship Metadata
 # Note: identifier, name, and documentation are already defined in Section 1.0 as universal properties

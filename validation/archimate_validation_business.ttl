@@ -22,14 +22,6 @@
 ###
 ### Generated from relationships.xml matrix
 ###
-### owl:imports note:
-### The ontology declares @base <https://purl.org/archimate#> so its IRI is
-### <https://purl.org/archimate#>. We import <https://purl.org/archimate/owl>
-### which is the PURL that redirects to the raw Turtle file. These URIs differ
-### but engines resolve owl:imports by dereferencing the URL, so the import
-### works. purl.org does not support content negotiation (Accept headers) —
-### separate PURLs are used for each representation (/archimate → SKOS HTML,
-### /archimate/owl → OWL Turtle).
 
 <#> rdf:type owl:Ontology ;
     owl:imports <https://purl.org/archimate/owl> ;
@@ -38,7 +30,17 @@
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-15"^^xsd:date ;
     dct:modified "2026-02-20"^^xsd:date ;
-    owl:versionInfo "Alpha" .
+    owl:versionInfo "Alpha" ;
+    sh:declare [
+        sh:prefix "archimate" ;
+        sh:namespace "https://purl.org/archimate#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "rdf" ;
+        sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "rdfs" ;
+        sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
+    ] .
 
 
 ### NOTES
@@ -68,6 +70,7 @@
 <#BusinessActorRelationships> rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessActor ;
     rdfs:label "BusinessActor Valid Relationships" ;
+    rdfs:comment "Validates all outgoing relationships from BusinessActor elements." ;
 
     # composition (c): BusinessActor, BusinessInterface, Grouping
     sh:property [
@@ -313,6 +316,7 @@
 <#BusinessRoleRelationships> rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessRole ;
     rdfs:label "BusinessRole Valid Relationships" ;
+    rdfs:comment "Validates all outgoing relationships from BusinessRole elements." ;
 
     # composition (c): BusinessInterface, BusinessRole, Grouping
     sh:property [
@@ -557,6 +561,7 @@
 <#BusinessCollaborationRelationships> rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessCollaboration ;
     rdfs:label "BusinessCollaboration Valid Relationships" ;
+    rdfs:comment "Validates all outgoing relationships from BusinessCollaboration elements." ;
 
     # composition (c): BusinessCollaboration, BusinessInterface, Grouping
     sh:property [
@@ -804,6 +809,7 @@
 <#BusinessInterfaceRelationships> rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessInterface ;
     rdfs:label "BusinessInterface Valid Relationships" ;
+    rdfs:comment "Validates all outgoing relationships from BusinessInterface elements." ;
 
     # composition (c): BusinessInterface, Grouping
     sh:property [
@@ -1035,6 +1041,7 @@
 <#BusinessProcessRelationships> rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessProcess ;
     rdfs:label "BusinessProcess Valid Relationships" ;
+    rdfs:comment "Validates all outgoing relationships from BusinessProcess elements." ;
 
     # composition (c): BusinessFunction, BusinessInteraction, BusinessProcess, Grouping
     sh:property [
@@ -1258,6 +1265,7 @@
 <#BusinessFunctionRelationships> rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessFunction ;
     rdfs:label "BusinessFunction Valid Relationships" ;
+    rdfs:comment "Validates all outgoing relationships from BusinessFunction elements." ;
 
     # composition (c): BusinessFunction, BusinessInteraction, BusinessProcess, Grouping
     sh:property [
@@ -1481,6 +1489,7 @@
 <#BusinessServiceRelationships> rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessService ;
     rdfs:label "BusinessService Valid Relationships" ;
+    rdfs:comment "Validates all outgoing relationships from BusinessService elements." ;
 
     # composition (c): BusinessService, Grouping
     sh:property [
@@ -1700,6 +1709,7 @@
 <#BusinessInteractionRelationships> rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessInteraction ;
     rdfs:label "BusinessInteraction Valid Relationships" ;
+    rdfs:comment "Validates all outgoing relationships from BusinessInteraction elements." ;
 
     # composition (c): BusinessFunction, BusinessInteraction, BusinessProcess, Grouping
     sh:property [
@@ -1807,6 +1817,7 @@
 <#BusinessEventRelationships> rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessEvent ;
     rdfs:label "BusinessEvent Valid Relationships" ;
+    rdfs:comment "Validates all outgoing relationships from BusinessEvent elements." ;
 
     # composition (c): BusinessEvent, Grouping
     sh:property [
@@ -1887,6 +1898,7 @@
 <#BusinessObjectRelationships> rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessObject ;
     rdfs:label "BusinessObject Valid Relationships" ;
+    rdfs:comment "Validates all outgoing relationships from BusinessObject elements." ;
 
     # composition (c): BusinessContract, BusinessObject, Grouping
     sh:property [
@@ -1952,6 +1964,7 @@
 <#BusinessContractRelationships> rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessContract ;
     rdfs:label "BusinessContract Valid Relationships" ;
+    rdfs:comment "Validates all outgoing relationships from BusinessContract elements." ;
 
     # composition (c): BusinessContract, BusinessObject, Grouping
     sh:property [
@@ -2015,6 +2028,7 @@
 <#RepresentationRelationships> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Representation ;
     rdfs:label "Representation Valid Relationships" ;
+    rdfs:comment "Validates all outgoing relationships from Representation elements." ;
 
     # composition (c): Grouping, Representation
     sh:property [
@@ -2069,6 +2083,7 @@
 <#ProductRelationships> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Product ;
     rdfs:label "Product Valid Relationships" ;
+    rdfs:comment "Validates all outgoing relationships from Product elements." ;
 
     # composition (c): ApplicationService, Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Product, Representation
     sh:property [
