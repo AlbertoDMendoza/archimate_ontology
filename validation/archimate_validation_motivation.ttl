@@ -1,0 +1,351 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix archimate: <https://purl.org/archimate#> .
+@base <https://purl.org/archimate/validation/motivation#> .
+
+### SHACL Validation: Motivation Aspect — Composition, Aggregation, Realization
+### ArchiMate 3.2 Specification — Appendix B Relationship Matrix
+###
+### Elements: Stakeholder, Driver, Assessment, Goal, Outcome, Principle,
+###           Requirement, Constraint, Meaning, Value
+###
+### Relationship types validated here:
+###   c=composition, g=aggregation, r=realization
+###
+### Excluded (covered by Levels 1 & 2):
+###   flow, triggering, serving  → Level 2 §1 (Motivation has none)
+###   access                     → not applicable (no passive structure targets)
+###   association                → universally permissive
+###   specialization             → Level 1 §3 same-type constraint
+###   influence                  → Level 2 §7 Motivation Metamodel
+###   assignment                 → Level 2 §7 (only BusinessActor → Stakeholder)
+###   realization to non-Motivation → Level 2 §7 (realization flows toward Motivation)
+###
+### Note: Motivation elements only compose/aggregate within Motivation + Grouping.
+### Elements without valid realization targets (Assessment, Driver, Goal, Meaning,
+### Stakeholder, Value) have no realization block — Level 2 §7 covers cross-aspect
+### realization direction.
+###
+### Derived from relationships.xml
+###
+
+<#> rdf:type owl:Ontology ;
+    owl:imports <https://purl.org/archimate/owl> ;
+    rdfs:label "ArchiMate Relationship Validation - Motivation Aspect" ;
+    rdfs:comment "Composition, aggregation, and realization constraints for Motivation aspect elements per ArchiMate 3.2." ;
+    dct:creator "Alberto D. Mendoza" ;
+    dct:modified "2026-02-20"^^xsd:date ;
+    sh:declare [
+        sh:prefix "archimate" ;
+        sh:namespace "https://purl.org/archimate#"^^xsd:anyURI
+    ] ,
+    [
+        sh:prefix "rdf" ;
+        sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI
+    ] ,
+    [
+        sh:prefix "rdfs" ;
+        sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI
+    ] .
+
+
+### Stakeholder
+
+<#StakeholderRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Stakeholder ;
+    rdfs:label "Stakeholder Valid Relationships" ;
+    rdfs:comment "Validates composition and aggregation from Stakeholder elements." ;
+
+    # composition (c): Grouping, Stakeholder
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Stakeholder ] ) ;
+        sh:message "Stakeholder: composition is only valid to Grouping, Stakeholder."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Stakeholder ] ) ;
+        sh:message "Stakeholder: aggregation is only valid to Grouping, Stakeholder."
+    ] ;
+
+    .
+
+
+### Driver
+
+<#DriverRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Driver ;
+    rdfs:label "Driver Valid Relationships" ;
+    rdfs:comment "Validates composition and aggregation from Driver elements." ;
+
+    # composition (c): Driver, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Driver ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Driver: composition is only valid to Driver, Grouping."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Driver ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Driver: aggregation is only valid to Driver, Grouping."
+    ] ;
+
+    .
+
+
+### Assessment
+
+<#AssessmentRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Assessment ;
+    rdfs:label "Assessment Valid Relationships" ;
+    rdfs:comment "Validates composition and aggregation from Assessment elements." ;
+
+    # composition (c): Assessment, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Assessment ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Assessment: composition is only valid to Assessment, Grouping."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Assessment ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Assessment: aggregation is only valid to Assessment, Grouping."
+    ] ;
+
+    .
+
+
+### Goal
+
+<#GoalRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Goal ;
+    rdfs:label "Goal Valid Relationships" ;
+    rdfs:comment "Validates composition and aggregation from Goal elements." ;
+
+    # composition (c): Goal, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Goal: composition is only valid to Goal, Grouping."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Goal: aggregation is only valid to Goal, Grouping."
+    ] ;
+
+    .
+
+
+### Outcome
+
+<#OutcomeRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Outcome ;
+    rdfs:label "Outcome Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from Outcome elements." ;
+
+    # composition (c): Grouping, Outcome
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Outcome ] ) ;
+        sh:message "Outcome: composition is only valid to Grouping, Outcome."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Outcome ] ) ;
+        sh:message "Outcome: aggregation is only valid to Grouping, Outcome."
+    ] ;
+
+    # realization (r): Goal, Grouping
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or ( [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Outcome: realization is only valid to Goal, Grouping."
+    ] ;
+
+    .
+
+
+### Principle
+
+<#PrincipleRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Principle ;
+    rdfs:label "Principle Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from Principle elements." ;
+
+    # composition (c): Grouping, Principle
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Principle ] ) ;
+        sh:message "Principle: composition is only valid to Grouping, Principle."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Principle ] ) ;
+        sh:message "Principle: aggregation is only valid to Grouping, Principle."
+    ] ;
+
+    # realization (r): Goal, Grouping, Outcome
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+        ) ;
+        sh:message "Principle: realization is only valid to Goal, Grouping, Outcome."
+    ] ;
+
+    .
+
+
+### Requirement
+
+<#RequirementRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Requirement ;
+    rdfs:label "Requirement Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from Requirement elements." ;
+
+    # composition (c): Constraint, Grouping, Requirement
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "Requirement: composition is only valid to Constraint, Grouping, Requirement."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "Requirement: aggregation is only valid to Constraint, Grouping, Requirement."
+    ] ;
+
+    # realization (r): Goal, Grouping, Outcome, Principle
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+        ) ;
+        sh:message "Requirement: realization is only valid to Goal, Grouping, Outcome, Principle."
+    ] ;
+
+    .
+
+
+### Constraint
+
+<#ConstraintRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Constraint ;
+    rdfs:label "Constraint Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from Constraint elements." ;
+
+    # composition (c): Constraint, Grouping, Requirement
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "Constraint: composition is only valid to Constraint, Grouping, Requirement."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "Constraint: aggregation is only valid to Constraint, Grouping, Requirement."
+    ] ;
+
+    # realization (r): Goal, Grouping, Outcome, Principle
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+        ) ;
+        sh:message "Constraint: realization is only valid to Goal, Grouping, Outcome, Principle."
+    ] ;
+
+    .
+
+
+### Meaning
+
+<#MeaningRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Meaning ;
+    rdfs:label "Meaning Valid Relationships" ;
+    rdfs:comment "Validates composition and aggregation from Meaning elements." ;
+
+    # composition (c): Grouping, Meaning
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Meaning ] ) ;
+        sh:message "Meaning: composition is only valid to Grouping, Meaning."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Meaning ] ) ;
+        sh:message "Meaning: aggregation is only valid to Grouping, Meaning."
+    ] ;
+
+    .
+
+
+### Value
+
+<#ValueRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Value ;
+    rdfs:label "Value Valid Relationships" ;
+    rdfs:comment "Validates composition and aggregation from Value elements." ;
+
+    # composition (c): Grouping, Value
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Value ] ) ;
+        sh:message "Value: composition is only valid to Grouping, Value."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Value ] ) ;
+        sh:message "Value: aggregation is only valid to Grouping, Value."
+    ] ;
+
+    .
