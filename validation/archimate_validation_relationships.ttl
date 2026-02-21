@@ -1,0 +1,3452 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix archimate: <https://purl.org/archimate#> .
+@base <https://purl.org/archimate/validation/relationships#> .
+
+### SHACL Validation: All Layers — Composition, Aggregation, Access, Realization
+### ArchiMate 3.2 Specification — Appendix B Relationship Matrix
+###
+### Elements: All 58 concrete ArchiMate elements across all layers and aspects
+###
+### Relationship types validated here:
+###   c=composition, g=aggregation, a=access, r=realization
+###
+### Excluded (covered by Levels 1 & 2):
+###   flow, triggering, serving  → Level 2 §1 Generic Metamodel
+###   association                → universally permissive
+###   specialization             → Level 1 §3 same-type constraint
+###   influence                  → Level 2 §7 Motivation Metamodel
+###   assignment                 → Level 2 §§1-2
+###
+### Merged from: archimate_validation_strategy.ttl, archimate_validation_business.ttl,
+###   archimate_validation_application.ttl, archimate_validation_technology.ttl,
+###   archimate_validation_physical.ttl, archimate_validation_motivation.ttl,
+###   archimate_validation_implementation.ttl
+###
+### Derived from relationships.xml
+###
+
+<#> rdf:type owl:Ontology ;
+    owl:imports <https://purl.org/archimate/owl> ;
+    rdfs:label "ArchiMate Relationship Validation - All Layers (Level 3)" ;
+    rdfs:comment "Composition, aggregation, access, and realization constraints for all ArchiMate 3.2 elements per Appendix B. Covers Strategy, Motivation, Business, Application, Technology, Physical, and Implementation & Migration layers." ;
+    dct:creator "Alberto D. Mendoza" ;
+    dct:modified "2026-02-21"^^xsd:date ;
+    sh:declare [
+        sh:prefix "archimate" ;
+        sh:namespace "https://purl.org/archimate#"^^xsd:anyURI
+    ] ,
+    [
+        sh:prefix "rdf" ;
+        sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI
+    ] ,
+    [
+        sh:prefix "rdfs" ;
+        sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI
+    ] .
+
+
+###############################################################################
+### Active Structure
+###############################################################################
+
+### BusinessActor
+
+<#BusinessActorRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessActor ;
+    rdfs:label "BusinessActor Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from BusinessActor elements." ;
+
+    # composition (c): BusinessActor, BusinessInterface, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:BusinessActor ] [ sh:class archimate:BusinessInterface ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessActor: composition is only valid to BusinessActor, BusinessInterface, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessActor, BusinessInterface, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:BusinessActor ] [ sh:class archimate:BusinessInterface ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessActor: aggregation is only valid to BusinessActor, BusinessInterface, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessActor: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): BusinessService, Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, Resource, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessService ] [ sh:class archimate:Capability ] [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ] [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ] [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessActor: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+### BusinessRole
+
+<#BusinessRoleRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessRole ;
+    rdfs:label "BusinessRole Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from BusinessRole elements." ;
+
+    # composition (c): BusinessInterface, BusinessRole, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:BusinessInterface ] [ sh:class archimate:BusinessRole ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessRole: composition is only valid to BusinessInterface, BusinessRole, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessInterface, BusinessRole, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:BusinessInterface ] [ sh:class archimate:BusinessRole ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessRole: aggregation is only valid to BusinessInterface, BusinessRole, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessRole: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): BusinessService, Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, Resource, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessService ] [ sh:class archimate:Capability ] [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ] [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ] [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessRole: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+### BusinessCollaboration
+
+<#BusinessCollaborationRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessCollaboration ;
+    rdfs:label "BusinessCollaboration Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from BusinessCollaboration elements." ;
+
+    # composition (c): BusinessCollaboration, BusinessInterface, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:BusinessCollaboration ] [ sh:class archimate:BusinessInterface ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessCollaboration: composition is only valid to BusinessCollaboration, BusinessInterface, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessActor, BusinessCollaboration, BusinessInterface, BusinessRole, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:BusinessActor ] [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessInterface ] [ sh:class archimate:BusinessRole ] [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessCollaboration: aggregation is only valid to BusinessActor, BusinessCollaboration, BusinessInterface, BusinessRole, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessCollaboration: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): BusinessService, Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, Resource, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessService ] [ sh:class archimate:Capability ] [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ] [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ] [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessCollaboration: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+### BusinessInterface
+
+<#BusinessInterfaceRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessInterface ;
+    rdfs:label "BusinessInterface Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from BusinessInterface elements." ;
+
+    # composition (c): BusinessInterface, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:BusinessInterface ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessInterface: composition is only valid to BusinessInterface, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessInterface, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:BusinessInterface ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessInterface: aggregation is only valid to BusinessInterface, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessInterface: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, Resource, ValueStream
+    # Note: BusinessService excluded (BusinessInterface→BusinessService = "fiotv", no realization)
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Capability ] [ sh:class archimate:Constraint ] [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ] [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessInterface: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+###############################################################################
+### Behavior
+###############################################################################
+
+### BusinessProcess
+
+<#BusinessProcessRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessProcess ;
+    rdfs:label "BusinessProcess Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from BusinessProcess elements." ;
+
+    # composition (c): BusinessFunction, BusinessInteraction, BusinessProcess, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:BusinessFunction ] [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessProcess ] [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessProcess: composition is only valid to BusinessFunction, BusinessInteraction, BusinessProcess, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessFunction, BusinessInteraction, BusinessProcess, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:BusinessFunction ] [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessProcess ] [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessProcess: aggregation is only valid to BusinessFunction, BusinessInteraction, BusinessProcess, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessProcess: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): BusinessService, Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessService ] [ sh:class archimate:Capability ] [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ] [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessProcess: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+### BusinessFunction
+
+<#BusinessFunctionRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessFunction ;
+    rdfs:label "BusinessFunction Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from BusinessFunction elements." ;
+
+    # composition (c): BusinessFunction, BusinessInteraction, BusinessProcess, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:BusinessFunction ] [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessProcess ] [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessFunction: composition is only valid to BusinessFunction, BusinessInteraction, BusinessProcess, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessFunction, BusinessInteraction, BusinessProcess, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:BusinessFunction ] [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessProcess ] [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessFunction: aggregation is only valid to BusinessFunction, BusinessInteraction, BusinessProcess, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessFunction: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): BusinessService, Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessService ] [ sh:class archimate:Capability ] [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ] [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessFunction: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+### BusinessService
+
+<#BusinessServiceRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessService ;
+    rdfs:label "BusinessService Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from BusinessService elements." ;
+
+    # composition (c): BusinessService, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:BusinessService ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessService: composition is only valid to BusinessService, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessService, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:BusinessService ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessService: aggregation is only valid to BusinessService, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessService: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Capability ] [ sh:class archimate:Constraint ] [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ] [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessService: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+### BusinessInteraction
+
+<#BusinessInteractionRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessInteraction ;
+    rdfs:label "BusinessInteraction Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from BusinessInteraction elements." ;
+
+    # composition (c): BusinessFunction, BusinessInteraction, BusinessProcess, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:BusinessFunction ] [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessProcess ] [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessInteraction: composition is only valid to BusinessFunction, BusinessInteraction, BusinessProcess, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessFunction, BusinessInteraction, BusinessProcess, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:BusinessFunction ] [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessProcess ] [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "BusinessInteraction: aggregation is only valid to BusinessFunction, BusinessInteraction, BusinessProcess, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessInteraction: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): BusinessService, Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessService ] [ sh:class archimate:Capability ] [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ] [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessInteraction: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+### BusinessEvent
+
+<#BusinessEventRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessEvent ;
+    rdfs:label "BusinessEvent Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from BusinessEvent elements." ;
+
+    # composition (c): BusinessEvent, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:BusinessEvent ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessEvent: composition is only valid to BusinessEvent, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessEvent, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:BusinessEvent ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessEvent: aggregation is only valid to BusinessEvent, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "BusinessEvent: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): Constraint, Goal, Grouping, Outcome, Principle, Requirement
+    # Note: No service/strategy realization — BusinessEvent→BusinessService = "fotv", Capability/ValueStream/CourseOfAction = "o"
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Constraint ] [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "BusinessEvent: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+###############################################################################
+### Passive Structure
+###############################################################################
+
+### BusinessObject
+
+<#BusinessObjectRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessObject ;
+    rdfs:label "BusinessObject Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from BusinessObject elements." ;
+
+    # composition (c): BusinessContract, BusinessObject, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessObject: composition is only valid to BusinessContract, BusinessObject, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessContract, BusinessObject, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessObject: aggregation is only valid to BusinessContract, BusinessObject, Grouping."
+    ] ;
+
+    # realization (r): Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, Resource, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Capability ] [ sh:class archimate:Constraint ] [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ] [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessObject: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+### BusinessContract
+
+<#BusinessContractRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:BusinessContract ;
+    rdfs:label "BusinessContract Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from BusinessContract elements." ;
+
+    # composition (c): BusinessContract, BusinessObject, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessContract: composition is only valid to BusinessContract, BusinessObject, Grouping."
+    ] ;
+
+    # aggregation (g): BusinessContract, BusinessObject, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "BusinessContract: aggregation is only valid to BusinessContract, BusinessObject, Grouping."
+    ] ;
+
+    # realization (r): Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, Resource, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Capability ] [ sh:class archimate:Constraint ] [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ] [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "BusinessContract: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+### Representation
+
+<#RepresentationRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Representation ;
+    rdfs:label "Representation Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from Representation elements." ;
+
+    # composition (c): Grouping, Representation
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Representation ] ) ;
+        sh:message "Representation: composition is only valid to Grouping, Representation."
+    ] ;
+
+    # aggregation (g): Grouping, Representation
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Representation ] ) ;
+        sh:message "Representation: aggregation is only valid to Grouping, Representation."
+    ] ;
+
+    # realization (r): BusinessContract, BusinessObject, Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, Resource, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ] [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ] [ sh:class archimate:CourseOfAction ] [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ] [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ] [ sh:class archimate:Resource ] [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Representation: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+###############################################################################
+### Composite
+###############################################################################
+
+### Product
+
+<#ProductRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Product ;
+    rdfs:label "Product Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from Product elements." ;
+
+    # composition (c): ApplicationService, Artifact, BusinessContract, BusinessObject, BusinessService,
+    #                  DataObject, Grouping, Material, Product, Representation, TechnologyService
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:ApplicationService ] [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessService ] [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ] [ sh:class archimate:Material ] [ sh:class archimate:Product ]
+            [ sh:class archimate:Representation ] [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "Product: composition target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # aggregation (g): ApplicationService, Artifact, BusinessContract, BusinessObject, BusinessService,
+    #                  DataObject, Grouping, Material, Product, Representation, TechnologyService
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:ApplicationService ] [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessService ] [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ] [ sh:class archimate:Material ] [ sh:class archimate:Product ]
+            [ sh:class archimate:Representation ] [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "Product: aggregation target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "Product: access target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # realization (r): ApplicationService, BusinessService, Capability, Constraint, CourseOfAction, Goal,
+    #                  Grouping, Outcome, Principle, Requirement, Resource, TechnologyService, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationService ] [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ] [ sh:class archimate:Constraint ] [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ] [ sh:class archimate:Resource ]
+            [ sh:class archimate:TechnologyService ] [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Product: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+###############################################################################
+### Active Structure
+###############################################################################
+
+### ApplicationCollaboration
+
+<#ApplicationCollaborationRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:ApplicationCollaboration ;
+    rdfs:label "ApplicationCollaboration Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from ApplicationCollaboration elements." ;
+
+    # composition (c): ApplicationCollaboration, ApplicationInterface, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:ApplicationCollaboration ] [ sh:class archimate:ApplicationInterface ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "ApplicationCollaboration: composition is only valid to ApplicationCollaboration, ApplicationInterface, Grouping."
+    ] ;
+
+    # aggregation (g): ApplicationCollaboration, ApplicationComponent, ApplicationInterface, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ] [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationInterface ] [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "ApplicationCollaboration: aggregation is only valid to ApplicationCollaboration, ApplicationComponent, ApplicationInterface, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "ApplicationCollaboration: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): ApplicationComponent, ApplicationEvent, ApplicationFunction, ApplicationInteraction,
+    #                  ApplicationInterface, ApplicationProcess, ApplicationService,
+    #                  BusinessEvent, BusinessFunction, BusinessInteraction, BusinessInterface,
+    #                  BusinessProcess, BusinessService,
+    #                  Capability, Constraint, CourseOfAction, Goal, Grouping,
+    #                  Outcome, Principle, Requirement, Resource, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationComponent ] [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ] [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ] [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessEvent ] [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ] [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ] [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ] [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ] [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ] [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "ApplicationCollaboration: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+### ApplicationComponent
+
+<#ApplicationComponentRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:ApplicationComponent ;
+    rdfs:label "ApplicationComponent Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from ApplicationComponent elements." ;
+
+    # composition (c): ApplicationComponent, ApplicationInterface, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:ApplicationComponent ] [ sh:class archimate:ApplicationInterface ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "ApplicationComponent: composition is only valid to ApplicationComponent, ApplicationInterface, Grouping."
+    ] ;
+
+    # aggregation (g): ApplicationComponent, ApplicationInterface, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:ApplicationComponent ] [ sh:class archimate:ApplicationInterface ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "ApplicationComponent: aggregation is only valid to ApplicationComponent, ApplicationInterface, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "ApplicationComponent: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): ApplicationComponent, ApplicationEvent, ApplicationFunction, ApplicationInteraction,
+    #                  ApplicationInterface, ApplicationProcess, ApplicationService,
+    #                  BusinessEvent, BusinessFunction, BusinessInteraction, BusinessInterface,
+    #                  BusinessProcess, BusinessService,
+    #                  Capability, Constraint, CourseOfAction, Goal, Grouping,
+    #                  Outcome, Principle, Requirement, Resource, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationComponent ] [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ] [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ] [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessEvent ] [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ] [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ] [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ] [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ] [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ] [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "ApplicationComponent: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+### ApplicationInterface
+
+<#ApplicationInterfaceRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:ApplicationInterface ;
+    rdfs:label "ApplicationInterface Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from ApplicationInterface elements." ;
+
+    # composition (c): ApplicationInterface, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:ApplicationInterface ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "ApplicationInterface: composition is only valid to ApplicationInterface, Grouping."
+    ] ;
+
+    # aggregation (g): ApplicationInterface, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:ApplicationInterface ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "ApplicationInterface: aggregation is only valid to ApplicationInterface, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "ApplicationInterface: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): Capability, Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement, Resource, ValueStream
+    # Note: ApplicationService excluded — ApplicationInterface→ApplicationService = "fiotv" (no realization)
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Capability ] [ sh:class archimate:Constraint ] [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ] [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "ApplicationInterface: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+###############################################################################
+### Behavior
+###############################################################################
+
+### ApplicationFunction
+
+<#ApplicationFunctionRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:ApplicationFunction ;
+    rdfs:label "ApplicationFunction Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from ApplicationFunction elements." ;
+
+    # composition (c): ApplicationFunction, ApplicationInteraction, ApplicationProcess, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:ApplicationFunction ] [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationProcess ] [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "ApplicationFunction: composition is only valid to ApplicationFunction, ApplicationInteraction, ApplicationProcess, Grouping."
+    ] ;
+
+    # aggregation (g): ApplicationFunction, ApplicationInteraction, ApplicationProcess, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:ApplicationFunction ] [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationProcess ] [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "ApplicationFunction: aggregation is only valid to ApplicationFunction, ApplicationInteraction, ApplicationProcess, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "ApplicationFunction: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): ApplicationService, Capability, Constraint, CourseOfAction, Goal, Grouping,
+    #                  Outcome, Principle, Requirement, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationService ] [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ] [ sh:class archimate:CourseOfAction ] [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ] [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ] [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "ApplicationFunction: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+### ApplicationProcess
+
+<#ApplicationProcessRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:ApplicationProcess ;
+    rdfs:label "ApplicationProcess Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from ApplicationProcess elements." ;
+
+    # composition (c): ApplicationFunction, ApplicationInteraction, ApplicationProcess, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:ApplicationFunction ] [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationProcess ] [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "ApplicationProcess: composition is only valid to ApplicationFunction, ApplicationInteraction, ApplicationProcess, Grouping."
+    ] ;
+
+    # aggregation (g): ApplicationFunction, ApplicationInteraction, ApplicationProcess, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:ApplicationFunction ] [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationProcess ] [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "ApplicationProcess: aggregation is only valid to ApplicationFunction, ApplicationInteraction, ApplicationProcess, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "ApplicationProcess: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): ApplicationService, Capability, Constraint, CourseOfAction, Goal, Grouping,
+    #                  Outcome, Principle, Requirement, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationService ] [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ] [ sh:class archimate:CourseOfAction ] [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ] [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ] [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "ApplicationProcess: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+### ApplicationInteraction
+
+<#ApplicationInteractionRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:ApplicationInteraction ;
+    rdfs:label "ApplicationInteraction Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from ApplicationInteraction elements." ;
+
+    # composition (c): ApplicationFunction, ApplicationInteraction, ApplicationProcess, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:ApplicationFunction ] [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationProcess ] [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "ApplicationInteraction: composition is only valid to ApplicationFunction, ApplicationInteraction, ApplicationProcess, Grouping."
+    ] ;
+
+    # aggregation (g): ApplicationFunction, ApplicationInteraction, ApplicationProcess, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:ApplicationFunction ] [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationProcess ] [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "ApplicationInteraction: aggregation is only valid to ApplicationFunction, ApplicationInteraction, ApplicationProcess, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "ApplicationInteraction: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): ApplicationService, Capability, Constraint, CourseOfAction, Goal, Grouping,
+    #                  Outcome, Principle, Requirement, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationService ] [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ] [ sh:class archimate:CourseOfAction ] [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ] [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ] [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "ApplicationInteraction: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+### ApplicationService
+
+<#ApplicationServiceRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:ApplicationService ;
+    rdfs:label "ApplicationService Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from ApplicationService elements." ;
+
+    # composition (c): ApplicationService, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:ApplicationService ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "ApplicationService: composition is only valid to ApplicationService, Grouping."
+    ] ;
+
+    # aggregation (g): ApplicationService, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:ApplicationService ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "ApplicationService: aggregation is only valid to ApplicationService, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "ApplicationService: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): BusinessService, Capability, Constraint, CourseOfAction, Goal, Grouping,
+    #                  Outcome, Principle, Requirement, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessService ] [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ] [ sh:class archimate:CourseOfAction ] [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ] [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ] [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "ApplicationService: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+### ApplicationEvent
+
+<#ApplicationEventRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:ApplicationEvent ;
+    rdfs:label "ApplicationEvent Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from ApplicationEvent elements." ;
+
+    # composition (c): ApplicationEvent, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:ApplicationEvent ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "ApplicationEvent: composition is only valid to ApplicationEvent, Grouping."
+    ] ;
+
+    # aggregation (g): ApplicationEvent, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:ApplicationEvent ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "ApplicationEvent: aggregation is only valid to ApplicationEvent, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ] [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "ApplicationEvent: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): Constraint, Goal, Grouping, Outcome, Principle, Requirement
+    # Note: No service/strategy realization — ApplicationEvent→ApplicationService = "fotv", Capability/ValueStream/CourseOfAction = "o"
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Constraint ] [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "ApplicationEvent: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+###############################################################################
+### Passive Structure
+###############################################################################
+
+### DataObject
+
+<#DataObjectRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:DataObject ;
+    rdfs:label "DataObject Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from DataObject elements." ;
+
+    # composition (c): DataObject, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "DataObject: composition is only valid to DataObject, Grouping."
+    ] ;
+
+    # aggregation (g): DataObject, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:DataObject ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "DataObject: aggregation is only valid to DataObject, Grouping."
+    ] ;
+
+    # realization (r): BusinessContract, BusinessObject, Capability, Constraint, CourseOfAction, Goal,
+    #                  Grouping, Outcome, Principle, Requirement, Resource, ValueStream
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:BusinessContract ] [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:Capability ] [ sh:class archimate:Constraint ] [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ] [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "DataObject: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    .
+
+
+### ─────────────────────────────────────────────
+### Active Structure
+### ─────────────────────────────────────────────
+
+### Node
+
+<#NodeRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Node ;
+    rdfs:label "Node Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from Node elements." ;
+
+    # composition (c): Device, Equipment, Facility, Node, SystemSoftware, TechnologyInterface, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyInterface ]
+        ) ;
+        sh:message "Node: composition is only valid to Device, Equipment, Facility, Grouping, Node, SystemSoftware, TechnologyInterface."
+    ] ;
+
+    # aggregation (g): same as composition
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyInterface ]
+        ) ;
+        sh:message "Node: aggregation is only valid to Device, Equipment, Facility, Grouping, Node, SystemSoftware, TechnologyInterface."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "Node: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): broad cross-layer set
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Node: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### Device
+
+<#DeviceRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Device ;
+    rdfs:label "Device Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from Device elements." ;
+
+    # composition (c): Device, SystemSoftware, TechnologyInterface, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyInterface ]
+        ) ;
+        sh:message "Device: composition is only valid to Device, Grouping, SystemSoftware, TechnologyInterface."
+    ] ;
+
+    # aggregation (g): same as composition
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyInterface ]
+        ) ;
+        sh:message "Device: aggregation is only valid to Device, Grouping, SystemSoftware, TechnologyInterface."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "Device: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r)
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Device: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### SystemSoftware
+
+<#SystemSoftwareRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:SystemSoftware ;
+    rdfs:label "SystemSoftware Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from SystemSoftware elements." ;
+
+    # composition (c): SystemSoftware, TechnologyInterface, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyInterface ]
+        ) ;
+        sh:message "SystemSoftware: composition is only valid to Grouping, SystemSoftware, TechnologyInterface."
+    ] ;
+
+    # aggregation (g): same as composition
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyInterface ]
+        ) ;
+        sh:message "SystemSoftware: aggregation is only valid to Grouping, SystemSoftware, TechnologyInterface."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "SystemSoftware: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r)
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "SystemSoftware: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### TechnologyCollaboration
+
+<#TechnologyCollaborationRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:TechnologyCollaboration ;
+    rdfs:label "TechnologyCollaboration Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from TechnologyCollaboration elements." ;
+
+    # composition (c): TechnologyCollaboration, TechnologyInterface, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyInterface ]
+        ) ;
+        sh:message "TechnologyCollaboration: composition is only valid to Grouping, TechnologyCollaboration, TechnologyInterface."
+    ] ;
+
+    # aggregation (g): adds Device, Equipment, Node, SystemSoftware
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyInterface ]
+        ) ;
+        sh:message "TechnologyCollaboration: aggregation is only valid to Device, Equipment, Grouping, Node, SystemSoftware, TechnologyCollaboration, TechnologyInterface."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "TechnologyCollaboration: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r)
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "TechnologyCollaboration: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### TechnologyInterface
+
+<#TechnologyInterfaceRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:TechnologyInterface ;
+    rdfs:label "TechnologyInterface Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from TechnologyInterface elements." ;
+
+    # composition (c): TechnologyInterface, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:TechnologyInterface ]
+        ) ;
+        sh:message "TechnologyInterface: composition is only valid to Grouping, TechnologyInterface."
+    ] ;
+
+    # aggregation (g): same as composition
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:TechnologyInterface ]
+        ) ;
+        sh:message "TechnologyInterface: aggregation is only valid to Grouping, TechnologyInterface."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "TechnologyInterface: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): Note — TechnologyService is NOT a valid target ("fiotv", no 'r')
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "TechnologyInterface: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### Path
+
+<#PathRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Path ;
+    rdfs:label "Path Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from Path elements." ;
+
+    # composition (c): Path, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Path ]
+        ) ;
+        sh:message "Path: composition is only valid to Grouping, Path."
+    ] ;
+
+    # aggregation (g): adds Device, Equipment, Facility, Node, SystemSoftware, TechnologyCollaboration, TechnologyInterface
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyInterface ]
+        ) ;
+        sh:message "Path: aggregation is only valid to Device, Equipment, Facility, Grouping, Node, Path, SystemSoftware, TechnologyCollaboration, TechnologyInterface."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "Path: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r)
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Path: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### CommunicationNetwork
+
+<#CommunicationNetworkRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:CommunicationNetwork ;
+    rdfs:label "CommunicationNetwork Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from CommunicationNetwork elements." ;
+
+    # composition (c): CommunicationNetwork, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "CommunicationNetwork: composition is only valid to CommunicationNetwork, Grouping."
+    ] ;
+
+    # aggregation (g): adds Device, SystemSoftware, TechnologyInterface
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyInterface ]
+        ) ;
+        sh:message "CommunicationNetwork: aggregation is only valid to CommunicationNetwork, Device, Grouping, SystemSoftware, TechnologyInterface."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "CommunicationNetwork: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): broader than Node — includes BusinessActor, BusinessCollaboration, BusinessRole, Stakeholder
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "CommunicationNetwork: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### ─────────────────────────────────────────────
+### Behavior
+### ─────────────────────────────────────────────
+
+### TechnologyFunction
+
+<#TechnologyFunctionRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:TechnologyFunction ;
+    rdfs:label "TechnologyFunction Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from TechnologyFunction elements." ;
+
+    # composition (c): TechnologyFunction, TechnologyInteraction, TechnologyProcess, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyProcess ]
+        ) ;
+        sh:message "TechnologyFunction: composition is only valid to Grouping, TechnologyFunction, TechnologyInteraction, TechnologyProcess."
+    ] ;
+
+    # aggregation (g): same as composition
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyProcess ]
+        ) ;
+        sh:message "TechnologyFunction: aggregation is only valid to Grouping, TechnologyFunction, TechnologyInteraction, TechnologyProcess."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "TechnologyFunction: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): cross-layer app+business behavior + strategy + motivation
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "TechnologyFunction: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### TechnologyProcess
+
+<#TechnologyProcessRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:TechnologyProcess ;
+    rdfs:label "TechnologyProcess Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from TechnologyProcess elements." ;
+
+    # composition (c): TechnologyFunction, TechnologyInteraction, TechnologyProcess, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyProcess ]
+        ) ;
+        sh:message "TechnologyProcess: composition is only valid to Grouping, TechnologyFunction, TechnologyInteraction, TechnologyProcess."
+    ] ;
+
+    # aggregation (g): same as composition
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyProcess ]
+        ) ;
+        sh:message "TechnologyProcess: aggregation is only valid to Grouping, TechnologyFunction, TechnologyInteraction, TechnologyProcess."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "TechnologyProcess: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): same pattern as TechnologyFunction
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "TechnologyProcess: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### TechnologyInteraction
+
+<#TechnologyInteractionRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:TechnologyInteraction ;
+    rdfs:label "TechnologyInteraction Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from TechnologyInteraction elements." ;
+
+    # composition (c): TechnologyFunction, TechnologyInteraction, TechnologyProcess, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyProcess ]
+        ) ;
+        sh:message "TechnologyInteraction: composition is only valid to Grouping, TechnologyFunction, TechnologyInteraction, TechnologyProcess."
+    ] ;
+
+    # aggregation (g): same as composition
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyProcess ]
+        ) ;
+        sh:message "TechnologyInteraction: aggregation is only valid to Grouping, TechnologyFunction, TechnologyInteraction, TechnologyProcess."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "TechnologyInteraction: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): same pattern as TechnologyFunction
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "TechnologyInteraction: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### TechnologyService
+
+<#TechnologyServiceRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:TechnologyService ;
+    rdfs:label "TechnologyService Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from TechnologyService elements." ;
+
+    # composition (c): TechnologyService, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "TechnologyService: composition is only valid to Grouping, TechnologyService."
+    ] ;
+
+    # aggregation (g): same as composition
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:TechnologyService ]
+        ) ;
+        sh:message "TechnologyService: aggregation is only valid to Grouping, TechnologyService."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "TechnologyService: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): ApplicationService, BusinessService + strategy + motivation
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "TechnologyService: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### TechnologyEvent
+
+<#TechnologyEventRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:TechnologyEvent ;
+    rdfs:label "TechnologyEvent Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from TechnologyEvent elements." ;
+
+    # composition (c): TechnologyEvent, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:TechnologyEvent ]
+        ) ;
+        sh:message "TechnologyEvent: composition is only valid to Grouping, TechnologyEvent."
+    ] ;
+
+    # aggregation (g): same as composition
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:TechnologyEvent ]
+        ) ;
+        sh:message "TechnologyEvent: aggregation is only valid to Grouping, TechnologyEvent."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "TechnologyEvent: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): only ApplicationEvent, BusinessEvent + motivation + Grouping
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "TechnologyEvent: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### ─────────────────────────────────────────────
+### Passive Structure
+### ─────────────────────────────────────────────
+
+### Artifact
+
+<#ArtifactRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Artifact ;
+    rdfs:label "Artifact Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from Artifact elements. No access block — Artifact is passive structure." ;
+
+    # composition (c): Artifact, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "Artifact: composition is only valid to Artifact, Grouping."
+    ] ;
+
+    # aggregation (g): same as composition
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "Artifact: aggregation is only valid to Artifact, Grouping."
+    ] ;
+
+    # realization (r): very broad — all app, business, tech behavior + passive + strategy + motivation
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Artifact: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### WorkPackage
+
+<#WorkPackageRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:WorkPackage ;
+    rdfs:label "WorkPackage Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from WorkPackage elements." ;
+
+    # composition (c): WorkPackage, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:WorkPackage ] ) ;
+        sh:message "WorkPackage: composition is only valid to Grouping, WorkPackage."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:WorkPackage ] ) ;
+        sh:message "WorkPackage: aggregation is only valid to Grouping, WorkPackage."
+    ] ;
+
+    # access (a): Deliverable, Grouping
+    sh:property [
+        sh:path archimate:access ;
+        sh:or ( [ sh:class archimate:Deliverable ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "WorkPackage: access is only valid to Deliverable, Grouping."
+    ] ;
+
+    # realization (r): all architecture elements except Gap, WorkPackage, Driver, Value, Meaning,
+    #                  Assessment, ImplementationEvent
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Deliverable ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Plateau ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:Representation ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "WorkPackage: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### ImplementationEvent
+
+<#ImplementationEventRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:ImplementationEvent ;
+    rdfs:label "ImplementationEvent Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and access from ImplementationEvent elements. No realization targets exist." ;
+
+    # composition (c): ImplementationEvent, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:ImplementationEvent ] ) ;
+        sh:message "ImplementationEvent: composition is only valid to Grouping, ImplementationEvent."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:ImplementationEvent ] ) ;
+        sh:message "ImplementationEvent: aggregation is only valid to Grouping, ImplementationEvent."
+    ] ;
+
+    # access (a): Deliverable, Grouping
+    sh:property [
+        sh:path archimate:access ;
+        sh:or ( [ sh:class archimate:Deliverable ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "ImplementationEvent: access is only valid to Deliverable, Grouping."
+    ] ;
+
+    .
+
+
+### Deliverable
+
+<#DeliverableRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Deliverable ;
+    rdfs:label "Deliverable Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from Deliverable elements. No access block — Deliverable is passive structure." ;
+
+    # composition (c): Deliverable, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Deliverable ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Deliverable: composition is only valid to Deliverable, Grouping."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Deliverable ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Deliverable: aggregation is only valid to Deliverable, Grouping."
+    ] ;
+
+    # realization (r): all architecture elements except Assessment, Driver, Gap,
+    #                  ImplementationEvent, Meaning, Value, WorkPackage
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Plateau ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:Representation ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Deliverable: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### Gap
+
+<#GapRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Gap ;
+    rdfs:label "Gap Valid Relationships" ;
+    rdfs:comment "Validates composition and aggregation from Gap elements. No access or realization targets exist." ;
+
+    # composition (c): Gap, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Gap ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Gap: composition is only valid to Gap, Grouping."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Gap ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Gap: aggregation is only valid to Gap, Grouping."
+    ] ;
+
+    .
+
+
+### Plateau
+
+<#PlateauRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Plateau ;
+    rdfs:label "Plateau Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from Plateau elements. Plateau is an architectural state container — it composes/aggregates nearly all architecture elements." ;
+
+    # composition (c): almost all architecture elements (architectural state container)
+    # Excluded: Deliverable, WorkPackage, Gap, ImplementationEvent, Principle, Stakeholder,
+    #           Driver, Assessment, Meaning, Value
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Plateau ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:Relationship ]
+            [ sh:class archimate:Representation ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Plateau: composition target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    # aggregation (g): same as composition
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Plateau ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:Relationship ]
+            [ sh:class archimate:Representation ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Plateau: aggregation target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    # access (a): Deliverable, Grouping
+    sh:property [
+        sh:path archimate:access ;
+        sh:or ( [ sh:class archimate:Deliverable ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Plateau: access is only valid to Deliverable, Grouping."
+    ] ;
+
+    # realization (r): same as composition but adds Principle, Stakeholder; removes Plateau, Relationship
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:Representation ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Plateau: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### Resource
+
+<#ResourceRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Resource ;
+    rdfs:label "Resource Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from Resource elements." ;
+
+    # composition (c): Grouping, Resource
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Resource ] ) ;
+        sh:message "Resource: composition is only valid to Grouping, Resource."
+    ] ;
+
+    # aggregation (g): Grouping, Resource
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Resource ] ) ;
+        sh:message "Resource: aggregation is only valid to Grouping, Resource."
+    ] ;
+
+    # realization (r): Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "Resource: realization is only valid to Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement."
+    ] ;
+
+    .
+
+
+### Capability
+
+<#CapabilityRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Capability ;
+    rdfs:label "Capability Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from Capability elements." ;
+
+    # composition (c): Capability, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Capability ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Capability: composition is only valid to Capability, Grouping."
+    ] ;
+
+    # aggregation (g): Capability, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Capability ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Capability: aggregation is only valid to Capability, Grouping."
+    ] ;
+
+    # realization (r): Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "Capability: realization is only valid to Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement."
+    ] ;
+
+    .
+
+
+### ValueStream
+
+<#ValueStreamRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:ValueStream ;
+    rdfs:label "ValueStream Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from ValueStream elements." ;
+
+    # composition (c): Grouping, ValueStream
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:ValueStream ] ) ;
+        sh:message "ValueStream: composition is only valid to Grouping, ValueStream."
+    ] ;
+
+    # aggregation (g): Grouping, ValueStream
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:ValueStream ] ) ;
+        sh:message "ValueStream: aggregation is only valid to Grouping, ValueStream."
+    ] ;
+
+    # realization (r): Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "ValueStream: realization is only valid to Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement."
+    ] ;
+
+    .
+
+
+### CourseOfAction
+
+<#CourseOfActionRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:CourseOfAction ;
+    rdfs:label "CourseOfAction Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from CourseOfAction elements." ;
+
+    # composition (c): CourseOfAction, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:CourseOfAction ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "CourseOfAction: composition is only valid to CourseOfAction, Grouping."
+    ] ;
+
+    # aggregation (g): CourseOfAction, Grouping
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:CourseOfAction ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "CourseOfAction: aggregation is only valid to CourseOfAction, Grouping."
+    ] ;
+
+    # realization (r): Constraint, Goal, Grouping, Outcome, Principle, Requirement
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "CourseOfAction: realization is only valid to Constraint, Goal, Grouping, Outcome, Principle, Requirement."
+    ] ;
+
+    .
+
+
+### ─────────────────────────────────────────────
+### Active Structure
+### ─────────────────────────────────────────────
+
+### Equipment
+
+<#EquipmentRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Equipment ;
+    rdfs:label "Equipment Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from Equipment elements." ;
+
+    # composition (c): Device, Equipment, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "Equipment: composition is only valid to Device, Equipment, Grouping."
+    ] ;
+
+    # aggregation (g): same as composition
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "Equipment: aggregation is only valid to Device, Equipment, Grouping."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "Equipment: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r)
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Equipment: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### Facility
+
+<#FacilityRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Facility ;
+    rdfs:label "Facility Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from Facility elements." ;
+
+    # composition (c): Device, Equipment, Facility, Node, SystemSoftware, TechnologyInterface, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyInterface ]
+        ) ;
+        sh:message "Facility: composition is only valid to Device, Equipment, Facility, Grouping, Node, SystemSoftware, TechnologyInterface."
+    ] ;
+
+    # aggregation (g): same as composition
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyInterface ]
+        ) ;
+        sh:message "Facility: aggregation is only valid to Device, Equipment, Facility, Grouping, Node, SystemSoftware, TechnologyInterface."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "Facility: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): Note — Facility and Node are NOT valid realization targets ("cfgiostv"/"cfgiotv", no 'r')
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Facility: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### DistributionNetwork
+
+<#DistributionNetworkRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:DistributionNetwork ;
+    rdfs:label "DistributionNetwork Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from DistributionNetwork elements." ;
+
+    # composition (c): DistributionNetwork, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Grouping ]
+        ) ;
+        sh:message "DistributionNetwork: composition is only valid to DistributionNetwork, Grouping."
+    ] ;
+
+    # aggregation (g): adds Device, Equipment, Facility, Node, SystemSoftware
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:SystemSoftware ]
+        ) ;
+        sh:message "DistributionNetwork: aggregation is only valid to Device, DistributionNetwork, Equipment, Facility, Grouping, Node, SystemSoftware."
+    ] ;
+
+    # access (a): Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation
+    sh:property [
+        sh:path archimate:access ;
+        sh:or (
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Representation ]
+        ) ;
+        sh:message "DistributionNetwork: access is only valid to Artifact, BusinessContract, BusinessObject, DataObject, Grouping, Material, Representation."
+    ] ;
+
+    # realization (r): very broad — includes full business active structure, physical elements, Stakeholder
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "DistributionNetwork: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### ─────────────────────────────────────────────
+### Passive Structure
+### ─────────────────────────────────────────────
+
+### Material
+
+<#MaterialRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Material ;
+    rdfs:label "Material Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from Material elements. No access block — Material is passive structure." ;
+
+    # composition (c): Material, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+        ) ;
+        sh:message "Material: composition is only valid to Grouping, Material."
+    ] ;
+
+    # aggregation (g): same as composition
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+        ) ;
+        sh:message "Material: aggregation is only valid to Grouping, Material."
+    ] ;
+
+    # realization (r): broad cross-layer set including passive structure elements and Material itself
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Material: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### Stakeholder
+
+<#StakeholderRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Stakeholder ;
+    rdfs:label "Stakeholder Valid Relationships" ;
+    rdfs:comment "Validates composition and aggregation from Stakeholder elements." ;
+
+    # composition (c): Grouping, Stakeholder
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Stakeholder ] ) ;
+        sh:message "Stakeholder: composition is only valid to Grouping, Stakeholder."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Stakeholder ] ) ;
+        sh:message "Stakeholder: aggregation is only valid to Grouping, Stakeholder."
+    ] ;
+
+    .
+
+
+### Driver
+
+<#DriverRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Driver ;
+    rdfs:label "Driver Valid Relationships" ;
+    rdfs:comment "Validates composition and aggregation from Driver elements." ;
+
+    # composition (c): Driver, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Driver ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Driver: composition is only valid to Driver, Grouping."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Driver ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Driver: aggregation is only valid to Driver, Grouping."
+    ] ;
+
+    .
+
+
+### Assessment
+
+<#AssessmentRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Assessment ;
+    rdfs:label "Assessment Valid Relationships" ;
+    rdfs:comment "Validates composition and aggregation from Assessment elements." ;
+
+    # composition (c): Assessment, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Assessment ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Assessment: composition is only valid to Assessment, Grouping."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Assessment ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Assessment: aggregation is only valid to Assessment, Grouping."
+    ] ;
+
+    .
+
+
+### Goal
+
+<#GoalRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Goal ;
+    rdfs:label "Goal Valid Relationships" ;
+    rdfs:comment "Validates composition and aggregation from Goal elements." ;
+
+    # composition (c): Goal, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Goal: composition is only valid to Goal, Grouping."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Goal: aggregation is only valid to Goal, Grouping."
+    ] ;
+
+    .
+
+
+### Outcome
+
+<#OutcomeRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Outcome ;
+    rdfs:label "Outcome Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from Outcome elements." ;
+
+    # composition (c): Grouping, Outcome
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Outcome ] ) ;
+        sh:message "Outcome: composition is only valid to Grouping, Outcome."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Outcome ] ) ;
+        sh:message "Outcome: aggregation is only valid to Grouping, Outcome."
+    ] ;
+
+    # realization (r): Goal, Grouping
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or ( [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Outcome: realization is only valid to Goal, Grouping."
+    ] ;
+
+    .
+
+
+### Principle
+
+<#PrincipleRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Principle ;
+    rdfs:label "Principle Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from Principle elements." ;
+
+    # composition (c): Grouping, Principle
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Principle ] ) ;
+        sh:message "Principle: composition is only valid to Grouping, Principle."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Principle ] ) ;
+        sh:message "Principle: aggregation is only valid to Grouping, Principle."
+    ] ;
+
+    # realization (r): Goal, Grouping, Outcome
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+        ) ;
+        sh:message "Principle: realization is only valid to Goal, Grouping, Outcome."
+    ] ;
+
+    .
+
+
+### Requirement
+
+<#RequirementRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Requirement ;
+    rdfs:label "Requirement Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from Requirement elements." ;
+
+    # composition (c): Constraint, Grouping, Requirement
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "Requirement: composition is only valid to Constraint, Grouping, Requirement."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "Requirement: aggregation is only valid to Constraint, Grouping, Requirement."
+    ] ;
+
+    # realization (r): Goal, Grouping, Outcome, Principle
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+        ) ;
+        sh:message "Requirement: realization is only valid to Goal, Grouping, Outcome, Principle."
+    ] ;
+
+    .
+
+
+### Constraint
+
+<#ConstraintRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Constraint ;
+    rdfs:label "Constraint Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from Constraint elements." ;
+
+    # composition (c): Constraint, Grouping, Requirement
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "Constraint: composition is only valid to Constraint, Grouping, Requirement."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Requirement ]
+        ) ;
+        sh:message "Constraint: aggregation is only valid to Constraint, Grouping, Requirement."
+    ] ;
+
+    # realization (r): Goal, Grouping, Outcome, Principle
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Principle ]
+        ) ;
+        sh:message "Constraint: realization is only valid to Goal, Grouping, Outcome, Principle."
+    ] ;
+
+    .
+
+
+### Meaning
+
+<#MeaningRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Meaning ;
+    rdfs:label "Meaning Valid Relationships" ;
+    rdfs:comment "Validates composition and aggregation from Meaning elements." ;
+
+    # composition (c): Grouping, Meaning
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Meaning ] ) ;
+        sh:message "Meaning: composition is only valid to Grouping, Meaning."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Meaning ] ) ;
+        sh:message "Meaning: aggregation is only valid to Grouping, Meaning."
+    ] ;
+
+    .
+
+
+### Value
+
+<#ValueRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Value ;
+    rdfs:label "Value Valid Relationships" ;
+    rdfs:comment "Validates composition and aggregation from Value elements." ;
+
+    # composition (c): Grouping, Value
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Value ] ) ;
+        sh:message "Value: composition is only valid to Grouping, Value."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:Value ] ) ;
+        sh:message "Value: aggregation is only valid to Grouping, Value."
+    ] ;
+
+    .
