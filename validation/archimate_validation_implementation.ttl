@@ -1,0 +1,480 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix archimate: <https://purl.org/archimate#> .
+@base <https://purl.org/archimate/validation/implementation#> .
+
+### SHACL Validation: Implementation & Migration Layer — Composition, Aggregation, Access, Realization
+### ArchiMate 3.2 Specification — Appendix B Relationship Matrix
+###
+### Elements: WorkPackage, ImplementationEvent, Deliverable, Gap, Plateau
+###
+### Relationship types validated here:
+###   c=composition, g=aggregation, a=access, r=realization
+###
+### Excluded (covered by Levels 1 & 2):
+###   flow, triggering, serving  → Level 2 §1 Generic Metamodel
+###   association                → universally permissive
+###   specialization             → Level 1 §3 same-type constraint
+###   influence                  → Level 2 §7 Motivation Metamodel
+###   assignment                 → Level 2 §§1-2
+###   WorkPackage→Deliverable realization deprecated → Level 2 §6 (sh:Warning)
+###
+### Notes:
+###   ImplementationEvent has no valid realization targets.
+###   Gap has no valid access or realization targets.
+###   Plateau composes/aggregates nearly all architecture elements (architectural state).
+###
+### Derived from relationships.xml
+###
+
+<#> rdf:type owl:Ontology ;
+    owl:imports <https://purl.org/archimate/owl> ;
+    rdfs:label "ArchiMate Relationship Validation - Implementation & Migration Layer" ;
+    rdfs:comment "Composition, aggregation, access, and realization constraints for Implementation & Migration layer elements per ArchiMate 3.2." ;
+    dct:creator "Alberto D. Mendoza" ;
+    dct:modified "2026-02-20"^^xsd:date ;
+    sh:declare [
+        sh:prefix "archimate" ;
+        sh:namespace "https://purl.org/archimate#"^^xsd:anyURI
+    ] ,
+    [
+        sh:prefix "rdf" ;
+        sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI
+    ] ,
+    [
+        sh:prefix "rdfs" ;
+        sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI
+    ] .
+
+
+### WorkPackage
+
+<#WorkPackageRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:WorkPackage ;
+    rdfs:label "WorkPackage Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from WorkPackage elements." ;
+
+    # composition (c): WorkPackage, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:WorkPackage ] ) ;
+        sh:message "WorkPackage: composition is only valid to Grouping, WorkPackage."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:WorkPackage ] ) ;
+        sh:message "WorkPackage: aggregation is only valid to Grouping, WorkPackage."
+    ] ;
+
+    # access (a): Deliverable, Grouping
+    sh:property [
+        sh:path archimate:access ;
+        sh:or ( [ sh:class archimate:Deliverable ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "WorkPackage: access is only valid to Deliverable, Grouping."
+    ] ;
+
+    # realization (r): all architecture elements except Gap, WorkPackage, Driver, Value, Meaning,
+    #                  Assessment, ImplementationEvent
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Deliverable ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Plateau ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:Representation ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "WorkPackage: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### ImplementationEvent
+
+<#ImplementationEventRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:ImplementationEvent ;
+    rdfs:label "ImplementationEvent Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and access from ImplementationEvent elements. No realization targets exist." ;
+
+    # composition (c): ImplementationEvent, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:ImplementationEvent ] ) ;
+        sh:message "ImplementationEvent: composition is only valid to Grouping, ImplementationEvent."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Grouping ] [ sh:class archimate:ImplementationEvent ] ) ;
+        sh:message "ImplementationEvent: aggregation is only valid to Grouping, ImplementationEvent."
+    ] ;
+
+    # access (a): Deliverable, Grouping
+    sh:property [
+        sh:path archimate:access ;
+        sh:or ( [ sh:class archimate:Deliverable ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "ImplementationEvent: access is only valid to Deliverable, Grouping."
+    ] ;
+
+    .
+
+
+### Deliverable
+
+<#DeliverableRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Deliverable ;
+    rdfs:label "Deliverable Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, and realization from Deliverable elements. No access block — Deliverable is passive structure." ;
+
+    # composition (c): Deliverable, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Deliverable ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Deliverable: composition is only valid to Deliverable, Grouping."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Deliverable ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Deliverable: aggregation is only valid to Deliverable, Grouping."
+    ] ;
+
+    # realization (r): all architecture elements except Assessment, Driver, Gap,
+    #                  ImplementationEvent, Meaning, Value, WorkPackage
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Plateau ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:Representation ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Deliverable: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
+
+
+### Gap
+
+<#GapRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Gap ;
+    rdfs:label "Gap Valid Relationships" ;
+    rdfs:comment "Validates composition and aggregation from Gap elements. No access or realization targets exist." ;
+
+    # composition (c): Gap, Grouping
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or ( [ sh:class archimate:Gap ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Gap: composition is only valid to Gap, Grouping."
+    ] ;
+
+    # aggregation (g): same
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or ( [ sh:class archimate:Gap ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Gap: aggregation is only valid to Gap, Grouping."
+    ] ;
+
+    .
+
+
+### Plateau
+
+<#PlateauRelationships> rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Plateau ;
+    rdfs:label "Plateau Valid Relationships" ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from Plateau elements. Plateau is an architectural state container — it composes/aggregates nearly all architecture elements." ;
+
+    # composition (c): almost all architecture elements (architectural state container)
+    # Excluded: Deliverable, WorkPackage, Gap, ImplementationEvent, Principle, Stakeholder,
+    #           Driver, Assessment, Meaning, Value
+    sh:property [
+        sh:path archimate:composition ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Plateau ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:Relationship ]
+            [ sh:class archimate:Representation ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Plateau: composition target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    # aggregation (g): same as composition
+    sh:property [
+        sh:path archimate:aggregation ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Plateau ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:Relationship ]
+            [ sh:class archimate:Representation ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Plateau: aggregation target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    # access (a): Deliverable, Grouping
+    sh:property [
+        sh:path archimate:access ;
+        sh:or ( [ sh:class archimate:Deliverable ] [ sh:class archimate:Grouping ] ) ;
+        sh:message "Plateau: access is only valid to Deliverable, Grouping."
+    ] ;
+
+    # realization (r): same as composition but adds Principle, Stakeholder; removes Plateau, Relationship
+    sh:property [
+        sh:path archimate:realization ;
+        sh:or (
+            [ sh:class archimate:ApplicationCollaboration ]
+            [ sh:class archimate:ApplicationComponent ]
+            [ sh:class archimate:ApplicationEvent ]
+            [ sh:class archimate:ApplicationFunction ]
+            [ sh:class archimate:ApplicationInteraction ]
+            [ sh:class archimate:ApplicationInterface ]
+            [ sh:class archimate:ApplicationProcess ]
+            [ sh:class archimate:ApplicationService ]
+            [ sh:class archimate:Artifact ]
+            [ sh:class archimate:BusinessActor ]
+            [ sh:class archimate:BusinessCollaboration ]
+            [ sh:class archimate:BusinessContract ]
+            [ sh:class archimate:BusinessEvent ]
+            [ sh:class archimate:BusinessFunction ]
+            [ sh:class archimate:BusinessInteraction ]
+            [ sh:class archimate:BusinessInterface ]
+            [ sh:class archimate:BusinessObject ]
+            [ sh:class archimate:BusinessProcess ]
+            [ sh:class archimate:BusinessRole ]
+            [ sh:class archimate:BusinessService ]
+            [ sh:class archimate:Capability ]
+            [ sh:class archimate:CommunicationNetwork ]
+            [ sh:class archimate:Constraint ]
+            [ sh:class archimate:CourseOfAction ]
+            [ sh:class archimate:DataObject ]
+            [ sh:class archimate:Device ]
+            [ sh:class archimate:DistributionNetwork ]
+            [ sh:class archimate:Equipment ]
+            [ sh:class archimate:Facility ]
+            [ sh:class archimate:Goal ]
+            [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Location ]
+            [ sh:class archimate:Material ]
+            [ sh:class archimate:Node ]
+            [ sh:class archimate:Outcome ]
+            [ sh:class archimate:Path ]
+            [ sh:class archimate:Principle ]
+            [ sh:class archimate:Product ]
+            [ sh:class archimate:Representation ]
+            [ sh:class archimate:Requirement ]
+            [ sh:class archimate:Resource ]
+            [ sh:class archimate:Stakeholder ]
+            [ sh:class archimate:SystemSoftware ]
+            [ sh:class archimate:TechnologyCollaboration ]
+            [ sh:class archimate:TechnologyEvent ]
+            [ sh:class archimate:TechnologyFunction ]
+            [ sh:class archimate:TechnologyInteraction ]
+            [ sh:class archimate:TechnologyInterface ]
+            [ sh:class archimate:TechnologyProcess ]
+            [ sh:class archimate:TechnologyService ]
+            [ sh:class archimate:ValueStream ]
+        ) ;
+        sh:message "Plateau: realization target not permitted per ArchiMate 3.2 Appendix B."
+    ] ;
+
+    .
