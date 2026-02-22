@@ -26,7 +26,7 @@ This repository models the language itself, not a specific tool implementation.
   https://purl.org/archimate#
   
 ### Last Updated Date
-  2026-02-10
+  2026-02-22
   
 ### Author
   Alberto D. Mendoza  
@@ -43,8 +43,7 @@ ontology/
 validation/
 ├── archimate_validation_core.ttl            # Level 1: graph integrity, concept requirements
 ├── archimate_validation_metamodel.ttl       # Level 2: metamodel pattern rules
-├── archimate_validation_strategy.ttl        # Level 3: Strategy layer relationship matrix
-├── archimate_validation_business.ttl        # Level 3: Business layer relationship matrix
+├── archimate_validation_relationships.ttl   # Level 3: relationship matrix for all layers (Appendix B)
 ├── archimate_validation_profiles.ttl        # Profile-specific SHACL shapes
 └── archimate_derivation_rules.ttl           # DR1-DR8, PDR1-PDR12 derivation rules
 </pre>
