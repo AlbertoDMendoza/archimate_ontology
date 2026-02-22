@@ -14,7 +14,7 @@
     rdfs:comment "Level 2 Metamodel Validation: abstract ArchiMate metamodel pattern rules using the ontology's class hierarchy (aspect x layer intersections). Encodes Figures 5, 34, 45, 46, 51, 52, 70, 82, 99, 104, 105, and 106 from ArchiMate 3.2. For graph integrity, see archimate_validation_core.ttl. For per-element relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-16"^^xsd:date ;
-    dct:modified "2026-02-20"^^xsd:date ;
+    dct:modified "2026-02-22"^^xsd:date ;
     owl:versionInfo "Alpha" ;
     sh:declare [
         sh:prefix "archimate" ;
@@ -53,7 +53,7 @@
 # - Section 3: Core Layer Patterns (Business, Application, Technology — Figures 52, 70, 82)
 #     3.1 Interface → Service assignment (interface exposes service, same layer)
 #     3.2 Service should not realize InternalBehavior (realization direction, same layer)
-#     3.3 Product/Node composition/aggregation targets (services + passive structure)
+#     3.3 (removed) LayerComposite targets differ per element — handled by Level 3
 #
 # - Section 4: Cross-Layer Relationships (Chapter 11, Figures 104/105)
 #     4.1 No realization of Business ActiveStructure from App/Tech layers
@@ -414,9 +414,11 @@
 # metamodel structure per Figures 52, 70, and 82:
 #   - Interface (ActiveStructure) → assigned to → Service (ExternalBehavior)
 #   - InternalBehavior/CollectiveBehavior → realizes → Service (ExternalBehavior)
-#   - CompositeElement (Product, Node) → composes/aggregates → Services + PassiveStructure
 #
 # Physical Layer is excluded — it has no interfaces, services, or behavior elements.
+#
+# Composition/aggregation targets for LayerComposite elements (Product, Node) are
+# NOT validated here — each has distinct allowed targets enforced by Level 3.
 #
 # These rules use same-layer matching via VALUES to avoid per-layer duplication.
 
@@ -493,41 +495,12 @@
 
 
 ## 3.3 CompositeElement composition/aggregation targets
-# Per Figures 52/82: Product and Node (CompositeElements) may aggregate or compose
-# services (ExternalBehavior) and passive structure elements, cross-layer.
-# They should NOT compose/aggregate active structure or internal behavior elements.
-
-<#CompositeElementCompositionTarget> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:CompositeElement ;
-    rdfs:label "CompositeElement Composition/Aggregation Targets" ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "CompositeElement (Product, Node) can only compose/aggregate services (ExternalBehavior) and passive structure elements — not active structure or internal behavior elements" ;
-        sh:select """
-            SELECT $this ?target WHERE {
-                {
-                    $this archimate:composition ?target .
-                } UNION {
-                    $this archimate:aggregation ?target .
-                }
-                # Target must be ExternalBehavior (services) or PassiveStructure
-                FILTER NOT EXISTS {
-                    ?target rdf:type/rdfs:subClassOf* archimate:ExternalBehavior
-                }
-                FILTER NOT EXISTS {
-                    ?target rdf:type/rdfs:subClassOf* archimate:PassiveStructure
-                }
-                # Exclude Grouping (universal target)
-                FILTER NOT EXISTS {
-                    ?target rdf:type/rdfs:subClassOf* archimate:Grouping
-                }
-                # Exclude CompositeElement itself (self-composition/aggregation is valid)
-                FILTER NOT EXISTS {
-                    ?target rdf:type/rdfs:subClassOf* archimate:CompositeElement
-                }
-            }
-        """
-    ] .
+# Removed: no universal rule applies across CompositeElement sub-kinds.
+# GenericComposite (Grouping, Location) is unrestricted by definition.
+# LayerComposite elements (Product, Node) each have distinct allowed targets:
+#   Product → ExternalBehavior + PassiveStructure (spec Figure 52)
+#   Node    → InternalActiveStructure (Device, SystemSoftware, TechnologyInterface) (spec Figure 82)
+# Per-element constraints are fully handled by Level 3 (archimate_validation_relationships.ttl).
 
 
 ### 4. Cross-Layer Relationships (Chapter 11)

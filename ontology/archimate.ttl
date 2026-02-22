@@ -26,20 +26,20 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2026-02-20"^^xsd:date .
+    dct:modified "2026-02-22"^^xsd:date .
 
 # NOTES 
 # Ontology file now 100% complete with ArchiMate 3.2 spec --61 elements, 11 relationships, relationship connectors (junctions). 
-# SKOS file only has only definitions.  
+# SKOS file contains definitions only (no framework structure).
 # Includes Full Framework (SKOS file does not have the full framework *yet*).
 # Relationships to leverage RDF-Star which supports relationship attributes.
 # Element Specializations are separate classes created via specialization relationships.
-# Profiles are defined by SHACL constraints
-# Separated SHACL constraints into its own files.
+# Profiles are user-defined element subtypes modeled as OWL subclasses; SHACL shapes for profile-specific constraints are in archimate_validation_profiles.ttl.
+# SHACL validation is separated into its own files (see validation/ directory).
 
 # TODO
 # VALIDATION:
-#   - Level 3 validation: Application, Technology, Physical, Motivation, Implementation & Migration layers
+#   - Level 3 validation: complete (all layers merged into archimate_validation_relationships.ttl)
 #
 # VIEWPOINTS:
 #   - Add common ArchiMate viewpoint definitions (Organization, Application Usage, Business Process Cooperation, etc.)
@@ -277,8 +277,18 @@
 
 <#CompositeElement> rdf:type owl:Class ;
     rdfs:label "Composite Element" ;
-    rdfs:comment "An element that does not necessarily fit in a single aspect of the framework but may combine two or more aspects." ;
+    rdfs:comment "An element that does not necessarily fit in a single aspect of the framework but may combine two or more aspects (spec Section 3.3). Two sub-kinds exist: GenericComposite (Grouping, Location) and LayerComposite (Product, Node, Plateau). Each has distinct composition/aggregation semantics — no universal composition rule applies across all composites." ;
     rdfs:subClassOf <#Element> .
+
+<#GenericComposite> rdf:type owl:Class ;
+    rdfs:label "Generic Composite" ;
+    rdfs:comment "A cross-cutting composite element that is layer-independent and imposes no semantic constraint on what it contains. Grouping organizes arbitrary concepts by common characteristic; Location anchors elements to a physical or conceptual place. Both are unrestricted in what they may compose or aggregate." ;
+    rdfs:subClassOf <#CompositeElement> .
+
+<#LayerComposite> rdf:type owl:Class ;
+    rdfs:label "Layer Composite" ;
+    rdfs:comment "A composite element that belongs to a specific layer and has well-defined, layer-specific composition/aggregation targets. Product (Business) packages services and passive structure; Node (Technology) contains active sub-elements (Device, SystemSoftware, TechnologyInterface); Plateau (I&M) represents a full architectural state and contains nearly all element types. Each has distinct allowed targets per Appendix B — no shared universal rule applies." ;
+    rdfs:subClassOf <#CompositeElement> .
 
 
 # Layers
@@ -525,7 +535,7 @@
     rdfs:comment "Represents a coherent collection of services and/or passive structure elements, accompanied by a contract, which is offered as a whole to (internal or external) customers." ;
     rdfs:subClassOf <#PassiveStructure> ;
     rdfs:subClassOf <#BusinessLayer> ;
-    rdfs:subClassOf <#CompositeElement> .
+    rdfs:subClassOf <#LayerComposite> .
 
 
 #### 2.4 Application Layer Elements
@@ -605,7 +615,7 @@
     rdfs:comment "A computational or physical resource that hosts, manipulates, or interacts with other computational or physical resources." ;
     rdfs:subClassOf <#InternalActiveStructure> ;
     rdfs:subClassOf <#TechnologyLayer> ;
-    rdfs:subClassOf <#CompositeElement> .
+    rdfs:subClassOf <#LayerComposite> .
 
 <#Device> rdf:type owl:Class ;
     rdfs:label "Device" ;
@@ -772,13 +782,13 @@
 <#Grouping> rdf:type owl:Class ;
     rdfs:label "Grouping" ;
     rdfs:comment "An element that aggregates or composes concepts that belong together based on some common characteristic." ;
-    rdfs:subClassOf <#CompositeElement> ;
+    rdfs:subClassOf <#GenericComposite> ;
     rdfs:subClassOf <#Element> .
 
 <#Location> rdf:type owl:Class ;
     rdfs:label "Location" ;
     rdfs:comment "A conceptual or physical place or position where concepts are located or performed." ;
-    rdfs:subClassOf <#CompositeElement> ;
+    rdfs:subClassOf <#GenericComposite> ;
     rdfs:subClassOf <#Element> .
 
 
