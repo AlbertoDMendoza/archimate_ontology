@@ -108,7 +108,13 @@
 	<p>A fundamental building block within an architecture model.</p>
 
 	<h3><a name="CompositeElement"></a>CompositeElement</h3>
-	<p>An element that does not necessarily fit in a single aspect of the framework but may combine two or more aspects.</p>
+	<p>An element that does not necessarily fit in a single aspect of the framework but may combine two or more aspects (spec Section 3.3). Two sub-kinds exist: <a href="#GenericComposite">GenericComposite</a> (Grouping, Location) and <a href="#LayerComposite">LayerComposite</a> (Product, Node). Each has distinct composition/aggregation semantics — no universal composition rule applies across all composites.</p>
+
+	<h3><a name="GenericComposite"></a>GenericComposite</h3>
+	<p>A cross-cutting composite element that is layer-independent and imposes no semantic constraint on what it contains. Grouping organizes arbitrary concepts by common characteristic; Location anchors elements to a physical or conceptual place. Both are unrestricted in what they may compose or aggregate.</p>
+
+	<h3><a name="LayerComposite"></a>LayerComposite</h3>
+	<p>A composite element that belongs to a specific layer and has well-defined, layer-specific composition/aggregation targets. Product (Business) packages services and passive structure; Node (Technology) contains active sub-elements (Device, SystemSoftware, TechnologyInterface). Each has distinct allowed targets per Appendix B — no shared universal rule applies.</p>
 
 	<h3><a name="ActiveStructure"></a>Active Structure</h3>
 	<p>A category of elements that perform behavior and collaborate to provide services.</p>
