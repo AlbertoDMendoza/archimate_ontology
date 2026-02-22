@@ -31,25 +31,15 @@
 # NOTES 
 # Ontology file now 100% complete with ArchiMate 3.2 spec --61 elements, 11 relationships, relationship connectors (junctions). 
 # SKOS file contains definitions only (no framework structure).
-# Includes Full Framework (SKOS file does not have the full framework *yet*).
-# Relationships to leverage RDF-Star which supports relationship attributes.
+# ArchiMate Relationships leverage RDF-Star which supports relationship attributes.
 # Element Specializations are separate classes created via specialization relationships.
 # Profiles are user-defined element subtypes modeled as OWL subclasses; SHACL shapes for profile-specific constraints are in archimate_validation_profiles.ttl.
 # SHACL validation is separated into its own files (see validation/ directory).
 
-# TODO
 # VALIDATION:
-#   - Level 3 validation: complete (all layers merged into archimate_validation_relationships.ttl)
-#
-# VIEWPOINTS:
-#   - Add common ArchiMate viewpoint definitions (Organization, Application Usage, Business Process Cooperation, etc.)
-#   - Define allowed elements and relationships per viewpoint
-#
-# EXAMPLES:
-#   - Create example models demonstrating element instantiation, RDF-Star relationships, profiles, and derivations
-#
-# PROFILES:
-#   - Add domain-specific example profiles
+# - Level 1 Core Validation — Universal model quality and graph integrity.  
+# - Level 2 Metamodel Validation — ArchiMate architectural pattern enforcement.
+# - Level 3 validation: complete (all layers merged into archimate_validation_relationships.ttl)
 #
 # DESIGN DECISIONS
 # 1) Naming Convention
@@ -68,7 +58,7 @@
 # verbose, complex models. RDF-Star solves this elegantly using quoted triples.
 #
 # Design pattern:
-# - Elements (BusinessActor, Junction, etc.) → OWL Classes → can be instantiated
+# - Elements (BusinessActor, Node, etc.) → OWL Classes → can be instantiated
 # - Relationships (assignment, composition, etc.) → OWL Properties → connect instances  
 # - Relationship metadata → RDF-Star annotations → describe relationship instances
 #
@@ -123,13 +113,13 @@
 #   (a) Modeling relationship: links a specialized element instance to a generic
 #       element instance of the same type (e.g., :TravelInsurance specialization :Insurance)
 #   (b) Profile hierarchy: links a profile class to its parent type
-#       (e.g., archimate-prof:Person specialization archimate:BusinessActor)
+#       (e.g., archimate-profile:Person specialization archimate:BusinessActor)
 #
 # ArchiMate profiles allow user-defined subtypes of standard elements,
 # e.g. BusinessActor → Person. In native RDF, we model them as real OWL
 # classes in the specialization hierarchy:
 #
-#   archimate-prof:Person a owl:Class, sh:NodeShape ;
+#   archimate-profile:Person a owl:Class, sh:NodeShape ;
 #       rdfs:subClassOf archimate:BusinessActor ;
 #       archimate:specialization archimate:BusinessActor .
 #
@@ -224,7 +214,6 @@
 
 
 # Aspects
-
 <#StructureAspect> rdf:type owl:Class ;
     rdfs:label "Structure Aspect" ;
     rdfs:comment "Represents the structural elements of the enterprise architecture, including active and passive structure elements." ;
