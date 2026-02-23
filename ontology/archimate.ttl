@@ -26,7 +26,7 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2026-02-22"^^xsd:date .
+    dct:modified "2026-02-23"^^xsd:date .
 
 # NOTES 
 # Ontology file now 100% complete with ArchiMate 3.2 spec --61 elements, 11 relationships, relationship connectors (junctions). 
@@ -158,7 +158,7 @@
 <#Aspect> rdf:type owl:Class ;
     rdfs:label "Aspect" ;
     rdfs:comment "Classification of elements based on layer-independent characteristics related to the concerns of different stakeholders. Used for positioning elements in the ArchiMate metamodel." ;
-    rdfs:subClassOf <#ArchiMate> .
+    rdfs:subClassOf <#Model> .
 	
 <#Model> rdf:type owl:Class ;
     rdfs:label "Model" ;
@@ -284,7 +284,7 @@
 <#Layer> rdf:type owl:Class ;
     rdfs:label "Layer" ;
     rdfs:comment "A major division in the architecture that categorizes elements according to their scope and purpose." ;
-    rdfs:subClassOf <#Concept> .
+    rdfs:subClassOf <#Model> .
 
 <#CoreLayer> rdf:type owl:Class ;
     rdfs:label "Core Layer" ;
