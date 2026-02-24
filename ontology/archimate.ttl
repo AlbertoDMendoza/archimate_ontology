@@ -202,9 +202,62 @@
     rdfs:comment "A fundamental building block within an architecture model." ;
     rdfs:subClassOf <#Concept> .
 
+# DESIGN NOTE: Dual Representation of Relationships
+# 
+# archimate:Relationship exists as an owl:Class solely for metadata inheritance purposes.
+# It is a subclass of archimate:Concept, which means relationship instances can carry
+# the universal Concept properties: identifier, name, and documentation.
+#
+# The actual ArchiMate relationship types (assignment, serving, realization, etc.) are
+# declared separately as owl:ObjectProperty under four base property hierarchies:
+#   - archimate:structuralRelationship (assignment, aggregation, composition, realization)
+#   - archimate:dependencyRelationship (serving, access, influence, association)
+#   - archimate:dynamicRelationship (triggering, flow)
+#   - archimate:otherRelationship (specialization)
+#
+# There is no formal OWL axiom connecting these two representations. This is intentional:
+# OWL domain/range on properties are inference axioms, not constraints, and declaring
+# narrow types causes incorrect inferences for cross-layer patterns. Relationship validity
+# is enforced by SHACL (Levels 2 and 3), not OWL class reasoning.
+#
+# RDF-Star bridges the two representations: <<subject property object>> quoted triples
+# allow relationship metadata (name, identifier, accessType, etc.) to be attached to
+# property-as-predicate usages without reification overhead.
+#
+# ALTERNATIVE CONSIDERED: OWL 2 Punning
+# OWL 2 DL permits a URI to be used as both an owl:Class and an owl:ObjectProperty
+# simultaneously — a pattern known as "punning". This would allow archimate:Relationship
+# (and its sub-properties) to participate in both the class hierarchy and the property
+# hierarchy, formally bridging the two representations.
+#
+# Example of what punning would look like:
+#
+#   <#structuralRelationship> rdf:type owl:Class ;         # class side
+#       rdfs:subClassOf <#Relationship> .
+#   <#structuralRelationship> rdf:type owl:ObjectProperty ; # property side
+#       rdfs:subPropertyOf ... .
+#
+# Why it was not adopted:
+# - Punning is legal in OWL 2 DL but handled inconsistently across reasoners (e.g.,
+#   Pellet supports it; HermiT may produce unexpected inferences).
+# - The added complexity is not justified given that SHACL handles all validation.
+# - RDF-Star already solves the metadata problem that punning would partially address.
+# - The current dual representation is simpler, more portable, and easier to maintain.
+#
+# If a future use case requires reasoner-level introspection of relationship types as
+# class instances, punning can be introduced incrementally without breaking existing
+# SPARQL queries or SHACL shapes.
+
 <#Relationship> rdf:type owl:Class ;
     rdfs:label "Relationship" ;
-    rdfs:comment "A relationship between two elements within an architecture model." ;
+    rdfs:comment """A relationship between two ArchiMate elements, modeled as an owl:Class for 
+    metadata inheritance purposes (identifier, name, documentation via archimate:Concept). 
+    The actual relationship types (assignment, serving, realization, etc.) are declared as 
+    owl:ObjectProperty under structuralRelationship, dependencyRelationship, dynamicRelationship, 
+    and otherRelationship. There is no formal OWL axiom connecting these two representations — 
+    this is intentional. Relationship validity is enforced by SHACL. RDF-Star quoted triples 
+    <<s p o>> bridge the two by allowing property-as-predicate usages to carry metadata. 
+    See block comment above for full design rationale and the punning alternative considered.""" ;
     rdfs:subClassOf <#Concept> .
 
 <#RelationshipConnector> rdf:type owl:Class ;
