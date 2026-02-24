@@ -11,7 +11,7 @@
 <#> rdf:type owl:Ontology ;
     owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Basic Validation Rules" ;
-    rdfs:comment "Level 1 Core Validation: universal model quality and graph integrity constraints. Validates concept requirements (identifier, name, documentation), specialization relationship integrity, relationship structural integrity (composition/aggregation rules, RDF-Star metadata), and model quality checks. For metamodel pattern rules, see archimate_validation_metamodel.ttl. For per-element-type relationship combinations, see archimate_validation_<layer>.ttl." ;
+    rdfs:comment "Level 1 Core Validation: universal model quality and graph integrity constraints. Validates concept requirements (identifier, name, documentation), specialization relationship integrity (same-type, no self-loops, depth), and structural relationship integrity (no circular/self composition/aggregation, composition part uniqueness). For metamodel pattern rules, see archimate_validation_metamodel.ttl. For per-element-type relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-10"^^xsd:date ;
     dct:modified "2026-02-20"^^xsd:date ;
@@ -38,22 +38,17 @@
 # - Universal concept requirements (identifier, name, documentation)
 # - Concept uniqueness constraints
 # - Specialization relationship validation (same-type constraint, depth check)
-# - Model completeness checks (orphaned elements, singletons)
 # - Relationship structural integrity (no circular/self composition/aggregation,
 #   composition part uniqueness)
-# - Relationship quality checks (redundant relationships, missing metadata)
 #
 # Organization:
 # - Section 1: Universal Concept Requirements
-# - Section 2: Model Completeness Quality Check
-# - Section 3: Specialization Relationship Validation (same-type, depth)
-# - Section 4: Structural Relationship Validation (composition, aggregation)
-# - Section 5: Relationship Quality Checks
+# - Section 2: Specialization Relationship Validation (same-type, depth)
+# - Section 3: Structural Relationship Validation (composition, aggregation)
 #
-# Validation severity levels:
-# - sh:Violation (default): Hard constraint violations
-# - sh:Warning: Issues that should be reviewed
-# - sh:Info: Quality suggestions and informational notices
+# Severity levels:
+# - sh:Violation (default): Hard constraints, appropriate for transactional SHACL
+# - sh:Info: DeepSpecializationCheck — batch/reporting use only
 #
 # owl:imports note:
 # The ontology declares @base <https://purl.org/archimate#> so its IRI is
@@ -78,30 +73,37 @@
 
 # All realized elements and relationships must have required attributes
 <#RealizedConceptShape> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Concept ;
+    sh:targetClass owl:NamedIndividual ;
     rdfs:label "Realized Concept Requirements" ;
-    rdfs:comment "Enforces that every ArchiMate concept has exactly one identifier and name, and at most one documentation value." ;
-    sh:property [
-        sh:path archimate:identifier ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:datatype xsd:string ;
-        sh:pattern "^[a-zA-Z_][a-zA-Z0-9_-]*$" ;
-        sh:message "All realized concepts must have exactly one valid identifier"
-    ] ;
-    sh:property [
-        sh:path archimate:name ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:datatype xsd:string ;
-        sh:message "All realized concepts must have exactly one name"
-    ] ;
-    sh:property [
-        sh:path archimate:documentation ;
-        sh:maxCount 1 ;
-        sh:datatype xsd:string ;
-        sh:message "All realized concepts must have at most one documentation value"
-    ] .
+    rdfs:comment "Enforces that every realized ArchiMate concept (owl:NamedIndividual instance) has exactly one identifier and name, and at most one documentation value. Targets owl:NamedIndividual to exclude ontology class definitions, which are instances of archimate:Concept via class punning but are not realized model elements." ;
+    sh:or (
+        [ sh:not [ sh:class archimate:Concept ] ]
+        [
+            sh:and (
+                [ sh:property [
+                    sh:path archimate:identifier ;
+                    sh:minCount 1 ;
+                    sh:maxCount 1 ;
+                    sh:datatype xsd:string ;
+                    sh:pattern "^[a-zA-Z_][a-zA-Z0-9_-]*$" ;
+                    sh:message "All realized concepts must have exactly one valid identifier"
+                ] ]
+                [ sh:property [
+                    sh:path archimate:name ;
+                    sh:minCount 1 ;
+                    sh:maxCount 1 ;
+                    sh:datatype xsd:string ;
+                    sh:message "All realized concepts must have exactly one name"
+                ] ]
+                [ sh:property [
+                    sh:path archimate:documentation ;
+                    sh:maxCount 1 ;
+                    sh:datatype xsd:string ;
+                    sh:message "All realized concepts must have at most one documentation value"
+                ] ]
+            )
+        ]
+    ) .
 
 # Unique identifier constraint across all concepts
 <#UniqueConceptIdentifier> rdf:type sh:NodeShape ;
@@ -122,70 +124,7 @@
 
 
 
-### 2. Model Completeness Validation
-
-# Check for orphaned elements (no relationships)
-<#OrphanedElementShape> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Element ;
-    rdfs:label "Connected Elements" ;
-    rdfs:comment "Flags elements that participate in no relationships (informational; Grouping and Location are exempt)." ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "Elements should participate in at least one relationship" ;
-        sh:severity sh:Info ;
-        sh:select """
-            SELECT $this WHERE {
-                # Exclude Grouping and Location elements (they can exist independently)
-                FILTER NOT EXISTS {
-                    $this rdf:type/rdfs:subClassOf* archimate:Grouping
-                }
-                FILTER NOT EXISTS {
-                    $this rdf:type/rdfs:subClassOf* archimate:Location
-                }
-
-                # Check if element has any relationships
-                FILTER NOT EXISTS {
-                    { $this ?p ?o . ?p rdfs:subPropertyOf+ archimate:structuralRelationship } UNION
-                    { $this ?p ?o . ?p rdfs:subPropertyOf+ archimate:dependencyRelationship } UNION
-                    { $this ?p ?o . ?p rdfs:subPropertyOf+ archimate:dynamicRelationship } UNION
-                    { ?s ?p $this . ?p rdfs:subPropertyOf+ archimate:structuralRelationship } UNION
-                    { ?s ?p $this . ?p rdfs:subPropertyOf+ archimate:dependencyRelationship } UNION
-                    { ?s ?p $this . ?p rdfs:subPropertyOf+ archimate:dynamicRelationship }
-                }
-            }
-        """
-    ] .
-
-# Check for singleton elements (only one instance of an element type)
-<#SingletonElementCheck> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Element ;
-    rdfs:label "Singleton Element Check" ;
-    rdfs:comment "Flags element types that have only a single instance in the model (informational)." ;
-    sh:severity sh:Info ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "Only one instance of this element type exists in the model - consider if this is intentional" ;
-        sh:select """
-            SELECT $this WHERE {
-                $this rdf:type ?elementType .
-                ?elementType rdfs:subClassOf+ archimate:Element .
-
-                # Count instances of this element type
-                {
-                    SELECT ?elementType (COUNT(?instance) AS ?instanceCount) WHERE {
-                        ?instance rdf:type ?elementType .
-                    }
-                    GROUP BY ?elementType
-                }
-
-                FILTER(?instanceCount = 1)
-            }
-        """
-    ] .
-
-
-
-### 3. Specialization Relationship Validation
+### 2. Specialization Relationship Validation
 # Specialization is purely a relationship (spec Section 5.4), not a concept property.
 # It connects two elements/concepts of the same type (e.g., specialized process → generic process).
 
@@ -246,7 +185,7 @@
         sh:select """
             SELECT $this WHERE {
                 # Check specialization depth via transitive property
-                # 4 chained steps with + = minimum 5 hops
+                # 4 chained steps with + = minimum 4 hops
                 $this archimate:specialization+ ?type1 .
                 ?type1 archimate:specialization+ ?type2 .
                 ?type2 archimate:specialization+ ?type3 .
@@ -257,9 +196,9 @@
 
 
 
-### 4. Structural Relationship Validation
+### 3. Structural Relationship Validation
 
-## 4.1 Composition Relationships
+## 3.1 Composition Relationships
 
 # No self-composition
 <#NoSelfComposition> rdf:type sh:NodeShape ;
@@ -309,7 +248,7 @@
     ] .
 
 
-## 4.2 Aggregation Relationships
+## 3.2 Aggregation Relationships
 
 # No self-aggregation
 <#NoSelfAggregation> rdf:type sh:NodeShape ;
@@ -343,65 +282,3 @@
 
 
 
-### 5. Relationship Quality Checks
-
-## Check for redundant relationships
-<#RedundantRelationshipCheck> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Concept ;
-    rdfs:label "Redundant Relationship Check" ;
-    rdfs:comment "Flags duplicate ArchiMate relationships of the same type between the same pair of elements (informational)." ;
-    sh:severity sh:Info ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "Redundant relationship detected: same relationship type between same elements exists multiple times" ;
-        sh:select """
-            SELECT $this WHERE {
-                $this ?rel ?target .
-
-                # Only consider ArchiMate relationship properties
-                { ?rel rdfs:subPropertyOf+ archimate:structuralRelationship }
-                UNION { ?rel rdfs:subPropertyOf+ archimate:dependencyRelationship }
-                UNION { ?rel rdfs:subPropertyOf+ archimate:dynamicRelationship }
-
-                # Count how many times this exact relationship exists
-                {
-                    SELECT ?source ?rel ?target (COUNT(*) AS ?count) WHERE {
-                        ?source ?rel ?target .
-                    }
-                    GROUP BY ?source ?rel ?target
-                }
-
-                FILTER(?source = $this)
-                FILTER(?count > 1)
-            }
-        """
-    ] .
-
-## Check for potentially missing relationship metadata
-<#MissingRelationshipMetadataWarning> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Concept ;
-    rdfs:label "Missing Relationship Metadata Warning" ;
-    rdfs:comment "Warns when a named relationship (via RDF-Star identifier) is missing both name and documentation." ;
-    sh:severity sh:Warning ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "Relationship exists but is missing name or documentation (only identifier present)" ;
-        sh:select """
-            SELECT $this WHERE {
-                $this ?rel ?target .
-                <<$this ?rel ?target>> archimate:identifier ?id .
-
-                # Only consider ArchiMate relationship properties
-                { ?rel rdfs:subPropertyOf+ archimate:structuralRelationship }
-                UNION { ?rel rdfs:subPropertyOf+ archimate:dependencyRelationship }
-                UNION { ?rel rdfs:subPropertyOf+ archimate:dynamicRelationship }
-
-                FILTER NOT EXISTS {
-                    <<$this ?rel ?target>> archimate:name ?name .
-                }
-                FILTER NOT EXISTS {
-                    <<$this ?rel ?target>> archimate:documentation ?doc .
-                }
-            }
-        """
-    ] .
