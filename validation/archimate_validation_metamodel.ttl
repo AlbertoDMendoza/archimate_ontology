@@ -160,15 +160,6 @@
     ] .
 
 
-## 1.2 Realization direction (informational)
-
-<#RealizationDirection> rdf:type sh:NodeShape ;
-    sh:targetSubjectsOf archimate:realization ;
-    rdfs:label "Realization Direction" ;
-    rdfs:comment "Realization should flow from more concrete to more abstract, typically from lower to higher layers. Valid exceptions exist (e.g., Core → Strategy)." ;
-    sh:severity sh:Info .
-
-
 
 ## 1.3 Access: BehaviorAspect → PassiveStructure (CoreLayer only)
 
@@ -380,7 +371,6 @@
 <#StrategyBehaviorRealizesCoA> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:realization ;
     rdfs:label "Strategy Realization: Capability/ValueStream → CourseOfAction" ;
-    sh:severity sh:Info ;
     rdfs:comment "Within Strategy layer, realization flows from Capability/ValueStream toward CourseOfAction, not the reverse." ;
     sh:sparql [
         sh:prefixes <#> ;
