@@ -49,9 +49,11 @@ validation/
 </pre>
 
 ## Specification 
-This Ontology is a rendition of The Open Group® ArchiMate® 3.2 Specification. See the full specification at https://pubs.opengroup.org/architecture/archimate3-doc/. 
-The model tries to remain faithful to the ArchiMate 3.2 specification. No semantic reinterpretation is introduced at the base ontology level.
+This Ontology is a rendition of The Open Group® ArchiMate® 3.2 Specification. See the full specification at https://pubs.opengroup.org/architecture/archimate3-doc/. The model tries to remain faithful to the ArchiMate® 3.2 specification. No semantic reinterpretation is introduced at the base ontology level.
 
-### Disclaimer
-ArchiMate is a registered trademark of The Open Group.
-This project is an independent formalization and is not an official Open Group publication.
+## License
+© Alberto D. Mendoza | Licensed under Apache 2.0 | 
+ArchiMate® is a registered trademark of The Open Group.
+This ontology is an independent formalization and is not an official Open Group publication.
+
+ 
