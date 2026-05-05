@@ -26,7 +26,7 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2026-02-23"^^xsd:date .
+    dct:modified "2026-05-05"^^xsd:date .
 
 # NOTES 
 # Ontology file now 100% complete with ArchiMate 3.2 spec --61 elements, 11 relationships, relationship connectors (junctions). 
@@ -196,6 +196,53 @@
     rdfs:comment "Textual description of any ArchiMate concept (element or relationship)." ;
     rdfs:domain <#Concept> ;
     rdfs:range xsd:string .
+
+# DESIGN NOTE: Three-tier property extension model
+#
+# ArchiMate has three distinct mechanisms for attaching data to concepts — each
+# serves a different purpose and they must not be conflated:
+#
+#   1. hasProperty (this section) — open-ended key-value pairs per spec Section 2.2.
+#      Untyped strings; no schema required. Primary use: round-trip fidelity with the
+#      ArchiMate exchange format and tool-generated models (Archi, Sparx, etc.) that
+#      serialize arbitrary <property key="..." value="..."/> entries on elements and
+#      relationships. Think of it as an import buffer: unschematized tool metadata lands
+#      here; as domains formalize, those properties are promoted to profile attributes.
+#
+#   2. Relationship properties (Section 3.4) — spec-defined, constrained-vocabulary
+#      properties (accessType, influenceSign, influenceStrength, flowType). These are
+#      typed owl:DatatypeProperty used as RDF-Star annotations on quoted triples.
+#      They must NOT be routed through hasProperty: doing so loses SHACL enforcement
+#      of allowed values and makes SPARQL queries fragile.
+#
+#   3. Profile properties — user-defined but formally typed owl:DatatypeProperty
+#      declared within profile OWL subclasses and governed by SHACL sh:NodeShape.
+#      These also must NOT be routed through hasProperty: the entire value of profiles
+#      is type safety, OWL inference, and SHACL validation.
+
+<#Property> rdf:type owl:Class ;
+    rdfs:label "Property" ;
+    rdfs:comment "A user-defined key-value pair that can be attached to any ArchiMate concept (element or relationship), per spec Section 2.2. Intended for unschematized metadata and exchange-format round-tripping. For typed, validated attributes use profile owl:DatatypeProperty declarations instead." ;
+    rdfs:subClassOf <#Attribute> .
+
+<#propertyKey> rdf:type owl:DatatypeProperty ;
+    rdfs:label "Property Key" ;
+    rdfs:comment "The name of a user-defined concept property (e.g., 'CostCenter', 'Owner')." ;
+    rdfs:domain <#Property> ;
+    rdfs:range xsd:string ;
+    rdf:type owl:FunctionalProperty .
+
+<#propertyValue> rdf:type owl:DatatypeProperty ;
+    rdfs:label "Property Value" ;
+    rdfs:comment "The string value of a user-defined concept property." ;
+    rdfs:domain <#Property> ;
+    rdfs:range xsd:string .
+
+<#hasProperty> rdf:type owl:ObjectProperty ;
+    rdfs:label "has Property" ;
+    rdfs:comment "Attaches one or more user-defined key-value properties to any ArchiMate concept. Domain is Concept, so this applies to both elements (directly) and relationships (via RDF-Star quoted triples)." ;
+    rdfs:domain <#Concept> ;
+    rdfs:range <#Property> .
 
 <#Element> rdf:type owl:Class ;
     rdfs:label "Element" ;

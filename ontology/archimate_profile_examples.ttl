@@ -15,7 +15,7 @@
     dct:description "Profile classes are owl:Class that specialize standard ArchiMate elements via rdfs:subClassOf and archimate:specialization. SHACL shapes for these profiles are defined in validation/archimate_validation_profiles.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-10"^^xsd:date ;
-    dct:modified "2026-02-20"^^xsd:date ;
+    dct:modified "2026-05-05"^^xsd:date ;
     owl:versionInfo "Alpha" .
 
 # DESIGN NOTES
@@ -62,6 +62,12 @@ archimate-prof:Organization rdf:type owl:Class ;
 
 
 ### 2. Profile-Specific Properties
+#
+# These are typed owl:DatatypeProperty declarations with explicit rdfs:domain and rdfs:range.
+# They are schema-enforced, OWL-reasoned, and SHACL-validated — distinct from the open-ended
+# archimate:hasProperty key-value bag, which is for unschematized or tool-imported metadata.
+# If a property is known, typed, and reusable across instances, declare it here.
+# If it is arbitrary, untyped, or imported from an exchange format file, use archimate:hasProperty.
 
 ## Person Properties
 archimate-prof:dateOfBirth rdf:type owl:DatatypeProperty ;
@@ -77,42 +83,7 @@ archimate-prof:email rdf:type owl:DatatypeProperty ;
     rdfs:range xsd:anyURI .
 
 
-### 3. Instance-Level Specialization Pattern
-#
-# The class declarations above define the profile hierarchy (TBox).
-# When creating instances (ABox), there are two valid approaches:
-#
-# APPROACH A — OWL-native (requires reasoner):
-#   Type the instance directly with the specialization class.
-#   OWL reasoning infers the base ArchiMate type via rdfs:subClassOf.
-#
-#   :alberto a archimate-prof:Person ;
-#       archimate:name "Alberto" ;
-#       archimate-prof:email <mailto:alberto@example.org> .
-#
-#   A reasoner infers: :alberto a archimate:BusinessActor .
-#
-# APPROACH B — Portable (no reasoner needed):
-#   Type the instance with the base ArchiMate element. Use
-#   archimate:specialization to point to the specialization class.
-#   Any ArchiMate tool sees valid elements without OWL reasoning.
-#
-#   :alberto a archimate:BusinessActor ;
-#       archimate:specialization archimate-prof:Person ;
-#       archimate:name "Alberto" ;
-#       archimate-prof:email <mailto:alberto@example.org> .
-#
-# Approach B is recommended for interoperability — most ArchiMate tools
-# (Archi, etc.) and SPARQL consumers do not run OWL reasoners. The base
-# type is always visible; the specialization is metadata for tools that
-# understand the profile vocabulary.
-#
-# Both approaches are valid. The choice depends on the consumer:
-# - OWL-native toolchains (Protégé, OWL reasoners) → Approach A
-# - ArchiMate tools, SPARQL dashboards, static analysis → Approach B
-
-
-### 4. Additional Profile Examples (Commented Out - Expand As Needed)
+### 3. Additional Profile Examples (Commented Out - Expand As Needed)
 
 # ## BusinessRole Profiles
 # archimate-prof:Manager rdf:type owl:Class ;

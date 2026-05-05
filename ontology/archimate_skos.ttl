@@ -19,7 +19,7 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2026-02-20"^^xsd:date ;
+    dct:modified "2026-05-05"^^xsd:date ;
     dct:subject "Enterprise Architecture, ArchiMate, Modeling Language" ;
     dct:conformsTo <https://pubs.opengroup.org/architecture/archimate3-doc/> ;
     skos:hasTopConcept <#ArchiMate> .
@@ -30,6 +30,7 @@
     skos:editorialNote "Concepts in this vocabulary are maintained in parallel with the OWL ontology. Changes to concept definitions, scope, or structure should be coordinated between both representations."@en .
 
 ### Change Notes for Version Control
+<#> skos:changeNote "2026-05-05: Renamed ConceptAttributes to ConceptProperties; added Identifier, Name, Documentation under ConceptProperties; added RelationshipProperties grouping with AccessType, InfluenceSign, InfluenceStrength, FlowType, JunctionType, Confidence."@en .
 <#> skos:changeNote "2026-02-10: Added missing 11 elements (Junction, TechnologyCollaboration, TechnologyInterface, TechnologyInteraction, TechnologyEvent, CommunicationNetwork, Path, Location, AndJunction, OrJunction, Grouping), corrected all class names to match OWL ontology exactly, added CoreFramework and CoreLanguage as SKOS concepts."@en .
 <#> skos:changeNote "2025-07-04: Split from combined OWL/SKOS file into dedicated SKOS vocabulary. Added multilingual labels, collections, and cross-references to OWL ontology."@en .
 
@@ -626,6 +627,42 @@
     skos:broader <#ImplementationAndMigrationElements> ;
     skos:inScheme <#> .
 
+### Concept Properties
+
+<#ConceptProperties> rdf:type skos:Concept ;
+    skos:prefLabel "Concept Properties"@en ;
+    skos:definition "Properties that can be attached to any ArchiMate concept (element or relationship), as defined in spec Section 2.2: identifier, name, documentation, and the open-ended property extension mechanism."@en ;
+    skos:broader <#ArchiMate> ;
+    skos:inScheme <#> .
+
+<#Identifier> rdf:type skos:Concept ;
+    skos:prefLabel "Identifier"@en ;
+    skos:definition "A unique identifier for any ArchiMate concept (element or relationship)."@en ;
+    skos:scopeNote "Mandatory per spec Section 2.2. Modeled as a functional owl:DatatypeProperty (xsd:string) with domain archimate:Concept."@en ;
+    skos:broader <#ConceptProperties> ;
+    skos:inScheme <#> .
+
+<#Name> rdf:type skos:Concept ;
+    skos:prefLabel "Name"@en ;
+    skos:definition "A human-readable name for any ArchiMate concept (element or relationship)."@en ;
+    skos:broader <#ConceptProperties> ;
+    skos:inScheme <#> .
+
+<#Documentation> rdf:type skos:Concept ;
+    skos:prefLabel "Documentation"@en ;
+    skos:altLabel "Description"@en ;
+    skos:definition "A textual description of any ArchiMate concept (element or relationship)."@en ;
+    skos:broader <#ConceptProperties> ;
+    skos:inScheme <#> .
+
+<#Property> rdf:type skos:Concept ;
+    skos:prefLabel "Property"@en ;
+    skos:altLabel "Concept Property"@en ;
+    skos:definition "A user-defined key-value pair that can be attached to any ArchiMate concept (element or relationship), per spec Section 2.2. Provides an open-ended extension mechanism for unschematized metadata."@en ;
+    skos:scopeNote "Use for arbitrary, untyped metadata — especially when importing from or exporting to ArchiMate exchange format files. For typed, validated properties, use profile definitions instead. Corresponds to the OWL hasProperty/Property pattern in the ontology."@en ;
+    skos:broader <#ConceptProperties> ;
+    skos:inScheme <#> .
+
 ### Composite Elements
 
 <#CompositeElements> rdf:type skos:Concept ;
@@ -771,6 +808,57 @@
     skos:prefLabel "Or Junction"@en ;
     skos:definition "A junction where at least one connected relationship must be satisfied (logical OR)."@en ;
     skos:broader <#Junction> ;
+    skos:inScheme <#> .
+
+### Relationship Properties
+
+<#RelationshipProperties> rdf:type skos:Concept ;
+    skos:prefLabel "Relationship Properties"@en ;
+    skos:definition "Spec-defined properties that qualify specific ArchiMate relationship types, used as RDF-Star annotations on relationship instances."@en ;
+    skos:scopeNote "These are constrained-vocabulary properties defined by the ArchiMate spec for specific relationship types. They are distinct from the open-ended Concept Properties (identifier, name, documentation, Property) which apply to all concepts."@en ;
+    skos:broader <#Relationships> ;
+    skos:inScheme <#> .
+
+<#AccessType> rdf:type skos:Concept ;
+    skos:prefLabel "Access Type"@en ;
+    skos:definition "Specifies the type of access in an Access relationship: read, write, readwrite, or unspecified."@en ;
+    skos:broader <#RelationshipProperties> ;
+    skos:related <#Access> ;
+    skos:inScheme <#> .
+
+<#InfluenceSign> rdf:type skos:Concept ;
+    skos:prefLabel "Influence Sign"@en ;
+    skos:definition "The direction of an Influence relationship: positive (+), negative (-), or unspecified."@en ;
+    skos:broader <#RelationshipProperties> ;
+    skos:related <#Influence> ;
+    skos:inScheme <#> .
+
+<#InfluenceStrength> rdf:type skos:Concept ;
+    skos:prefLabel "Influence Strength"@en ;
+    skos:definition "The strength of an Influence relationship: weak, moderate, strong, or unspecified."@en ;
+    skos:broader <#RelationshipProperties> ;
+    skos:related <#Influence> ;
+    skos:inScheme <#> .
+
+<#FlowType> rdf:type skos:Concept ;
+    skos:prefLabel "Flow Type"@en ;
+    skos:definition "The type of transfer in a Flow relationship: information, material, energy, or unspecified."@en ;
+    skos:broader <#RelationshipProperties> ;
+    skos:related <#Flow> ;
+    skos:inScheme <#> .
+
+<#JunctionType> rdf:type skos:Concept ;
+    skos:prefLabel "Junction Type"@en ;
+    skos:definition "The logical operation of a Junction: 'and' (all relationships must be satisfied) or 'or' (at least one must be satisfied)."@en ;
+    skos:broader <#RelationshipProperties> ;
+    skos:related <#Junction> ;
+    skos:inScheme <#> .
+
+<#Confidence> rdf:type skos:Concept ;
+    skos:prefLabel "Confidence"@en ;
+    skos:definition "The confidence level of a relationship, used for derived relationships: valid, potential, or unspecified."@en ;
+    skos:scopeNote "Applied to relationships produced by derivation inference rules rather than explicitly modeled. Indicates certainty of the derived relationship."@en ;
+    skos:broader <#RelationshipProperties> ;
     skos:inScheme <#> .
 
 ### Multilingual Labels (Spanish)
