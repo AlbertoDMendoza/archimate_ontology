@@ -5,21 +5,24 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix archimate: <https://purl.org/archimate#> .
-@prefix archimate-prof: <https://purl.org/archimate/profile#> .
+@prefix myModel: <https://example.org/myModel#> .
 @base <https://purl.org/archimate/validation/profiles#> .
 
 ### SHACL Shapes for ArchiMate Specialization Profiles
 <#> rdf:type owl:Ontology ;
     owl:imports <https://purl.org/archimate/owl> ;
-    rdfs:label "ArchiMate Profile Shapes" ;
-    rdfs:comment "SHACL shapes for ArchiMate specialization profiles. Profile classes are owl:Class that specialize standard ArchiMate elements; this file defines their typed attributes." ;
+    rdfs:label "ArchiMate Profile Shapes — Example" ;
+    rdfs:comment "Example SHACL shapes for ArchiMate specialization profiles. Profile classes are owl:Class that specialize standard ArchiMate elements; this file defines their typed attributes. The myModel: prefix is illustrative — organizations define their own namespace. This file is not a published specification." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-15"^^xsd:date ;
-    dct:modified "2026-02-20"^^xsd:date ;
-    owl:versionInfo "Alpha" ;
+    dct:modified "2026-05-09"^^xsd:date ;
+    owl:versionInfo "Sample" ;
     sh:declare [
         sh:prefix "archimate" ;
         sh:namespace "https://purl.org/archimate#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "myModel" ;
+        sh:namespace "https://example.org/myModel#"^^xsd:anyURI ;
     ] , [
         sh:prefix "rdf" ;
         sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI ;
@@ -29,12 +32,21 @@
     ] .
 
 ### NOTES
-# Profile classes (defined in ontology/archimate.ttl) are owl:Class that specialize
-# standard ArchiMate elements via rdfs:subClassOf and archimate:specialization.
-# This file defines their SHACL shapes — typed attributes that give profiles meaning.
+# Profile classes (defined in ontology/archimate_profile_examples.ttl) are owl:Class
+# that specialize standard ArchiMate elements via rdfs:subClassOf and
+# archimate:specialization. This file defines their SHACL shapes — typed attributes
+# that give profiles meaning.
+#
+# The myModel: prefix is illustrative. Organizations deploying this ontology define
+# their own namespace. The three-declaration pattern (rdfs:subClassOf +
+# archimate:specialization + sh:NodeShape) is the mechanism; the namespace is yours.
 #
 # The profile class IS the shape (implicit target pattern: class URI = shape URI).
 # Applications discover profile shapes via sh:property, same as any other shape.
+#
+# archimate:name and archimate:documentation are enforced by Level 1 core validation
+# (archimate_validation_core.ttl) and are not redeclared in profile shapes.
+# Profile shapes declare only what is new and specific to the profile.
 #
 # This validation file should be used alongside:
 # - archimate_validation_core.ttl (Level 1: graph integrity, concept requirements)
@@ -45,55 +57,43 @@
 ### 1. BusinessActor Profile Shapes
 
 ## Person Shape
-archimate-prof:Person a sh:NodeShape ;
+myModel:Person a sh:NodeShape ;
     rdfs:label "Person" ;
-    rdfs:comment "Typed attribute shape for the Person profile (specialization of BusinessActor)." ;
+    rdfs:comment "Typed attribute shape for the Person profile (specialization of BusinessActor). Declares only profile-specific properties; archimate:name and archimate:documentation are enforced by Level 1 core validation." ;
     sh:property [
-        sh:path archimate:name ;
-        sh:name "Name" ;
+        sh:path myModel:firstName ;
+        sh:name "First Name" ;
         sh:datatype xsd:string ;
         sh:minCount 1 ;
         sh:order 1
     ] ;
     sh:property [
-        sh:path archimate-prof:dateOfBirth ;
-        sh:name "Date of Birth" ;
-        sh:datatype xsd:date ;
+        sh:path myModel:lastName ;
+        sh:name "Last Name" ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
         sh:order 2
     ] ;
     sh:property [
-        sh:path archimate-prof:email ;
-        sh:name "Email" ;
-        sh:datatype xsd:anyURI ;
+        sh:path myModel:dateOfBirth ;
+        sh:name "Date of Birth" ;
+        sh:datatype xsd:date ;
         sh:order 3
     ] ;
     sh:property [
-        sh:path archimate:documentation ;
-        sh:name "Documentation" ;
-        sh:datatype xsd:string ;
+        sh:path myModel:email ;
+        sh:name "Email" ;
+        sh:datatype xsd:anyURI ;
         sh:order 4
     ] .
 
 ## Organization Shape
-archimate-prof:Organization a sh:NodeShape ;
+myModel:Organization a sh:NodeShape ;
     rdfs:label "Organization" ;
-    rdfs:comment "Typed attribute shape for the Organization profile (specialization of BusinessActor)." ;
-    sh:property [
-        sh:path archimate:name ;
-        sh:name "Name" ;
-        sh:datatype xsd:string ;
-        sh:minCount 1 ;
-        sh:order 1
-    ] ;
-    sh:property [
-        sh:path archimate:documentation ;
-        sh:name "Documentation" ;
-        sh:datatype xsd:string ;
-        sh:order 2
-    ] ;
+    rdfs:comment "Typed attribute shape for the Organization profile (specialization of BusinessActor). Declares only profile-specific properties; archimate:name and archimate:documentation are enforced by Level 1 core validation." ;
     sh:property [
         sh:path archimate:aggregation ;
         sh:name "Members" ;
-        sh:class archimate-prof:Person ;
-        sh:order 3
+        sh:class myModel:Person ;
+        sh:order 1
     ] .
