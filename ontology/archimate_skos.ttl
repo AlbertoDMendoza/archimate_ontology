@@ -4,7 +4,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@base <https://purl.org/archimate/skos#> .
+@base <https://purl.org/archimate/skos> .
 
 ### Vocabulary Declaration
 <#> rdf:type skos:ConceptScheme ;

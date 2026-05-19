@@ -5,7 +5,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix archimate: <https://purl.org/archimate#> .
-@base <https://purl.org/archimate/validation#> .
+@base <https://purl.org/archimate/validation> .
 
 ### SHACL Validation for ArchiMate Basic Constraints
 <#> rdf:type owl:Ontology ;

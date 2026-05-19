@@ -5,7 +5,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix archimate: <https://purl.org/archimate#> .
-@base <https://purl.org/archimate/validation/relationships#> .
+@base <https://purl.org/archimate/validation/relationships> .
 
 ### SHACL Validation: All Layers — Composition, Aggregation, Access, Realization
 ### ArchiMate 3.2 Specification — Appendix B Relationship Matrix

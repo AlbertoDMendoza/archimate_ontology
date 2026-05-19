@@ -5,7 +5,7 @@
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix archimate: <https://purl.org/archimate#> .
 @prefix myModel: <https://example.org/myModel#> .
-@base <https://example.org/myModel#> .
+@base <https://example.org/myModel> .
 
 ### ArchiMate Specialization Profile Examples
 <#> rdf:type owl:Ontology ;
