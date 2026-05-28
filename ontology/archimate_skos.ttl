@@ -19,7 +19,7 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2026-05-05"^^xsd:date ;
+    dct:modified "2026-05-28"^^xsd:date ;
     dct:subject "Enterprise Architecture, ArchiMate, Modeling Language" ;
     dct:conformsTo <https://pubs.opengroup.org/architecture/archimate3-doc/> ;
     skos:hasTopConcept <#ArchiMate> .
@@ -635,20 +635,20 @@
     skos:broader <#ArchiMate> ;
     skos:inScheme <#> .
 
-<#Identifier> rdf:type skos:Concept ;
+<#identifier> rdf:type skos:Concept ;
     skos:prefLabel "Identifier"@en ;
     skos:definition "A unique identifier for any ArchiMate concept (element or relationship)."@en ;
     skos:scopeNote "Mandatory per spec Section 2.2. Modeled as a functional owl:DatatypeProperty (xsd:string) with domain archimate:Concept."@en ;
     skos:broader <#ConceptProperties> ;
     skos:inScheme <#> .
 
-<#Name> rdf:type skos:Concept ;
+<#name> rdf:type skos:Concept ;
     skos:prefLabel "Name"@en ;
     skos:definition "A human-readable name for any ArchiMate concept (element or relationship)."@en ;
     skos:broader <#ConceptProperties> ;
     skos:inScheme <#> .
 
-<#Documentation> rdf:type skos:Concept ;
+<#documentation> rdf:type skos:Concept ;
     skos:prefLabel "Documentation"@en ;
     skos:altLabel "Description"@en ;
     skos:definition "A textual description of any ArchiMate concept (element or relationship)."@en ;
@@ -697,25 +697,25 @@
     skos:broader <#Relationships> ;
     skos:inScheme <#> .
 
-<#Assignment> rdf:type skos:Concept ;
+<#assignment> rdf:type skos:Concept ;
     skos:prefLabel "Assignment"@en ;
     skos:definition "Links active structure elements with behavior that they perform or roles they fulfill."@en ;
     skos:broader <#StructuralRelationships> ;
     skos:inScheme <#> .
 
-<#Aggregation> rdf:type skos:Concept ;
+<#aggregation> rdf:type skos:Concept ;
     skos:prefLabel "Aggregation"@en ;
     skos:definition "Models a whole-part relationship where parts can exist independently."@en ;
     skos:broader <#StructuralRelationships> ;
     skos:inScheme <#> .
 
-<#Composition> rdf:type skos:Concept ;
+<#composition> rdf:type skos:Concept ;
     skos:prefLabel "Composition"@en ;
     skos:definition "Models a whole-part relationship where parts cannot exist without the whole."@en ;
     skos:broader <#StructuralRelationships> ;
     skos:inScheme <#> .
 
-<#Realization> rdf:type skos:Concept ;
+<#realization> rdf:type skos:Concept ;
     skos:prefLabel "Realization"@en ;
     skos:definition "Indicates that an entity realizes or implements another entity."@en ;
     skos:scopeNote "Use when a more concrete element implements or fulfills the purpose of a more abstract element. Common in layer transitions (e.g., application process realizing business process)."@en ;
@@ -728,26 +728,26 @@
     skos:broader <#Relationships> ;
     skos:inScheme <#> .
 
-<#Serving> rdf:type skos:Concept ;
+<#serving> rdf:type skos:Concept ;
     skos:prefLabel "Serving"@en ;
     skos:definition "Models that an element provides functionality to another element."@en ;
     skos:scopeNote "Use when one element provides functionality, data, or capabilities to another element. Can cross architectural layers (e.g., application serving business)."@en ;
     skos:broader <#DependencyRelationships> ;
     skos:inScheme <#> .
 
-<#Access> rdf:type skos:Concept ;
+<#access> rdf:type skos:Concept ;
     skos:prefLabel "Access"@en ;
     skos:definition "Models access of behavior elements to passive structure elements."@en ;
     skos:broader <#DependencyRelationships> ;
     skos:inScheme <#> .
 
-<#Influence> rdf:type skos:Concept ;
+<#influence> rdf:type skos:Concept ;
     skos:prefLabel "Influence"@en ;
     skos:definition "Models how one element influences another element."@en ;
     skos:broader <#DependencyRelationships> ;
     skos:inScheme <#> .
 
-<#Association> rdf:type skos:Concept ;
+<#association> rdf:type skos:Concept ;
     skos:prefLabel "Association"@en ;
     skos:definition "Models a relationship not covered by other specific relationship types."@en ;
     skos:broader <#DependencyRelationships> ;
@@ -759,13 +759,13 @@
     skos:broader <#Relationships> ;
     skos:inScheme <#> .
 
-<#Triggering> rdf:type skos:Concept ;
+<#triggering> rdf:type skos:Concept ;
     skos:prefLabel "Triggering"@en ;
     skos:definition "Models temporal or causal relationships where one behavior triggers another."@en ;
     skos:broader <#DynamicRelationships> ;
     skos:inScheme <#> .
 
-<#Flow> rdf:type skos:Concept ;
+<#flow> rdf:type skos:Concept ;
     skos:prefLabel "Flow"@en ;
     skos:definition "Models transfer of information, materials, or energy between behavior elements."@en ;
     skos:broader <#DynamicRelationships> ;
@@ -777,7 +777,7 @@
     skos:broader <#Relationships> ;
     skos:inScheme <#> .
 
-<#Specialization> rdf:type skos:Concept ;
+<#specialization> rdf:type skos:Concept ;
     skos:prefLabel "Specialization"@en ;
     skos:altLabel "Generalization"@en ;
     skos:definition "Indicates that an element is a more specific form of another element."@en ;
@@ -819,42 +819,42 @@
     skos:broader <#Relationships> ;
     skos:inScheme <#> .
 
-<#AccessType> rdf:type skos:Concept ;
+<#accessType> rdf:type skos:Concept ;
     skos:prefLabel "Access Type"@en ;
     skos:definition "Specifies the type of access in an Access relationship: read, write, readwrite, or unspecified."@en ;
     skos:broader <#RelationshipProperties> ;
-    skos:related <#Access> ;
+    skos:related <#access> ;
     skos:inScheme <#> .
 
-<#InfluenceSign> rdf:type skos:Concept ;
+<#influenceSign> rdf:type skos:Concept ;
     skos:prefLabel "Influence Sign"@en ;
     skos:definition "The direction of an Influence relationship: positive (+), negative (-), or unspecified."@en ;
     skos:broader <#RelationshipProperties> ;
-    skos:related <#Influence> ;
+    skos:related <#influence> ;
     skos:inScheme <#> .
 
-<#InfluenceStrength> rdf:type skos:Concept ;
+<#influenceStrength> rdf:type skos:Concept ;
     skos:prefLabel "Influence Strength"@en ;
     skos:definition "The strength of an Influence relationship: weak, moderate, strong, or unspecified."@en ;
     skos:broader <#RelationshipProperties> ;
-    skos:related <#Influence> ;
+    skos:related <#influence> ;
     skos:inScheme <#> .
 
-<#FlowType> rdf:type skos:Concept ;
+<#flowType> rdf:type skos:Concept ;
     skos:prefLabel "Flow Type"@en ;
     skos:definition "The type of transfer in a Flow relationship: information, material, energy, or unspecified."@en ;
     skos:broader <#RelationshipProperties> ;
-    skos:related <#Flow> ;
+    skos:related <#flow> ;
     skos:inScheme <#> .
 
-<#JunctionType> rdf:type skos:Concept ;
+<#junctionType> rdf:type skos:Concept ;
     skos:prefLabel "Junction Type"@en ;
     skos:definition "The logical operation of a Junction: 'and' (all relationships must be satisfied) or 'or' (at least one must be satisfied)."@en ;
     skos:broader <#RelationshipProperties> ;
     skos:related <#Junction> ;
     skos:inScheme <#> .
 
-<#Confidence> rdf:type skos:Concept ;
+<#confidence> rdf:type skos:Concept ;
     skos:prefLabel "Confidence"@en ;
     skos:definition "The confidence level of a relationship, used for derived relationships: valid, potential, or unspecified."@en ;
     skos:scopeNote "Applied to relationships produced by derivation inference rules rather than explicitly modeled. Indicates certainty of the derived relationship."@en ;
