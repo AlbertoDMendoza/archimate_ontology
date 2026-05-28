@@ -15,7 +15,8 @@
     rdfs:comment "Example SHACL shapes for ArchiMate specialization profiles. Profile classes are owl:Class that specialize standard ArchiMate elements; this file defines their typed attributes. The myModel: prefix is illustrative — organizations define their own namespace. This file is not a published specification." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-15"^^xsd:date ;
-    dct:modified "2026-05-09"^^xsd:date ;
+    dct:modified "2026-05-28"^^xsd:date ;
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Sample" ;
     sh:declare [
         sh:prefix "archimate" ;

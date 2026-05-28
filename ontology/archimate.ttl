@@ -13,7 +13,7 @@
 # The @base remains <https://purl.org/archimate#> for the term namespace.
 # Validation files import this ontology via: owl:imports <https://purl.org/archimate/owl> .
 <https://purl.org/archimate/owl> rdf:type owl:Ontology ;
-    owl:versionInfo "Alpha" ;
+    owl:versionInfo "Beta" ;
     rdfs:label "ArchiMate Ontology - RDF-Star Edition" ;
     rdfs:comment "An RDF-Star compliant ontology for the ArchiMate modeling language with relationship metadata support." ;
     dct:title "ArchiMate Ontology" ;
@@ -26,7 +26,8 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2026-05-05"^^xsd:date .
+    dct:modified "2026-05-28"^^xsd:date ;
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0> .
 
 # NOTES 
 # Ontology file now 100% complete with ArchiMate 3.2 spec --61 elements, 11 relationships, relationship connectors (junctions). 

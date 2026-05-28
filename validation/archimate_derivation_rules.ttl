@@ -15,8 +15,9 @@
     rdfs:comment "Complete implementation of ArchiMate derivation rules DR1-DR8 and PDR1-PDR12 using SPARQL CONSTRUCT rules." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-15"^^xsd:date ;
-    dct:modified "2026-02-20"^^xsd:date ;
-    owl:versionInfo "Alpha" ;
+    dct:modified "2026-05-28"^^xsd:date ;
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
+    owl:versionInfo "Beta" ;
     sh:declare [
         sh:prefix "archimate" ;
         sh:namespace "https://purl.org/archimate#"^^xsd:anyURI ;

@@ -14,8 +14,9 @@
     rdfs:comment "Level 1 Core Validation: universal model quality and graph integrity constraints. Validates concept requirements (identifier, name, documentation), specialization relationship integrity (same-type, no self-loops, depth), and structural relationship integrity (no circular/self composition/aggregation, composition part uniqueness). For metamodel pattern rules, see archimate_validation_metamodel.ttl. For per-element-type relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-10"^^xsd:date ;
-    dct:modified "2026-02-20"^^xsd:date ;
-    owl:versionInfo "Alpha" ;
+    dct:modified "2026-05-28"^^xsd:date ;
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
+    owl:versionInfo "Beta" ;
     sh:declare [
         sh:prefix "archimate" ;
         sh:namespace "https://purl.org/archimate#"^^xsd:anyURI ;

@@ -15,7 +15,8 @@
     dct:description "Profile classes are owl:Class that specialize standard ArchiMate elements via rdfs:subClassOf and archimate:specialization. SHACL shapes for these profiles are defined in validation/archimate_validation_profiles.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-10"^^xsd:date ;
-    dct:modified "2026-05-09"^^xsd:date ;
+    dct:modified "2026-05-28"^^xsd:date ;
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Sample" .
 
 # DESIGN NOTES

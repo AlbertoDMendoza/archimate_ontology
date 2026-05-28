@@ -35,7 +35,9 @@
     rdfs:label "ArchiMate Relationship Validation - All Layers (Level 3)" ;
     rdfs:comment "Composition, aggregation, access, and realization constraints for all ArchiMate 3.2 elements per Appendix B. Covers Strategy, Motivation, Business, Application, Technology, Physical, and Implementation & Migration layers." ;
     dct:creator "Alberto D. Mendoza" ;
-    dct:modified "2026-02-21"^^xsd:date ;
+    dct:modified "2026-05-28"^^xsd:date ;
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
+    owl:versionInfo "Beta" ;
     sh:declare [
         sh:prefix "archimate" ;
         sh:namespace "https://purl.org/archimate#"^^xsd:anyURI
