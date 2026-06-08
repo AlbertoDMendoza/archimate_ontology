@@ -951,7 +951,7 @@
                 UNION
                 { ?a ?rel1 $this . $this ?rel2 ?b . }
 
-                # Only consider ArchiMate relationship properties
+                # Only consider concrete ArchiMate relationship properties (exclude abstract base properties)
                 { ?rel1 rdfs:subPropertyOf* archimate:structuralRelationship }
                 UNION { ?rel1 rdfs:subPropertyOf* archimate:dependencyRelationship }
                 UNION { ?rel1 rdfs:subPropertyOf* archimate:dynamicRelationship }
@@ -960,6 +960,8 @@
                 UNION { ?rel2 rdfs:subPropertyOf* archimate:dependencyRelationship }
                 UNION { ?rel2 rdfs:subPropertyOf* archimate:dynamicRelationship }
 
+                FILTER NOT EXISTS { ?rel1 archimate:abstract true }
+                FILTER NOT EXISTS { ?rel2 archimate:abstract true }
                 FILTER(?rel1 != ?rel2)
             }
         """

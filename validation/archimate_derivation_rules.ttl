@@ -663,6 +663,7 @@ archimate:serving <#dependencyStrength> 4 .
         sh:select """
             SELECT $this WHERE {
                 $this ?rel ?target .
+                FILTER NOT EXISTS { ?rel archimate:abstract true }
 
                 # Implementation & Migration → Motivation (only assignment, realization, influence, association allowed)
                 {
