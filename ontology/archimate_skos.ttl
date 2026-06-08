@@ -338,9 +338,9 @@
     skos:broader <#BusinessPassiveStructure> ;
     skos:inScheme <#> .
 
-<#BusinessContract> rdf:type skos:Concept ;
-    skos:prefLabel "Business Contract"@en ;
-    skos:altLabel "Contract"@en ;
+<#Contract> rdf:type skos:Concept ;
+    skos:prefLabel "Contract"@en ;
+    skos:altLabel "Business Contract"@en ;
     skos:definition "A formal or informal specification of an agreement between a provider and a consumer."@en ;
     skos:broader <#BusinessPassiveStructure> ;
     skos:inScheme <#> .
