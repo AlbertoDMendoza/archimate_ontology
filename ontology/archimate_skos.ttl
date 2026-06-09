@@ -20,7 +20,7 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2026-05-28"^^xsd:date ;
+    dct:modified "2026-06-09"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Beta" ;
     dct:subject "Enterprise Architecture, ArchiMate, Modeling Language" ;
@@ -668,7 +668,7 @@
 
 ### Composite Elements
 
-<#CompositeElements> rdf:type skos:Concept ;
+<#CompositeElement> rdf:type skos:Concept ;
     skos:prefLabel "Composite Elements"@en ;
     skos:definition "Elements that do not fit in a single aspect of the framework but may combine two or more aspects."@en ;
     skos:broader <#ArchiMate> ;
@@ -677,107 +677,107 @@
 <#Grouping> rdf:type skos:Concept ;
     skos:prefLabel "Grouping"@en ;
     skos:definition "An element that aggregates or composes concepts that belong together based on some common characteristic."@en ;
-    skos:broader <#CompositeElements> ;
+    skos:broader <#CompositeElement> ;
     skos:inScheme <#> .
 
 <#Location> rdf:type skos:Concept ;
     skos:prefLabel "Location"@en ;
     skos:definition "A conceptual or physical place or position where concepts are located or performed."@en ;
-    skos:broader <#CompositeElements> ;
+    skos:broader <#CompositeElement> ;
     skos:inScheme <#> .
 
 ### Relationship Concepts
 
-<#Relationships> rdf:type skos:Concept ;
+<#Relationship> rdf:type skos:Concept ;
     skos:prefLabel "Relationships"@en ;
     skos:definition "Connections between ArchiMate elements."@en ;
     skos:broader <#ArchiMate> ;
     skos:inScheme <#> .
 
-<#StructuralRelationships> rdf:type skos:Concept ;
+<#structuralRelationship> rdf:type skos:Concept ;
     skos:prefLabel "Structural Relationships"@en ;
     skos:definition "Relationships that define static construction or composition."@en ;
-    skos:broader <#Relationships> ;
+    skos:broader <#Relationship> ;
     skos:inScheme <#> .
 
 <#assignment> rdf:type skos:Concept ;
     skos:prefLabel "Assignment"@en ;
     skos:definition "Links active structure elements with behavior that they perform or roles they fulfill."@en ;
-    skos:broader <#StructuralRelationships> ;
+    skos:broader <#structuralRelationship> ;
     skos:inScheme <#> .
 
 <#aggregation> rdf:type skos:Concept ;
     skos:prefLabel "Aggregation"@en ;
     skos:definition "Models a whole-part relationship where parts can exist independently."@en ;
-    skos:broader <#StructuralRelationships> ;
+    skos:broader <#structuralRelationship> ;
     skos:inScheme <#> .
 
 <#composition> rdf:type skos:Concept ;
     skos:prefLabel "Composition"@en ;
     skos:definition "Models a whole-part relationship where parts cannot exist without the whole."@en ;
-    skos:broader <#StructuralRelationships> ;
+    skos:broader <#structuralRelationship> ;
     skos:inScheme <#> .
 
 <#realization> rdf:type skos:Concept ;
     skos:prefLabel "Realization"@en ;
     skos:definition "Indicates that an entity realizes or implements another entity."@en ;
     skos:scopeNote "Use when a more concrete element implements or fulfills the purpose of a more abstract element. Common in layer transitions (e.g., application process realizing business process)."@en ;
-    skos:broader <#StructuralRelationships> ;
+    skos:broader <#structuralRelationship> ;
     skos:inScheme <#> .
 
-<#DependencyRelationships> rdf:type skos:Concept ;
+<#dependencyRelationship> rdf:type skos:Concept ;
     skos:prefLabel "Dependency Relationships"@en ;
     skos:definition "Relationships that model dependencies between elements."@en ;
-    skos:broader <#Relationships> ;
+    skos:broader <#Relationship> ;
     skos:inScheme <#> .
 
 <#serving> rdf:type skos:Concept ;
     skos:prefLabel "Serving"@en ;
     skos:definition "Models that an element provides functionality to another element."@en ;
     skos:scopeNote "Use when one element provides functionality, data, or capabilities to another element. Can cross architectural layers (e.g., application serving business)."@en ;
-    skos:broader <#DependencyRelationships> ;
+    skos:broader <#dependencyRelationship> ;
     skos:inScheme <#> .
 
 <#access> rdf:type skos:Concept ;
     skos:prefLabel "Access"@en ;
     skos:definition "Models access of behavior elements to passive structure elements."@en ;
-    skos:broader <#DependencyRelationships> ;
+    skos:broader <#dependencyRelationship> ;
     skos:inScheme <#> .
 
 <#influence> rdf:type skos:Concept ;
     skos:prefLabel "Influence"@en ;
     skos:definition "Models how one element influences another element."@en ;
-    skos:broader <#DependencyRelationships> ;
+    skos:broader <#dependencyRelationship> ;
     skos:inScheme <#> .
 
 <#association> rdf:type skos:Concept ;
     skos:prefLabel "Association"@en ;
     skos:definition "Models a relationship not covered by other specific relationship types."@en ;
-    skos:broader <#DependencyRelationships> ;
+    skos:broader <#dependencyRelationship> ;
     skos:inScheme <#> .
 
-<#DynamicRelationships> rdf:type skos:Concept ;
+<#dynamicRelationship> rdf:type skos:Concept ;
     skos:prefLabel "Dynamic Relationships"@en ;
     skos:definition "Relationships that model behavioral dependencies between elements."@en ;
-    skos:broader <#Relationships> ;
+    skos:broader <#Relationship> ;
     skos:inScheme <#> .
 
 <#triggering> rdf:type skos:Concept ;
     skos:prefLabel "Triggering"@en ;
     skos:definition "Models temporal or causal relationships where one behavior triggers another."@en ;
-    skos:broader <#DynamicRelationships> ;
+    skos:broader <#dynamicRelationship> ;
     skos:inScheme <#> .
 
 <#flow> rdf:type skos:Concept ;
     skos:prefLabel "Flow"@en ;
     skos:definition "Models transfer of information, materials, or energy between behavior elements."@en ;
-    skos:broader <#DynamicRelationships> ;
+    skos:broader <#dynamicRelationship> ;
     skos:inScheme <#> .
 
 <#OtherRelationships> rdf:type skos:Concept ;
     skos:prefLabel "Other Relationships"@en ;
     skos:definition "Other types of relationships not covered by structural, dependency, or dynamic relationships."@en ;
-    skos:broader <#Relationships> ;
+    skos:broader <#Relationship> ;
     skos:inScheme <#> .
 
 <#specialization> rdf:type skos:Concept ;
@@ -792,7 +792,7 @@
 <#RelationshipConnectors> rdf:type skos:Concept ;
     skos:prefLabel "Relationship Connectors"@en ;
     skos:definition "Elements that connect relationships of the same type."@en ;
-    skos:broader <#Relationships> ;
+    skos:broader <#Relationship> ;
     skos:inScheme <#> .
 
 <#Junction> rdf:type skos:Concept ;
@@ -819,7 +819,7 @@
     skos:prefLabel "Relationship Properties"@en ;
     skos:definition "Spec-defined properties that qualify specific ArchiMate relationship types, used as RDF-Star annotations on relationship instances."@en ;
     skos:scopeNote "These are constrained-vocabulary properties defined by the ArchiMate spec for specific relationship types. They are distinct from the open-ended Concept Properties (identifier, name, documentation, Property) which apply to all concepts."@en ;
-    skos:broader <#Relationships> ;
+    skos:broader <#Relationship> ;
     skos:inScheme <#> .
 
 <#accessType> rdf:type skos:Concept ;
