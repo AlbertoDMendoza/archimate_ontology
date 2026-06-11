@@ -321,8 +321,48 @@
 	<h3><a name="specialization"></a>Specialization</h3>
 	<p>Indicates that an element is a more specific form of another element of the same type.</p>
 
+	<h2>Concept Properties</h2>
+
+	<h3><a name="ConceptProperties"></a>Concept Properties</h3>
+	<p>Properties that can be attached to any ArchiMate concept (element or relationship), as defined in spec Section 2.2: <a href="#identifier">identifier</a>, <a href="#name">name</a>, <a href="#documentation">documentation</a>, and the open-ended <a href="#Property">Property</a> extension mechanism.</p>
+
+	<h3><a name="identifier"></a>Identifier</h3>
+	<p>A unique identifier for any ArchiMate concept (element or relationship). Mandatory per spec Section 2.2. Modeled as a functional <code>owl:DatatypeProperty</code> (<code>xsd:string</code>) with domain <code>archimate:Concept</code>.</p>
+
+	<h3><a name="name"></a>Name</h3>
+	<p>A human-readable name for any ArchiMate concept (element or relationship).</p>
+
+	<h3><a name="documentation"></a>Documentation</h3>
+	<p>A textual description of any ArchiMate concept (element or relationship).</p>
+
+	<h3><a name="Property"></a>Property</h3>
+	<p>A user-defined key-value pair that can be attached to any ArchiMate concept (element or relationship), per spec Section 2.2. Provides an open-ended extension mechanism for unschematized metadata. Use for arbitrary, untyped metadata — especially when importing from or exporting to ArchiMate exchange format files. For typed, validated properties, use profile definitions instead.</p>
+
 	<h3><a name="abstract"></a>Abstract</h3>
-	<p>A metamodel flag (<code>archimate:abstract true</code>) asserted on a class or property to mark it as an abstract organizing construct, not intended for direct instantiation or assertion in instance data. SHACL shapes targeting concrete model content exclude entities so marked.</p>
+	<p>A metamodel flag (<code>&lt;#abstract&gt; true</code>) asserted on a class or property to mark it as an abstract organizing construct, not intended for direct instantiation or assertion in instance data. SHACL shapes targeting concrete model content exclude entities so marked.</p>
+
+	<h2>Relationship Properties</h2>
+
+	<h3><a name="RelationshipProperties"></a>Relationship Properties</h3>
+	<p>Spec-defined properties that qualify specific ArchiMate relationship types, used as RDF-Star annotations on relationship instances. Distinct from the open-ended <a href="#ConceptProperties">Concept Properties</a> which apply to all concepts.</p>
+
+	<h3><a name="accessType"></a>Access Type</h3>
+	<p>Specifies the type of access in an <a href="#access">Access</a> relationship: read, write, readwrite, or unspecified.</p>
+
+	<h3><a name="influenceSign"></a>Influence Sign</h3>
+	<p>The direction of an <a href="#influence">Influence</a> relationship: positive (+), negative (-), or unspecified.</p>
+
+	<h3><a name="influenceStrength"></a>Influence Strength</h3>
+	<p>The strength of an <a href="#influence">Influence</a> relationship: weak, moderate, strong, or unspecified.</p>
+
+	<h3><a name="flowType"></a>Flow Type</h3>
+	<p>The type of transfer in a <a href="#flow">Flow</a> relationship: information, material, energy, or unspecified.</p>
+
+	<h3><a name="junctionType"></a>Junction Type</h3>
+	<p>The logical operation of a Junction: <code>and</code> (all relationships must be satisfied) or <code>or</code> (at least one must be satisfied).</p>
+
+	<h3><a name="confidence"></a>Confidence</h3>
+	<p>The confidence level of a relationship, used for derived relationships: valid, potential, or unspecified. Applied to relationships produced by derivation inference rules rather than explicitly modeled; indicates certainty of the derived relationship.</p>
 
 	<h3><a name="Copyright"></a>Copyright</h3>
 	<p>All trademarks and copyrights belong to The Open Group</p>
