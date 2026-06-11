@@ -20,7 +20,7 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2026-06-09"^^xsd:date ;
+    dct:modified "2026-06-11"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Beta" ;
     dct:subject "Enterprise Architecture, ArchiMate, Modeling Language" ;
@@ -663,6 +663,13 @@
     skos:altLabel "Concept Property"@en ;
     skos:definition "A user-defined key-value pair that can be attached to any ArchiMate concept (element or relationship), per spec Section 2.2. Provides an open-ended extension mechanism for unschematized metadata."@en ;
     skos:scopeNote "Use for arbitrary, untyped metadata — especially when importing from or exporting to ArchiMate exchange format files. For typed, validated properties, use profile definitions instead. Corresponds to the OWL hasProperty/Property pattern in the ontology."@en ;
+    skos:broader <#ConceptProperties> ;
+    skos:inScheme <#> .
+
+<#abstract> rdf:type skos:Concept ;
+    skos:prefLabel "Abstract"@en ;
+    skos:definition "A metamodel flag asserted on a class or property to mark it as an abstract organizing construct, not intended for direct instantiation or assertion in instance data."@en ;
+    skos:scopeNote "Validation shapes targeting concrete model content exclude entities marked `<#abstract> true`. Used in the OWL ontology and in SHACL `FILTER NOT EXISTS { ?x <#abstract> true }` clauses; not a model-level term."@en ;
     skos:broader <#ConceptProperties> ;
     skos:inScheme <#> .
 
