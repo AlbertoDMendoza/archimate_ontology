@@ -321,6 +321,9 @@
 	<h3><a name="specialization"></a>Specialization</h3>
 	<p>Indicates that an element is a more specific form of another element of the same type.</p>
 
+	<h3><a name="Profile"></a>Profile</h3>
+	<p>A customization mechanism for defining user-specific subtypes of standard ArchiMate elements (spec Section 2.5). A profile is a class that specializes an ArchiMate element via <code>rdfs:subClassOf</code> and the <a href="#specialization">specialization</a> relationship, and carries typed attributes as SHACL <code>sh:NodeShape</code> constraints. Profiles are user/organization-defined and live in the deploying organization's own namespace, not in <code>archimate:</code> — the standard publishes the <em>mechanism</em>, not the profiles. See <code>archimate_profile_examples.ttl</code> for illustrative examples in a <code>myModel:</code> namespace.</p>
+
 	<h2>Concept Properties</h2>
 
 	<h3><a name="ConceptProperties"></a>Concept Properties</h3>

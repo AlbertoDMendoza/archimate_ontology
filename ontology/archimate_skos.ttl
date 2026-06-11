@@ -794,6 +794,15 @@
     skos:broader <#OtherRelationships> ;
     skos:inScheme <#> .
 
+<#Profile> rdf:type skos:Concept ;
+    skos:prefLabel "Profile"@en ;
+    skos:altLabel "Specialization Profile"@en ;
+    skos:definition "A customization mechanism for defining user-specific subtypes of standard ArchiMate elements (spec Section 2.5). A profile is a class that specializes an ArchiMate element via rdfs:subClassOf and carries typed attributes via SHACL sh:NodeShape constraints."@en ;
+    skos:scopeNote "Profiles are user/organization-defined and live in the deploying organization's own namespace, not in archimate:. The standard publishes the mechanism, not the profiles. See archimate_profile_examples.ttl for illustrative examples in a myModel: namespace."@en ;
+    skos:broader <#ArchiMate> ;
+    skos:related <#specialization> ;
+    skos:inScheme <#> .
+
 ### Relationship Connectors
 
 <#RelationshipConnectors> rdf:type skos:Concept ;
