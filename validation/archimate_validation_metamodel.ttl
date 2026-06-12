@@ -14,7 +14,7 @@
     rdfs:comment "Level 2 Metamodel Validation: abstract ArchiMate metamodel pattern rules using the ontology's class hierarchy (aspect x layer intersections). Encodes Figures 5, 34, 45, 46, 51, 52, 70, 82, 99, 104, 105, and 106 from ArchiMate 3.2. For graph integrity, see archimate_validation_core.ttl. For per-element relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-16"^^xsd:date ;
-    dct:modified "2026-05-28"^^xsd:date ;
+    dct:modified "2026-06-12"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Beta" ;
     sh:declare [
@@ -125,7 +125,9 @@
 # layer hierarchy. Strategy, Physical, and I&M each have their own metamodel
 # patterns in Sections 2, 5, and 6.
 
-## 1.1 Assignment: ActiveStructure → BehaviorAspect (CoreLayer only)
+## 1.1 Assignment: ActiveStructure → BehaviorAspect (canonical) plus deployment exceptions per 3.2 Appendix B
+##      Source must always be ActiveStructure. Target is BehaviorAspect in the generic case, OR
+##      Artifact (Node/Device/SystemSoftware → Artifact deployment) OR Node (Path → Node).
 <#AssignmentSourceConstraint> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:assignment ;
     rdfs:label "Assignment Source: Active Structure (Core)" ;
@@ -145,16 +147,20 @@
 
 <#AssignmentTargetConstraint> rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:assignment ;
-    rdfs:label "Assignment Target: Behavior (Core)" ;
+    rdfs:label "Assignment Target: Behavior or Deployment Target (Core)" ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "In core layers, assignment can only target behavior elements" ;
+        sh:message "In core layers, assignment target must be a behavior element, or — per spec 3.2 Appendix B — an Artifact (Node/Device/SystemSoftware → Artifact deployment) or a Node (Path → Node)" ;
         sh:select """
             SELECT $this WHERE {
                 ?source archimate:assignment $this .
                 $this rdf:type/rdfs:subClassOf* archimate:CoreLayer .
                 FILTER NOT EXISTS {
-                    $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
+                    { $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect }
+                    UNION
+                    { $this rdf:type/rdfs:subClassOf* archimate:Artifact }
+                    UNION
+                    { $this rdf:type/rdfs:subClassOf* archimate:Node }
                 }
             }
         """
@@ -162,20 +168,24 @@
 
 
 
-## 1.3 Access: BehaviorAspect → PassiveStructure (CoreLayer only)
+## 1.3 Access: (BehaviorAspect ∪ ActiveStructure) → PassiveStructure (CoreLayer only)
+##      Per spec 3.2 §5.2.2 the access source was broadened from BehaviorAspect (3.1) to also
+##      include ActiveStructure elements (e.g. a Node accessing an Artifact).
 
 <#AccessSourceConstraint> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:access ;
-    rdfs:label "Access Source: Behavior (Core)" ;
+    rdfs:label "Access Source: Behavior or Active Structure (Core)" ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "In core layers, access can only originate from behavior elements" ;
+        sh:message "In core layers, access can only originate from behavior or active structure elements (per spec 3.2 §5.2.2; 3.1 restricted this to behavior only)" ;
         sh:select """
             SELECT $this WHERE {
                 $this archimate:access ?target .
                 $this rdf:type/rdfs:subClassOf* archimate:CoreLayer .
                 FILTER NOT EXISTS {
-                    $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
+                    { $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect }
+                    UNION
+                    { $this rdf:type/rdfs:subClassOf* archimate:ActiveStructure }
                 }
             }
         """
