@@ -200,13 +200,15 @@
     rdfs:label "Name" ;
     rdfs:comment "Human-readable name for any ArchiMate concept (element or relationship)." ;
     rdfs:domain <#Concept> ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+	rdf:type owl:FunctionalProperty .
 
 <#documentation> rdf:type owl:DatatypeProperty ;
     rdfs:label "Documentation" ;
     rdfs:comment "Textual description of any ArchiMate concept (element or relationship)." ;
     rdfs:domain <#Concept> ;
-    rdfs:range xsd:string .
+    rdfs:range xsd:string ;
+	rdf:type owl:FunctionalProperty .
 
 # DESIGN NOTE: Three-tier property extension model
 #
