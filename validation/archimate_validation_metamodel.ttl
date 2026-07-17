@@ -147,16 +147,18 @@
 
 <#AssignmentTargetConstraint> rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:assignment ;
-    rdfs:label "Assignment Target: Behavior or Deployment Target (Core)" ;
+    rdfs:label "Assignment Target: Behavior, Active Structure, or Deployment Target (Core)" ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "In core layers, assignment target must be a behavior element, or — per spec 3.2 Appendix B — an Artifact (Node/Device/SystemSoftware → Artifact deployment) or a Node (Path → Node)" ;
+        sh:message "In core layers, assignment target must be a behavior element, an active structure element (e.g. BusinessActor → BusinessRole), or — per spec 3.2 Appendix B — an Artifact (Node/Device/SystemSoftware → Artifact deployment) or a Node (Path → Node)" ;
         sh:select """
             SELECT $this WHERE {
                 ?source archimate:assignment $this .
                 $this rdf:type/rdfs:subClassOf* archimate:CoreLayer .
                 FILTER NOT EXISTS {
                     { $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect }
+                    UNION
+                    { $this rdf:type/rdfs:subClassOf* archimate:ActiveStructure }
                     UNION
                     { $this rdf:type/rdfs:subClassOf* archimate:Artifact }
                     UNION
@@ -258,19 +260,23 @@
 # Motivation elements. No source constraint needed at metamodel level.
 
 
-## 1.6 Triggering: BehaviorAspect → BehaviorAspect (CoreLayer only)
+## 1.6 Triggering: (BehaviorAspect ∪ ActiveStructure) → (BehaviorAspect ∪ ActiveStructure) (CoreLayer only)
+##      Per spec 3.2 Appendix B, triggering may connect behavior elements and active structure
+##      elements (e.g. BusinessActor/BusinessRole), not behavior only.
 <#TriggeringSourceConstraint> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:triggering ;
-    rdfs:label "Triggering Source: Behavior (Core)" ;
+    rdfs:label "Triggering Source: Behavior or Active Structure (Core)" ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "In core layers, triggering can only originate from behavior elements" ;
+        sh:message "In core layers, triggering can only originate from behavior or active structure elements" ;
         sh:select """
             SELECT $this WHERE {
                 $this archimate:triggering ?target .
                 $this rdf:type/rdfs:subClassOf* archimate:CoreLayer .
                 FILTER NOT EXISTS {
-                    $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
+                    { $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect }
+                    UNION
+                    { $this rdf:type/rdfs:subClassOf* archimate:ActiveStructure }
                 }
             }
         """
@@ -278,35 +284,40 @@
 
 <#TriggeringTargetConstraint> rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:triggering ;
-    rdfs:label "Triggering Target: Behavior (Core)" ;
+    rdfs:label "Triggering Target: Behavior or Active Structure (Core)" ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "In core layers, triggering can only target behavior elements" ;
+        sh:message "In core layers, triggering can only target behavior or active structure elements" ;
         sh:select """
             SELECT $this WHERE {
                 ?source archimate:triggering $this .
                 $this rdf:type/rdfs:subClassOf* archimate:CoreLayer .
                 FILTER NOT EXISTS {
-                    $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
+                    { $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect }
+                    UNION
+                    { $this rdf:type/rdfs:subClassOf* archimate:ActiveStructure }
                 }
             }
         """
     ] .
 
 
-## 1.7 Flow: BehaviorAspect → BehaviorAspect (CoreLayer only)
+## 1.7 Flow: (BehaviorAspect ∪ ActiveStructure) → (BehaviorAspect ∪ ActiveStructure) (CoreLayer only)
+##      Per spec 3.2 Appendix B, flow may connect behavior elements and active structure elements.
 <#FlowSourceConstraint> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:flow ;
-    rdfs:label "Flow Source: Behavior (Core)" ;
+    rdfs:label "Flow Source: Behavior or Active Structure (Core)" ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "In core layers, flow can only originate from behavior elements" ;
+        sh:message "In core layers, flow can only originate from behavior or active structure elements" ;
         sh:select """
             SELECT $this WHERE {
                 $this archimate:flow ?target .
                 $this rdf:type/rdfs:subClassOf* archimate:CoreLayer .
                 FILTER NOT EXISTS {
-                    $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
+                    { $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect }
+                    UNION
+                    { $this rdf:type/rdfs:subClassOf* archimate:ActiveStructure }
                 }
             }
         """
@@ -314,16 +325,18 @@
 
 <#FlowTargetConstraint> rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:flow ;
-    rdfs:label "Flow Target: Behavior (Core)" ;
+    rdfs:label "Flow Target: Behavior or Active Structure (Core)" ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "In core layers, flow can only target behavior elements" ;
+        sh:message "In core layers, flow can only target behavior or active structure elements" ;
         sh:select """
             SELECT $this WHERE {
                 ?source archimate:flow $this .
                 $this rdf:type/rdfs:subClassOf* archimate:CoreLayer .
                 FILTER NOT EXISTS {
-                    $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
+                    { $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect }
+                    UNION
+                    { $this rdf:type/rdfs:subClassOf* archimate:ActiveStructure }
                 }
             }
         """
