@@ -115,10 +115,13 @@
         sh:prefixes <#> ;
         sh:message "Concept identifiers must be unique across the model" ;
         sh:select """
-            SELECT $this ?other WHERE {
+            SELECT $this WHERE {
                 $this archimate:identifier ?id .
-                ?other archimate:identifier ?id .
-                FILTER($this != ?other)
+                {
+                    SELECT ?id (COUNT(DISTINCT ?c) AS ?n) WHERE { ?c archimate:identifier ?id }
+                    GROUP BY ?id
+                    HAVING (COUNT(DISTINCT ?c) > 1)
+                }
             }
         """
     ] .
@@ -236,15 +239,24 @@
 <#CompositionPartUniqueness> rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:composition ;
     rdfs:label "Composition Part Uniqueness" ;
-    rdfs:comment "Enforces that each composed part belongs to exactly one whole (exclusive ownership)." ;
+    rdfs:comment "Enforces that each composed part belongs to exactly one whole (exclusive ownership). Exempts the case where one composer is a composition-ancestor of another (e.g. a company directly composing a sub-team that a department also directly composes) — that's a redundant re-assertion of an already-transitive relationship, not a genuine ownership conflict." ;
     sh:sparql [
         sh:prefixes <#> ;
         sh:message "A composed part can only belong to one whole (composition implies exclusive ownership)" ;
         sh:select """
             SELECT $this WHERE {
-                ?whole1 archimate:composition $this .
-                ?whole2 archimate:composition $this .
-                FILTER(?whole1 != ?whole2)
+                {
+                    SELECT $this WHERE {
+                        ?whole archimate:composition $this .
+                    }
+                    GROUP BY $this
+                    HAVING (COUNT(DISTINCT ?whole) > 1)
+                }
+                ?w1 archimate:composition $this .
+                ?w2 archimate:composition $this .
+                FILTER(?w1 != ?w2)
+                FILTER NOT EXISTS { ?w1 archimate:composition+ ?w2 }
+                FILTER NOT EXISTS { ?w2 archimate:composition+ ?w1 }
             }
         """
     ] .

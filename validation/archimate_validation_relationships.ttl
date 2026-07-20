@@ -296,8 +296,8 @@
         sh:or (
             [ sh:class archimate:BusinessService ] [ sh:class archimate:Capability ] [ sh:class archimate:Constraint ]
             [ sh:class archimate:CourseOfAction ] [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ]
-            [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ]
-            [ sh:class archimate:ValueStream ]
+            [ sh:class archimate:Junction ] [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ] [ sh:class archimate:ValueStream ]
         ) ;
         sh:message "BusinessProcess: realization target is not valid per ArchiMate 3.2."
     ] ;
@@ -349,8 +349,8 @@
         sh:or (
             [ sh:class archimate:BusinessService ] [ sh:class archimate:Capability ] [ sh:class archimate:Constraint ]
             [ sh:class archimate:CourseOfAction ] [ sh:class archimate:Goal ] [ sh:class archimate:Grouping ]
-            [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ] [ sh:class archimate:Requirement ]
-            [ sh:class archimate:ValueStream ]
+            [ sh:class archimate:Junction ] [ sh:class archimate:Outcome ] [ sh:class archimate:Principle ]
+            [ sh:class archimate:Requirement ] [ sh:class archimate:ValueStream ]
         ) ;
         sh:message "BusinessFunction: realization target is not valid per ArchiMate 3.2."
     ] ;
@@ -1354,6 +1354,7 @@
             [ sh:class archimate:CourseOfAction ]
             [ sh:class archimate:Goal ]
             [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Junction ]
             [ sh:class archimate:Outcome ]
             [ sh:class archimate:Principle ]
             [ sh:class archimate:Requirement ]
@@ -2305,6 +2306,7 @@
             [ sh:class archimate:Facility ]
             [ sh:class archimate:Goal ]
             [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Junction ]
             [ sh:class archimate:Location ]
             [ sh:class archimate:Material ]
             [ sh:class archimate:Node ]
@@ -2737,11 +2739,12 @@
             [ sh:class archimate:CourseOfAction ]
             [ sh:class archimate:Goal ]
             [ sh:class archimate:Grouping ]
+            [ sh:class archimate:Junction ]
             [ sh:class archimate:Outcome ]
             [ sh:class archimate:Principle ]
             [ sh:class archimate:Requirement ]
         ) ;
-        sh:message "Capability: realization is only valid to Constraint, CourseOfAction, Goal, Grouping, Outcome, Principle, Requirement."
+        sh:message "Capability: realization is only valid to Constraint, CourseOfAction, Goal, Grouping, Junction, Outcome, Principle, Requirement."
     ] ;
 
     .

@@ -709,12 +709,13 @@ archimate:serving <#dependencyStrength> 4 .
                     FILTER(?rel NOT IN (archimate:association))
                 } UNION
 
-                # Implementation & Migration → Core (only realization, association allowed)
+                # Implementation & Migration → Core (realization, aggregation, composition, association allowed —
+                # Plateau aggregates/composes nearly all element types to represent an architecture state, per spec)
                 {
                     VALUES ?coreLayer { archimate:BusinessLayer archimate:ApplicationLayer archimate:TechnologyLayer archimate:PhysicalLayer }
                     $this rdf:type/rdfs:subClassOf+ archimate:ImplementationAndMigrationLayer .
                     ?target rdf:type/rdfs:subClassOf* ?coreLayer .
-                    FILTER(?rel NOT IN (archimate:realization, archimate:association))
+                    FILTER(?rel NOT IN (archimate:realization, archimate:association, archimate:aggregation, archimate:composition))
                 } UNION
 
                 # Core → Implementation & Migration (only assignment, association allowed)
@@ -739,12 +740,15 @@ archimate:serving <#dependencyStrength> 4 .
                     FILTER(?rel NOT IN (archimate:association))
                 } UNION
 
-                # Strategy → Core (only association allowed)
+                # Strategy → Core (serving, influence, association allowed — per spec 7.2/Figure 51,
+                # e.g. Capability serving a BusinessProcess. Realization is intentionally excluded:
+                # realization flows Core -> Strategy, not the reverse, per StrategyRealizationTarget
+                # in archimate_validation_metamodel.ttl)
                 {
                     VALUES ?coreLayer { archimate:BusinessLayer archimate:ApplicationLayer archimate:TechnologyLayer archimate:PhysicalLayer }
                     $this rdf:type/rdfs:subClassOf+ archimate:StrategyLayer .
                     ?target rdf:type/rdfs:subClassOf* ?coreLayer .
-                    FILTER(?rel NOT IN (archimate:association))
+                    FILTER(?rel NOT IN (archimate:association, archimate:serving, archimate:influence))
                 }
             }
         """

@@ -218,6 +218,7 @@
 <#ServingLayerDirection> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:serving ;
     rdfs:label "Serving Layer Direction" ;
+    sh:deactivated true ;
     sh:severity sh:Warning ;
     sh:sparql [
         sh:prefixes <#> ;
@@ -464,10 +465,16 @@
                     archimate:TechnologyLayer
                 }
                 $this rdf:type/rdfs:subClassOf* ?layer .
-                # Target must be ExternalBehavior in the same layer
+                # Target must be ExternalBehavior in the same layer, or a universal target
                 FILTER NOT EXISTS {
                     ?target rdf:type/rdfs:subClassOf* archimate:ExternalBehavior .
                     ?target rdf:type/rdfs:subClassOf* ?layer .
+                }
+                FILTER NOT EXISTS {
+                    ?target rdf:type/rdfs:subClassOf* archimate:Grouping
+                }
+                FILTER NOT EXISTS {
+                    ?target rdf:type/rdfs:subClassOf* archimate:Junction
                 }
             }
         """
@@ -481,6 +488,7 @@
 <#CoreServiceRealizesInternalBehavior> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:realization ;
     rdfs:label "Core Service Realization Direction" ;
+    sh:deactivated true ;
     sh:severity sh:Info ;
     rdfs:comment "Within a core layer, realization should flow from internal/collective behavior to service, not the reverse." ;
     sh:sparql [
@@ -638,6 +646,7 @@
 <#DeprecatedWorkPackageRealizesDeliverable> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:realization ;
     rdfs:label "Deprecated: WorkPackage → Deliverable Realization" ;
+    sh:deactivated true ;
     sh:severity sh:Warning ;
     sh:sparql [
         sh:prefixes <#> ;
@@ -664,6 +673,7 @@
 <#GapPlateauAssociation> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Gap ;
     rdfs:label "Gap Should Associate with Plateaus" ;
+    sh:deactivated true ;
     sh:severity sh:Warning ;
     sh:sparql [
         sh:prefixes <#> ;
@@ -840,6 +850,7 @@
 <#CoreBehaviorRealizesStrategyBehavior> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:realization ;
     rdfs:label "Core Behavior → Strategy Behavior Realization" ;
+    sh:deactivated true ;
     sh:severity sh:Info ;
     rdfs:comment "Internal and external behavior elements from Core layers (Business, Application, Technology) may realize Strategy behavior elements (Capability, ValueStream). This shape validates the pattern is used correctly — source should be Core behavior, target should be Strategy behavior." ;
     sh:sparql [
@@ -875,6 +886,7 @@
 <#CoreStructureRealizesResource> rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:realization ;
     rdfs:label "Core Structure → Resource Realization" ;
+    sh:deactivated true ;
     sh:severity sh:Info ;
     rdfs:comment "Active and passive structure elements from Core layers may realize Resource. This shape validates the pattern — source should be Core structure, target should be Resource." ;
     sh:sparql [
@@ -932,9 +944,12 @@
                 FILTER NOT EXISTS {
                     ?target rdf:type/rdfs:subClassOf* archimate:MotivationAspect
                 }
-                # Exclude Grouping (universal target)
+                # Exclude Grouping and Junction (universal targets)
                 FILTER NOT EXISTS {
                     ?target rdf:type/rdfs:subClassOf* archimate:Grouping
+                }
+                FILTER NOT EXISTS {
+                    ?target rdf:type/rdfs:subClassOf* archimate:Junction
                 }
             }
         """
@@ -967,26 +982,25 @@
         sh:message "All relationships connected to a junction must be of the same type" ;
         sh:select """
             SELECT $this WHERE {
-                # Get any two relationships touching this junction
-                { ?a ?rel1 $this . ?b ?rel2 $this . }
-                UNION
-                { $this ?rel1 ?a . $this ?rel2 ?b . }
-                UNION
-                { ?a ?rel1 $this . $this ?rel2 ?b . }
+                # Every relationship touching this junction, incoming or outgoing
+                { ?a ?rel $this } UNION { $this ?rel ?a }
 
                 # Only consider concrete ArchiMate relationship properties (exclude abstract base properties)
-                { ?rel1 rdfs:subPropertyOf* archimate:structuralRelationship }
-                UNION { ?rel1 rdfs:subPropertyOf* archimate:dependencyRelationship }
-                UNION { ?rel1 rdfs:subPropertyOf* archimate:dynamicRelationship }
+                FILTER NOT EXISTS { ?rel archimate:abstract true }
+                {
+                    { ?rel rdfs:subPropertyOf* archimate:structuralRelationship }
+                    UNION { ?rel rdfs:subPropertyOf* archimate:dependencyRelationship }
+                    UNION { ?rel rdfs:subPropertyOf* archimate:dynamicRelationship }
+                }
 
-                { ?rel2 rdfs:subPropertyOf* archimate:structuralRelationship }
-                UNION { ?rel2 rdfs:subPropertyOf* archimate:dependencyRelationship }
-                UNION { ?rel2 rdfs:subPropertyOf* archimate:dynamicRelationship }
-
-                FILTER NOT EXISTS { ?rel1 archimate:abstract true }
-                FILTER NOT EXISTS { ?rel2 archimate:abstract true }
-                FILTER(?rel1 != ?rel2)
+                BIND(
+                    IF(EXISTS { ?rel rdfs:subPropertyOf* archimate:structuralRelationship }, "structural",
+                    IF(EXISTS { ?rel rdfs:subPropertyOf* archimate:dependencyRelationship }, "dependency",
+                    "dynamic")) AS ?category
+                )
             }
+            GROUP BY $this
+            HAVING (COUNT(DISTINCT ?category) > 1)
         """
     ] .
 
