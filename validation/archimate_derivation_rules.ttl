@@ -1029,17 +1029,20 @@ archimate:serving <#dependencyStrength> 4 .
 <#DerivationDepthLimit> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Element ;
     rdfs:label "Derivation Depth Limit" ;
-    rdfs:comment "Prevents excessive derivation chains that could cause performance issues" ;
+    rdfs:comment "Flags elements whose derived relationships collectively rest on more than 5 distinct direct sources (informational; batch/reporting only, see sh:deactivated)." ;
+    sh:deactivated true ;
     sh:sparql [
         sh:prefixes <#> ;
-        sh:message "Derivation chain exceeds maximum depth of 5" ;
-        sh:severity sh:Warning ;
+        sh:message "Element's derived relationships rest on more than 5 distinct direct sources" ;
+        sh:severity sh:Info ;
         sh:select """
             SELECT $this WHERE {
                 $this ?rel ?target .
                 BIND(<<$this ?rel ?target>> AS ?stmt)
-                ?stmt deriv:derivedFrom ?source1, ?source2, ?source3, ?source4, ?source5, ?source6 .
+                ?stmt deriv:derivedFrom ?source .
             }
+            GROUP BY $this
+            HAVING (COUNT(DISTINCT ?source) > 5)
         """
     ] .
 

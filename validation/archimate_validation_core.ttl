@@ -178,7 +178,8 @@
 <#DeepSpecializationCheck> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Concept ;
     rdfs:label "Deep Specialization Chain Check" ;
-    rdfs:comment "Flags elements involved in specialization chains 5 or more levels deep (informational)." ;
+    rdfs:comment "Flags elements involved in specialization chains 5 or more levels deep (informational; batch/reporting only, see sh:deactivated)." ;
+    sh:deactivated true ;
     sh:severity sh:Info ;
     sh:sparql [
         sh:prefixes <#> ;
