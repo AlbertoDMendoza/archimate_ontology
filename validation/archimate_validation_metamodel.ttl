@@ -639,7 +639,7 @@
 # Key I&M-specific constraints below.
 
 
-## 6.2 Gap should associate with Plateaus
+## 6.1 Gap should associate with Plateaus
 # Per Section 12.2.5: "A gap is associated with two plateaus and represents the
 # differences between these plateaus."
 
