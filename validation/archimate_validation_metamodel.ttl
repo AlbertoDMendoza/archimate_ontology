@@ -639,33 +639,6 @@
 # Key I&M-specific constraints below.
 
 
-## 6.1 WorkPackage→Deliverable realization is deprecated
-# Per Figure 106 note: "The realization relationship from Work Package to Deliverable
-# is deprecated and may be removed in a future version. Use access instead."
-
-<#DeprecatedWorkPackageRealizesDeliverable> rdf:type sh:NodeShape ;
-    sh:targetSubjectsOf archimate:realization ;
-    rdfs:label "Deprecated: WorkPackage → Deliverable Realization" ;
-    sh:deactivated true ;
-    sh:severity sh:Warning ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "WorkPackage → Deliverable realization is deprecated per ArchiMate 3.2 — use an access relationship instead" ;
-        sh:select """
-            SELECT $this ?target WHERE {
-                $this archimate:realization ?target .
-                $this rdf:type/rdfs:subClassOf* archimate:InternalBehavior .
-                $this rdf:type/rdfs:subClassOf* archimate:ImplementationAndMigrationLayer .
-                ?target rdf:type/rdfs:subClassOf* archimate:PassiveStructure .
-                ?target rdf:type/rdfs:subClassOf* archimate:ImplementationAndMigrationLayer .
-                FILTER NOT EXISTS {
-                    ?target rdf:type/rdfs:subClassOf* archimate:Plateau
-                }
-            }
-        """
-    ] .
-
-
 ## 6.2 Gap should associate with Plateaus
 # Per Section 12.2.5: "A gap is associated with two plateaus and represents the
 # differences between these plateaus."
