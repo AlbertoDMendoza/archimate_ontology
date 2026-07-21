@@ -1087,3 +1087,49 @@
     rdfs:range xsd:string .
 
 
+#### 3.5 Derivation Vocabulary
+#
+# Relationship-strength ranking and derivation-provenance terms. Queried
+# directly by application code (e.g. ArchiGraph v5's loadDerivedRelationships()/
+# materializeRelationship() in graphdb.ts), so these live here — in the base
+# ontology, always loaded into the default graph — rather than in
+# validation/archimate_derivation_rules.ttl, which is loaded into the SHACL
+# shapes graph and is hidden from ordinary SPARQL queries. In the archimate:
+# namespace (not a separate deriv: one) since they live in this file now.
+
+<#structuralStrength> rdf:type owl:DatatypeProperty ;
+    rdfs:label "structural strength" ;
+    rdfs:comment "Numeric strength of structural relationships: realization=1, assignment=2, aggregation=3, composition=4" ;
+    rdfs:domain <#structuralRelationship> ;
+    rdfs:range xsd:integer .
+
+<#dependencyStrength> rdf:type owl:DatatypeProperty ;
+    rdfs:label "dependency strength" ;
+    rdfs:comment "Numeric strength of dependency relationships: association=1, influence=2, access=3, serving=4" ;
+    rdfs:domain <#dependencyRelationship> ;
+    rdfs:range xsd:integer .
+
+<#realization> <#structuralStrength> 1 .
+<#assignment> <#structuralStrength> 2 .
+<#aggregation> <#structuralStrength> 3 .
+<#composition> <#structuralStrength> 4 .
+
+<#association> <#dependencyStrength> 1 .
+<#influence> <#dependencyStrength> 2 .
+<#access> <#dependencyStrength> 3 .
+<#serving> <#dependencyStrength> 4 .
+
+# Provenance terms on a materialized (derived-and-asserted) relationship's
+# quoted triple. Written directly by materializeRelationship() (graphdb.ts);
+# also the CONSTRUCT target of the (inert) SPARQL derivation rules in
+# validation/archimate_derivation_rules.ttl.
+<#derivedFrom> rdf:type owl:ObjectProperty ;
+    rdfs:label "derived from" ;
+    rdfs:comment "On a materialized relationship's quoted triple: the source relationship(s) or bridging element it was derived from. Range left open — usages vary between relationship IRIs (predicates) and the bridging element, depending on the derivation rule." .
+
+<#derivationRule> rdf:type owl:DatatypeProperty ;
+    rdfs:label "derivation rule" ;
+    rdfs:comment "On a materialized relationship's quoted triple: which derivation rule (e.g. \"DR2\", \"DR3\") produced it." ;
+    rdfs:range xsd:string .
+
+

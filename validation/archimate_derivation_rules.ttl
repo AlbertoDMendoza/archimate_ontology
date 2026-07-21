@@ -110,20 +110,11 @@
 #   - Create derivation explanation generator (show which rules produced which relationships)
 
 ### Helper Properties for Relationship Strength
-
-# Structural relationship strength ordering
-<#structuralStrength> rdf:type owl:DatatypeProperty ;
-    rdfs:label "structural strength" ;
-    rdfs:comment "Numeric strength of structural relationships: realization=1, assignment=2, aggregation=3, composition=4" ;
-    rdfs:domain archimate:structuralRelationship ;
-    rdfs:range xsd:integer .
-
-# Dependency relationship strength ordering  
-<#dependencyStrength> rdf:type owl:DatatypeProperty ;
-    rdfs:label "dependency strength" ;
-    rdfs:comment "Numeric strength of dependency relationships: association=1, influence=2, access=3, serving=4" ;
-    rdfs:domain archimate:dependencyRelationship ;
-    rdfs:range xsd:integer .
+# archimate:structuralStrength / archimate:dependencyStrength are declared and assigned
+# in ontology/archimate.ttl §3.5, not here — this file is loaded into the
+# SHACL shapes graph, which is hidden from ordinary SPARQL queries, and
+# application code (e.g. loadDerivedRelationships() in graphdb.ts) needs to
+# query these directly.
 
 ### Valid Derivation Rules (DR1-DR8)
 
@@ -140,7 +131,7 @@
             ?a ?weakerRel ?c .
             <<?a ?weakerRel ?c>> archimate:confidence "valid" ;
                                 archimate:description "Derived via DR2: structural relationship chain" ;
-                                deriv:derivedFrom ?rel1, ?rel2 .
+                                archimate:derivedFrom ?rel1, ?rel2 .
         }
         WHERE {
             # Find chain of two structural relationships
@@ -152,8 +143,8 @@
             ?rel2 rdfs:subPropertyOf+ archimate:structuralRelationship .
             
             # Get strength values
-            ?rel1 deriv:structuralStrength ?strength1 .
-            ?rel2 deriv:structuralStrength ?strength2 .
+            ?rel1 archimate:structuralStrength ?strength1 .
+            ?rel2 archimate:structuralStrength ?strength2 .
             
             # Determine weaker relationship
             BIND(IF(?strength1 <= ?strength2, ?rel1, ?rel2) AS ?weakerRel)
@@ -174,7 +165,7 @@
             ?a ?depRel ?c .
             <<?a ?depRel ?c>> archimate:confidence "valid" ;
                              archimate:description "Derived via DR3: structural + dependency" ;
-                             deriv:derivedFrom ?structRel, ?depRel .
+                             archimate:derivedFrom ?structRel, ?depRel .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -198,7 +189,7 @@
             ?c ?depRel ?a .
             <<?c ?depRel ?a>> archimate:confidence "valid" ;
                              archimate:description "Derived via DR4: opposing structural + dependency" ;
-                             deriv:derivedFrom ?structRel, ?depRel .
+                             archimate:derivedFrom ?structRel, ?depRel .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -222,7 +213,7 @@
             ?a ?dynRel ?c .
             <<?a ?dynRel ?c>> archimate:confidence "valid" ;
                              archimate:description "Derived via DR5: structural + dynamic" ;
-                             deriv:derivedFrom ?structRel, ?dynRel .
+                             archimate:derivedFrom ?structRel, ?dynRel .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -246,7 +237,7 @@
             ?c archimate:flow ?a .
             <<?c archimate:flow ?a>> archimate:confidence "valid" ;
                                      archimate:description "Derived via DR6: structural + flow (opposite)" ;
-                                     deriv:derivedFrom ?structRel, archimate:flow .
+                                     archimate:derivedFrom ?structRel, archimate:flow .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -269,7 +260,7 @@
             ?a archimate:triggering ?c .
             <<?a archimate:triggering ?c>> archimate:confidence "valid" ;
                                            archimate:description "Derived via DR7: triggering + structural" ;
-                                           deriv:derivedFrom archimate:triggering, ?structRel .
+                                           archimate:derivedFrom archimate:triggering, ?structRel .
         }
         WHERE {
             ?a archimate:triggering ?b .
@@ -292,7 +283,7 @@
             ?a archimate:triggering ?c .
             <<?a archimate:triggering ?c>> archimate:confidence "valid" ;
                                            archimate:description "Derived via DR8: triggering transitivity" ;
-                                           deriv:derivedFrom archimate:triggering, archimate:triggering .
+                                           archimate:derivedFrom archimate:triggering, archimate:triggering .
         }
         WHERE {
             ?a archimate:triggering ?b .
@@ -315,7 +306,7 @@
             ?a ?rel ?c .
             <<?a ?rel ?c>> archimate:confidence "potential" ;
                           archimate:description "Derived via PDR1: specialization inheritance (forward)" ;
-                          deriv:derivedFrom archimate:specialization, ?rel .
+                          archimate:derivedFrom archimate:specialization, ?rel .
         }
         WHERE {
             ?a archimate:specialization ?b .
@@ -345,7 +336,7 @@
             ?c ?rel ?a .
             <<?c ?rel ?a>> archimate:confidence "potential" ;
                           archimate:description "Derived via PDR2: specialization inheritance (reverse)" ;
-                          deriv:derivedFrom archimate:specialization, ?rel .
+                          archimate:derivedFrom archimate:specialization, ?rel .
         }
         WHERE {
             ?a archimate:specialization ?b .
@@ -375,7 +366,7 @@
             ?b ?rel ?c .
             <<?b ?rel ?c>> archimate:confidence "potential" ;
                           archimate:description "Derived via PDR3: specialization source inheritance" ;
-                          deriv:derivedFrom archimate:specialization, ?rel .
+                          archimate:derivedFrom archimate:specialization, ?rel .
         }
         WHERE {
             ?a archimate:specialization ?b .
@@ -405,7 +396,7 @@
             ?c ?rel ?b .
             <<?c ?rel ?b>> archimate:confidence "potential" ;
                           archimate:description "Derived via PDR4: specialization target inheritance" ;
-                          deriv:derivedFrom archimate:specialization, ?rel .
+                          archimate:derivedFrom archimate:specialization, ?rel .
         }
         WHERE {
             ?a archimate:specialization ?b .
@@ -435,7 +426,7 @@
             ?c ?depRel ?b .
             <<?c ?depRel ?b>> archimate:confidence "potential" ;
                              archimate:description "Derived via PDR5: structural + dependency (at source)" ;
-                             deriv:derivedFrom ?structRel, ?depRel .
+                             archimate:derivedFrom ?structRel, ?depRel .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -459,7 +450,7 @@
             ?b ?depRel ?c .
             <<?b ?depRel ?c>> archimate:confidence "potential" ;
                              archimate:description "Derived via PDR6: structural + dependency (from source)" ;
-                             deriv:derivedFrom ?structRel, ?depRel .
+                             archimate:derivedFrom ?structRel, ?depRel .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -483,7 +474,7 @@
             ?a ?weakerRel ?c .
             <<?a ?weakerRel ?c>> archimate:confidence "potential" ;
                                 archimate:description "Derived via PDR7: dependency chain" ;
-                                deriv:derivedFrom ?rel1, ?rel2 .
+                                archimate:derivedFrom ?rel1, ?rel2 .
         }
         WHERE {
             ?a ?rel1 ?b .
@@ -493,8 +484,8 @@
             ?rel2 rdfs:subPropertyOf+ archimate:dependencyRelationship .
             
             # Get strength values
-            ?rel1 deriv:dependencyStrength ?strength1 .
-            ?rel2 deriv:dependencyStrength ?strength2 .
+            ?rel1 archimate:dependencyStrength ?strength1 .
+            ?rel2 archimate:dependencyStrength ?strength2 .
             
             # Determine weaker relationship
             BIND(IF(?strength1 <= ?strength2, ?rel1, ?rel2) AS ?weakerRel)
@@ -514,7 +505,7 @@
             ?a archimate:flow ?c .
             <<?a archimate:flow ?c>> archimate:confidence "potential" ;
                                      archimate:description "Derived via PDR8: flow + structural" ;
-                                     deriv:derivedFrom archimate:flow, ?structRel .
+                                     archimate:derivedFrom archimate:flow, ?structRel .
         }
         WHERE {
             ?a archimate:flow ?b .
@@ -537,7 +528,7 @@
             ?b ?dynRel ?c .
             <<?b ?dynRel ?c>> archimate:confidence "potential" ;
                              archimate:description "Derived via PDR9: structural + dynamic (reverse)" ;
-                             deriv:derivedFrom ?structRel, ?dynRel .
+                             archimate:derivedFrom ?structRel, ?dynRel .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -561,7 +552,7 @@
             ?a archimate:flow ?c .
             <<?a archimate:flow ?c>> archimate:confidence "potential" ;
                                      archimate:description "Derived via PDR10: flow chain" ;
-                                     deriv:derivedFrom archimate:flow, archimate:flow .
+                                     archimate:derivedFrom archimate:flow, archimate:flow .
         }
         WHERE {
             ?a archimate:flow ?b .
@@ -582,7 +573,7 @@
             ?a archimate:triggering ?c .
             <<?a archimate:triggering ?c>> archimate:confidence "potential" ;
                                            archimate:description "Derived via PDR11: triggering + structural (reverse)" ;
-                                           deriv:derivedFrom archimate:triggering, ?structRel .
+                                           archimate:derivedFrom archimate:triggering, ?structRel .
         }
         WHERE {
             ?a archimate:triggering ?b .
@@ -605,7 +596,7 @@
             ?a ?targetRel ?c .
             <<?a ?targetRel ?c>> archimate:confidence "potential" ;
                                 archimate:description "Derived via PDR12: grouping element derivation" ;
-                                deriv:derivedFrom ?sourceRel, ?targetRel .
+                                archimate:derivedFrom ?sourceRel, ?targetRel .
         }
         WHERE {
             ?b ?sourceRel ?a .
@@ -634,21 +625,7 @@
     """ .
 
 ### Relationship Strength Assignments
-# The rules work with the relationship strength assignments defined below.
-# The strength values enable derivation rules to determine which relationship
-# type to use when combining relationships (always use the weaker relationship).
-
-# Assign structural relationship strengths (directly queryable in SPARQL)
-archimate:realization <#structuralStrength> 1 .
-archimate:assignment <#structuralStrength> 2 .
-archimate:aggregation <#structuralStrength> 3 .
-archimate:composition <#structuralStrength> 4 .
-
-# Assign dependency relationship strengths (directly queryable in SPARQL)
-archimate:association <#dependencyStrength> 1 .
-archimate:influence <#dependencyStrength> 2 .
-archimate:access <#dependencyStrength> 3 .
-archimate:serving <#dependencyStrength> 4 .
+# Moved to ontology/archimate.ttl §3.5 (see note above).
 
 ### Cross-Domain Relationship Restrictions
 # CrossDomainRestrictions: removed. Needs rework — see commit history.
@@ -665,7 +642,7 @@ archimate:serving <#dependencyStrength> 4 .
             ?a ?finalRel ?d .
             <<?a ?finalRel ?d>> archimate:confidence "valid" ;
                                archimate:description "Derived via complex chain: structural → structural → dependency" ;
-                               deriv:derivedFrom ?rel1, ?rel2, ?rel3 .
+                               archimate:derivedFrom ?rel1, ?rel2, ?rel3 .
         }
         WHERE {
             # Chain: a -structural-> b -structural-> c -dependency-> d
@@ -700,7 +677,7 @@ archimate:serving <#dependencyStrength> 4 .
             ?actor archimate:assignment ?behavior .
             <<?actor archimate:assignment ?behavior>> archimate:confidence "suggestion" ;
                                                       archimate:description "Suggested assignment based on collaboration patterns" ;
-                                                      deriv:derivedFrom archimate:composition, archimate:composition .
+                                                      archimate:derivedFrom archimate:composition, archimate:composition .
         }
         WHERE {
             # Find active structure elements that are part of the same collaboration
@@ -729,7 +706,7 @@ archimate:serving <#dependencyStrength> 4 .
             ?service archimate:serving ?consumer .
             <<?service archimate:serving ?consumer>> archimate:confidence "suggestion" ;
                                                      archimate:description "Suggested serving based on realization and access patterns" ;
-                                                     deriv:derivedFrom archimate:realization, archimate:access .
+                                                     archimate:derivedFrom archimate:realization, archimate:access .
         }
         WHERE {
             # Find service realized by component
@@ -760,7 +737,7 @@ archimate:serving <#dependencyStrength> 4 .
             ?appComponent archimate:serving ?businessProcess .
             <<?appComponent archimate:serving ?businessProcess>> archimate:confidence "potential" ;
                                                                   archimate:description "Derived application support for business process" ;
-                                                                  deriv:derivedFrom archimate:realization, archimate:composition .
+                                                                  archimate:derivedFrom archimate:realization, archimate:composition .
         }
         WHERE {
             # Business process composed of sub-processes
@@ -790,7 +767,7 @@ archimate:serving <#dependencyStrength> 4 .
             ?techService archimate:serving ?appComponent .
             <<?techService archimate:serving ?appComponent>> archimate:confidence "potential" ;
                                                              archimate:description "Derived technology support for application" ;
-                                                             deriv:derivedFrom archimate:assignment, archimate:realization .
+                                                             archimate:derivedFrom archimate:assignment, archimate:realization .
         }
         WHERE {
             # Technology node assigned to technology service
@@ -818,7 +795,7 @@ archimate:serving <#dependencyStrength> 4 .
         CONSTRUCT {
             ?stmt archimate:createdBy "ArchiMate Derivation Engine" ;
                   archimate:createdDate ?now ;
-                  deriv:derivationRule ?rule .
+                  archimate:derivationRule ?rule .
         }
         WHERE {
             ?stmt archimate:confidence ?conf .
@@ -942,7 +919,7 @@ archimate:serving <#dependencyStrength> 4 .
             SELECT $this WHERE {
                 $this ?rel ?target .
                 BIND(<<$this ?rel ?target>> AS ?stmt)
-                ?stmt deriv:derivedFrom ?source .
+                ?stmt archimate:derivedFrom ?source .
             }
             GROUP BY $this
             HAVING (COUNT(DISTINCT ?source) > 5)
