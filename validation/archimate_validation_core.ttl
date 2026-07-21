@@ -117,11 +117,8 @@
         sh:select """
             SELECT $this WHERE {
                 $this archimate:identifier ?id .
-                {
-                    SELECT ?id (COUNT(DISTINCT ?c) AS ?n) WHERE { ?c archimate:identifier ?id }
-                    GROUP BY ?id
-                    HAVING (COUNT(DISTINCT ?c) > 1)
-                }
+                ?other archimate:identifier ?id .
+                FILTER(?other != $this)
             }
         """
     ] .
