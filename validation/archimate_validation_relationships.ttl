@@ -108,7 +108,7 @@
 <#BusinessRoleRelationships> rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessRole ;
     rdfs:label "BusinessRole Valid Relationships" ;
-    rdfs:comment "Validates composition, aggregation, access, and realization from BusinessRole elements." ;
+    rdfs:comment "Validates composition, aggregation, access, and realization from BusinessRole elements, plus assignment direction (assignment itself is otherwise Level 2's §§1-2 scope, not this file's)." ;
 
     # composition (c): BusinessInterface, BusinessRole, Grouping
     sh:property [
@@ -145,6 +145,16 @@
             [ sh:class archimate:Resource ] [ sh:class archimate:ValueStream ]
         ) ;
         sh:message "BusinessRole: realization target is not valid per ArchiMate 3.2."
+    ] ;
+
+    # assignment direction (i): per Appendix B, assignment between BusinessActor and
+    # BusinessRole is valid only BusinessActor -> BusinessRole (relations.xml: BusinessActor's
+    # row for target BusinessRole includes "i"; BusinessRole's row for target BusinessActor
+    # does not). BusinessRole must not assign to BusinessActor.
+    sh:property [
+        sh:path archimate:assignment ;
+        sh:not [ sh:class archimate:BusinessActor ] ;
+        sh:message "A business actor may be assigned to one or more business roles, but not the other way around."
     ] ;
 
     .
