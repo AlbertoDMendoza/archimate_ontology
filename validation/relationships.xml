@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <relationships version="3.2">
 
+    <!--
+    relations letter legend:
+    a=access  c=composition  f=flow  g=aggregation  i=assignment  n=influence
+    o=association  r=realization  s=specialization  t=triggering  v=serving
+    -->
+
     <source concept="ApplicationCollaboration">
         <target concept="ApplicationCollaboration" relations="cfgostv" />
         <target concept="ApplicationComponent" relations="fgortv" />
