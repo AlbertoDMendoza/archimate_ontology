@@ -27,7 +27,7 @@
 ###   archimate_validation_physical.ttl, archimate_validation_motivation.ttl,
 ###   archimate_validation_implementation.ttl
 ###
-### Derived from relationships.xml
+### Derived from derivation/relationships.xml
 ###
 
 <#> rdf:type owl:Ontology ;

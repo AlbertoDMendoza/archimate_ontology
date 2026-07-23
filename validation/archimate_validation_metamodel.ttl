@@ -91,7 +91,7 @@
 # - archimate_validation_core.ttl (Level 1: graph integrity, concept requirements)
 # - archimate_validation_metamodel.ttl (Level 2: metamodel validation) <--<this file>
 # - archimate_validation_<layer>.ttl (Level 3: per-element-type relationship combinations)
-# - archimate_derivation_rules.ttl (derivation rules)
+# - ../derivation/archimate_derivation_rules.ttl (derivation rules)
 # - archimate_validation_profiles.ttl (profile-specific shapes)
 #
 # Validation severity levels:

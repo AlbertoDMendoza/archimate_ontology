@@ -44,8 +44,12 @@ validation/
 ├── archimate_validation_core.ttl            # Level 1: graph integrity, concept requirements
 ├── archimate_validation_metamodel.ttl       # Level 2: metamodel pattern rules
 ├── archimate_validation_relationships.ttl   # Level 3: relationship matrix for all layers (Appendix B)
-├── archimate_validation_profiles.ttl        # Profile-specific SHACL shapes
-└── archimate_derivation_rules.ttl           # DR1-DR8, PDR1-PDR12 derivation rules
+└── archimate_validation_profiles.ttl        # Profile-specific SHACL shapes
+
+derivation/
+├── relationships.xml                 # Appendix B relationship matrix source data
+├── archimate_derivation_rules.ttl    # DR1-DR8, PDR1-PDR12 derivation rules (SPARQL CONSTRUCT)
+└── archimate_derivation_axioms.ttl   # Relationship derivations as RDF individuals
 </pre>
 
 ## Specification 
