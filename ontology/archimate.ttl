@@ -157,32 +157,6 @@ archimate:ArchiMate rdf:type owl:Class ;
     rdfs:subClassOf owl:Thing ;
     skos:exactMatch archimate-skos:ArchiMate .
 
-
-archimate:ArchiMateView rdf:type owl:Class ;
-    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
-    rdfs:label "Architecture View";
-    rdfs:comment "A representation of a system from the perspective of a related set of concerns.";
-    rdfs:subClassOf archimate:Concept .
-
-archimate:ArchiMateViewpoint rdf:type owl:Class ;
-    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
-    rdfs:label "Architecture Viewpoint";
-    rdfs:comment "A specification of the conventions for a particular kind of architecture view.";
-    rdfs:subClassOf archimate:Concept .
-
-archimate:Aspect rdf:type owl:Class ;
-    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
-    rdfs:label "Aspect" ;
-    rdfs:comment "Classification of elements based on layer-independent characteristics related to the concerns of different stakeholders. Used for positioning elements in the ArchiMate metamodel." ;
-    archimate:abstract true ;
-    rdfs:subClassOf archimate:ArchiMate .
-
-# archimate:Model is instantiated once per imported exchange-format model (the <model> root
-# element's own identifier/name/documentation, plus archimate:hasConcept below for containment
-# -- see archimate_ontology issue #1 follow-up work). rdfs:subClassOf Concept (not the reverse,
-# as this used to be declared) so it inherits identifier/name/documentation the same way
-# ArchiMateView/ArchiMateViewpoint do, rather than sitting above Concept in the hierarchy where
-# every element/relationship instance would transitively (and incorrectly) type as a Model.
 archimate:Model rdf:type owl:Class ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Model" ;
@@ -200,6 +174,25 @@ archimate:Concept rdf:type owl:Class ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Concept" ;
     rdfs:comment "A conceptual entity within the ArchiMate modeling language." ;
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:ArchiMate .
+
+archimate:ArchiMateView rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
+    rdfs:label "Architecture View";
+    rdfs:comment "A representation of a system from the perspective of a related set of concerns.";
+    rdfs:subClassOf archimate:Concept .
+
+archimate:ArchiMateViewpoint rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
+    rdfs:label "Architecture Viewpoint";
+    rdfs:comment "A specification of the conventions for a particular kind of architecture view.";
+    rdfs:subClassOf archimate:Concept .
+
+archimate:Aspect rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
+    rdfs:label "Aspect" ;
+    rdfs:comment "Classification of elements based on layer-independent characteristics related to the concerns of different stakeholders. Used for positioning elements in the ArchiMate metamodel." ;
     archimate:abstract true ;
     rdfs:subClassOf archimate:ArchiMate .
 
