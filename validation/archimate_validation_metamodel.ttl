@@ -14,7 +14,7 @@
     rdfs:comment "Level 2 Metamodel Validation: abstract ArchiMate metamodel pattern rules using the ontology's class hierarchy (aspect x layer intersections). Encodes Figures 5, 34, 45, 46, 51, 52, 70, 82, 99, 104, 105, and 106 from ArchiMate 3.2. For graph integrity, see archimate_validation_core.ttl. For per-element relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-16"^^xsd:date ;
-    dct:modified "2026-06-12"^^xsd:date ;
+    dct:modified "2026-07-24"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Beta" ;
     sh:declare [
@@ -1007,6 +1007,23 @@ avmeta:FlowTypeValidation rdf:type sh:NodeShape ;
                 $this archimate:flow ?target .
                 <<$this archimate:flow ?target>> archimate:flowType ?val .
                 FILTER(?val NOT IN ("information", "material", "energy", "unspecified"))
+            }
+        """
+    ] .
+
+## 10.5 Association directedness validation
+
+avmeta:AssociationIsDirectedValidation rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:association ;
+    rdfs:label "Association Is Directed Validation" ;
+    sh:sparql [
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
+        sh:message "isDirected must be a boolean true or false" ;
+        sh:select """
+            SELECT $this ?target WHERE {
+                $this archimate:association ?target .
+                <<$this archimate:association ?target>> archimate:isDirected ?val .
+                FILTER(?val NOT IN (true, false))
             }
         """
     ] .
