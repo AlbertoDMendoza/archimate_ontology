@@ -14,7 +14,7 @@
     rdfs:comment "Level 1 Core Validation: universal model quality and graph integrity constraints. Validates concept requirements (identifier, name, documentation), specialization relationship integrity (same-type, no self-loops, depth), and structural relationship integrity (no circular/self composition/aggregation, composition part uniqueness). For metamodel pattern rules, see archimate_validation_metamodel.ttl. For per-element-type relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-10"^^xsd:date ;
-    dct:modified "2026-05-28"^^xsd:date ;
+    dct:modified "2026-07-24"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Beta" ;
     sh:declare [
@@ -73,7 +73,7 @@
 avcore:RealizedConceptShape rdf:type sh:NodeShape ;
     sh:targetClass owl:NamedIndividual ;
     rdfs:label "Realized Concept Requirements" ;
-    rdfs:comment "Enforces that every realized ArchiMate concept (owl:NamedIndividual instance) has exactly one identifier and name, and at most one documentation value. Targets owl:NamedIndividual to exclude ontology class definitions, which are instances of archimate:Concept via class punning but are not realized model elements." ;
+    rdfs:comment "Enforces that every realized ArchiMate concept (owl:NamedIndividual instance) has exactly one identifier, at least one name, and any number of documentation values -- name/documentation may repeat as rdf:langString with distinct xml:lang tags for multi-language exchange models, but at most one per language. Targets owl:NamedIndividual to exclude ontology class definitions, which are instances of archimate:Concept via class punning but are not realized model elements." ;
     sh:or (
         [ sh:not [ sh:class archimate:Concept ] ]
         [
@@ -89,15 +89,15 @@ avcore:RealizedConceptShape rdf:type sh:NodeShape ;
                 [ sh:property [
                     sh:path archimate:name ;
                     sh:minCount 1 ;
-                    sh:maxCount 1 ;
-                    sh:datatype xsd:string ;
-                    sh:message "All realized concepts must have exactly one name"
+                    sh:or ( [ sh:datatype xsd:string ] [ sh:datatype rdf:langString ] ) ;
+                    sh:uniqueLang true ;
+                    sh:message "All realized concepts must have at least one name (plain xsd:string, or one rdf:langString per xml:lang for multi-language exchange models)"
                 ] ]
                 [ sh:property [
                     sh:path archimate:documentation ;
-                    sh:maxCount 1 ;
-                    sh:datatype xsd:string ;
-                    sh:message "All realized concepts must have at most one documentation value"
+                    sh:or ( [ sh:datatype xsd:string ] [ sh:datatype rdf:langString ] ) ;
+                    sh:uniqueLang true ;
+                    sh:message "documentation values must be plain xsd:string, or one rdf:langString per xml:lang for multi-language exchange models"
                 ] ]
             )
         ]
