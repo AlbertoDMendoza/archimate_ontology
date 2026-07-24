@@ -11,7 +11,7 @@
 ### Ontology Declaration
 # The ontology IRI uses /archimate/owl (the PURL that serves this Turtle file).
 # Terms live under the archimate: prefix (<https://purl.org/archimate#>), declared via
-# @prefix rather than @base + relative <#Term> IRIs (see archimate_ontology issue #1) --
+# @prefix rather than @base + relative <#Term> IRIs
 # every term below carries rdfs:isDefinedBy pointing at the ontology document IRI.
 # Validation files import this ontology via: owl:imports <https://purl.org/archimate/owl> .
 <https://purl.org/archimate/owl> rdf:type owl:Ontology ;
@@ -162,33 +162,46 @@ archimate:ArchiMateView rdf:type owl:Class ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Architecture View";
     rdfs:comment "A representation of a system from the perspective of a related set of concerns.";
-    rdfs:subClassOf archimate:ArchiMate .
+    rdfs:subClassOf archimate:Concept .
 
 archimate:ArchiMateViewpoint rdf:type owl:Class ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Architecture Viewpoint";
     rdfs:comment "A specification of the conventions for a particular kind of architecture view.";
-    rdfs:subClassOf archimate:ArchiMate .
+    rdfs:subClassOf archimate:Concept .
 
 archimate:Aspect rdf:type owl:Class ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Aspect" ;
     rdfs:comment "Classification of elements based on layer-independent characteristics related to the concerns of different stakeholders. Used for positioning elements in the ArchiMate metamodel." ;
     archimate:abstract true ;
-    rdfs:subClassOf archimate:Model .
-	
+    rdfs:subClassOf archimate:ArchiMate .
+
+# archimate:Model is instantiated once per imported exchange-format model (the <model> root
+# element's own identifier/name/documentation, plus archimate:hasConcept below for containment
+# -- see archimate_ontology issue #1 follow-up work). rdfs:subClassOf Concept (not the reverse,
+# as this used to be declared) so it inherits identifier/name/documentation the same way
+# ArchiMateView/ArchiMateViewpoint do, rather than sitting above Concept in the hierarchy where
+# every element/relationship instance would transitively (and incorrectly) type as a Model.
 archimate:Model rdf:type owl:Class ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Model" ;
     rdfs:comment "A model contains elements and relationships within an architecture." ;
-    rdfs:subClassOf archimate:ArchiMate .
+    rdfs:subClassOf archimate:Concept .
+
+archimate:hasConcept rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
+    rdfs:label "has concept" ;
+    rdfs:comment "Links a Model to an element or relationship it contains. For relationships (which are RDF-star quoted-triple subjects, not plain IRI subjects -- see the RDF-Star design note above), the object is the quoted triple, e.g. :model1 archimate:hasConcept <<:s archimate:realization :o>> ." ;
+    rdfs:domain archimate:Model ;
+    rdfs:range archimate:Concept .
 
 archimate:Concept rdf:type owl:Class ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Concept" ;
     rdfs:comment "A conceptual entity within the ArchiMate modeling language." ;
     archimate:abstract true ;
-    rdfs:subClassOf archimate:Model .
+    rdfs:subClassOf archimate:ArchiMate .
 
 archimate:Attribute rdf:type owl:Class ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
@@ -196,8 +209,9 @@ archimate:Attribute rdf:type owl:Class ;
     rdfs:comment "A property associated with an ArchiMate language element or relationship.";
     rdfs:subClassOf archimate:ArchiMate .
 
-# Universal Properties for All ArchiMate Concepts (Elements and Relationships)
-# These properties apply to both Elements and Relationships
+# Universal Properties for All ArchiMate Concepts
+# Domain is archimate:Concept, so these apply to Elements, Relationships, Views, Viewpoints,
+# and Model (every subclass of Concept), not just Elements and Relationships.
 
 archimate:identifier rdf:type owl:DatatypeProperty ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
@@ -441,7 +455,7 @@ archimate:Layer rdf:type owl:Class ;
     rdfs:label "Layer" ;
     rdfs:comment "A major division in the architecture that categorizes elements according to their scope and purpose." ;
     archimate:abstract true ;
-    rdfs:subClassOf archimate:Model .
+    rdfs:subClassOf archimate:ArchiMate .
 
 archimate:CoreLayer rdf:type owl:Class ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
