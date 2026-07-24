@@ -5,10 +5,9 @@
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix archimate: <https://purl.org/archimate#> .
 @prefix myModel: <https://example.org/myModel#> .
-@base <https://example.org/myModel> .
 
 ### ArchiMate Specialization Profile Examples
-<#> rdf:type owl:Ontology ;
+<https://example.org/myModel> rdf:type owl:Ontology ;
     owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Profile Examples" ;
     rdfs:comment "Example specialization profiles for ArchiMate elements. These demonstrate how to create custom subtypes of standard ArchiMate elements using the profile pattern. The myModel: prefix is illustrative — organizations define their own namespace. This file is not a published specification." ;
@@ -50,7 +49,6 @@
 #   Node             → Server, VM, Container, CloudInstance
 #   Artifact         → SourceCode, Configuration, LogFile, Schema
 
-
 ### 1. BusinessActor Profile Classes
 
 myModel:Person rdf:type owl:Class ;
@@ -64,7 +62,6 @@ myModel:Organization rdf:type owl:Class ;
     archimate:specialization archimate:BusinessActor ;
     rdfs:label "Organization" ;
     rdfs:comment "A BusinessActor representing a group of people or organizational unit." .
-
 
 ### 2. Profile-Specific Properties
 
@@ -92,7 +89,6 @@ myModel:email rdf:type owl:DatatypeProperty ;
     rdfs:comment "Email address of a Person." ;
     rdfs:domain myModel:Person ;
     rdfs:range xsd:anyURI .
-
 
 ### 3. Additional Profile Examples (Commented Out - Expand As Needed)
 

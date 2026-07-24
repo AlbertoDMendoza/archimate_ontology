@@ -5,10 +5,10 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix archimate: <https://purl.org/archimate#> .
-@base <https://purl.org/archimate/validation/metamodel> .
+@prefix avmeta: <https://purl.org/archimate/validation/metamodel#> .
 
 ### SHACL Validation for ArchiMate Metamodel Patterns
-<#> rdf:type owl:Ontology ;
+<https://purl.org/archimate/validation/metamodel> rdf:type owl:Ontology ;
     owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Metamodel Validation Rules" ;
     rdfs:comment "Level 2 Metamodel Validation: abstract ArchiMate metamodel pattern rules using the ontology's class hierarchy (aspect x layer intersections). Encodes Figures 5, 34, 45, 46, 51, 52, 70, 82, 99, 104, 105, and 106 from ArchiMate 3.2. For graph integrity, see archimate_validation_core.ttl. For per-element relationship combinations, see archimate_validation_<layer>.ttl." ;
@@ -27,7 +27,6 @@
         sh:prefix "rdfs" ;
         sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
     ] .
-
 
 ### NOTES
 # Level 2 Metamodel Validation — ArchiMate architectural pattern enforcement.
@@ -116,8 +115,6 @@
 # 5. Load your model data
 # 6. Run SHACL validation
 
-
-
 ### 1. Generic Metamodel - Behavior and Structure Elements Metamodel
 # Per spec Chapter 4: "This figure [Figure 5] is to be read as a generic template
 # for the layers of the ArchiMate core, but is not applied directly."
@@ -128,11 +125,11 @@
 ## 1.1 Assignment: ActiveStructure → BehaviorAspect (canonical) plus deployment exceptions per 3.2 Appendix B
 ##      Source must always be ActiveStructure. Target is BehaviorAspect in the generic case, OR
 ##      Artifact (Node/Device/SystemSoftware → Artifact deployment) OR Node (Path → Node).
-<#AssignmentSourceConstraint> rdf:type sh:NodeShape ;
+avmeta:AssignmentSourceConstraint rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:assignment ;
     rdfs:label "Assignment Source: Active Structure (Core)" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "In core layers, assignment can only originate from active structure elements" ;
         sh:select """
             SELECT $this WHERE {
@@ -145,11 +142,11 @@
         """
     ] .
 
-<#AssignmentTargetConstraint> rdf:type sh:NodeShape ;
+avmeta:AssignmentTargetConstraint rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:assignment ;
     rdfs:label "Assignment Target: Behavior, Active Structure, or Deployment Target (Core)" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "In core layers, assignment target must be a behavior element, an active structure element (e.g. BusinessActor → BusinessRole), or — per spec 3.2 Appendix B — an Artifact (Node/Device/SystemSoftware → Artifact deployment) or a Node (Path → Node)" ;
         sh:select """
             SELECT $this WHERE {
@@ -168,17 +165,15 @@
         """
     ] .
 
-
-
 ## 1.3 Access: (BehaviorAspect ∪ ActiveStructure) → PassiveStructure (CoreLayer only)
 ##      Per spec 3.2 §5.2.2 the access source was broadened from BehaviorAspect (3.1) to also
 ##      include ActiveStructure elements (e.g. a Node accessing an Artifact).
 
-<#AccessSourceConstraint> rdf:type sh:NodeShape ;
+avmeta:AccessSourceConstraint rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:access ;
     rdfs:label "Access Source: Behavior or Active Structure (Core)" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "In core layers, access can only originate from behavior or active structure elements (per spec 3.2 §5.2.2; 3.1 restricted this to behavior only)" ;
         sh:select """
             SELECT $this WHERE {
@@ -193,11 +188,11 @@
         """
     ] .
 
-<#AccessTargetConstraint> rdf:type sh:NodeShape ;
+avmeta:AccessTargetConstraint rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:access ;
     rdfs:label "Access Target: Passive Structure (Core)" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "In core layers, access can only target passive structure elements" ;
         sh:select """
             SELECT $this WHERE {
@@ -210,18 +205,17 @@
         """
     ] .
 
-
 ## 1.4 Serving direction: lower layers serve higher layers
 # Layer stack (bottom to top): Physical → Technology → Application → Business → Strategy
 # I&M is orthogonal (serves/served by all core layers).
 
-<#ServingLayerDirection> rdf:type sh:NodeShape ;
+avmeta:ServingLayerDirection rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:serving ;
     rdfs:label "Serving Layer Direction" ;
     sh:deactivated true ;
     sh:severity sh:Warning ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Serving relationships should flow upward from lower to higher layers (Physical → Technology → Application → Business)" ;
         sh:select """
             SELECT $this ?target WHERE {
@@ -255,20 +249,18 @@
         """
     ] .
 
-
 ## 1.5 Influence targets MotivationAspect
 # Note: Influence is broadly permitted per Appendix B; any element can influence
 # Motivation elements. No source constraint needed at metamodel level.
 
-
 ## 1.6 Triggering: (BehaviorAspect ∪ ActiveStructure) → (BehaviorAspect ∪ ActiveStructure) (CoreLayer only)
 ##      Per spec 3.2 Appendix B, triggering may connect behavior elements and active structure
 ##      elements (e.g. BusinessActor/BusinessRole), not behavior only.
-<#TriggeringSourceConstraint> rdf:type sh:NodeShape ;
+avmeta:TriggeringSourceConstraint rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:triggering ;
     rdfs:label "Triggering Source: Behavior or Active Structure (Core)" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "In core layers, triggering can only originate from behavior or active structure elements" ;
         sh:select """
             SELECT $this WHERE {
@@ -283,11 +275,11 @@
         """
     ] .
 
-<#TriggeringTargetConstraint> rdf:type sh:NodeShape ;
+avmeta:TriggeringTargetConstraint rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:triggering ;
     rdfs:label "Triggering Target: Behavior or Active Structure (Core)" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "In core layers, triggering can only target behavior or active structure elements" ;
         sh:select """
             SELECT $this WHERE {
@@ -302,14 +294,13 @@
         """
     ] .
 
-
 ## 1.7 Flow: (BehaviorAspect ∪ ActiveStructure) → (BehaviorAspect ∪ ActiveStructure) (CoreLayer only)
 ##      Per spec 3.2 Appendix B, flow may connect behavior elements and active structure elements.
-<#FlowSourceConstraint> rdf:type sh:NodeShape ;
+avmeta:FlowSourceConstraint rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:flow ;
     rdfs:label "Flow Source: Behavior or Active Structure (Core)" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "In core layers, flow can only originate from behavior or active structure elements" ;
         sh:select """
             SELECT $this WHERE {
@@ -324,11 +315,11 @@
         """
     ] .
 
-<#FlowTargetConstraint> rdf:type sh:NodeShape ;
+avmeta:FlowTargetConstraint rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:flow ;
     rdfs:label "Flow Target: Behavior or Active Structure (Core)" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "In core layers, flow can only target behavior or active structure elements" ;
         sh:select """
             SELECT $this WHERE {
@@ -342,8 +333,6 @@
             }
         """
     ] .
-
-
 
 ### 2. Strategy Layer Metamodel Patterns
 
@@ -361,15 +350,14 @@
 # Note: composition, aggregation, specialization within same type are
 # universal (handled in Level 1). Association is universally permitted.
 
-
 ## 2.1 Resource assignment targets within Strategy layer
 # Resource is assigned to Capability and ValueStream only, NOT to CourseOfAction.
 
-<#StrategyAssignmentTarget> rdf:type sh:NodeShape ;
+avmeta:StrategyAssignmentTarget rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:assignment ;
     rdfs:label "Strategy Assignment: Resource → Capability/ValueStream" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Within the Strategy layer, Resource can only be assigned to Capability or ValueStream (not CourseOfAction)" ;
         sh:select """
             SELECT $this ?target WHERE {
@@ -389,16 +377,15 @@
         """
     ] .
 
-
 ## 2.2 Capability/ValueStream realizes CourseOfAction
 # Capability and ValueStream can realize CourseOfAction. CourseOfAction does NOT realize Capability/ValueStream (direction matters).
 
-<#StrategyBehaviorRealizesCoA> rdf:type sh:NodeShape ;
+avmeta:StrategyBehaviorRealizesCoA rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:realization ;
     rdfs:label "Strategy Realization: Capability/ValueStream → CourseOfAction" ;
     rdfs:comment "Within Strategy layer, realization flows from Capability/ValueStream toward CourseOfAction, not the reverse." ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "CourseOfAction should not realize Capability or ValueStream — realization flows the other direction per Figure 46" ;
         sh:select """
             SELECT $this ?target WHERE {
@@ -415,13 +402,11 @@
         """
     ] .
 
-
 ## 2.3 CourseOfAction realizes Motivation elements
 # CourseOfAction realizes Requirement and Outcome.
 # Also: Capability, ValueStream, Resource realize Requirement.
 # All Strategy elements can influence Motivation elements.
 # These are validated at Level 3 (per-element); included here as informational.
-
 
 ### 3. Core Layer Patterns (Business, Application, Technology)
 
@@ -437,16 +422,15 @@
 #
 # These rules use same-layer matching via VALUES to avoid per-layer duplication.
 
-
 ## 3.1 Interface → Service assignment (same layer)
 # Per Figures 52/70/82: an interface may be assigned to a service within the
 # same layer, meaning the service is exposed through that interface.
 
-<#CoreInterfaceAssignmentTarget> rdf:type sh:NodeShape ;
+avmeta:CoreInterfaceAssignmentTarget rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:assignment ;
     rdfs:label "Core Interface Assignment: → Service" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Interface assignment target must be an external behavior element (service) in the same layer" ;
         sh:select """
             SELECT $this ?target WHERE {
@@ -480,19 +464,18 @@
         """
     ] .
 
-
 ## 3.2 Service should not realize InternalBehavior (same layer)
 # Per Figures 52/70/82: realization flows from internal/collective behavior
 # toward external behavior (service), not the reverse.
 
-<#CoreServiceRealizesInternalBehavior> rdf:type sh:NodeShape ;
+avmeta:CoreServiceRealizesInternalBehavior rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:realization ;
     rdfs:label "Core Service Realization Direction" ;
     sh:deactivated true ;
     sh:severity sh:Info ;
     rdfs:comment "Within a core layer, realization should flow from internal/collective behavior to service, not the reverse." ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Service should not realize internal behavior elements — realization flows from process/function/interaction toward service" ;
         sh:select """
             SELECT $this ?target WHERE {
@@ -515,7 +498,6 @@
         """
     ] .
 
-
 ## 3.3 CompositeElement composition/aggregation targets
 # Removed: no universal rule applies across CompositeElement sub-kinds.
 # GenericComposite (Grouping, Location) is unrestricted by definition.
@@ -523,7 +505,6 @@
 #   Product → ExternalBehavior + PassiveStructure (spec Figure 52)
 #   Node    → InternalActiveStructure (Device, SystemSoftware, TechnologyInterface) (spec Figure 82)
 # Per-element constraints are fully handled by Level 3 (archimate_validation_relationships.ttl).
-
 
 ### 4. Cross-Layer Relationships (Chapter 11)
 
@@ -535,17 +516,16 @@
 # application or technology elements because people cannot be realized by
 # applications or technology." (Section 11.1)
 
-
 ## 4.1 No realization of Business ActiveStructure from Application/Technology
 # Per Section 11.1: Application and Technology elements cannot realize Business
 # active structure elements (actors, roles, collaborations, interfaces).
 # Only Business behavior can be realized by lower-layer behavior.
 
-<#NoRealizationOfBusinessActiveStructure> rdf:type sh:NodeShape ;
+avmeta:NoRealizationOfBusinessActiveStructure rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:realization ;
     rdfs:label "No Realization of Business Active Structure from Lower Layers" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Application and Technology elements cannot realize Business active structure elements — only Business behavior can be realized by lower layers" ;
         sh:select """
             SELECT $this ?target WHERE {
@@ -565,7 +545,6 @@
         """
     ] .
 
-
 ### 5. Physical Layer Metamodel Patterns (Figure 99)
 
 # Physical elements: ActiveStructure (Equipment, Facility, Distribution Network),
@@ -579,16 +558,15 @@
 #
 # Since Section 1 is scoped to CoreLayer, these patterns do not trigger false positives.
 
-
 ## 5.1 Physical assignment source must be ActiveStructure
 # Per Figure 99: only active structure elements (Facility, Equipment) can be
 # assignment sources within the Physical layer.
 
-<#PhysicalAssignmentSource> rdf:type sh:NodeShape ;
+avmeta:PhysicalAssignmentSource rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:assignment ;
     rdfs:label "Physical Assignment Source: ActiveStructure" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "In Physical layer, assignment can only originate from active structure elements" ;
         sh:select """
             SELECT $this WHERE {
@@ -601,16 +579,15 @@
         """
     ] .
 
-
 ## 5.2 Physical assignment target must be StructureAspect (active or passive)
 # Per Figure 99: targets are Equipment (ActiveStructure) or Material (PassiveStructure).
 # No behavior elements exist in Physical layer.
 
-<#PhysicalAssignmentTarget> rdf:type sh:NodeShape ;
+avmeta:PhysicalAssignmentTarget rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:assignment ;
     rdfs:label "Physical Assignment Target: Structure" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "In Physical layer, assignment can only target active or passive structure elements" ;
         sh:select """
             SELECT $this WHERE {
@@ -626,7 +603,6 @@
         """
     ] .
 
-
 ### 6. Implementation and Migration Metamodel Patterns (Figure 106)
 
 # I&M elements: WorkPackage (InternalBehavior), ImplementationEvent (BehaviorAspect),
@@ -638,18 +614,17 @@
 #
 # Key I&M-specific constraints below.
 
-
 ## 6.1 Gap should associate with Plateaus
 # Per Section 12.2.5: "A gap is associated with two plateaus and represents the
 # differences between these plateaus."
 
-<#GapPlateauAssociation> rdf:type sh:NodeShape ;
+avmeta:GapPlateauAssociation rdf:type sh:NodeShape ;
     sh:targetClass archimate:Gap ;
     rdfs:label "Gap Should Associate with Plateaus" ;
     sh:deactivated true ;
     sh:severity sh:Warning ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Gap should be associated with at least one Plateau — a gap represents a difference between two plateaus" ;
         sh:select """
             SELECT $this WHERE {
@@ -666,7 +641,6 @@
         """
     ] .
 
-
 ### 7. Motivation Metamodel Patterns (Figures 34, 45)
 
 # Motivation is a cross-cutting aspect, not a layer. Motivation elements
@@ -681,17 +655,16 @@
 #   - Meaning/Value → association → any element
 #   - Motivation elements do NOT participate in triggering or flow
 
-
 ## 7.1 Assignment into Motivation: only Business ActiveStructure → Stakeholder
 # Per Section 6.6: "a business internal active structure element (i.e., business
 # actor, role, or collaboration) may be assigned to a stakeholder."
 # No other assignment relationships target Motivation elements.
 
-<#MotivationAssignmentSource> rdf:type sh:NodeShape ;
+avmeta:MotivationAssignmentSource rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:assignment ;
     rdfs:label "Motivation Assignment: Only from Business ActiveStructure" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Only Business active structure elements (actor, role, collaboration) can be assigned to Motivation elements — and only to Stakeholder" ;
         sh:select """
             SELECT $this ?target WHERE {
@@ -706,11 +679,11 @@
         """
     ] .
 
-<#MotivationAssignmentTarget> rdf:type sh:NodeShape ;
+avmeta:MotivationAssignmentTarget rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:assignment ;
     rdfs:label "Motivation Assignment Target: Only Stakeholder" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Assignment into Motivation can only target Stakeholder — not other Motivation elements" ;
         sh:select """
             SELECT $this WHERE {
@@ -723,16 +696,15 @@
         """
     ] .
 
-
 ## 7.2 Motivation elements should not participate in triggering or flow
 # Triggering and flow are behavior relationships (Figure 5). Motivation elements
 # have no behavior aspect and should not be sources or targets of these.
 
-<#MotivationNoTriggeringSource> rdf:type sh:NodeShape ;
+avmeta:MotivationNoTriggeringSource rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:triggering ;
     rdfs:label "Motivation: No Triggering (source)" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Motivation elements should not be sources of triggering relationships" ;
         sh:select """
             SELECT $this WHERE {
@@ -741,11 +713,11 @@
         """
     ] .
 
-<#MotivationNoTriggeringTarget> rdf:type sh:NodeShape ;
+avmeta:MotivationNoTriggeringTarget rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:triggering ;
     rdfs:label "Motivation: No Triggering (target)" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Motivation elements should not be targets of triggering relationships" ;
         sh:select """
             SELECT $this WHERE {
@@ -754,11 +726,11 @@
         """
     ] .
 
-<#MotivationNoFlowSource> rdf:type sh:NodeShape ;
+avmeta:MotivationNoFlowSource rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:flow ;
     rdfs:label "Motivation: No Flow (source)" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Motivation elements should not be sources of flow relationships" ;
         sh:select """
             SELECT $this WHERE {
@@ -767,11 +739,11 @@
         """
     ] .
 
-<#MotivationNoFlowTarget> rdf:type sh:NodeShape ;
+avmeta:MotivationNoFlowTarget rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:flow ;
     rdfs:label "Motivation: No Flow (target)" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Motivation elements should not be targets of flow relationships" ;
         sh:select """
             SELECT $this WHERE {
@@ -780,17 +752,16 @@
         """
     ] .
 
-
 ## 7.3 Motivation should not realize non-Motivation elements
 # Per Figure 45: realization flows FROM core/strategy elements TOWARD Motivation
 # (e.g., Process → realizes → Requirement). Motivation elements should not
 # realize core or strategy elements — only other Motivation elements.
 
-<#MotivationRealizationTarget> rdf:type sh:NodeShape ;
+avmeta:MotivationRealizationTarget rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:realization ;
     rdfs:label "Motivation Realization Direction" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Motivation elements should not realize non-Motivation elements — realization flows from core/strategy toward Motivation" ;
         sh:select """
             SELECT $this ?target WHERE {
@@ -806,7 +777,6 @@
         """
     ] .
 
-
 ### 8. Strategy To Core Elements And Motivation Elements
 # Internal and external behavior elements may realize strategy behavior elements (value streams and capabilities), while an active or passive structure element may realize a resource. Capabilities, 
 # value streams, courses of action, and resources may realize or influence requirements (and indirectly, as described in Section 5.7, also principles or goals), and a course of action may also 
@@ -820,14 +790,14 @@
 
 ## 8.1 Core behavior realizes Strategy behavior elements
 
-<#CoreBehaviorRealizesStrategyBehavior> rdf:type sh:NodeShape ;
+avmeta:CoreBehaviorRealizesStrategyBehavior rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:realization ;
     rdfs:label "Core Behavior → Strategy Behavior Realization" ;
     sh:deactivated true ;
     sh:severity sh:Info ;
     rdfs:comment "Internal and external behavior elements from Core layers (Business, Application, Technology) may realize Strategy behavior elements (Capability, ValueStream). This shape validates the pattern is used correctly — source should be Core behavior, target should be Strategy behavior." ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "When realizing Strategy behavior from Core, source should be a Core behavior element (process, function, service, etc.)" ;
         sh:select """
             SELECT $this ?target WHERE {
@@ -853,17 +823,16 @@
         """
     ] .
 
-
 ## 8.2 Core structure realizes Resource
 
-<#CoreStructureRealizesResource> rdf:type sh:NodeShape ;
+avmeta:CoreStructureRealizesResource rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:realization ;
     rdfs:label "Core Structure → Resource Realization" ;
     sh:deactivated true ;
     sh:severity sh:Info ;
     rdfs:comment "Active and passive structure elements from Core layers may realize Resource. This shape validates the pattern — source should be Core structure, target should be Resource." ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "When realizing Resource from Core, source should be a Core active or passive structure element" ;
         sh:select """
             SELECT $this ?target WHERE {
@@ -891,7 +860,6 @@
         """
     ] .
 
-
 ## 8.3 Strategy → Motivation realization/influence
 # Per Figure 51: Capability, ValueStream, Resource realize Requirement.
 #   CourseOfAction realizes Requirement and Outcome.
@@ -899,11 +867,11 @@
 # Enforced at Level 3 per-element shapes. Metamodel-level rule:
 # Strategy elements should only realize MotivationAspect targets, not Core targets.
 
-<#StrategyRealizationTarget> rdf:type sh:NodeShape ;
+avmeta:StrategyRealizationTarget rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:realization ;
     rdfs:label "Strategy Realization Target" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Strategy elements can only realize other Strategy elements or Motivation elements — not Core layer elements" ;
         sh:select """
             SELECT $this ?target WHERE {
@@ -928,14 +896,11 @@
         """
     ] .
 
-
-
 ### 9. JUNCTION VALIDATION
-
 
 ## 9.1 Junction type (and/or)
 
-<#JunctionTypeValidation> rdf:type sh:NodeShape ;
+avmeta:JunctionTypeValidation rdf:type sh:NodeShape ;
     sh:targetClass archimate:Junction ;
     rdfs:label "Junction Type Validation" ;
     sh:property [
@@ -944,14 +909,13 @@
         sh:message "Junction type must be either 'and' or 'or'"
     ] .
 
-
 ## 9.2 Junction relationship homogeneity
 
-<#JunctionRelationshipHomogeneity> rdf:type sh:NodeShape ;
+avmeta:JunctionRelationshipHomogeneity rdf:type sh:NodeShape ;
     sh:targetClass archimate:Junction ;
     rdfs:label "Junction Relationship Homogeneity" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "All relationships connected to a junction must be of the same type" ;
         sh:select """
             SELECT $this WHERE {
@@ -977,18 +941,15 @@
         """
     ] .
 
-
-
 ### 10. RELATIONSHIP ATTRIBUTE CONSTRAINTS (RDF-Star metadata values)
-
 
 ## 10.1 Access type validation
 
-<#AccessTypeValidation> rdf:type sh:NodeShape ;
+avmeta:AccessTypeValidation rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:access ;
     rdfs:label "Access Type Validation" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Access type must be: read, write, readwrite, or unspecified" ;
         sh:select """
             SELECT $this ?target WHERE {
@@ -999,14 +960,13 @@
         """
     ] .
 
-
 ## 10.2 Influence sign validation
 
-<#InfluenceSignValidation> rdf:type sh:NodeShape ;
+avmeta:InfluenceSignValidation rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:influence ;
     rdfs:label "Influence Sign Validation" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Influence sign must be: positive, negative, or unspecified" ;
         sh:select """
             SELECT $this ?target WHERE {
@@ -1017,14 +977,13 @@
         """
     ] .
 
-
 ## 10.3 Influence strength validation
 
-<#InfluenceStrengthValidation> rdf:type sh:NodeShape ;
+avmeta:InfluenceStrengthValidation rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:influence ;
     rdfs:label "Influence Strength Validation" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Influence strength must be: weak, moderate, strong, or unspecified" ;
         sh:select """
             SELECT $this ?target WHERE {
@@ -1035,14 +994,13 @@
         """
     ] .
 
-
 ## 10.4 Flow type validation
 
-<#FlowTypeValidation> rdf:type sh:NodeShape ;
+avmeta:FlowTypeValidation rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:flow ;
     rdfs:label "Flow Type Validation" ;
     sh:sparql [
-        sh:prefixes <#> ;
+        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
         sh:message "Flow type must be: information, material, energy, or unspecified" ;
         sh:select """
             SELECT $this ?target WHERE {
