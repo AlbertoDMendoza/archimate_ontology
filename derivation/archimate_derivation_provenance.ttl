@@ -1,0 +1,47 @@
+# Derivation provenance vocabulary — LOAD THIS into a working repository.
+#
+# The terms an application writes onto a relationship's quoted triple to record that the relationship
+# came from a derivation rather than from someone drawing it. Nothing about the ArchiMate language
+# requires them: a deployment that does no derivation has no use for them, and an exchange file has
+# nowhere to put them. That is why they are here rather than in the base ontology.
+#
+# Declared in ontology/archimate.ttl until 2026-07-29 — archimate:derivedFrom and
+# archimate:derivationRule in §3.5, archimate:confidence in §3.4 among the RDF-star metadata
+# properties. The IRIs are unchanged, still in the https://purl.org/archimate# namespace, so this is a
+# relocation of the declarations and not a rename. Existing data and queries are unaffected; a
+# deployment that loaded archimate.ttl alone and relied on these must now also load this file.
+#
+# archimate:confidence was moved even though it sat in §3.4 rather than §3.5. Its own definition begins
+# "if derived", and it is written and read only by derivation tooling, so leaving it behind would have
+# split one vocabulary across two files for no reason other than where the section break fell.
+#
+# WHERE TO LOAD THEM: the default graph, or wherever ordinary SPARQL can see them. These are read back
+# by applications — to show a modeller which rule produced a relationship, and whether it was a valid
+# derivation or a suggested one. Some engines hide the SHACL shapes graph from ordinary queries (RDF4J
+# does), so a deployment that puts archimate_derivation_rules.ttl in a shapes graph must still load
+# this file outside it.
+#
+# NOT derivation, despite the similar name: archimate:influenceStrength stays in
+# ontology/archimate.ttl. That is the specification's own attribute on an influence relationship
+# (weak / moderate / strong), unrelated to the weakest-link ordering in
+# archimate_derivation_strengths.ttl.
+
+@base <https://purl.org/archimate#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<#confidence> rdf:type owl:DatatypeProperty ;
+    rdfs:label "Confidence" ;
+    rdfs:comment "On a derived relationship's quoted triple: how far the derivation is to be trusted. \"valid\" for a relationship one of Appendix B's valid derivation rules produced, which the specification permits a modeller to assert; \"potential\" for one a potential rule suggested, which Appendix B B.3 says \"might be relevant but may also be wrong… it is up to the modeler to decide\"." ;
+    rdfs:range xsd:string .
+
+<#derivedFrom> rdf:type owl:ObjectProperty ;
+    rdfs:label "derived from" ;
+    rdfs:comment "On a derived relationship's quoted triple: the source relationship(s) or bridging element it was derived from. Range left open deliberately — usages vary between relationship IRIs (predicates) and the bridging element, depending on which rule fired." .
+
+<#derivationRule> rdf:type owl:DatatypeProperty ;
+    rdfs:label "derivation rule" ;
+    rdfs:comment "On a derived relationship's quoted triple: which derivation rule (e.g. \"DR2\", \"DR3\") produced it." ;
+    rdfs:range xsd:string .

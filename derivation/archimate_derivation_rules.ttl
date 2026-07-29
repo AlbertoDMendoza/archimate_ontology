@@ -56,10 +56,16 @@
 
 ### Usage Instructions
 # To execute these derivation rules:
-# 1. Load your base ArchiMate ontology
-# 2. Load this derivation rules file  
-# 3. Run SPARQL CONSTRUCT queries or use SHACL-Advanced Features
-# 4. The derived relationships will have metadata indicating:
+# 1. Load your base ArchiMate ontology (ontology/archimate.ttl)
+# 2. Load derivation/archimate_derivation_strengths.ttl  — REQUIRED. The weakest-link rules below
+#    compare archimate:structuralStrength / archimate:dependencyStrength arithmetically; without this
+#    file those premises never match and the rules derive nothing, silently.
+# 3. Load derivation/archimate_derivation_provenance.ttl — required only if you intend to record
+#    archimate:confidence / derivedFrom / derivationRule on what you derive. Load it somewhere ordinary
+#    SPARQL can read, since applications read these back.
+# 4. Load this derivation rules file
+# 5. Run SPARQL CONSTRUCT queries or use SHACL-Advanced Features
+# 6. The derived relationships will have metadata indicating:
 #    - Confidence level (valid/potential/suggestion)
 #    - Derivation rule used
 #    - Source relationships that led to the derivation
@@ -110,11 +116,15 @@
 #   - Create derivation explanation generator (show which rules produced which relationships)
 
 ### Helper Properties for Relationship Strength
-# archimate:structuralStrength / archimate:dependencyStrength are declared and assigned
-# in ontology/archimate.ttl §3.5, not here — this file is loaded into the
-# SHACL shapes graph, which is hidden from ordinary SPARQL queries, and
-# application code (e.g. loadDerivedRelationships() in graphdb.ts) needs to
-# query these directly.
+# archimate:structuralStrength / archimate:dependencyStrength are declared and assigned in
+# derivation/archimate_derivation_strengths.ttl. LOAD THAT FILE ALONGSIDE THIS ONE: the rules below
+# compare the strength values arithmetically, and without them every weakest-link rule silently derives
+# nothing — the premises simply fail to match, with no error.
+#
+# They were in ontology/archimate.ttl §3.5 until 2026-07-29, on the reasoning that this file goes into a
+# SHACL shapes graph hidden from ordinary SPARQL. That is a deployment choice, not a property of the
+# file, and the ordering is not part of the ArchiMate language, so it moved to sit with the rules that
+# need it.
 
 ### Valid Derivation Rules (DR1-DR8)
 
@@ -625,7 +635,7 @@
     """ .
 
 ### Relationship Strength Assignments
-# Moved to ontology/archimate.ttl §3.5 (see note above).
+# In derivation/archimate_derivation_strengths.ttl (see the note under "Helper Properties" above).
 
 ### Cross-Domain Relationship Restrictions
 # CrossDomainRestrictions: removed. Needs rework — see commit history.

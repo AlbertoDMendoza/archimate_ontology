@@ -1,0 +1,76 @@
+# Relationship-strength ordering for the weakest-link derivation rules — LOAD THIS alongside
+# archimate_derivation_rules.ttl.
+#
+# Appendix B's structural and dependency derivation rules both say the same thing: a chain of two
+# relationships yields the WEAKER of the two. That requires an ordering, and the ordering is not part of
+# the ArchiMate language — no diagram, no exchange file and no conformance statement depends on it. It
+# is an input to a derivation procedure. So it belongs here.
+#
+# Declared in ontology/archimate.ttl §3.5 until 2026-07-29. The original note there argued they had to
+# be in the base ontology because "application code queries them directly" and because this file "is
+# loaded into the SHACL shapes graph, which is hidden from ordinary SPARQL". Both premises have expired:
+# the rules file is ordinary RDF that a deployment loads wherever it likes (the default graph is the
+# sensible place, precisely so these are queryable), and an application that delegates derivation to an
+# engine never queries the ordering itself. What remains is the plain question of where the terms
+# belong, and the answer is: with the rules that need them.
+#
+# The IRIs are unchanged — still archimate:structuralStrength and archimate:dependencyStrength in the
+# https://purl.org/archimate# namespace. This is a relocation of the declarations, not a rename.
+# Existing data and queries are unaffected; a deployment that loaded archimate.ttl alone and relied on
+# these must now also load this file.
+#
+# ---------------------------------------------------------------------------
+# WHY NUMBERS HERE, AND WHY THAT IS NOT THE ONLY REASONABLE ENCODING
+#
+# The ordering is expressed as integers because the SPARQL rules in archimate_derivation_rules.ttl
+# compare them arithmetically:
+#
+#     BIND(IF(?strength1 <= ?strength2, ?rel1, ?rel2) AS ?weakerRel)
+#
+# That is the compact and readable encoding, and SPARQL supports it directly.
+#
+# It is worth knowing that it does not survive translation to every rule engine. A native
+# forward-chaining ruleset — GraphDB's `.pie` format, for instance — has no numeric comparison in its
+# premise language at all. Ported there, the ordering has to be pre-expanded into an explicit pairwise
+# relation (composition weakerOrEqual aggregation, and so on) so that a rule can match it as a triple
+# rather than evaluate it as an expression. Same ordering, different shape, forced by the engine.
+#
+# Anyone reimplementing these rules should expect that step rather than treat it as a modelling
+# disagreement. If you need the pairwise form, it is derivable from what is below: for each category,
+# every pair (a, b) with strength(a) <= strength(b).
+#
+# NOT TO BE CONFUSED WITH archimate:influenceStrength, which stays in ontology/archimate.ttl. That is
+# the specification's own attribute on an influence relationship (weak / moderate / strong) and has
+# nothing to do with the weakest-link ordering. Two different things both called "strength"; do not
+# consolidate them.
+# ---------------------------------------------------------------------------
+
+@base <https://purl.org/archimate#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<#structuralStrength> rdf:type owl:DatatypeProperty ;
+    rdfs:label "structural strength" ;
+    rdfs:comment "Numeric strength of structural relationships: realization=1, assignment=2, aggregation=3, composition=4. Higher is stronger; a chain of two structural relationships derives the weaker (Appendix B, B.2.2)." ;
+    rdfs:domain <#structuralRelationship> ;
+    rdfs:range xsd:integer .
+
+<#dependencyStrength> rdf:type owl:DatatypeProperty ;
+    rdfs:label "dependency strength" ;
+    rdfs:comment "Numeric strength of dependency relationships: association=1, influence=2, access=3, serving=4. Higher is stronger; a chain of two dependency relationships derives the weaker (Appendix B, B.3.3 — note that B.3.3 is a POTENTIAL derivation, not a valid one)." ;
+    rdfs:domain <#dependencyRelationship> ;
+    rdfs:range xsd:integer .
+
+# B.2.2 — structural: composition is strongest, realization weakest.
+<#realization>  <#structuralStrength> 1 .
+<#assignment>   <#structuralStrength> 2 .
+<#aggregation>  <#structuralStrength> 3 .
+<#composition>  <#structuralStrength> 4 .
+
+# B.3.3 — dependency: serving is strongest, association weakest.
+<#association>  <#dependencyStrength> 1 .
+<#influence>    <#dependencyStrength> 2 .
+<#access>       <#dependencyStrength> 3 .
+<#serving>      <#dependencyStrength> 4 .

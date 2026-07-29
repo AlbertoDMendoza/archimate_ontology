@@ -1057,10 +1057,9 @@
 # Note: identifier, name, and documentation are already defined in Section 1.0 as universal properties
 # They apply to both elements AND relationships (both are Concepts)
 
-<#confidence> rdf:type owl:DatatypeProperty ;
-    rdfs:label "Confidence" ;
-    rdfs:comment "Confidence level in the relationship, if derived (e.g., valid, potential)." ;
-    rdfs:range xsd:string .
+# archimate:confidence moved to derivation/archimate_derivation_provenance.ttl on 2026-07-29 — it is
+# written and read only by derivation tooling ("if derived", as its definition said), so it belongs
+# with the other provenance terms rather than among the language's own relationship metadata. Same IRI.
 
 
 # Access Relationship Specific Properties
@@ -1087,49 +1086,24 @@
     rdfs:range xsd:string .
 
 
-#### 3.5 Derivation Vocabulary
+#### 3.5 Derivation Vocabulary — MOVED
 #
-# Relationship-strength ranking and derivation-provenance terms. Queried
-# directly by application code (e.g. ArchiGraph v5's loadDerivedRelationships()/
-# materializeRelationship() in graphdb.ts), so these live here — in the base
-# ontology, always loaded into the default graph — rather than in
-# derivation/archimate_derivation_rules.ttl, which is loaded into the SHACL
-# shapes graph and is hidden from ordinary SPARQL queries. In the archimate:
-# namespace (not a separate deriv: one) since they live in this file now.
-
-<#structuralStrength> rdf:type owl:DatatypeProperty ;
-    rdfs:label "structural strength" ;
-    rdfs:comment "Numeric strength of structural relationships: realization=1, assignment=2, aggregation=3, composition=4" ;
-    rdfs:domain <#structuralRelationship> ;
-    rdfs:range xsd:integer .
-
-<#dependencyStrength> rdf:type owl:DatatypeProperty ;
-    rdfs:label "dependency strength" ;
-    rdfs:comment "Numeric strength of dependency relationships: association=1, influence=2, access=3, serving=4" ;
-    rdfs:domain <#dependencyRelationship> ;
-    rdfs:range xsd:integer .
-
-<#realization> <#structuralStrength> 1 .
-<#assignment> <#structuralStrength> 2 .
-<#aggregation> <#structuralStrength> 3 .
-<#composition> <#structuralStrength> 4 .
-
-<#association> <#dependencyStrength> 1 .
-<#influence> <#dependencyStrength> 2 .
-<#access> <#dependencyStrength> 3 .
-<#serving> <#dependencyStrength> 4 .
-
-# Provenance terms on a materialized (derived-and-asserted) relationship's
-# quoted triple. Written directly by materializeRelationship() (graphdb.ts);
-# also the CONSTRUCT target of the (inert) SPARQL derivation rules in
-# derivation/archimate_derivation_rules.ttl.
-<#derivedFrom> rdf:type owl:ObjectProperty ;
-    rdfs:label "derived from" ;
-    rdfs:comment "On a materialized relationship's quoted triple: the source relationship(s) or bridging element it was derived from. Range left open — usages vary between relationship IRIs (predicates) and the bridging element, depending on the derivation rule." .
-
-<#derivationRule> rdf:type owl:DatatypeProperty ;
-    rdfs:label "derivation rule" ;
-    rdfs:comment "On a materialized relationship's quoted triple: which derivation rule (e.g. \"DR2\", \"DR3\") produced it." ;
-    rdfs:range xsd:string .
-
-
+# The relationship-strength ordering (archimate:structuralStrength, archimate:dependencyStrength) and
+# the derivation-provenance terms (archimate:confidence, archimate:derivedFrom,
+# archimate:derivationRule) were declared here until 2026-07-29. They now live where they belong:
+#
+#     derivation/archimate_derivation_strengths.ttl    the weakest-link ordering
+#     derivation/archimate_derivation_provenance.ttl   confidence / derivedFrom / derivationRule
+#
+# The IRIs are unchanged — all still in this file's https://purl.org/archimate# namespace — so this is
+# a relocation, not a rename, and no existing data or query breaks. A deployment that relied on
+# loading archimate.ttl alone must now also load the file it needs.
+#
+# The reasoning: none of these terms is part of the ArchiMate language. No diagram, exchange file or
+# conformance claim depends on the strength ordering — it is an input to a derivation procedure — and
+# provenance describes how a triple came to exist rather than what it means. A deployment that does no
+# derivation has no use for either, and should not have to load them to get the language.
+#
+# archimate:influenceStrength stays in this file, in §3.4. It is the specification's own attribute on
+# an influence relationship (weak / moderate / strong) and is unrelated to the weakest-link ordering,
+# despite the shared word.
