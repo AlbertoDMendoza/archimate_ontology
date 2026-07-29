@@ -51,6 +51,46 @@
 # - sh:Violation (default): Hard constraints, appropriate for transactional SHACL
 # - sh:Info: DeepSpecializationCheck — batch/reporting use only
 #
+# Most shapes here declare no sh:severity and therefore default to sh:Violation, which is what SHACL
+# prescribes. Be aware that some engines — RDF4J 4.3.x among them — treat EVERY severity as
+# transaction-blocking, so an sh:Info shape left active will reject writes rather than annotate them.
+# That is why the advisory shapes in this file carry sh:deactivated true as well as sh:Info.
+#
+# ---------------------------------------------------------------------------
+# ENGINE REQUIREMENT: sh:targetClass ON ABSTRACT CLASSES
+#
+# Eight shapes in this file target archimate:Concept or archimate:Element. Both are marked
+# <#abstract> true in the ontology: they are organizing constructs, and NO NODE IN A REAL MODEL CARRIES
+# rdf:type archimate:Concept. A model element is typed archimate:BusinessActor, and reaching Concept
+# from there means traversing rdfs:subClassOf.
+#
+# This is correct as written. SHACL defines the targets of sh:targetClass as the "SHACL instances" of
+# the class, and §2.1.3.1 defines a SHACL instance via rdf:type/rdfs:subClassOf* — subclasses
+# included, transitively. A conforming engine resolves archimate:BusinessActor to archimate:Concept
+# by itself, provided it can see the subclass axioms.
+#
+# THAT PROVISO IS THE TRAP, and it fails quietly. An engine that evaluates shapes against a dedicated
+# shapes graph — RDF4J's ShaclSail, GraphDB — resolves the class hierarchy from THAT graph. Load these
+# shapes into the shapes graph while the ontology sits in the default graph, and archimate:Concept has
+# no subclasses as far as the validator is concerned. Every one of the eight shapes then selects zero
+# focus nodes, validation passes, and NOTHING REPORTS THAT ANYTHING WAS SKIPPED. A cross-type
+# specialization is accepted in silence.
+#
+# Two ways to avoid it:
+#   * enable subclass reasoning for shape targeting (RDF4J: ShaclSail's rdfsSubClassReasoning), and
+#     make sure the ontology's rdfs:subClassOf statements are visible where that reasoning reads them;
+#   * or load archimate.ttl into the shapes graph alongside these shapes.
+#
+# To check rather than assume, count what a target actually selects before trusting a clean report:
+#   SELECT (COUNT(*) AS ?n) WHERE { ?x a/rdfs:subClassOf* archimate:Concept }
+# A result of 0 against a non-empty model means these shapes are inert.
+#
+# Deployments that cannot arrange either option can retarget by predicate instead — e.g.
+# sh:targetSubjectsOf archimate:specialization for the specialization shapes, or
+# sh:targetSubjectsOf archimate:identifier for <#UniqueConceptIdentifier>. That needs no reasoning at
+# all and cannot silently select nothing, at the cost of no longer being driven by the class hierarchy.
+# ---------------------------------------------------------------------------
+#
 # owl:imports note:
 # The ontology declares @base <https://purl.org/archimate#> so its IRI is
 # <https://purl.org/archimate#>. We import <https://purl.org/archimate/owl>
@@ -175,10 +215,27 @@
     ] .
 
 # Check for overly deep specialization chains
+# CAVEAT — COST AND EXACTNESS. This shape chains four `archimate:specialization+` steps. Each `+` is
+# itself an unbounded transitive path, so the four are joined as a cross product of four closures over
+# the same property: the most expensive query in this file by a wide margin, and the cost grows with
+# specialization density rather than with the depth it is looking for.
+#
+# It is also inexact in two ways:
+#   * the four intermediate variables are not required to be distinct, so a specialization CYCLE
+#     satisfies it trivially — the shape reports "deep chain" where the real defect is circularity;
+#   * four `+` steps means a minimum of four HOPS (five elements), so the threshold is off by one from
+#     "5 or more levels deep" if you count levels as hops.
+#
+# Counting ancestors once is cheaper and says what it means:
+#     SELECT $this (COUNT(DISTINCT ?ancestor) AS ?depth) WHERE {
+#         $this archimate:specialization+ ?ancestor .
+#     } GROUP BY $this HAVING (COUNT(DISTINCT ?ancestor) >= 5)
+# The shape is left as-is for compatibility; the alternative above is what a deployment concerned with
+# cost should use. Either way this is advisory: a deep chain is a smell, not an error.
 <#DeepSpecializationCheck> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Concept ;
     rdfs:label "Deep Specialization Chain Check" ;
-    rdfs:comment "Flags elements involved in specialization chains 5 or more levels deep (informational; batch/reporting only, see sh:deactivated)." ;
+    rdfs:comment "Flags elements involved in specialization chains 5 or more levels deep (informational; batch/reporting only, see sh:deactivated). NOTE: four chained transitive paths — expensive, and satisfied trivially by a specialization cycle. See the caveat comment above the shape." ;
     sh:deactivated true ;
     sh:severity sh:Info ;
     sh:sparql [
@@ -233,6 +290,23 @@
     ] .
 
 # Composition part uniqueness: a part can only belong to one whole
+#
+# CAVEAT — THE MOST EXPENSIVE ACTIVE SHAPE IN THIS FILE, and the one most likely to need deactivating
+# in a transactional deployment. For each part it self-joins the composers (?w1, ?w2 over the same
+# predicate — a cross product in the number of wholes) and then evaluates two FILTER NOT EXISTS blocks,
+# each over an unbounded `archimate:composition+` closure, per surviving pair.
+#
+# The exemption those two filters implement is not optional, and it is worth understanding before
+# simplifying this shape. If composition is TRANSITIVELY MATERIALIZED — because a derivation engine ran
+# DR2, or because the model asserts shortcuts — then every nested element is composed by every one of
+# its ancestors, and a naive "exactly one whole" test fails on every deep model. The ancestor exemption
+# is what keeps the shape meaningful in that setting: the composers of a part form a chain, so pairwise
+# one is always an ancestor of the other, and only a genuine ownership conflict survives.
+#
+# Consequence for deployment: run this over ASSERTED composition. Over a derived closure it is either
+# expensive-and-vacuous (with the exemption) or expensive-and-wrong (without it). Deployments that
+# accept Archi-authored models, which permit a part to have several wholes, will want it deactivated
+# rather than fixed — the models are not wrong so much as written to a more permissive contract.
 <#CompositionPartUniqueness> rdf:type sh:NodeShape ;
     sh:targetObjectsOf archimate:composition ;
     rdfs:label "Composition Part Uniqueness" ;

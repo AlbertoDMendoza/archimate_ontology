@@ -809,70 +809,34 @@
         }
     """ .
 
-### Validation for Derived Relationships
+### Validation for Derived Relationships — REMOVED
 
-# Ensure derived relationships don't violate metamodel constraints
-<#DerivedRelationshipValidation> rdf:type sh:NodeShape ;
-    rdfs:label "Derived Relationship Validation" ;
-    rdfs:comment "Validates that derived relationships conform to ArchiMate metamodel constraints" ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "Derived relationship violates ArchiMate metamodel constraints" ;
-        sh:select """
-            SELECT ?source ?target ?rel WHERE {
-                ?source ?rel ?target .
-                <<?source ?rel ?target>> archimate:confidence ?conf .
-                
-                # Check against known metamodel violations
-                {
-                    # Access must be from behavior to passive structure
-                    ?rel rdfs:subPropertyOf+ archimate:access .
-                    FILTER NOT EXISTS {
-                        ?source rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
-                        ?target rdf:type/rdfs:subClassOf+ archimate:PassiveStructure .
-                    }
-                } UNION {
-                    # Assignment must be from active structure (or Resource) to behavior
-                    ?rel rdfs:subPropertyOf+ archimate:assignment .
-                    FILTER NOT EXISTS {
-                        ?source rdf:type/rdfs:subClassOf+ archimate:ActiveStructure .
-                        ?target rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
-                    }
-                    # Resource (StructureAspect ∩ StrategyLayer) can also assign
-                    FILTER NOT EXISTS {
-                        ?source rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
-                        ?source rdf:type/rdfs:subClassOf* archimate:StructureAspect .
-                        ?target rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
-                    }
-                } UNION {
-                    # Dynamic relationships must be between behavior elements (or Resource)
-                    ?rel rdfs:subPropertyOf+ archimate:dynamicRelationship .
-                    FILTER NOT EXISTS {
-                        ?source rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
-                        ?target rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
-                    }
-                    # Resource (StructureAspect ∩ StrategyLayer) has triggering/flow
-                    FILTER NOT EXISTS {
-                        ?source rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
-                        ?source rdf:type/rdfs:subClassOf* archimate:StructureAspect .
-                        ?target rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
-                    }
-                    FILTER NOT EXISTS {
-                        ?source rdf:type/rdfs:subClassOf+ archimate:BehaviorAspect .
-                        ?target rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
-                        ?target rdf:type/rdfs:subClassOf* archimate:StructureAspect .
-                    }
-                    # Resource → Resource
-                    FILTER NOT EXISTS {
-                        ?source rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
-                        ?source rdf:type/rdfs:subClassOf* archimate:StructureAspect .
-                        ?target rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
-                        ?target rdf:type/rdfs:subClassOf* archimate:StructureAspect .
-                    }
-                }
-            }
-        """
-    ] .
+# <#DerivedRelationshipValidation> was removed 2026-07-29. It never validated anything, and it was the
+# most expensive body in this file. Recorded here rather than deleted silently, because a shape that
+# vanishes from a published vocabulary should leave a reason behind.
+#
+# Three independent defects:
+#
+# 1. NO TARGET. It declared sh:sparql but no sh:targetClass, sh:targetNode, sh:targetSubjectsOf or
+#    sh:targetObjectsOf, and it was not also declared an rdfs:Class, so it had no implicit class
+#    target either. Per SHACL §2.1.3 a node shape with no target selects no focus nodes: the shape
+#    was inert in any conforming engine.
+#
+# 2. UNSATISFIABLE WITHOUT THE RULES. Its premise required
+#    << ?source ?rel ?target >> archimate:confidence ?conf, which only exists after the CONSTRUCT
+#    rules above have run. As metamodel validation it therefore could not see relationships a
+#    modeller asserted by hand — the ones most in need of checking.
+#
+# 3. REDUNDANT AND EXPENSIVE. Three sh:UNION branches, each with two to four FILTER NOT EXISTS blocks
+#    over unbounded rdf:type/rdfs:subClassOf+ paths. "Is this relationship permitted between these two
+#    element types" is answered per-pair, and far more cheaply, by
+#    validation/archimate_validation_relationships.ttl, which is generated from the Appendix B tables
+#    in derivation/relationships.xml and therefore cannot drift from them. Hand-written aspect logic
+#    was a second, weaker encoding of the same rule.
+#
+# If you want this check, use the Level 3 relationship shapes. If you want it on DERIVED relationships
+# specifically, target them by the provenance the rules above write:
+#     sh:targetSubjectsOf archimate:derivedFrom
 
 ### Cleanup Rules
 
@@ -906,10 +870,33 @@
 ### Performance Optimization Rules
 
 # Limit derivation depth to prevent infinite chains
+#
+# CAVEAT — READ BEFORE RELYING ON THIS SHAPE. Two limits, neither of them a syntax problem:
+#
+# 1. IT REPORTS ONLY IF THE RULES ABOVE HAVE RUN. The premise `?stmt archimate:derivedFrom ?source`
+#    matches provenance written by the CONSTRUCT rules in this file. An engine that derives
+#    relationships some other way — a native forward-chaining ruleset, for instance — produces plain
+#    triples with no provenance, and this shape then matches nothing and silently reports conformance.
+#    It measures the output of *these* rules, not derivation in general.
+#
+# 2. IT DOES NOT MEASURE CHAIN DEPTH, despite the name. It counts DISTINCT provenance sources on a
+#    single statement. An element can sit at the end of a twenty-deep specialization chain and be
+#    flagged by neither this shape nor anything else here, because each derived statement along the way
+#    may rest on one source. Depth is a recursive property and needs a path expression:
+#
+#        SELECT $this (COUNT(DISTINCT ?ancestor) AS ?depth) WHERE {
+#            $this archimate:specialization+ ?ancestor .
+#        } GROUP BY $this HAVING (COUNT(DISTINCT ?ancestor) >= 5)
+#
+#    That form is worth knowing about because transitive closure over a chain of n elements yields
+#    (n-1)(n-2)/2 derived relationships — a 7-element chain produces 15 — so depth is the quantity that
+#    actually predicts closure size. archimate_validation_core.ttl's <#DeepSpecializationCheck> covers
+#    the specialization case, though it chains four `specialization+` steps rather than counting
+#    ancestors; see the caveat there for why that is more expensive and less exact.
 <#DerivationDepthLimit> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Element ;
     rdfs:label "Derivation Depth Limit" ;
-    rdfs:comment "Flags elements whose derived relationships collectively rest on more than 5 distinct direct sources (informational; batch/reporting only, see sh:deactivated)." ;
+    rdfs:comment "Flags elements whose derived relationships collectively rest on more than 5 distinct direct sources. Informational; batch/reporting only (see sh:deactivated). NOTE: this counts distinct provenance sources per statement, not chain depth, and only reports where the CONSTRUCT rules in this file wrote archimate:derivedFrom — see the caveat comment above the shape." ;
     sh:deactivated true ;
     sh:sparql [
         sh:prefixes <#> ;

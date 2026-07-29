@@ -36,6 +36,49 @@
 # via aspect x layer intersections (e.g., BehaviorAspect ∩ StrategyLayer = Capability).
 # No intermediate abstract classes needed.
 #
+# ---------------------------------------------------------------------------
+# CAVEAT: COST. This is the expensive level, and the reason is structural rather than incidental.
+#
+# Encoding "Resource is StructureAspect ∩ StrategyLayer" without intermediate classes means expressing
+# every pattern as FILTER NOT EXISTS blocks over rdf:type/rdfs:subClassOf+ paths — one per permitted
+# combination. Ruling out a case needs a NOT EXISTS; a pattern with several permitted combinations
+# needs several, and they compose multiplicatively rather than additively. That design choice buys a
+# faithful reading of the specification's figures at the cost of unbounded path evaluation per focus
+# node.
+#
+# Ranked by join weight (FILTER NOT EXISTS blocks, UNIONs, and unbounded subClassOf/subPropertyOf
+# paths), the heaviest shapes in this file:
+#
+#     ServingLayerDirection                    heaviest   (already sh:deactivated)
+#     CoreStructureRealizesResource                       (already sh:deactivated)
+#     CoreBehaviorRealizesStrategyBehavior                (already sh:deactivated)
+#     CoreInterfaceAssignmentTarget                       ACTIVE
+#     StrategyRealizationTarget                           ACTIVE
+#     AssignmentTargetConstraint                          ACTIVE
+#     StrategyAssignmentTarget                            ACTIVE
+#     NoRealizationOfBusinessActiveStructure              ACTIVE
+#     CoreServiceRealizesInternalBehavior                 (already sh:deactivated)
+#
+# The four already deactivated are the four worst, which is not a coincidence — they were switched off
+# after they proved unusable transactionally. The five marked ACTIVE are usable but are the first place
+# to look if validation latency becomes a problem, and the ones to deactivate before touching Level 1.
+#
+# WHERE THIS MATTERS MOST: transactional SHACL, where every write pays the whole cost. These shapes are
+# well suited to batch validation of a finished model and poorly suited to guarding an interactive
+# editor. Engines that validate the entire repository on each commit, or that revalidate stored data
+# when shapes are loaded, can exhaust heap on a large model — the practical failure is an
+# OutOfMemoryError during a shapes load, not a slow query.
+#
+# CHEAPER ALTERNATIVE FOR THE TYPE-PAIR CASES: most of what this file checks is also expressible as a
+# permitted (source type, relationship, target type) lookup, which is what Level 3
+# (archimate_validation_relationships.ttl) does — generated from derivation/relationships.xml, one
+# constraint per pair, no path evaluation. Level 3 cannot express the value-domain shapes
+# (AccessTypeValidation, InfluenceSignValidation, InfluenceStrengthValidation, FlowTypeValidation,
+# JunctionTypeValidation) or JunctionRelationshipHomogeneity, which constrain a literal or a set rather
+# than a pair. A cost-constrained deployment can reasonably run Level 3 plus those six and leave the
+# rest of this file to batch reporting.
+# ---------------------------------------------------------------------------
+#
 # Organization:
 # - Section 1: Generic Metamodel - Behavior and Structure Elements Metamodel
 #     1.1 Assignment (ActiveStructure → BehaviorAspect)
