@@ -14,7 +14,7 @@
     rdfs:comment "Level 1 Core Validation: universal model quality and graph integrity constraints. Validates concept requirements (identifier, name, documentation), specialization relationship integrity (same-type, no self-loops, depth), and structural relationship integrity (no circular/self composition/aggregation, composition part uniqueness). For metamodel pattern rules, see archimate_validation_metamodel.ttl. For per-element-type relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-10"^^xsd:date ;
-    dct:modified "2026-05-28"^^xsd:date ;
+    dct:modified "2026-07-29"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Beta" ;
     sh:declare [
@@ -77,9 +77,9 @@
 # specialization is accepted in silence.
 #
 # Two ways to avoid it:
-#   * enable subclass reasoning for shape targeting (RDF4J: ShaclSail's rdfsSubClassReasoning), and
-#     make sure the ontology's rdfs:subClassOf statements are visible where that reasoning reads them;
-#   * or load archimate.ttl into the shapes graph alongside these shapes.
+#   * load archimate.ttl into the shapes graph alongside these shapes;
+#   * or enable subclass reasoning for shape targeting (RDF4J: ShaclSail's rdfsSubClassReasoning), and
+#     make sure the ontology's rdfs:subClassOf statements are visible where that reasoning reads them.
 #
 # To check rather than assume, count what a target actually selects before trusting a clean report:
 #   SELECT (COUNT(*) AS ?n) WHERE { ?x a/rdfs:subClassOf* archimate:Concept }
@@ -104,7 +104,7 @@
 # 1. Load base ArchiMate ontology (archimate.ttl)
 # 2. Load archimate_validation_core.ttl (Level 1) <--<this file>
 # 3. Load archimate_validation_metamodel.ttl (Level 2: abstract metamodel pattern rules)
-# 4. Load archimate_validation_<layer>.ttl files (Level 3, optional)
+# 4. Load archimate_validation_relationships.ttl (Level 3, optional)
 # 5. Load your model data
 # 6. Run SHACL validation
 
@@ -230,8 +230,7 @@
 #     SELECT $this (COUNT(DISTINCT ?ancestor) AS ?depth) WHERE {
 #         $this archimate:specialization+ ?ancestor .
 #     } GROUP BY $this HAVING (COUNT(DISTINCT ?ancestor) >= 5)
-# The shape is left as-is for compatibility; the alternative above is what a deployment concerned with
-# cost should use. Either way this is advisory: a deep chain is a smell, not an error.
+# Either way this is advisory: a deep chain is a smell, not an error.
 <#DeepSpecializationCheck> rdf:type sh:NodeShape ;
     sh:targetClass archimate:Concept ;
     rdfs:label "Deep Specialization Chain Check" ;

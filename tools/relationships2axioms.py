@@ -11,12 +11,9 @@ Emits (all in the ontology's real term namespace, `https://purl.org/archimate#` 
 `…/archimate/owl#` ontology-document IRI, which is the bug that made the previous axioms file
 unable to bind to anything):
 
-  axioms-weaker.ttl     the weakest-link ordering, transitively closed, as archi:weakerOrEqual.
-                        Parameterizes the derivation rules; without it the ruleset fires on nothing.
-  axioms-permits.ttl    one archi:permits<Relation> triple per permitted (source, target, relation),
-                        over direct ∪ derived, plus archi:permittedBy meta-triples mapping each
-                        relation to its permission predicate. Used as a POSITIVE premise so
-                        restriction rules need no negation.
+  archimate_derivation_axioms.ttl   the file to load: relationship letters, categories, the
+                    permission lookup, and the permitted matrix in both forms — archi:permits<Rel>
+                    (direct or derived) and archi:permitsDirect<Rel> (directly assertable).
   fixture-direct.ttl    the UPPERCASE relationships as type-level instance data — the input a
                         conformance run feeds to the ruleset.
   fixture-derived.ttl   the lowercase relationships, same shape — what the ruleset is expected to
@@ -101,44 +98,12 @@ def main():
     outdir.mkdir(parents=True, exist_ok=True)
     direct, derived, concepts = parse(src)
 
-    # ---- weaker lattice -------------------------------------------------
-    L = [ttl_header("Weakest-link ordering (transitively closed, reflexive)")]
-    L.append("archi:weakerOrEqual a owl:ObjectProperty ;\n"
-             '    rdfs:label "weaker or equal to" ;\n'
-             '    rdfs:comment "Subject relation is weaker than or equal to the object relation. '
-             'Transitive closure is materialized here so a ruleset need not rely on the engine '
-             'expanding it." .\n\n')
-    L.append("# Relationship categories, so a single rule can dispatch on category.\n")
-    for cat, rels in CATEGORY.items():
-        for rel in rels:
-            L.append(f"archi:{rel} archi:relCategory archi:{cat} .\n")
-    L.append("\n")
-    n_weak = 0
-    for name, order in (("B.2.2 structural", STRUCTURAL), ("B.3.3 dependency", DEPENDENCY)):
-        L.append(f"# {name}: {' > '.join(order)}\n")
-        for weak, strong in sorted(closed_pairs(order)):
-            L.append(f"archi:{weak} archi:weakerOrEqual archi:{strong} .\n")
-            n_weak += 1
-        L.append("\n")
-    (outdir / "axioms-weaker.ttl").write_text("".join(L))
-
     # ---- permits matrix (direct ∪ derived) + permittedBy meta ----------
-    P = [ttl_header("Permitted relationships (direct ∪ derived) — restriction guard")]
-    P.append("# archi:permittedBy maps a relation to the predicate carrying its permissions, so a\n"
-             "# single generic rule can look up permission for whatever relation it is deriving.\n")
-    for rel in sorted(set(LETTER.values())):
-        P.append(f"archi:{rel} archi:permittedBy archi:{permits_predicate(rel)} .\n")
-    P.append("\n")
     permitted = defaultdict(set)
     for table in (direct, derived):
         for (s, t), rels in table.items():
             permitted[(s, t)] |= rels
-    n_perm = 0
-    for (s, t) in sorted(permitted):
-        for rel in sorted(permitted[(s, t)]):
-            P.append(f"archi:{s} archi:{permits_predicate(rel)} archi:{t} .\n")
-            n_perm += 1
-    (outdir / "axioms-permits.ttl").write_text("".join(P))
+    n_perm = sum(len(v) for v in permitted.values())
 
     # ---- conformance fixtures (type level) -----------------------------
     counts = {}
@@ -162,11 +127,13 @@ def main():
     # ---- consolidated replacement for archimate_derivation_axioms.ttl -----
     A = [ttl_header("ArchiMate derivation axioms — relationship strength, categories, and the "
                     "Appendix B permitted matrix")]
-    A.append("# Supersedes the previous hand-transcribed axioms file, which (a) used the ontology\n"
-             "# DOCUMENT IRI <https://purl.org/archimate/owl#> as its term namespace so nothing it\n"
-             "# asserted could bind to real relationships, and (b) was transcribed from an\n"
-             "# all-lowercase table, discarding the spec's direct-vs-derived distinction.\n"
-             "@prefix deriv: <https://purl.org/archimate/derivation#> .\n\n")
+    A.append("# Generated from derivation/relationships.xml. Do not edit by hand.\n"
+             "#\n"
+             "# archi:permits<Relation>       permitted, whether directly or by derivation\n"
+             "# archi:permitsDirect<Relation> permitted DIRECTLY — assertable per the metamodel\n"
+             "#\n"
+             "# Every permitsDirect triple is also a permits triple. A relationship that is permitted\n"
+             "# but not permitted-direct is one Appendix B sanctions only as a derivation.\n\n")
     A.append("### Relationship letters (spec legend)\n")
     for ch, rel in sorted(LETTER.items()):
         A.append(f'archi:{rel} archi:relAbbreviation "{ch}" .\n')
@@ -174,38 +141,24 @@ def main():
     for cat, rels in CATEGORY.items():
         for rel in rels:
             A.append(f"archi:{rel} archi:relCategory archi:{cat} .\n")
-    A.append("\n### Strength ordering (B.2.2 structural, B.3.3 dependency), transitively closed\n")
-    for order in (STRUCTURAL, DEPENDENCY):
-        for i, strong in enumerate(order):
-            for weak in order[i+1:]:
-                A.append(f"archi:{weak} archi:weakerThan archi:{strong} .\n")
-        for weak, strong in sorted(closed_pairs(order)):
-            A.append(f"archi:{weak} archi:weakerOrEqual archi:{strong} .\n")
-    A.append("\n### Permission lookup used as a positive premise by the derivation ruleset\n")
+    A.append("\n### Relation -> the predicate carrying its permissions\n")
     for rel in sorted(set(LETTER.values())):
         A.append(f"archi:{rel} archi:permittedBy archi:{permits_predicate(rel)} .\n")
     A.append("\n### Permitted relationships per (source, target) — direct union derived\n")
     for (s_, t_) in sorted(permitted):
         for rel in sorted(permitted[(s_, t_)]):
             A.append(f"archi:{s_} archi:{permits_predicate(rel)} archi:{t_} .\n")
-    A.append("\n### Per-pair detail, PRESERVING the spec's direct/derived split\n")
-    n_ind = 0
-    for (s_, t_) in sorted(set(direct) | set(derived)):
-        dr = sorted(direct.get((s_, t_), ()))
-        dv = sorted(derived.get((s_, t_), ()))
-        A.append(f"deriv:{s_}-{t_} a deriv:ArchimateRelationshipPair ;\n"
-                 f"    deriv:source archi:{s_} ;\n    deriv:target archi:{t_} ;\n")
-        if dr:
-            A.append("    deriv:directRelation " + ", ".join(f"archi:{r}" for r in dr) + " ;\n")
-        if dv:
-            A.append("    deriv:derivedRelation " + ", ".join(f"archi:{r}" for r in dv) + " ;\n")
-        A.append("    .\n")
-        n_ind += 1
+    A.append("\n### Permitted DIRECTLY per (source, target) — the UPPERCASE half of the tables\n")
+    n_dir = 0
+    for (s_, t_) in sorted(direct):
+        for rel in sorted(direct[(s_, t_)]):
+            A.append(f"archi:{s_} archi:permitsDirect{rel[0].upper()}{rel[1:]} archi:{t_} .\n")
+            n_dir += 1
     (outdir.parent / "archimate_derivation_axioms.ttl").write_text("".join(A))
-    print(f"consolidated axioms -> {outdir.parent / 'archimate_derivation_axioms.ttl'} ({n_ind} pairs)")
+    print(f"consolidated axioms -> {outdir.parent / 'archimate_derivation_axioms.ttl'}")
 
     print(f"concepts            {len(concepts)}")
-    print(f"weakerOrEqual pairs {n_weak}")
+    print(f"permitsDirect       {n_dir}")
     print(f"permits triples     {n_perm}")
     print(f"direct  (UPPERCASE) {counts['direct']}")
     print(f"derived (lowercase) {counts['derived']}")

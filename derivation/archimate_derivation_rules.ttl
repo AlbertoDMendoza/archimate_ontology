@@ -885,8 +885,8 @@
 #
 # 1. IT REPORTS ONLY IF THE RULES ABOVE HAVE RUN. The premise `?stmt archimate:derivedFrom ?source`
 #    matches provenance written by the CONSTRUCT rules in this file. An engine that derives
-#    relationships some other way — a native forward-chaining ruleset, for instance — produces plain
-#    triples with no provenance, and this shape then matches nothing and silently reports conformance.
+#    relationships without writing that provenance produces plain triples, and this shape then matches
+#    nothing and silently reports conformance.
 #    It measures the output of *these* rules, not derivation in general.
 #
 # 2. IT DOES NOT MEASURE CHAIN DEPTH, despite the name. It counts DISTINCT provenance sources on a

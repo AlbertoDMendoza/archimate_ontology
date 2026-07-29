@@ -14,7 +14,7 @@
     rdfs:comment "Level 2 Metamodel Validation: abstract ArchiMate metamodel pattern rules using the ontology's class hierarchy (aspect x layer intersections). Encodes Figures 5, 34, 45, 46, 51, 52, 70, 82, 99, 104, 105, and 106 from ArchiMate 3.2. For graph integrity, see archimate_validation_core.ttl. For per-element relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-16"^^xsd:date ;
-    dct:modified "2026-06-12"^^xsd:date ;
+    dct:modified "2026-07-29"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Beta" ;
     sh:declare [
@@ -155,7 +155,7 @@
 # 1. Load base ArchiMate ontology (archimate.ttl)
 # 2. Load archimate_validation_core.ttl (Level 1)
 # 3. Load this validation file (Level 2)
-# 4. Load archimate_validation_<layer>.ttl files (Level 3, optional)
+# 4. Load archimate_validation_relationships.ttl files (Level 3, optional)
 # 5. Load your model data
 # 6. Run SHACL validation
 

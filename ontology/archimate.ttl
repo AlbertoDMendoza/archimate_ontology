@@ -26,7 +26,7 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2026-06-11"^^xsd:date ;
+    dct:modified "2026-07-29"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> .
 
 # NOTES 
@@ -40,7 +40,7 @@
 # VALIDATION:
 # - Level 1 Core Validation — Universal model quality and graph integrity.  
 # - Level 2 Metamodel Validation — ArchiMate architectural pattern enforcement.
-# - Level 3 validation: complete (all layers merged into archimate_validation_relationships.ttl)
+# - Level 3 Relationships Validation: all possible relationships merged into one file. 
 #
 # DESIGN DECISIONS
 # 1) Naming Convention
@@ -952,7 +952,7 @@
 # not constraints. Narrower declarations cause incorrect type inferences for
 # elements like Resource (StructureAspect that participates in assignment,
 # triggering, and flow) and cross-layer patterns (e.g., Actor → Stakeholder).
-# Actual relationship validity is enforced by SHACL (Level 2 metamodel shapes).
+# Actual relationship validity is enforced by SHACL (Level 2 & 3 metamodel & relationship shapes).
 
 # Structural Relationships
 <#assignment> rdf:type owl:ObjectProperty ;
@@ -1086,24 +1086,4 @@
     rdfs:range xsd:string .
 
 
-#### 3.5 Derivation Vocabulary — MOVED
-#
-# The relationship-strength ordering (archimate:structuralStrength, archimate:dependencyStrength) and
-# the derivation-provenance terms (archimate:confidence, archimate:derivedFrom,
-# archimate:derivationRule) were declared here until 2026-07-29. They now live where they belong:
-#
-#     derivation/archimate_derivation_strengths.ttl    the weakest-link ordering
-#     derivation/archimate_derivation_provenance.ttl   confidence / derivedFrom / derivationRule
-#
-# The IRIs are unchanged — all still in this file's https://purl.org/archimate# namespace — so this is
-# a relocation, not a rename, and no existing data or query breaks. A deployment that relied on
-# loading archimate.ttl alone must now also load the file it needs.
-#
-# The reasoning: none of these terms is part of the ArchiMate language. No diagram, exchange file or
-# conformance claim depends on the strength ordering — it is an input to a derivation procedure — and
-# provenance describes how a triple came to exist rather than what it means. A deployment that does no
-# derivation has no use for either, and should not have to load them to get the language.
-#
-# archimate:influenceStrength stays in this file, in §3.4. It is the specification's own attribute on
-# an influence relationship (weak / moderate / strong) and is unrelated to the weakest-link ordering,
-# despite the shared word.
+

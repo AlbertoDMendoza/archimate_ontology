@@ -5,16 +5,6 @@
 # requires them: a deployment that does no derivation has no use for them, and an exchange file has
 # nowhere to put them. That is why they are here rather than in the base ontology.
 #
-# Declared in ontology/archimate.ttl until 2026-07-29 — archimate:derivedFrom and
-# archimate:derivationRule in §3.5, archimate:confidence in §3.4 among the RDF-star metadata
-# properties. The IRIs are unchanged, still in the https://purl.org/archimate# namespace, so this is a
-# relocation of the declarations and not a rename. Existing data and queries are unaffected; a
-# deployment that loaded archimate.ttl alone and relied on these must now also load this file.
-#
-# archimate:confidence was moved even though it sat in §3.4 rather than §3.5. Its own definition begins
-# "if derived", and it is written and read only by derivation tooling, so leaving it behind would have
-# split one vocabulary across two files for no reason other than where the section break fell.
-#
 # WHERE TO LOAD THEM: the default graph, or wherever ordinary SPARQL can see them. These are read back
 # by applications — to show a modeller which rule produced a relationship, and whether it was a valid
 # derivation or a suggested one. Some engines hide the SHACL shapes graph from ordinary queries (RDF4J
@@ -45,3 +35,18 @@
     rdfs:label "derivation rule" ;
     rdfs:comment "On a derived relationship's quoted triple: which derivation rule (e.g. \"DR2\", \"DR3\") produced it." ;
     rdfs:range xsd:string .
+
+<#description> rdf:type owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "On a derived relationship's quoted triple: a human-readable note on how it arose, e.g. \"Derived via DR2: structural relationship chain\". Written by every rule in archimate_derivation_rules.ttl." ;
+    rdfs:range xsd:string .
+
+<#createdBy> rdf:type owl:DatatypeProperty ;
+    rdfs:label "created by" ;
+    rdfs:comment "On a derived relationship's quoted triple: what produced it — an engine name, or a user identifier where a modeller accepted a suggestion." ;
+    rdfs:range xsd:string .
+
+<#createdDate> rdf:type owl:DatatypeProperty ;
+    rdfs:label "created date" ;
+    rdfs:comment "On a derived relationship's quoted triple: when it was produced." ;
+    rdfs:range xsd:dateTime .

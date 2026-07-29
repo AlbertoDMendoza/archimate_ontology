@@ -19,25 +19,9 @@
 # Existing data and queries are unaffected; a deployment that loaded archimate.ttl alone and relied on
 # these must now also load this file.
 #
-# ---------------------------------------------------------------------------
-# WHY NUMBERS HERE, AND WHY THAT IS NOT THE ONLY REASONABLE ENCODING
-#
-# The ordering is expressed as integers because the SPARQL rules in archimate_derivation_rules.ttl
-# compare them arithmetically:
+# The rules in archimate_derivation_rules.ttl compare these arithmetically:
 #
 #     BIND(IF(?strength1 <= ?strength2, ?rel1, ?rel2) AS ?weakerRel)
-#
-# That is the compact and readable encoding, and SPARQL supports it directly.
-#
-# It is worth knowing that it does not survive translation to every rule engine. A native
-# forward-chaining ruleset — GraphDB's `.pie` format, for instance — has no numeric comparison in its
-# premise language at all. Ported there, the ordering has to be pre-expanded into an explicit pairwise
-# relation (composition weakerOrEqual aggregation, and so on) so that a rule can match it as a triple
-# rather than evaluate it as an expression. Same ordering, different shape, forced by the engine.
-#
-# Anyone reimplementing these rules should expect that step rather than treat it as a modelling
-# disagreement. If you need the pairwise form, it is derivable from what is below: for each category,
-# every pair (a, b) with strength(a) <= strength(b).
 #
 # NOT TO BE CONFUSED WITH archimate:influenceStrength, which stays in ontology/archimate.ttl. That is
 # the specification's own attribute on an influence relationship (weak / moderate / strong) and has
