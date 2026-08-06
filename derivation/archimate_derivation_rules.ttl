@@ -15,7 +15,7 @@
     rdfs:comment "Complete implementation of ArchiMate derivation rules DR1-DR8 and PDR1-PDR12 using SPARQL CONSTRUCT rules." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-15"^^xsd:date ;
-    dct:modified "2026-05-28"^^xsd:date ;
+    dct:modified "2026-08-06"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Beta" ;
     sh:declare [
@@ -915,51 +915,5 @@
             BIND(<<?source ?rel ?target>> AS ?stmt)
         }
     """ .
-
-### Performance Optimization Rules
-
-# Limit derivation depth to prevent infinite chains
-#
-# CAVEAT — READ BEFORE RELYING ON THIS SHAPE. Two limits, neither of them a syntax problem:
-#
-# 1. IT REPORTS ONLY IF THE RULES ABOVE HAVE RUN. The premise `?stmt archimate:derivedFrom ?source`
-#    matches provenance written by the CONSTRUCT rules in this file. An engine that derives
-#    relationships without writing that provenance produces plain triples, and this shape then matches
-#    nothing and silently reports conformance.
-#    It measures the output of *these* rules, not derivation in general.
-#
-# 2. IT DOES NOT MEASURE CHAIN DEPTH, despite the name. It counts DISTINCT provenance sources on a
-#    single statement. An element can sit at the end of a twenty-deep specialization chain and be
-#    flagged by neither this shape nor anything else here, because each derived statement along the way
-#    may rest on one source. Depth is a recursive property and needs a path expression:
-#
-#        SELECT $this (COUNT(DISTINCT ?ancestor) AS ?depth) WHERE {
-#            $this archimate:specialization+ ?ancestor .
-#        } GROUP BY $this HAVING (COUNT(DISTINCT ?ancestor) >= 5)
-#
-#    That form is worth knowing about because transitive closure over a chain of n elements yields
-#    (n-1)(n-2)/2 derived relationships — a 7-element chain produces 15 — so depth is the quantity that
-#    actually predicts closure size. archimate_validation_core.ttl's <#DeepSpecializationCheck> covers
-#    the specialization case, though it chains four `specialization+` steps rather than counting
-#    ancestors; see the caveat there for why that is more expensive and less exact.
-<#DerivationDepthLimit> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Element ;
-    rdfs:label "Derivation Depth Limit" ;
-    rdfs:comment "Flags elements whose derived relationships collectively rest on more than 5 distinct direct sources. Informational; batch/reporting only (see sh:deactivated). NOTE: this counts distinct provenance sources per statement, not chain depth, and only reports where the CONSTRUCT rules in this file wrote archimate:derivedFrom — see the caveat comment above the shape." ;
-    sh:deactivated true ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "Element's derived relationships rest on more than 5 distinct direct sources" ;
-        sh:severity sh:Info ;
-        sh:select """
-            SELECT $this WHERE {
-                $this ?rel ?target .
-                BIND(<<$this ?rel ?target>> AS ?stmt)
-                ?stmt archimate:derivedFrom ?source .
-            }
-            GROUP BY $this
-            HAVING (COUNT(DISTINCT ?source) > 5)
-        """
-    ] .
 
 

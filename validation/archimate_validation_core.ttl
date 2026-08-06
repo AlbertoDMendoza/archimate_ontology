@@ -14,7 +14,7 @@
     rdfs:comment "Level 1 Core Validation: universal model quality and graph integrity constraints. Validates concept requirements (identifier, name, documentation), specialization relationship integrity (same-type, no self-loops, depth), and structural relationship integrity (no circular/self composition/aggregation, composition part uniqueness). For metamodel pattern rules, see archimate_validation_metamodel.ttl. For per-element-type relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-10"^^xsd:date ;
-    dct:modified "2026-07-29"^^xsd:date ;
+    dct:modified "2026-08-06"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Beta" ;
     sh:declare [
@@ -48,18 +48,15 @@
 # - Section 3: Structural Relationship Validation (composition, aggregation)
 #
 # Severity levels:
-# - sh:Violation (default): Hard constraints, appropriate for transactional SHACL
-# - sh:Info: DeepSpecializationCheck — batch/reporting use only
-#
-# Most shapes here declare no sh:severity and therefore default to sh:Violation, which is what SHACL
-# prescribes. Be aware that some engines — RDF4J 4.3.x among them — treat EVERY severity as
-# transaction-blocking, so an sh:Info shape left active will reject writes rather than annotate them.
-# That is why the advisory shapes in this file carry sh:deactivated true as well as sh:Info.
+# - sh:Violation (default): every shape in this file. Most declare no sh:severity and get this by
+#   SHACL's own default. Some engines — RDF4J 4.3.x among them — treat every severity as
+#   transaction-blocking, so this file has no sh:Info/sh:Warning shapes: an advisory-severity shape
+#   left active on such an engine rejects writes rather than annotating them.
 #
 # ---------------------------------------------------------------------------
 # ENGINE REQUIREMENT: sh:targetClass ON ABSTRACT CLASSES
 #
-# Eight shapes in this file target archimate:Concept or archimate:Element. Both are marked
+# Seven shapes in this file target archimate:Concept or archimate:Element. Both are marked
 # <#abstract> true in the ontology: they are organizing constructs, and NO NODE IN A REAL MODEL CARRIES
 # rdf:type archimate:Concept. A model element is typed archimate:BusinessActor, and reaching Concept
 # from there means traversing rdfs:subClassOf.
@@ -213,46 +210,6 @@
             }
         """
     ] .
-
-# Check for overly deep specialization chains
-# CAVEAT — COST AND EXACTNESS. This shape chains four `archimate:specialization+` steps. Each `+` is
-# itself an unbounded transitive path, so the four are joined as a cross product of four closures over
-# the same property: the most expensive query in this file by a wide margin, and the cost grows with
-# specialization density rather than with the depth it is looking for.
-#
-# It is also inexact in two ways:
-#   * the four intermediate variables are not required to be distinct, so a specialization CYCLE
-#     satisfies it trivially — the shape reports "deep chain" where the real defect is circularity;
-#   * four `+` steps means a minimum of four HOPS (five elements), so the threshold is off by one from
-#     "5 or more levels deep" if you count levels as hops.
-#
-# Counting ancestors once is cheaper and says what it means:
-#     SELECT $this (COUNT(DISTINCT ?ancestor) AS ?depth) WHERE {
-#         $this archimate:specialization+ ?ancestor .
-#     } GROUP BY $this HAVING (COUNT(DISTINCT ?ancestor) >= 5)
-# Either way this is advisory: a deep chain is a smell, not an error.
-<#DeepSpecializationCheck> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Concept ;
-    rdfs:label "Deep Specialization Chain Check" ;
-    rdfs:comment "Flags elements involved in specialization chains 5 or more levels deep (informational; batch/reporting only, see sh:deactivated). NOTE: four chained transitive paths — expensive, and satisfied trivially by a specialization cycle. See the caveat comment above the shape." ;
-    sh:deactivated true ;
-    sh:severity sh:Info ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "Element has a deep specialization chain (5+ levels) - consider if this complexity is necessary" ;
-        sh:select """
-            SELECT $this WHERE {
-                # Check specialization depth via transitive property
-                # 4 chained steps with + = minimum 4 hops
-                $this archimate:specialization+ ?type1 .
-                ?type1 archimate:specialization+ ?type2 .
-                ?type2 archimate:specialization+ ?type3 .
-                ?type3 archimate:specialization+ ?type4 .
-            }
-        """
-    ] .
-
-
 
 ### 3. Structural Relationship Validation
 

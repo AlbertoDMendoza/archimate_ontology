@@ -14,7 +14,7 @@
     rdfs:comment "Level 2 Metamodel Validation: abstract ArchiMate metamodel pattern rules using the ontology's class hierarchy (aspect x layer intersections). Encodes Figures 5, 34, 45, 46, 51, 52, 70, 82, 99, 104, 105, and 106 from ArchiMate 3.2. For graph integrity, see archimate_validation_core.ttl. For per-element relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-16"^^xsd:date ;
-    dct:modified "2026-07-29"^^xsd:date ;
+    dct:modified "2026-08-06"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Beta" ;
     sh:declare [
@@ -47,21 +47,10 @@
 # node.
 #
 # Ranked by join weight (FILTER NOT EXISTS blocks, UNIONs, and unbounded subClassOf/subPropertyOf
-# paths), the heaviest shapes in this file:
-#
-#     ServingLayerDirection                    heaviest   (already sh:deactivated)
-#     CoreStructureRealizesResource                       (already sh:deactivated)
-#     CoreBehaviorRealizesStrategyBehavior                (already sh:deactivated)
-#     CoreInterfaceAssignmentTarget                       ACTIVE
-#     StrategyRealizationTarget                           ACTIVE
-#     AssignmentTargetConstraint                          ACTIVE
-#     StrategyAssignmentTarget                            ACTIVE
-#     NoRealizationOfBusinessActiveStructure              ACTIVE
-#     CoreServiceRealizesInternalBehavior                 (already sh:deactivated)
-#
-# The four already deactivated are the four worst, which is not a coincidence — they were switched off
-# after they proved unusable transactionally. The five marked ACTIVE are usable but are the first place
-# to look if validation latency becomes a problem, and the ones to deactivate before touching Level 1.
+# paths), the heaviest shapes in this file, heaviest first: CoreInterfaceAssignmentTarget,
+# StrategyRealizationTarget, AssignmentTargetConstraint, StrategyAssignmentTarget,
+# NoRealizationOfBusinessActiveStructure. These are usable but are the first place to look if
+# validation latency becomes a problem.
 #
 # WHERE THIS MATTERS MOST: transactional SHACL, where every write pays the whole cost. These shapes are
 # well suited to batch validation of a finished model and poorly suited to guarding an interactive
@@ -96,7 +85,6 @@
 
 # - Section 3: Core Layer Patterns (Business, Application, Technology — Figures 52, 70, 82)
 #     3.1 Interface → Service assignment (interface exposes service, same layer)
-#     3.2 Service should not realize InternalBehavior (realization direction, same layer)
 #     3.3 (removed) LayerComposite targets differ per element — handled by Level 3
 #
 # - Section 4: Cross-Layer Relationships (Chapter 11, Figures 104/105)
@@ -105,10 +93,6 @@
 # - Section 5: Physical Layer Metamodel Patterns (Figure 99)
 #     5.1 Physical assignment source must be ActiveStructure
 #     5.2 Physical assignment target must be StructureAspect (active or passive)
-#
-# - Section 6: Implementation and Migration Metamodel Patterns (Figure 106)
-#     6.1 WorkPackage→Deliverable realization deprecated (sh:Warning)
-#     6.2 Gap should associate with Plateaus (sh:Warning)
 #
 # - Section 7: Motivation Metamodel Patterns (Figures 34, 45)
 #     7.1 Assignment into Motivation: only Business ActiveStructure → Stakeholder
@@ -256,47 +240,8 @@
 
 ## 1.4 Serving direction: lower layers serve higher layers
 # Layer stack (bottom to top): Physical → Technology → Application → Business → Strategy
-# I&M is orthogonal (serves/served by all core layers).
-
-<#ServingLayerDirection> rdf:type sh:NodeShape ;
-    sh:targetSubjectsOf archimate:serving ;
-    rdfs:label "Serving Layer Direction" ;
-    sh:deactivated true ;
-    sh:severity sh:Warning ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "Serving relationships should flow upward from lower to higher layers (Physical → Technology → Application → Business)" ;
-        sh:select """
-            SELECT $this ?target WHERE {
-                $this archimate:serving ?target .
-                {
-                    # Business serving Application
-                    $this rdf:type/rdfs:subClassOf* archimate:BusinessLayer .
-                    ?target rdf:type/rdfs:subClassOf* archimate:ApplicationLayer .
-                } UNION {
-                    # Business serving Technology
-                    $this rdf:type/rdfs:subClassOf* archimate:BusinessLayer .
-                    ?target rdf:type/rdfs:subClassOf* archimate:TechnologyLayer .
-                } UNION {
-                    # Business serving Physical
-                    $this rdf:type/rdfs:subClassOf* archimate:BusinessLayer .
-                    ?target rdf:type/rdfs:subClassOf* archimate:PhysicalLayer .
-                } UNION {
-                    # Application serving Technology
-                    $this rdf:type/rdfs:subClassOf* archimate:ApplicationLayer .
-                    ?target rdf:type/rdfs:subClassOf* archimate:TechnologyLayer .
-                } UNION {
-                    # Application serving Physical
-                    $this rdf:type/rdfs:subClassOf* archimate:ApplicationLayer .
-                    ?target rdf:type/rdfs:subClassOf* archimate:PhysicalLayer .
-                } UNION {
-                    # Technology serving Physical
-                    $this rdf:type/rdfs:subClassOf* archimate:TechnologyLayer .
-                    ?target rdf:type/rdfs:subClassOf* archimate:PhysicalLayer .
-                }
-            }
-        """
-    ] .
+# I&M is orthogonal (serves/served by all core layers). No shape in this file or in Level 3
+# currently enforces this direction; serving is otherwise unconstrained.
 
 
 ## 1.5 Influence targets MotivationAspect
@@ -524,41 +469,6 @@
     ] .
 
 
-## 3.2 Service should not realize InternalBehavior (same layer)
-# Per Figures 52/70/82: realization flows from internal/collective behavior
-# toward external behavior (service), not the reverse.
-
-<#CoreServiceRealizesInternalBehavior> rdf:type sh:NodeShape ;
-    sh:targetSubjectsOf archimate:realization ;
-    rdfs:label "Core Service Realization Direction" ;
-    sh:deactivated true ;
-    sh:severity sh:Info ;
-    rdfs:comment "Within a core layer, realization should flow from internal/collective behavior to service, not the reverse." ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "Service should not realize internal behavior elements — realization flows from process/function/interaction toward service" ;
-        sh:select """
-            SELECT $this ?target WHERE {
-                $this archimate:realization ?target .
-                # Source is ExternalBehavior in a core layer
-                $this rdf:type/rdfs:subClassOf* archimate:ExternalBehavior .
-                VALUES ?layer {
-                    archimate:BusinessLayer
-                    archimate:ApplicationLayer
-                    archimate:TechnologyLayer
-                }
-                $this rdf:type/rdfs:subClassOf* ?layer .
-                # Target is non-external BehaviorAspect in the same layer
-                ?target rdf:type/rdfs:subClassOf* archimate:BehaviorAspect .
-                ?target rdf:type/rdfs:subClassOf* ?layer .
-                FILTER NOT EXISTS {
-                    ?target rdf:type/rdfs:subClassOf* archimate:ExternalBehavior
-                }
-            }
-        """
-    ] .
-
-
 ## 3.3 CompositeElement composition/aggregation targets
 # Removed: no universal rule applies across CompositeElement sub-kinds.
 # GenericComposite (Grouping, Location) is unrestricted by definition.
@@ -664,46 +574,6 @@
                 }
                 FILTER NOT EXISTS {
                     $this rdf:type/rdfs:subClassOf* archimate:PassiveStructure
-                }
-            }
-        """
-    ] .
-
-
-### 6. Implementation and Migration Metamodel Patterns (Figure 106)
-
-# I&M elements: WorkPackage (InternalBehavior), ImplementationEvent (BehaviorAspect),
-# Deliverable (PassiveStructure), Plateau (PassiveStructure), Gap (PassiveStructure).
-#
-# No ActiveStructure, no ExternalBehavior (services), no interfaces in this layer.
-# I&M behavior relationships follow similar patterns to the generic metamodel but are
-# not validated by Section 1 (CoreLayer-scoped).
-#
-# Key I&M-specific constraints below.
-
-
-## 6.1 Gap should associate with Plateaus
-# Per Section 12.2.5: "A gap is associated with two plateaus and represents the
-# differences between these plateaus."
-
-<#GapPlateauAssociation> rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Gap ;
-    rdfs:label "Gap Should Associate with Plateaus" ;
-    sh:deactivated true ;
-    sh:severity sh:Warning ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "Gap should be associated with at least one Plateau — a gap represents a difference between two plateaus" ;
-        sh:select """
-            SELECT $this WHERE {
-                FILTER NOT EXISTS {
-                    {
-                        $this archimate:association ?plateau .
-                        ?plateau rdf:type/rdfs:subClassOf* archimate:Plateau .
-                    } UNION {
-                        ?plateau archimate:association $this .
-                        ?plateau rdf:type/rdfs:subClassOf* archimate:Plateau .
-                    }
                 }
             }
         """
@@ -851,8 +721,8 @@
 
 
 ### 8. Strategy To Core Elements And Motivation Elements
-# Internal and external behavior elements may realize strategy behavior elements (value streams and capabilities), while an active or passive structure element may realize a resource. Capabilities, 
-# value streams, courses of action, and resources may realize or influence requirements (and indirectly, as described in Section 5.7, also principles or goals), and a course of action may also 
+# Internal and external behavior elements may realize strategy behavior elements (value streams and capabilities), while an active or passive structure element may realize a resource. Capabilities,
+# value streams, courses of action, and resources may realize or influence requirements (and indirectly, as described in Section 5.7, also principles or goals), and a course of action may also
 # realize or influence an outcome (and, indirectly, also a goal).
 #
 # Figure 51 shows:
@@ -860,80 +730,10 @@
 #   Core Active/Passive Structure --realization--> Resource
 #   Strategy elements --realization/influence--> Motivation (Requirement, Outcome)
 #
-
-## 8.1 Core behavior realizes Strategy behavior elements
-
-<#CoreBehaviorRealizesStrategyBehavior> rdf:type sh:NodeShape ;
-    sh:targetSubjectsOf archimate:realization ;
-    rdfs:label "Core Behavior → Strategy Behavior Realization" ;
-    sh:deactivated true ;
-    sh:severity sh:Info ;
-    rdfs:comment "Internal and external behavior elements from Core layers (Business, Application, Technology) may realize Strategy behavior elements (Capability, ValueStream). This shape validates the pattern is used correctly — source should be Core behavior, target should be Strategy behavior." ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "When realizing Strategy behavior from Core, source should be a Core behavior element (process, function, service, etc.)" ;
-        sh:select """
-            SELECT $this ?target WHERE {
-                $this archimate:realization ?target .
-                # Target is Strategy BehaviorAspect
-                ?target rdf:type/rdfs:subClassOf* archimate:BehaviorAspect .
-                ?target rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
-                # Source is Core layer
-                {
-                    $this rdf:type/rdfs:subClassOf* archimate:BusinessLayer .
-                } UNION {
-                    $this rdf:type/rdfs:subClassOf* archimate:ApplicationLayer .
-                } UNION {
-                    $this rdf:type/rdfs:subClassOf* archimate:TechnologyLayer .
-                } UNION {
-                    $this rdf:type/rdfs:subClassOf* archimate:PhysicalLayer .
-                }
-                # Source must be BehaviorAspect (not structure)
-                FILTER NOT EXISTS {
-                    $this rdf:type/rdfs:subClassOf* archimate:BehaviorAspect
-                }
-            }
-        """
-    ] .
-
-
-## 8.2 Core structure realizes Resource
-
-<#CoreStructureRealizesResource> rdf:type sh:NodeShape ;
-    sh:targetSubjectsOf archimate:realization ;
-    rdfs:label "Core Structure → Resource Realization" ;
-    sh:deactivated true ;
-    sh:severity sh:Info ;
-    rdfs:comment "Active and passive structure elements from Core layers may realize Resource. This shape validates the pattern — source should be Core structure, target should be Resource." ;
-    sh:sparql [
-        sh:prefixes <#> ;
-        sh:message "When realizing Resource from Core, source should be a Core active or passive structure element" ;
-        sh:select """
-            SELECT $this ?target WHERE {
-                $this archimate:realization ?target .
-                # Target is Resource (StructureAspect ∩ StrategyLayer)
-                ?target rdf:type/rdfs:subClassOf* archimate:StructureAspect .
-                ?target rdf:type/rdfs:subClassOf* archimate:StrategyLayer .
-                # Source is Core layer
-                {
-                    $this rdf:type/rdfs:subClassOf* archimate:BusinessLayer .
-                } UNION {
-                    $this rdf:type/rdfs:subClassOf* archimate:ApplicationLayer .
-                } UNION {
-                    $this rdf:type/rdfs:subClassOf* archimate:TechnologyLayer .
-                } UNION {
-                    $this rdf:type/rdfs:subClassOf* archimate:PhysicalLayer .
-                }
-                # Source must be structure (active or passive), not behavior
-                FILTER NOT EXISTS {
-                    { $this rdf:type/rdfs:subClassOf* archimate:ActiveStructure }
-                    UNION
-                    { $this rdf:type/rdfs:subClassOf* archimate:PassiveStructure }
-                }
-            }
-        """
-    ] .
-
+# The first two patterns are per-element-type realization pairs, so Level 3
+# (archimate_validation_relationships.ttl, generated from derivation/relationships.xml) already
+# enforces them exhaustively; no separate Level 2 shape duplicates that here. Only the third pattern,
+# which is not a fixed type pair, has a shape below.
 
 ## 8.3 Strategy → Motivation realization/influence
 # Per Figure 51: Capability, ValueStream, Resource realize Requirement.
