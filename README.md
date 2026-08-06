@@ -27,7 +27,7 @@ This repository models the language itself, not a specific tool implementation.
   https://purl.org/archimate#
   
 ### Last Updated Date
-  2026-07-29
+  2026-08-06
   
 ### Author
   Alberto D. Mendoza  
@@ -36,9 +36,9 @@ This repository models the language itself, not a specific tool implementation.
 ## Repo Structure
 <pre>
 ontology/
-├── archimate.ttl                     # Main ontology file (purl.org/archimate/owl)
-├── archimate_skos.ttl                # Vocabulary (purl.org/archimate/skos)
-└── archimate_profile_examples.ttl    # Profile examples
+├── archimate.ttl                        # Main ontology file (purl.org/archimate/owl)
+├── archimate_skos.ttl                   # Vocabulary (purl.org/archimate/skos)
+└── archimate_profile_examples.ttl       # Profile examples
 
 validation/
 ├── archimate_validation_core.ttl              # Level 1: graph integrity, concept requirements
@@ -46,14 +46,12 @@ validation/
 ├── archimate_validation_relationships.ttl     # Level 3: relationship matrix for all layers (Appendix B)
 └── archimate_validation_profile_examples.ttl  # Profile-specific SHACL shapes (example)
 
-derivation/                           # see derivation/README.md
-├── relationships.xml                 # Appendix B matrix, CASE-SIGNIFICANT: UPPERCASE = direct,
-│                                     #   lowercase = derived. Source of truth.
-├── archimate_derivation_axioms.ttl   # generated: categories + permits / permitsDirect matrices
-├── archimate_derivation_strengths.ttl # B.2.2 / B.3.3 strength orderings
-├── archimate_derivation_provenance.ttl # terms recording where a derived relationship came from
-├── archimate_derivation_rules.ttl    # DR1-DR8, PDR1-PDR12 (SPARQL CONSTRUCT)
-└── conformance/                      # generated test fixtures — never load into a working repository
+derivation/                              # see derivation/README.md
+├── relationships.xml                    # Appendix B Relationships matrix, CASE-SIGNIFICANT: UPPERCASE = direct, lowercase = derived. Source of truth.
+├── archimate_derivation_axioms.ttl      # generated: categories + permits / permitsDirect matrices
+├── archimate_derivation_strengths.ttl   # relationship strength orderings
+├── archimate_derivation_provenance.ttl  # terms recording where a derived relationship came from
+└── conformance/                         # generated test fixtures — never load into a working repository
 
 tools/
 └── relationships2axioms.py           # generates the axioms and fixtures from relationships.xml
