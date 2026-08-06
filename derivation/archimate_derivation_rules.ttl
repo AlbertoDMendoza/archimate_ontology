@@ -304,6 +304,45 @@
         }
     """ .
 
+### Junction Transparency
+# Not one of DR1-DR8: a Junction is a connector, not an element, so it has no row in Appendix B's
+# tables and cannot -- it merges or splits relationships OF ONE TYPE, decided per diagram, not per
+# concept pair (see derivation/README.md's "Junction is deliberately not in this table"). Without this
+# rule, a chain through a junction (A -> Junction -> B) silently derives nothing: nothing in DR1-DR8
+# treats a junction endpoint as transparent, so a modeller who routes a relationship through one gets
+# no derived direct edge between the real endpoints.
+#
+# HOMOGENEITY IS STRUCTURAL: the same variable ?r is required on both hops, so both legs must already
+# be the same relationship. A junction cannot mix relationship types by construction of this rule --
+# <#JunctionRelationshipHomogeneity> (archimate_validation_metamodel.ttl) still matters, because it
+# catches a modeller *asserting* mixed types through a junction, which this rule cannot: the rule
+# simply declines to fire rather than flagging the error.
+#
+# SIMPLIFIED RELATIVE TO THE DEPLOYED RULESET: like DR6-DR8 above, this omits the archi:permittedBy
+# type-permission guard the private fork's engine ruleset uses (checking the endpoint TYPES, not just
+# that ?r matches on both hops) -- consistent with this file's role as documentation of the rule shape,
+# not the enforced implementation (see file header). A rigorous deployment should add that guard.
+<#JunctionTransparency> rdf:type sh:SPARQLRule ;
+    rdfs:label "Junction Transparency" ;
+    rdfs:comment "If p(a,j):R and p(j,c):R exist with j a Junction, derive p(a,c):R -- a junction is transparent to the relationship passing through it." ;
+    sh:prefixes <#> ;
+    sh:construct """
+        CONSTRUCT {
+            ?a ?r ?c .
+            <<?a ?r ?c>> archimate:confidence "valid" ;
+                        archimate:description "Derived via Junction transparency: connector merge/split" ;
+                        archimate:derivedFrom ?r, ?r .
+        }
+        WHERE {
+            ?a ?r ?j .
+            ?j a archimate:Junction .
+            ?j ?r ?c .
+
+            FILTER(?a != ?c)
+            FILTER NOT EXISTS { ?a ?r ?c }
+        }
+    """ .
+
 ### Potential Derivation Rules (PDR1-PDR12)
 
 ## PDR1: Specialization + Other Relationship → Potentially Same Relationship

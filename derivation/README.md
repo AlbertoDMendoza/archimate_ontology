@@ -91,17 +91,19 @@ the inferred relationships against `conformance/fixture-derived.ttl`:
 | inferred, **permitted nowhere** | a restriction the rules fail to enforce |
 
 Counts from the current tables: 61 concepts, 10,610 permitted triples, of which 5,103 are direct and
-5,507 derived. The derived half is byte-identical to the private `archimate_one` repo's table (also
-5,507) — the two only disagree on the direct half, and only because of `Junction` (below).
+5,507 derived. A private downstream fork with its own consuming application keeps the same derived
+half (also 5,507) but a larger direct half — the two only disagree there, and only because of
+`Junction` (below).
 
 ## Junction is deliberately not in this table
 
-The sibling private repo (`archimate_one`) carries 61 `Junction` rows, all `ACFGINORSTV` — every
-relationship type, all direct. This table carries none, on purpose, not as a sync gap.
+A private downstream fork of this ontology, with its own consuming application, carries 61 `Junction`
+rows in its equivalent table, all `ACFGINORSTV` — every relationship type, all direct. This table
+carries none, on purpose, not as a sync gap.
 
 `Junction` has no relationship semantics of its own: it merges or splits relationships of *some other
 type*, decided per diagram, not per concept pair, so no fixed per-pair case can represent it in a
-static permission table. `archimate_one` picks `ACFGINORSTV` anyway because its consuming app has to
+static permission table. That fork picks `ACFGINORSTV` anyway because its consuming application has to
 let people draw a junction with any relationship type — that is a statement about what a modeller may
 draw, not about which relationships two *concept types* permit between them, which is the only
 question this table exists to answer. A specification rendering is more faithful leaving it out.
@@ -109,7 +111,10 @@ question this table exists to answer. A specification rendering is more faithful
 This is why `Junction`'s absence here does **not** need "adding back": doing so would answer a
 question this table doesn't ask. The real gap it leaves — deriving *through* a junction, e.g. a chain
 `A → Junction → B` — needs a rule that treats the junction as transparent and takes the relationship
-type from its real neighbours, not a permission row. That is an engine-ruleset concern (see
-`archimate_one/inference/`, not published here), and `<#JunctionRelationshipHomogeneity>`
-(`validation/archimate_validation_metamodel.ttl`) enforces the same-type invariant any such rule
-depends on — kept active for exactly that reason during the SHACL cleanup pass.
+type from its real neighbours, not a permission row. `<#JunctionTransparency>` in
+`archimate_derivation_rules.ttl` is exactly that rule, so this repository derives across a junction on
+its own, with nothing engine-specific required. `<#JunctionRelationshipHomogeneity>`
+(`validation/archimate_validation_metamodel.ttl`) stays active alongside it: the rule's same-type
+requirement is structural (one shared variable spans both hops), so it cannot itself flag a modeller
+*asserting* mismatched types through a junction — the shape catches exactly that case, which the rule
+cannot.
