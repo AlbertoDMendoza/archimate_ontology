@@ -69,7 +69,7 @@
 # THAT PROVISO IS THE TRAP, and it fails quietly. An engine that evaluates shapes against a dedicated
 # shapes graph — RDF4J's ShaclSail, GraphDB — resolves the class hierarchy from THAT graph. Load these
 # shapes into the shapes graph while the ontology sits in the default graph, and archimate:Concept has
-# no subclasses as far as the validator is concerned. Every one of the eight shapes then selects zero
+# no subclasses as far as the validator is concerned. Every one of the seven shapes then selects zero
 # focus nodes, validation passes, and NOTHING REPORTS THAT ANYTHING WAS SKIPPED. A cross-type
 # specialization is accepted in silence.
 #

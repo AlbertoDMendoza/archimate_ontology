@@ -11,7 +11,7 @@
 <#> rdf:type owl:Ontology ;
     owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Metamodel Validation Rules" ;
-    rdfs:comment "Level 2 Metamodel Validation: abstract ArchiMate metamodel pattern rules using the ontology's class hierarchy (aspect x layer intersections). Encodes Figures 5, 34, 45, 46, 51, 52, 70, 82, 99, 104, 105, and 106 from ArchiMate 3.2. For graph integrity, see archimate_validation_core.ttl. For per-element relationship combinations, see archimate_validation_<layer>.ttl." ;
+    rdfs:comment "Level 2 Metamodel Validation: abstract ArchiMate metamodel pattern rules using the ontology's class hierarchy (aspect x layer intersections). Encodes Figures 5, 34, 45, 46, 51, 52, 70, 82, 99, 104, and 105 from ArchiMate 3.2. For graph integrity, see archimate_validation_core.ttl. For per-element relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-16"^^xsd:date ;
     dct:modified "2026-08-06"^^xsd:date ;
@@ -122,9 +122,8 @@
 # - archimate_validation_profiles.ttl (profile-specific shapes)
 #
 # Validation severity levels:
-# - sh:Violation (default): Hard constraint violations
-# - sh:Warning: Issues that should be reviewed
-# - sh:Info: Quality suggestions and informational notices
+# - sh:Violation (default): every active shape in this file. This file has no active sh:Info/
+#   sh:Warning shapes — see the RDF4J severity-blocking note in archimate_validation_core.ttl.
 #
 # owl:imports note:
 # The ontology declares @base <https://purl.org/archimate#> so its IRI is
