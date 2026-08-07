@@ -89,32 +89,6 @@
 # }
 
 
-### TODO
-# TESTING:
-#   - Create test cases for each derivation rule (DR1-DR8, PDR1-PDR12)
-#   - Build example models that demonstrate valid vs potential derivations
-#   - Test derivation depth limits and performance with large models
-# 
-# VALIDATION:
-#   - Add validation to ensure derived relationships don't violate metamodel constraints
-#   - Test interaction between derivation rules and relationship validation
-#   - Verify provenance metadata is correctly attached to all derived relationships
-# 
-# OPTIMIZATION:
-#   - Profile SPARQL query performance for complex derivation chains
-#   - Consider materialization strategies for frequently-derived relationships
-#   - Add caching mechanism for derivation results
-# 
-# DOCUMENTATION:
-#   - Create visual diagrams showing derivation rule patterns
-#   - Document when to use valid vs potential derivations
-#   - Build query examples showing how to filter by confidence level
-# 
-# EXTENSIONS:
-#   - Add custom derivation rules for domain-specific patterns
-#   - Implement derivation rule prioritization when multiple rules apply
-#   - Create derivation explanation generator (show which rules produced which relationships)
-
 ### Helper Properties for Relationship Strength
 # archimate:structuralStrength / archimate:dependencyStrength are declared and assigned in
 # derivation/archimate_derivation_strengths.ttl. LOAD THAT FILE ALONGSIDE THIS ONE: the rules below
