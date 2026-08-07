@@ -35,12 +35,12 @@
 ### NOTES
 # Profile classes (defined in ontology/archimate_profile_examples.ttl) are owl:Class
 # that specialize standard ArchiMate elements via rdfs:subClassOf and
-# archimate:specialization. This file defines their SHACL shapes — typed attributes
-# that give profiles meaning.
+# archimate:profileSpecialization. This file defines their SHACL shapes — typed
+# attributes that give profiles meaning.
 #
 # The myModel: prefix is illustrative. Organizations deploying this ontology define
 # their own namespace. The three-declaration pattern (rdfs:subClassOf +
-# archimate:specialization + sh:NodeShape) is the mechanism; the namespace is yours.
+# archimate:profileSpecialization + sh:NodeShape) is the mechanism; the namespace is yours.
 #
 # The profile class IS the shape (implicit target pattern: class URI = shape URI).
 # Applications discover profile shapes via sh:property, same as any other shape.
@@ -52,7 +52,7 @@
 # This validation file should be used alongside:
 # - archimate_validation_core.ttl (Level 1: graph integrity, concept requirements)
 # - archimate_validation_metamodel.ttl (Level 2: abstract metamodel pattern rules)
-# - archimate_validation_relationship.ttl (Level 3: per-element-type relationship combinations)
+# - archimate_validation_relationships.ttl (Level 3: per-element-type relationship combinations)
 # - ../derivation/archimate_derivation_rules.ttl (derivation rules)
 
 ### 1. BusinessActor Profile Shapes

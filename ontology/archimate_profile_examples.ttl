@@ -12,7 +12,7 @@
     owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Profile Examples" ;
     rdfs:comment "Example specialization profiles for ArchiMate elements. These demonstrate how to create custom subtypes of standard ArchiMate elements using the profile pattern. The myModel: prefix is illustrative — organizations define their own namespace. This file is not a published specification." ;
-    dct:description "Profile classes are owl:Class that specialize standard ArchiMate elements via rdfs:subClassOf and archimate:specialization. SHACL shapes for these profiles are defined in validation/archimate_validation_profiles.ttl." ;
+    dct:description "Profile classes are owl:Class that specialize standard ArchiMate elements via rdfs:subClassOf (OWL inference) and archimate:profileSpecialization (profile marker). SHACL shapes for these profiles are defined in validation/archimate_validation_profile_examples.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-10"^^xsd:date ;
     dct:modified "2026-05-28"^^xsd:date ;
@@ -22,20 +22,24 @@
 # DESIGN NOTES
 # ArchiMate profiles allow user-defined subtypes of standard elements,
 # e.g. BusinessActor → Person, Organization. In native RDF, we model them as real OWL
-# classes in the specialization hierarchy:
+# classes using the three-declaration profile pattern:
 #
 #   myModel:Person a owl:Class ;
 #       rdfs:subClassOf archimate:BusinessActor ;
-#       archimate:specialization archimate:BusinessActor .
+#       archimate:profileSpecialization archimate:BusinessActor .
 #
 # Why this works:
 # - rdfs:subClassOf gives OWL inference (a myModel:Person is-a archimate:BusinessActor)
-# - archimate:specialization (owl:TransitiveProperty) enables derivation rules (PDR1-4)
-# - Profile classes can have SHACL shapes defined in validation/archimate_validation_profiles.ttl
+# - archimate:profileSpecialization marks the class as a profile (queryable, no inference side effects)
+# - Profile classes can have SHACL shapes defined in validation/archimate_validation_profile_examples.ttl
 # - The profile class IS the shape (implicit target pattern) — no separate shape needed
 # - Profile shapes declare only what is new and specific to the profile;
 #   archimate:name and archimate:documentation are enforced by Level 1 core validation
 # - Profiles nest naturally: Employee → Person → BusinessActor
+#
+# Note: archimate:profileSpecialization (owl:AnnotationProperty, class-level) is distinct
+# from archimate:specialization (owl:ObjectProperty, instance-level per spec Section 5.4).
+# See ontology/archimate_profile.ttl for the full design rationale.
 #
 # The myModel: prefix is illustrative. Organizations deploying this ontology define
 # their own namespace. The three-declaration pattern is the mechanism; the namespace is yours.
@@ -55,13 +59,13 @@
 
 myModel:Person rdf:type owl:Class ;
     rdfs:subClassOf archimate:BusinessActor ;
-    archimate:specialization archimate:BusinessActor ;
+    archimate:profileSpecialization archimate:BusinessActor ;
     rdfs:label "Person" ;
     rdfs:comment "A BusinessActor representing an individual person." .
 
 myModel:Organization rdf:type owl:Class ;
     rdfs:subClassOf archimate:BusinessActor ;
-    archimate:specialization archimate:BusinessActor ;
+    archimate:profileSpecialization archimate:BusinessActor ;
     rdfs:label "Organization" ;
     rdfs:comment "A BusinessActor representing a group of people or organizational unit." .
 
@@ -99,38 +103,38 @@ myModel:email rdf:type owl:DatatypeProperty ;
 # ## BusinessRole Profiles
 # myModel:Manager rdf:type owl:Class ;
 #     rdfs:subClassOf archimate:BusinessRole ;
-#     archimate:specialization archimate:BusinessRole ;
+#     archimate:profileSpecialization archimate:BusinessRole ;
 #     rdfs:label "Manager" ;
 #     rdfs:comment "A BusinessRole representing a managerial function." .
 #
 # myModel:Developer rdf:type owl:Class ;
 #     rdfs:subClassOf archimate:BusinessRole ;
-#     archimate:specialization archimate:BusinessRole ;
+#     archimate:profileSpecialization archimate:BusinessRole ;
 #     rdfs:label "Developer" ;
 #     rdfs:comment "A BusinessRole representing a software development function." .
 
 # ## ApplicationComponent Profiles
 # myModel:Microservice rdf:type owl:Class ;
 #     rdfs:subClassOf archimate:ApplicationComponent ;
-#     archimate:specialization archimate:ApplicationComponent ;
+#     archimate:profileSpecialization archimate:ApplicationComponent ;
 #     rdfs:label "Microservice" ;
 #     rdfs:comment "An ApplicationComponent following microservice architecture patterns." .
 #
 # myModel:Database rdf:type owl:Class ;
 #     rdfs:subClassOf archimate:ApplicationComponent ;
-#     archimate:specialization archimate:ApplicationComponent ;
+#     archimate:profileSpecialization archimate:ApplicationComponent ;
 #     rdfs:label "Database" ;
 #     rdfs:comment "An ApplicationComponent that provides data storage and retrieval." .
 
 # ## Node Profiles
 # myModel:Server rdf:type owl:Class ;
 #     rdfs:subClassOf archimate:Node ;
-#     archimate:specialization archimate:Node ;
+#     archimate:profileSpecialization archimate:Node ;
 #     rdfs:label "Server" ;
 #     rdfs:comment "A Node representing a physical or virtual server." .
 #
 # myModel:Container rdf:type owl:Class ;
 #     rdfs:subClassOf archimate:Node ;
-#     archimate:specialization archimate:Node ;
+#     archimate:profileSpecialization archimate:Node ;
 #     rdfs:label "Container" ;
 #     rdfs:comment "A Node representing a containerized execution environment." .

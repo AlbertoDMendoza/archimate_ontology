@@ -1,0 +1,58 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@base <https://purl.org/archimate> .
+
+### ArchiMate Profile Mechanism
+<https://purl.org/archimate/profile> rdf:type owl:Ontology ;
+    owl:imports <https://purl.org/archimate/owl> ;
+    rdfs:label "ArchiMate Profile Mechanism" ;
+    rdfs:comment "Defines the profileSpecialization annotation property used by the ArchiMate profile pattern. This property marks an OWL class as a domain-specific profile (specialization) of a standard ArchiMate element type. It is a class-level declaration, distinct from archimate:specialization which is an instance-level ArchiMate relationship per spec Section 5.4." ;
+    dct:creator "Alberto D. Mendoza" ;
+    dct:created "2026-07-05"^^xsd:date ;
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
+    owl:versionInfo "Beta" .
+
+# =============================================================================
+# DESIGN NOTES — Instance Specialization vs Profile Specialization
+# =============================================================================
+#
+# ArchiMate 3.2 defines specialization as an instance-level relationship
+# (spec Section 5.4): "a specialization relationship is always allowed
+# between two instances of the same element type." This is modeled as
+# archimate:specialization (owl:ObjectProperty, owl:TransitiveProperty).
+#
+# Profiles are a different concept: they declare new OWL classes that
+# refine standard ArchiMate element types with domain-specific semantics
+# and typed attributes. This is a class-level (TBox) declaration, not an
+# instance-level (ABox) relationship.
+#
+# archimate:profileSpecialization is an owl:AnnotationProperty that marks
+# a class as a profile. It carries no OWL inference — rdfs:subClassOf
+# handles type inference, and SPARQL property paths handle transitive
+# querying:
+#
+#   # Find all profiles of DataObject, any depth
+#   SELECT ?profile WHERE {
+#       ?profile archimate:profileSpecialization+ archimate:DataObject .
+#   }
+#
+# The three-declaration profile pattern:
+#
+#   ex:Person rdf:type owl:Class ;
+#       rdfs:subClassOf archimate:BusinessActor ;          # OWL inference
+#       archimate:profileSpecialization archimate:BusinessActor .  # profile marker
+#
+# Sub-profiles nest naturally via rdfs:subClassOf:
+#
+#   ex:Employee rdf:type owl:Class ;
+#       rdfs:subClassOf ex:Person ;                        # OWL inference
+#       archimate:profileSpecialization ex:Person .        # profile marker
+#
+# =============================================================================
+
+<#profileSpecialization> rdf:type owl:AnnotationProperty ;
+    rdfs:label "profile specialization" ;
+    rdfs:comment "Marks an OWL class as a domain-specific profile (specialization) of a standard ArchiMate element type or another profile class. This is a class-level annotation for the profile pattern — it does not participate in OWL reasoning (rdfs:subClassOf handles inference) or ArchiMate derivation rules (archimate:specialization handles instance-level PDR1-4). Queryable via SPARQL property paths for profile discovery." .

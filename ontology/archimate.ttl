@@ -106,32 +106,42 @@
 # - Junction elements can reference relationships using the same pattern
 #
 #
-# 3) SPECIALIZATION AND PROFILES
-# archimate:specialization is purely an ArchiMate relationship (spec Section 5.4),
-# NOT a concept property. Instance-to-type mapping uses rdf:type.
+# 3) SPECIALIZATION vs PROFILE SPECIALIZATION
 #
-# It serves two compatible purposes:
-#   (a) Modeling relationship: links a specialized element instance to a generic
-#       element instance of the same type (e.g., :TravelInsurance specialization :Insurance)
-#   (b) Profile hierarchy: links a profile class to its parent type
-#       (e.g., archimate-profile:Person specialization archimate:BusinessActor)
+# Two distinct properties serve two distinct semantic levels:
+#
+#   archimate:specialization (owl:ObjectProperty, owl:TransitiveProperty)
+#       Instance-level ArchiMate relationship per spec Section 5.4.
+#       Links a specialized element INSTANCE to a generic element INSTANCE
+#       of the same type (e.g., :TravelInsurance specialization :Insurance).
+#       Validated by SHACL same-type constraint (Level 1). Used by PDR1-4.
+#
+#   archimate:profileSpecialization (owl:AnnotationProperty)
+#       Class-level declaration for the profile pattern.
+#       Links a profile CLASS to the ArchiMate element CLASS it specializes
+#       (e.g., rdbs:Table profileSpecialization archimate:DataObject).
+#       Not an ArchiMate relationship — it is a meta-ontology annotation
+#       that marks a class as a domain-specific profile. Ignored by OWL
+#       reasoners and derivation rules; OWL inference is handled by
+#       rdfs:subClassOf. Defined in ontology/archimate_profile.ttl.
 #
 # ArchiMate profiles allow user-defined subtypes of standard elements,
 # e.g. BusinessActor → Person. In native RDF, we model them as real OWL
-# classes in the specialization hierarchy:
+# classes using the three-declaration pattern:
 #
 #   archimate-profile:Person a owl:Class, sh:NodeShape ;
 #       rdfs:subClassOf archimate:BusinessActor ;
-#       archimate:specialization archimate:BusinessActor .
+#       archimate:profileSpecialization archimate:BusinessActor .
 #
 # Why this works:
 # - rdfs:subClassOf gives OWL inference (a archimate-prof:Person is-a archimate:BusinessActor)
-# - archimate:specialization (owl:TransitiveProperty) enables derivation rules (PDR1-4)
+# - archimate:profileSpecialization marks the class as a profile (queryable, no inference side effects)
 # - sh:NodeShape on the profile class defines typed attributes as SHACL properties
 # - The profile class IS the shape (implicit target pattern) — no separate shape needed
 # - Profile shapes can define domain-specific properties (e.g. dateOfBirth, email)
-# - Profiles nest naturally: Alberto → Person → BusinessActor
+# - Profiles nest naturally: Employee → Person → BusinessActor
 #
+# See ontology/archimate_profile.ttl for the property definition.
 # See ontology/archimate_profile_examples.ttl for example profile definitions.
 
 
@@ -1030,7 +1040,7 @@
 # Other Relationships (spec Section 5.4)
 <#specialization> rdf:type owl:ObjectProperty ;
     rdfs:label "Specialization" ;
-    rdfs:comment "The specialization relationship represents that an element is a particular kind of another element (spec Section 5.4). A specialization relationship is always allowed between two instances of the same element type. Also used in profiles to link specialized classes to their parent types." ;
+    rdfs:comment "Instance-level ArchiMate relationship: an element is a particular kind of another element of the same type (spec Section 5.4). For class-level profile declarations, use archimate:profileSpecialization instead." ;
     rdfs:subPropertyOf <#otherRelationship> ;
     rdfs:domain <#Concept> ;
     rdfs:range <#Concept> ;
