@@ -40,7 +40,7 @@ The tables distinguish two things a flat matrix cannot, and both are generated:
 | predicate | meaning |
 |---|---|
 | `archi:permits<Relation>` | permitted, whether directly or by derivation — 10,610 triples |
-| `archi:permitsDirect<Relation>` | permitted **directly**: assertable per the metamodel — 5,103 triples |
+| `archi:permitsDirect<Relation>` | permitted **directly**: assertable per the metamodel — 5,822 triples |
 
 Every `permitsDirect` triple is also a `permits` triple. A pair that is permitted but *not*
 permitted-direct is one Appendix B sanctions only as the conclusion of a derivation, so the two
@@ -90,9 +90,9 @@ the inferred relationships against `conformance/fixture-derived.ttl`:
 | in `fixture-derived`, **not** inferred | missing or incorrect rule |
 | inferred, **permitted nowhere** | a restriction the rules fail to enforce |
 
-Counts from the current tables: 61 concepts, 10,610 permitted triples, of which 5,103 are direct and
-5,507 derived. A private downstream fork with its own consuming application keeps the same derived
-half (also 5,507) but a larger direct half — the two only disagree there, and only because of
+Counts from the current tables: 61 concepts, 10,610 permitted triples, of which 5,822 are direct and
+4,788 derived. A private downstream fork with its own consuming application keeps the same derived
+half (also 4,788) but a larger direct half — the two only disagree there, and only because of
 `Junction` (below).
 
 ## Junction is deliberately not in this table

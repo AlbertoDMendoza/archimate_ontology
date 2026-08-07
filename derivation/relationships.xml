@@ -45,7 +45,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfginOrstv" />
+        <target concept="Grouping" relations="ACFGINORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -109,7 +109,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfginOrstv" />
+        <target concept="Grouping" relations="ACFGINORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -173,7 +173,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfgnOrstv" />
+        <target concept="Grouping" relations="ACFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -237,7 +237,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfgnOrstv" />
+        <target concept="Grouping" relations="ACFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -301,7 +301,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfgnOrstv" />
+        <target concept="Grouping" relations="ACFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -365,7 +365,7 @@
         <target concept="Facility" relations="fOtV" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfginOrstv" />
+        <target concept="Grouping" relations="ACFGINORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -429,7 +429,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfgnOrstv" />
+        <target concept="Grouping" relations="ACFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -493,7 +493,7 @@
         <target concept="Facility" relations="fOtV" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfgnOrstv" />
+        <target concept="Grouping" relations="ACFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -557,7 +557,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="cgnOrs" />
+        <target concept="Grouping" relations="CGNORS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -621,7 +621,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="NO" />
-        <target concept="Grouping" relations="cgnOs" />
+        <target concept="Grouping" relations="CGNOS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -685,7 +685,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfginOrstv" />
+        <target concept="Grouping" relations="ACFGINORSTV" />
         <target concept="ImplementationEvent" relations="IO" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -749,7 +749,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfginOrstv" />
+        <target concept="Grouping" relations="ACFGINORSTV" />
         <target concept="ImplementationEvent" relations="IO" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -813,7 +813,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfgnOrstv" />
+        <target concept="Grouping" relations="ACFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -877,7 +877,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfgnOrstv" />
+        <target concept="Grouping" relations="ACFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -941,7 +941,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfgnOrstv" />
+        <target concept="Grouping" relations="ACFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -1005,7 +1005,7 @@
         <target concept="Facility" relations="fOtV" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfginOrstv" />
+        <target concept="Grouping" relations="ACFGINORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -1069,7 +1069,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="cgnOrs" />
+        <target concept="Grouping" relations="CGNORS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -1133,7 +1133,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfgnOrstv" />
+        <target concept="Grouping" relations="ACFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -1197,7 +1197,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfginOrstv" />
+        <target concept="Grouping" relations="ACFGINORSTV" />
         <target concept="ImplementationEvent" relations="IO" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -1261,7 +1261,7 @@
         <target concept="Facility" relations="fOtV" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfgnOrstv" />
+        <target concept="Grouping" relations="ACFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -1325,7 +1325,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="cfgnOrstv" />
+        <target concept="Grouping" relations="CFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -1389,7 +1389,7 @@
         <target concept="Facility" relations="fOrtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfginOrstv" />
+        <target concept="Grouping" relations="ACFGINORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -1453,7 +1453,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="NOr" />
-        <target concept="Grouping" relations="cgnOrs" />
+        <target concept="Grouping" relations="CGNORS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -1517,7 +1517,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="cgnOrs" />
+        <target concept="Grouping" relations="CGNORS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -1581,7 +1581,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="cfgnOrstv" />
+        <target concept="Grouping" relations="CFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -1645,7 +1645,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="cgnOrs" />
+        <target concept="Grouping" relations="CGNORS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -1709,7 +1709,7 @@
         <target concept="Facility" relations="OR" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOR" />
-        <target concept="Grouping" relations="cgnOrs" />
+        <target concept="Grouping" relations="CGNORS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="OR" />
         <target concept="Material" relations="OR" />
@@ -1773,7 +1773,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfginOrstv" />
+        <target concept="Grouping" relations="ACFGINORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -1837,7 +1837,7 @@
         <target concept="Facility" relations="fGiOrtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfginOrstv" />
+        <target concept="Grouping" relations="ACFGINORSTV" />
         <target concept="ImplementationEvent" relations="iO" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aiO" />
@@ -1901,7 +1901,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="NO" />
-        <target concept="Grouping" relations="cgnOs" />
+        <target concept="Grouping" relations="CGNOS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -1965,7 +1965,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfginOrstv" />
+        <target concept="Grouping" relations="ACFGINORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aIO" />
@@ -2029,7 +2029,7 @@
         <target concept="Facility" relations="CfGiOStv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfginOrstv" />
+        <target concept="Grouping" relations="ACFGINORSTV" />
         <target concept="ImplementationEvent" relations="iO" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aiO" />
@@ -2093,7 +2093,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="CGOS" />
         <target concept="Goal" relations="O" />
-        <target concept="Grouping" relations="cgOs" />
+        <target concept="Grouping" relations="CGOS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -2157,7 +2157,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="CGnOS" />
-        <target concept="Grouping" relations="cgnOs" />
+        <target concept="Grouping" relations="CGNOS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -2187,67 +2187,67 @@
     </source>
 
     <source concept="Grouping">
-        <target concept="ApplicationCollaboration" relations="CfGOrstv" />
-        <target concept="ApplicationComponent" relations="CfGOrstv" />
-        <target concept="ApplicationEvent" relations="CfGiOrstv" />
-        <target concept="ApplicationFunction" relations="CfGiOrstv" />
-        <target concept="ApplicationInteraction" relations="CfGiOrstv" />
-        <target concept="ApplicationInterface" relations="CfGOrstv" />
-        <target concept="ApplicationProcess" relations="CfGiOrstv" />
-        <target concept="ApplicationService" relations="CfGiOrstv" />
-        <target concept="Artifact" relations="aCGiOrs" />
-        <target concept="Assessment" relations="CGnOs" />
-        <target concept="BusinessActor" relations="CfGiOrstv" />
-        <target concept="BusinessCollaboration" relations="CfGiOrstv" />
-        <target concept="BusinessEvent" relations="CfGiOrstv" />
-        <target concept="BusinessFunction" relations="CfGiOrstv" />
-        <target concept="BusinessInteraction" relations="CfGiOrstv" />
-        <target concept="BusinessInterface" relations="CfGiOrstv" />
-        <target concept="BusinessObject" relations="aCGOrs" />
-        <target concept="BusinessProcess" relations="CfGiOrstv" />
-        <target concept="BusinessRole" relations="CfGiOrstv" />
-        <target concept="BusinessService" relations="CfGiOrstv" />
-        <target concept="Capability" relations="CfGiOrstv" />  <!-- flagged for spot-check -->
-        <target concept="CommunicationNetwork" relations="CfGOrstv" />
-        <target concept="Constraint" relations="CGNORs" />
-        <target concept="Contract" relations="aCGOrs" />
-        <target concept="CourseOfAction" relations="CfGOrstv" />  <!-- flagged for spot-check -->
-        <target concept="DataObject" relations="aCGOrs" />
-        <target concept="Deliverable" relations="acgOrs" />
-        <target concept="Device" relations="CfGiOrstv" />
-        <target concept="DistributionNetwork" relations="CfGOrstv" />
-        <target concept="Driver" relations="CGnOs" />
-        <target concept="Equipment" relations="CfGiOrstv" />
-        <target concept="Facility" relations="CfGiOrstv" />
-        <target concept="Gap" relations="cgOs" />
-        <target concept="Goal" relations="CGnOrs" />
+        <target concept="ApplicationCollaboration" relations="CFGORSTV" />
+        <target concept="ApplicationComponent" relations="CFGORSTV" />
+        <target concept="ApplicationEvent" relations="CFGIORSTV" />
+        <target concept="ApplicationFunction" relations="CFGIORSTV" />
+        <target concept="ApplicationInteraction" relations="CFGIORSTV" />
+        <target concept="ApplicationInterface" relations="CFGORSTV" />
+        <target concept="ApplicationProcess" relations="CFGIORSTV" />
+        <target concept="ApplicationService" relations="CFGIORSTV" />
+        <target concept="Artifact" relations="ACGIORS" />
+        <target concept="Assessment" relations="CGNOS" />
+        <target concept="BusinessActor" relations="CFGIORSTV" />
+        <target concept="BusinessCollaboration" relations="CFGIORSTV" />
+        <target concept="BusinessEvent" relations="CFGIORSTV" />
+        <target concept="BusinessFunction" relations="CFGIORSTV" />
+        <target concept="BusinessInteraction" relations="CFGIORSTV" />
+        <target concept="BusinessInterface" relations="CFGIORSTV" />
+        <target concept="BusinessObject" relations="ACGORS" />
+        <target concept="BusinessProcess" relations="CFGIORSTV" />
+        <target concept="BusinessRole" relations="CFGIORSTV" />
+        <target concept="BusinessService" relations="CFGIORSTV" />
+        <target concept="Capability" relations="CFGIORSTV" />  <!-- flagged for spot-check -->
+        <target concept="CommunicationNetwork" relations="CFGORSTV" />
+        <target concept="Constraint" relations="CGNORS" />
+        <target concept="Contract" relations="ACGORS" />
+        <target concept="CourseOfAction" relations="CFGORSTV" />  <!-- flagged for spot-check -->
+        <target concept="DataObject" relations="ACGORS" />
+        <target concept="Deliverable" relations="ACGORS" />
+        <target concept="Device" relations="CFGIORSTV" />
+        <target concept="DistributionNetwork" relations="CFGORSTV" />
+        <target concept="Driver" relations="CGNOS" />
+        <target concept="Equipment" relations="CFGIORSTV" />
+        <target concept="Facility" relations="CFGIORSTV" />
+        <target concept="Gap" relations="CGOS" />
+        <target concept="Goal" relations="CGNORS" />
         <target concept="Grouping" relations="ACFGINORSTV" />  <!-- flagged for spot-check -->
-        <target concept="ImplementationEvent" relations="cfgiOst" />
+        <target concept="ImplementationEvent" relations="CFGIOST" />
         <target concept="Location" relations="cfgOrstv" />
-        <target concept="Material" relations="aCGiOrs" />
-        <target concept="Meaning" relations="CGnOs" />
-        <target concept="Node" relations="CfGiOrstv" />
-        <target concept="Outcome" relations="CGnOrs" />
-        <target concept="Path" relations="CfGOrstv" />
+        <target concept="Material" relations="ACGIORS" />
+        <target concept="Meaning" relations="CGNOS" />
+        <target concept="Node" relations="CFGIORSTV" />
+        <target concept="Outcome" relations="CGNORS" />
+        <target concept="Path" relations="CFGORSTV" />
         <target concept="Plateau" relations="cfgOrst" />
-        <target concept="Principle" relations="CGnOrs" />
-        <target concept="Product" relations="CfGOrstv" />
+        <target concept="Principle" relations="CGNORS" />
+        <target concept="Product" relations="CFGORSTV" />
         <target concept="Relationship" relations="cgO" />
-        <target concept="Representation" relations="aCGOrs" />
-        <target concept="Requirement" relations="CGNORs" />
-        <target concept="Resource" relations="CfGOrstv" />  <!-- flagged for spot-check -->
-        <target concept="Stakeholder" relations="CGinOrs" />
-        <target concept="SystemSoftware" relations="CfGiOrstv" />
-        <target concept="TechnologyCollaboration" relations="CfGOrstv" />
-        <target concept="TechnologyEvent" relations="CfGiOrstv" />
-        <target concept="TechnologyFunction" relations="CfGiOrstv" />
-        <target concept="TechnologyInteraction" relations="CfGiOrstv" />
-        <target concept="TechnologyInterface" relations="CfGiOrstv" />
-        <target concept="TechnologyProcess" relations="CfGiOrstv" />
-        <target concept="TechnologyService" relations="CfGiOrstv" />
-        <target concept="Value" relations="CGnOs" />
-        <target concept="ValueStream" relations="CfGiOrstv" />  <!-- flagged for spot-check -->
-        <target concept="WorkPackage" relations="cfgiOst" />
+        <target concept="Representation" relations="ACGORS" />
+        <target concept="Requirement" relations="CGNORS" />
+        <target concept="Resource" relations="CFGORSTV" />  <!-- flagged for spot-check -->
+        <target concept="Stakeholder" relations="CGINORS" />
+        <target concept="SystemSoftware" relations="CFGIORSTV" />
+        <target concept="TechnologyCollaboration" relations="CFGORSTV" />
+        <target concept="TechnologyEvent" relations="CFGIORSTV" />
+        <target concept="TechnologyFunction" relations="CFGIORSTV" />
+        <target concept="TechnologyInteraction" relations="CFGIORSTV" />
+        <target concept="TechnologyInterface" relations="CFGIORSTV" />
+        <target concept="TechnologyProcess" relations="CFGIORSTV" />
+        <target concept="TechnologyService" relations="CFGIORSTV" />
+        <target concept="Value" relations="CGNOS" />
+        <target concept="ValueStream" relations="CFGIORSTV" />  <!-- flagged for spot-check -->
+        <target concept="WorkPackage" relations="CFGIOST" />
     </source>
 
     <source concept="ImplementationEvent">
@@ -2285,7 +2285,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nO" />
-        <target concept="Grouping" relations="acfgnOst" />
+        <target concept="Grouping" relations="ACFGNOST" />
         <target concept="ImplementationEvent" relations="CFGOST" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -2413,7 +2413,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="cgnOrs" />
+        <target concept="Grouping" relations="CGNORS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="CGOrS" />
@@ -2477,7 +2477,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="NO" />
-        <target concept="Grouping" relations="cgnOs" />
+        <target concept="Grouping" relations="CGNOS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -2541,7 +2541,7 @@
         <target concept="Facility" relations="CfGiOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfginOrstv" />
+        <target concept="Grouping" relations="ACFGINORSTV" />
         <target concept="ImplementationEvent" relations="iO" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aiO" />
@@ -2605,7 +2605,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="NOR" />
-        <target concept="Grouping" relations="cgnOrs" />
+        <target concept="Grouping" relations="CGNORS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -2669,7 +2669,7 @@
         <target concept="Facility" relations="fGiOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfginOrstv" />
+        <target concept="Grouping" relations="ACFGINORSTV" />
         <target concept="ImplementationEvent" relations="iO" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aiO" />
@@ -2797,7 +2797,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="NOr" />
-        <target concept="Grouping" relations="cgnOrs" />
+        <target concept="Grouping" relations="CGNORS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -2861,7 +2861,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfgnOrstv" />
+        <target concept="Grouping" relations="ACFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aCGO" />
@@ -2989,7 +2989,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="cgnOrs" />
+        <target concept="Grouping" relations="CGNORS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -3053,7 +3053,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="NOr" />
-        <target concept="Grouping" relations="cgnOrs" />
+        <target concept="Grouping" relations="CGNORS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -3117,7 +3117,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="cfginOrstv" />
+        <target concept="Grouping" relations="CFGINORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -3181,7 +3181,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="NO" />
-        <target concept="Grouping" relations="cgnOs" />
+        <target concept="Grouping" relations="CGNOS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -3245,7 +3245,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfginOrstv" />
+        <target concept="Grouping" relations="ACFGINORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -3309,7 +3309,7 @@
         <target concept="Facility" relations="fGiOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfginOrstv" />
+        <target concept="Grouping" relations="ACFGINORSTV" />
         <target concept="ImplementationEvent" relations="iO" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aiO" />
@@ -3373,7 +3373,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfgnOrstv" />
+        <target concept="Grouping" relations="ACFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -3437,7 +3437,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfgnOrstv" />
+        <target concept="Grouping" relations="ACFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -3501,7 +3501,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfgnOrstv" />
+        <target concept="Grouping" relations="ACFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -3565,7 +3565,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfginOrstv" />
+        <target concept="Grouping" relations="ACFGINORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -3629,7 +3629,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfgnOrstv" />
+        <target concept="Grouping" relations="ACFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -3693,7 +3693,7 @@
         <target concept="Facility" relations="fOtv" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="acfgnOrstv" />
+        <target concept="Grouping" relations="ACFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="fOtv" />
         <target concept="Material" relations="aO" />
@@ -3757,7 +3757,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="NO" />
-        <target concept="Grouping" relations="cgnOs" />
+        <target concept="Grouping" relations="CGNOS" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -3821,7 +3821,7 @@
         <target concept="Facility" relations="O" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOr" />
-        <target concept="Grouping" relations="cfgnOrstv" />
+        <target concept="Grouping" relations="CFGNORSTV" />
         <target concept="ImplementationEvent" relations="O" />
         <target concept="Location" relations="O" />
         <target concept="Material" relations="O" />
@@ -3885,7 +3885,7 @@
         <target concept="Facility" relations="OR" />
         <target concept="Gap" relations="O" />
         <target concept="Goal" relations="nOR" />
-        <target concept="Grouping" relations="acfgnOrst" />
+        <target concept="Grouping" relations="ACFGNORST" />
         <target concept="ImplementationEvent" relations="FOT" />
         <target concept="Location" relations="OR" />
         <target concept="Material" relations="OR" />
