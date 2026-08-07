@@ -27,7 +27,7 @@ This repository models the language itself, not a specific tool implementation.
   https://purl.org/archimate#
   
 ### Last Updated Date
-  2026-08-06
+  2026-08-07
   
 ### Author
   Alberto D. Mendoza  
@@ -38,6 +38,8 @@ This repository models the language itself, not a specific tool implementation.
 ontology/
 ├── archimate.ttl                        # Main ontology file (purl.org/archimate/owl)
 ├── archimate_skos.ttl                   # Vocabulary (purl.org/archimate/skos)
+├── archimate_skos.html                  # Human-readable vocabulary docs
+├── archimate_profile.ttl                # archimate:profileSpecialization (class-level profile marker)
 └── archimate_profile_examples.ttl       # Profile examples
 
 validation/
