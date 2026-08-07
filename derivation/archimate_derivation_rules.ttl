@@ -307,7 +307,7 @@
 ### Junction Transparency
 # Not one of DR1-DR8: a Junction is a connector, not an element, so it has no row in Appendix B's
 # tables and cannot -- it merges or splits relationships OF ONE TYPE, decided per diagram, not per
-# concept pair (see derivation/README.md's "Junction is deliberately not in this table"). Without this
+# concept pair (see derivation/README.md's "Junction is a connector, not a concept pair"). Without this
 # rule, a chain through a junction (A -> Junction -> B) silently derives nothing: nothing in DR1-DR8
 # treats a junction endpoint as transparent, so a modeller who routes a relationship through one gets
 # no derived direct edge between the real endpoints.

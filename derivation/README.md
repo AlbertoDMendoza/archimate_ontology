@@ -95,26 +95,17 @@ Counts from the current tables: 61 concepts, 10,610 permitted triples, of which 
 half (also 4,788) but a larger direct half — the two only disagree there, and only because of
 `Junction` (below).
 
-## Junction is deliberately not in this table
+## Junction is a connector, not a concept pair
 
-A private downstream fork of this ontology, with its own consuming application, carries 61 `Junction`
-rows in its equivalent table, all `ACFGINORSTV` — every relationship type, all direct. This table
-carries none, on purpose, not as a sync gap.
-
-`Junction` has no relationship semantics of its own: it merges or splits relationships of *some other
-type*, decided per diagram, not per concept pair, so no fixed per-pair case can represent it in a
-static permission table. That fork picks `ACFGINORSTV` anyway because its consuming application has to
-let people draw a junction with any relationship type — that is a statement about what a modeller may
-draw, not about which relationships two *concept types* permit between them, which is the only
-question this table exists to answer. A specification rendering is more faithful leaving it out.
-
-This is why `Junction`'s absence here does **not** need "adding back": doing so would answer a
-question this table doesn't ask. The real gap it leaves — deriving *through* a junction, e.g. a chain
-`A → Junction → B` — needs a rule that treats the junction as transparent and takes the relationship
-type from its real neighbours, not a permission row. `<#JunctionTransparency>` in
-`archimate_derivation_rules.ttl` is exactly that rule, so this repository derives across a junction on
-its own, with nothing engine-specific required. `<#JunctionRelationshipHomogeneity>`
-(`validation/archimate_validation_metamodel.ttl`) stays active alongside it: the rule's same-type
-requirement is structural (one shared variable spans both hops), so it cannot itself flag a modeller
-*asserting* mismatched types through a junction — the shape catches exactly that case, which the rule
-cannot.
+`Junction` merges or splits relationships of one type per diagram, not per concept pair, so it has no
+natural row in a matrix built to answer "which relationships are permitted between two *concept*
+types" — a private downstream fork with its own consuming application carries 61 rows for it anyway
+(all `ACFGINORSTV`), because its application has to let people draw a junction with any relationship
+type; this table, being a specification rendering rather than a drawing surface, leaves it out. A
+relationship "through" a junction is really two relationships meeting at a shared node
+(`A --rel--> Junction --rel--> B`), and something has to say which relationship types may reach that
+node at all: `<#JunctionTransparency>` (`archimate_derivation_rules.ttl`) derives the direct
+`A --rel--> B` once the endpoint types permit it; `<#JunctionRelationshipHomogeneity>`
+(`validation/archimate_validation_metamodel.ttl`) enforces that both hops share one relationship type
+— structural in the rule itself, so the shape isn't a dependency of it, it catches a different failure
+the rule can't: a modeller *asserting* mismatched types through a junction.
