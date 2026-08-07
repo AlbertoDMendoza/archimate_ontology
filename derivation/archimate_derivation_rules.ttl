@@ -128,8 +128,13 @@
 
 ### Valid Derivation Rules (DR1-DR8)
 
-## DR1: Transitivity of Specialization (Already implemented in your ontology)
-# Note: This is already handled by making specialization owl:TransitiveProperty
+## DR1: Transitivity of Specialization (Appendix B, B.2.1)
+## No sh:construct body: archimate:specialization is declared owl:TransitiveProperty in
+## ontology/archimate.ttl, so any OWL-aware consumer derives this already -- an unexecuted
+## CONSTRUCT here would be a decorative rule that looks live and is not.
+<#DR1_SpecializationTransitivity> rdf:type sh:SPARQLRule ;
+    rdfs:label "DR1: Transitivity of Specialization" ;
+    rdfs:comment "If two relationships p(a,b):S and q(b,c):S exist, with S being Specialization, then a relationship r(a,c):S can be derived." .
 
 ## DR2: Derivation Between Structural Relationships
 <#DR2_StructuralChain> rdf:type sh:SPARQLRule ;
