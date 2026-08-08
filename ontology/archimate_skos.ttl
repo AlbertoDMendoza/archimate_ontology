@@ -10,8 +10,10 @@
 ### Vocabulary Declaration
 <https://purl.org/archimate/skos> rdf:type skos:ConceptScheme ;
     skos:prefLabel "ArchiMate Vocabulary"@en ;
+    skos:prefLabel "Vocabulario ArchiMate"@es ;
     skos:altLabel "ArchiMate SKOS Vocabulary"@en ;
     dct:title "ArchiMate 3.2 Controlled Vocabulary"@en ;
+    dct:title "Vocabulario Controlado ArchiMate 3.2"@es ;
     dct:description "A SKOS vocabulary of ArchiMate concepts for content management, classification, and terminology management in enterprise architecture."@en ;
     dct:creator "Alberto D. Mendoza" ;
     dct:contributor [
@@ -1561,20 +1563,12 @@ archimate-skos:confidence rdf:type skos:Concept ;
     skos:broader archimate-skos:RelationshipProperties ;
     skos:inScheme <https://purl.org/archimate/skos> .
 
-### Related Concepts from Other Vocabularies
-
-archimate-skos:BusinessProcess skos:related <http://www.w3.org/ns/org#Role> ;
-    skos:closeMatch <http://purl.org/goodrelations/v1#BusinessFunction> .
-
-archimate-skos:ApplicationComponent skos:related <http://www.w3.org/ns/dcat#DataService> .
-
-archimate-skos:TechnologyService skos:related <http://www.w3.org/ns/dcat#DataService> .
-
 ### Collections for Easier Navigation
 
 archimate-skos:CoreElements rdf:type skos:Collection ;
     rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Core ArchiMate Elements"@en ;
+    skos:prefLabel "Elementos Centrales de ArchiMate"@es ;
     skos:definition "The most commonly used ArchiMate elements across all layers."@en ;
     skos:member archimate-skos:BusinessActor, archimate-skos:BusinessProcess, archimate-skos:BusinessService, archimate-skos:BusinessObject,
                 archimate-skos:ApplicationComponent, archimate-skos:ApplicationService, archimate-skos:DataObject,
@@ -1583,12 +1577,14 @@ archimate-skos:CoreElements rdf:type skos:Collection ;
 archimate-skos:StructuralElements rdf:type skos:Collection ;
     rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Structural Elements"@en ;
+    skos:prefLabel "Elementos Estructurales"@es ;
     skos:definition "ArchiMate elements that represent structure across all layers."@en ;
     skos:member archimate-skos:BusinessActor, archimate-skos:BusinessRole, archimate-skos:ApplicationComponent, archimate-skos:Node, archimate-skos:Equipment .
 
 archimate-skos:BehaviorElements rdf:type skos:Collection ;
     rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Behavior Elements"@en ;
+    skos:prefLabel "Elementos de Comportamiento"@es ;
     skos:definition "ArchiMate elements that represent behavior across all layers."@en ;
     skos:member archimate-skos:BusinessProcess, archimate-skos:BusinessFunction, archimate-skos:BusinessService,
                 archimate-skos:ApplicationFunction, archimate-skos:ApplicationProcess, archimate-skos:ApplicationService,
@@ -1597,6 +1593,7 @@ archimate-skos:BehaviorElements rdf:type skos:Collection ;
 archimate-skos:InformationElements rdf:type skos:Collection ;
     rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Information Elements"@en ;
+    skos:prefLabel "Elementos de Información"@es ;
     skos:definition "ArchiMate elements that represent information and data."@en ;
     skos:member archimate-skos:BusinessObject, archimate-skos:Representation, archimate-skos:DataObject, archimate-skos:Artifact .
 
