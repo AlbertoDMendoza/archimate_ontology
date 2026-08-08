@@ -227,18 +227,16 @@ archimate:identifier rdf:type owl:DatatypeProperty ;
 archimate:name rdf:type owl:DatatypeProperty ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Name" ;
-    rdfs:comment "Human-readable name for any ArchiMate concept (element or relationship)." ;
+    rdfs:comment "Human-readable name for any ArchiMate concept (element or relationship). Supports multiple languages: one rdf:langString value per distinct xml:lang for multi-language exchange models." ;
     rdfs:domain archimate:Concept ;
-    rdfs:range xsd:string ;
-	rdf:type owl:FunctionalProperty .
+    rdfs:range xsd:string .
 
 archimate:documentation rdf:type owl:DatatypeProperty ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Documentation" ;
-    rdfs:comment "Textual description of any ArchiMate concept (element or relationship)." ;
+    rdfs:comment "Textual description of any ArchiMate concept (element or relationship). Supports multiple languages: one rdf:langString value per distinct xml:lang for multi-language exchange models." ;
     rdfs:domain archimate:Concept ;
-    rdfs:range xsd:string ;
-	rdf:type owl:FunctionalProperty .
+    rdfs:range xsd:string .
 
 # DESIGN NOTE: Three-tier property extension model
 #
