@@ -6,11 +6,13 @@
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix archimate-skos: <https://purl.org/archimate/skos#> .
-@base <https://purl.org/archimate> .
+@prefix archimate: <https://purl.org/archimate#> .
 
 ### Ontology Declaration
 # The ontology IRI uses /archimate/owl (the PURL that serves this Turtle file).
-# The @base remains <https://purl.org/archimate#> for the term namespace.
+# Terms live under the archimate: prefix (<https://purl.org/archimate#>), declared via
+# @prefix rather than @base + relative <#Term> IRIs
+# every term below carries rdfs:isDefinedBy pointing at the ontology document IRI.
 # Validation files import this ontology via: owl:imports <https://purl.org/archimate/owl> .
 <https://purl.org/archimate/owl> rdf:type owl:Ontology ;
     owl:versionInfo "Beta" ;
@@ -26,7 +28,7 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2026-07-29"^^xsd:date ;
+    dct:modified "2026-08-08"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> .
 
 # NOTES 
@@ -45,10 +47,10 @@
 # DESIGN DECISIONS
 # 1) Naming Convention
 # Class URIs (Identifiers): UpperCamelCase (PascalCase)
-# 	Example: <#BusinessActor>, <#ApplicationComponent>
+# 	Example: archimate:BusinessActor, archimate:ApplicationComponent
 #
 # Property URIs (Identifiers): lowerCamelCase
-#	Example: <#assignment>, <#structuralRelationship>
+#	Example: archimate:assignment, archimate:structuralRelationship
 #
 # Labels (rdfs:label): Title Case or Natural Language
 #	Example: "Business Actor", "Assignment"
@@ -148,7 +150,8 @@
 
 #### Meta-Ontology Annotations
 
-<#abstract> rdf:type owl:AnnotationProperty ;
+archimate:abstract rdf:type owl:AnnotationProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "abstract" ;
     rdfs:comment "Marks a class or property as an abstract organizing construct, not intended for direct instantiation or assertion in instance data. Validation shapes targeting concrete model content should exclude entities so marked." ;
     rdfs:range xsd:boolean .
@@ -157,66 +160,83 @@
 ### 1. General ArchiMate Definitions
 
 #### 1.0 ArchiMate General Definitions
-<#ArchiMate> rdf:type owl:Class ;
+archimate:ArchiMate rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate" ;
     rdfs:comment "ArchiMate Enterprise Architecture modeling language, a visual language with a set of default iconography for describing, analyzing, and communicating many concerns of Enterprise Architectures as they change over time. The standard provides a set of entities and relationships with their corresponding iconography for the representation of Architecture Descriptions." ;
     rdfs:subClassOf owl:Thing ;
     skos:exactMatch archimate-skos:ArchiMate .
 
-
-<#ArchiMateView> rdf:type owl:Class ;
-    rdfs:label "Architecture View";
-    rdfs:comment "A representation of a system from the perspective of a related set of concerns.";
-    rdfs:subClassOf <#ArchiMate> .
-
-<#ArchiMateViewpoint> rdf:type owl:Class ;
-    rdfs:label "Architecture Viewpoint";
-    rdfs:comment "A specification of the conventions for a particular kind of architecture view.";
-    rdfs:subClassOf <#ArchiMate> .
-
-<#Aspect> rdf:type owl:Class ;
-    rdfs:label "Aspect" ;
-    rdfs:comment "Classification of elements based on layer-independent characteristics related to the concerns of different stakeholders. Used for positioning elements in the ArchiMate metamodel." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#Model> .
-	
-<#Model> rdf:type owl:Class ;
+archimate:Model rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Model" ;
     rdfs:comment "A model contains elements and relationships within an architecture." ;
-    rdfs:subClassOf <#ArchiMate> .
+    rdfs:subClassOf archimate:Concept .
 
-<#Concept> rdf:type owl:Class ;
+archimate:hasConcept rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
+    rdfs:label "has concept" ;
+    rdfs:comment "Links a Model to an element or relationship it contains. For relationships (which are RDF-star quoted-triple subjects, not plain IRI subjects -- see the RDF-Star design note above), the object is the quoted triple, e.g. :model1 archimate:hasConcept <<:s archimate:realization :o>> ." ;
+    rdfs:domain archimate:Model ;
+    rdfs:range archimate:Concept .
+
+archimate:Concept rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Concept" ;
     rdfs:comment "A conceptual entity within the ArchiMate modeling language." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#Model> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:ArchiMate .
 
-<#Attribute> rdf:type owl:Class ;
+archimate:ArchiMateView rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
+    rdfs:label "Architecture View";
+    rdfs:comment "A representation of a system from the perspective of a related set of concerns.";
+    rdfs:subClassOf archimate:Concept .
+
+archimate:ArchiMateViewpoint rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
+    rdfs:label "Architecture Viewpoint";
+    rdfs:comment "A specification of the conventions for a particular kind of architecture view.";
+    rdfs:subClassOf archimate:Concept .
+
+archimate:Aspect rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
+    rdfs:label "Aspect" ;
+    rdfs:comment "Classification of elements based on layer-independent characteristics related to the concerns of different stakeholders. Used for positioning elements in the ArchiMate metamodel." ;
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:ArchiMate .
+
+archimate:Attribute rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Attribute";
     rdfs:comment "A property associated with an ArchiMate language element or relationship.";
-    rdfs:subClassOf <#ArchiMate> .
+    rdfs:subClassOf archimate:ArchiMate .
 
-# Universal Properties for All ArchiMate Concepts (Elements and Relationships)
-# These properties apply to both Elements and Relationships
+# Universal Properties for All ArchiMate Concepts
+# Domain is archimate:Concept, so these apply to Elements, Relationships, Views, Viewpoints,
+# and Model (every subclass of Concept), not just Elements and Relationships.
 
-<#identifier> rdf:type owl:DatatypeProperty ;
+archimate:identifier rdf:type owl:DatatypeProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Identifier" ;
     rdfs:comment "Unique identifier for any ArchiMate concept (element or relationship)." ;
-    rdfs:domain <#Concept> ;
+    rdfs:domain archimate:Concept ;
     rdfs:range xsd:string ;
     rdf:type owl:FunctionalProperty .
 
-<#name> rdf:type owl:DatatypeProperty ;
+archimate:name rdf:type owl:DatatypeProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Name" ;
     rdfs:comment "Human-readable name for any ArchiMate concept (element or relationship)." ;
-    rdfs:domain <#Concept> ;
+    rdfs:domain archimate:Concept ;
     rdfs:range xsd:string ;
 	rdf:type owl:FunctionalProperty .
 
-<#documentation> rdf:type owl:DatatypeProperty ;
+archimate:documentation rdf:type owl:DatatypeProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Documentation" ;
     rdfs:comment "Textual description of any ArchiMate concept (element or relationship)." ;
-    rdfs:domain <#Concept> ;
+    rdfs:domain archimate:Concept ;
     rdfs:range xsd:string ;
 	rdf:type owl:FunctionalProperty .
 
@@ -243,35 +263,40 @@
 #      These also must NOT be routed through hasProperty: the entire value of profiles
 #      is type safety, OWL inference, and SHACL validation.
 
-<#Property> rdf:type owl:Class ;
+archimate:Property rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Property" ;
     rdfs:comment "A user-defined key-value pair that can be attached to any ArchiMate concept (element or relationship), per spec Section 2.2. Intended for unschematized metadata and exchange-format round-tripping. For typed, validated attributes use profile owl:DatatypeProperty declarations instead." ;
-    rdfs:subClassOf <#Attribute> .
+    rdfs:subClassOf archimate:Attribute .
 
-<#propertyKey> rdf:type owl:DatatypeProperty ;
+archimate:propertyKey rdf:type owl:DatatypeProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Property Key" ;
     rdfs:comment "The name of a user-defined concept property (e.g., 'CostCenter', 'Owner')." ;
-    rdfs:domain <#Property> ;
+    rdfs:domain archimate:Property ;
     rdfs:range xsd:string ;
     rdf:type owl:FunctionalProperty .
 
-<#propertyValue> rdf:type owl:DatatypeProperty ;
+archimate:propertyValue rdf:type owl:DatatypeProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Property Value" ;
     rdfs:comment "The string value of a user-defined concept property." ;
-    rdfs:domain <#Property> ;
+    rdfs:domain archimate:Property ;
     rdfs:range xsd:string .
 
-<#hasProperty> rdf:type owl:ObjectProperty ;
+archimate:hasProperty rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "has Property" ;
     rdfs:comment "Attaches one or more user-defined key-value properties to any ArchiMate concept. Domain is Concept, so this applies to both elements (directly) and relationships (via RDF-Star quoted triples)." ;
-    rdfs:domain <#Concept> ;
-    rdfs:range <#Property> .
+    rdfs:domain archimate:Concept ;
+    rdfs:range archimate:Property .
 
-<#Element> rdf:type owl:Class ;
+archimate:Element rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Element" ;
     rdfs:comment "A fundamental building block within an architecture model." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#Concept> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:Concept .
 
 # DESIGN NOTE: Dual Representation of Relationships
 # 
@@ -303,9 +328,9 @@
 #
 # Example of what punning would look like:
 #
-#   <#structuralRelationship> rdf:type owl:Class ;         # class side
-#       rdfs:subClassOf <#Relationship> .
-#   <#structuralRelationship> rdf:type owl:ObjectProperty ; # property side
+#   archimate:structuralRelationship rdf:type owl:Class ;         # class side
+#       rdfs:subClassOf archimate:Relationship .
+#   archimate:structuralRelationship rdf:type owl:ObjectProperty ; # property side
 #       rdfs:subPropertyOf ... .
 #
 # Why it was not adopted:
@@ -319,9 +344,10 @@
 # class instances, punning can be introduced incrementally without breaking existing
 # SPARQL queries or SHACL shapes.
 
-<#Relationship> rdf:type owl:Class ;
+archimate:Relationship rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Relationship" ;
-    <#abstract> true ;
+    archimate:abstract true ;
     rdfs:comment """A relationship between two ArchiMate elements, modeled as an owl:Class for 
     metadata inheritance purposes (identifier, name, documentation via archimate:Concept). 
     The actual relationship types (assignment, serving, realization, etc.) are declared as 
@@ -330,142 +356,165 @@
     this is intentional. Relationship validity is enforced by SHACL. RDF-Star quoted triples 
     <<s p o>> bridge the two by allowing property-as-predicate usages to carry metadata. 
     See block comment above for full design rationale and the punning alternative considered.""" ;
-    rdfs:subClassOf <#Concept> .
+    rdfs:subClassOf archimate:Concept .
 
-<#RelationshipConnector> rdf:type owl:Class ;
+archimate:RelationshipConnector rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Relationship Connector" ;
     rdfs:comment "A connector that connects relationships of the same type between elements." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#Relationship> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:Relationship .
 
 
 # Aspects
-<#StructureAspect> rdf:type owl:Class ;
+archimate:StructureAspect rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Structure Aspect" ;
     rdfs:comment "Represents the structural elements of the enterprise architecture, including active and passive structure elements." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#Aspect> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:Aspect .
 
-<#ActiveStructure> rdf:type owl:Class ;
+archimate:ActiveStructure rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Active Structure" ;
     rdfs:comment "A category of elements that perform behavior and collaborate to provide services." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#StructureAspect> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:StructureAspect .
 	
-<#ExternalActiveStructure> rdf:type owl:Class ;
+archimate:ExternalActiveStructure rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "External Active Structure" ;
     rdfs:comment "A category of external active structure elements (also called interfaces) that perform behavior and collaborate to provide services." ;
-    rdfs:subClassOf <#ActiveStructure> .
+    rdfs:subClassOf archimate:ActiveStructure .
 	
-<#InternalActiveStructure> rdf:type owl:Class ;
+archimate:InternalActiveStructure rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Internal Active Structure" ;
     rdfs:comment "A category of internal elements that perform behavior and collaborate to provide services." ;
-    rdfs:subClassOf <#ActiveStructure> .
+    rdfs:subClassOf archimate:ActiveStructure .
 
-<#PassiveStructure> rdf:type owl:Class ;
+archimate:PassiveStructure rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Passive Structure" ;
     rdfs:comment "Represents structural elements that are used or produced by behavior elements." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#StructureAspect> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:StructureAspect .
 
-<#BehaviorAspect> rdf:type owl:Class ;
+archimate:BehaviorAspect rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Behavior" ;
     rdfs:comment "Represents elements that define the behavior performed by active structure elements." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#Aspect> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:Aspect .
 
-<#InternalBehavior> rdf:type owl:Class ;
+archimate:InternalBehavior rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Internal Behavior" ;
     rdfs:comment "An internal behavior element represents a unit of activity that can be performed by one or more active structure elements." ;
-    rdfs:subClassOf <#BehaviorAspect> .	
+    rdfs:subClassOf archimate:BehaviorAspect .	
 
-<#ExternalBehavior> rdf:type owl:Class ;
+archimate:ExternalBehavior rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "External Behavior" ;
     rdfs:comment "Represents external elements (also called services) that define the behavior performed by active structure elements." ;
-    rdfs:subClassOf <#BehaviorAspect> .
+    rdfs:subClassOf archimate:BehaviorAspect .
 
-<#CollectiveBehavior> rdf:type owl:Class ;
+archimate:CollectiveBehavior rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Collective Behavior" ; 
     rdfs:comment "Represents collective behavior (interaction) that is performed by a collaboration of multiple structural elements." ;
-    rdfs:subClassOf <#BehaviorAspect> .
+    rdfs:subClassOf archimate:BehaviorAspect .
 
-<#MotivationAspect> rdf:type owl:Class ;
+archimate:MotivationAspect rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Motivation" ;
     rdfs:comment "A cross-cutting aspect that represents drivers, goals, requirements, and principles in an enterprise architecture." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#Aspect> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:Aspect .
 
-<#CompositeElement> rdf:type owl:Class ;
+archimate:CompositeElement rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Composite Element" ;
     rdfs:comment "An element that does not necessarily fit in a single aspect of the framework but may combine two or more aspects (spec Section 3.3). Two sub-kinds exist: GenericComposite (Grouping, Location) and LayerComposite (Product, Node, Plateau). Each has distinct composition/aggregation semantics — no universal composition rule applies across all composites." ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:Element .
 
-<#GenericComposite> rdf:type owl:Class ;
+archimate:GenericComposite rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Generic Composite" ;
     rdfs:comment "A cross-cutting composite element that is layer-independent and imposes no semantic constraint on what it contains. Grouping organizes arbitrary concepts by common characteristic; Location anchors elements to a physical or conceptual place. Both are unrestricted in what they may compose or aggregate." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#CompositeElement> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:CompositeElement .
 
-<#LayerComposite> rdf:type owl:Class ;
+archimate:LayerComposite rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Layer Composite" ;
     rdfs:comment "A composite element that belongs to a specific layer and has well-defined, layer-specific composition/aggregation targets. Product (Business) packages services and passive structure; Node (Technology) contains active sub-elements (Device, SystemSoftware, TechnologyInterface); Plateau (I&M) represents a full architectural state and contains nearly all element types. Each has distinct allowed targets per Appendix B — no shared universal rule applies." ;
-    rdfs:subClassOf <#CompositeElement> .
+    rdfs:subClassOf archimate:CompositeElement .
 
 
 # Layers
-<#Layer> rdf:type owl:Class ;
+archimate:Layer rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Layer" ;
     rdfs:comment "A major division in the architecture that categorizes elements according to their scope and purpose." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#Model> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:ArchiMate .
 
-<#CoreLayer> rdf:type owl:Class ;
+archimate:CoreLayer rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Core Layer" ;
     rdfs:comment "The three layers of the ArchiMate Core Framework (Section 3.4): Business, Application, and Technology. These follow the generic metamodel template (Figure 5)." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#Layer> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:Layer .
 
-<#ExtendedLayer> rdf:type owl:Class ;
+archimate:ExtendedLayer rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Extended Layer" ;
     rdfs:comment "Layers added by the ArchiMate Full Framework (Section 3.5) beyond the core: Strategy, Physical, and Implementation & Migration. Each has its own metamodel patterns." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#Layer> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:Layer .
 
-<#StrategyLayer> rdf:type owl:Class ;
+archimate:StrategyLayer rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Strategy Layer" ;
     rdfs:comment "Represents elements that define an organization's strategic direction and choices." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#ExtendedLayer> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:ExtendedLayer .
 
-<#BusinessLayer> rdf:type owl:Class ;
+archimate:BusinessLayer rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Business Layer" ;
     rdfs:comment "Represents elements and relationships that describe the organization's business functions and processes." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#CoreLayer> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:CoreLayer .
 
-<#ApplicationLayer> rdf:type owl:Class ;
+archimate:ApplicationLayer rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Application Layer" ;
     rdfs:comment "Represents the software applications and their components that support business processes and provide services to users and other applications." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#CoreLayer> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:CoreLayer .
 
-<#TechnologyLayer> rdf:type owl:Class ;
+archimate:TechnologyLayer rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Technology Layer" ;
     rdfs:comment "Represents the physical and software infrastructure that supports the Application Layer and, ultimately, the Business Layer. It focuses on the hardware, software, and networking components required to run applications and deliver business functionality." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#CoreLayer> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:CoreLayer .
 
-<#PhysicalLayer> rdf:type owl:Class ;
+archimate:PhysicalLayer rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Physical Layer" ;
     rdfs:comment "Represents physical equipment, materials, and distribution networks used to carry out business activities. An extension to the Technology Layer (Section 10.5)." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#ExtendedLayer> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:ExtendedLayer .
 
-<#ImplementationAndMigrationLayer> rdf:type owl:Class ;
+archimate:ImplementationAndMigrationLayer rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Implementation and Migration Layer" ;
     rdfs:comment "Represents elements related to projects, programs, and transition architectures." ;
-    <#abstract> true ;
-    rdfs:subClassOf <#ExtendedLayer> .
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:ExtendedLayer .
 
 
 
@@ -473,65 +522,75 @@
 
 #### 2.1 Motivation Elements
 
-<#Stakeholder> rdf:type owl:Class ;
+archimate:Stakeholder rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Stakeholder" ;
     rdfs:comment "An individual or group with an interest in the architecture." ;
-    rdfs:subClassOf <#MotivationAspect> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:MotivationAspect ;
+    rdfs:subClassOf archimate:Element .
 
-<#Driver> rdf:type owl:Class ;
+archimate:Driver rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Driver" ;
     rdfs:comment "An external or internal factor that influences architecture decisions." ;
-    rdfs:subClassOf <#MotivationAspect> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:MotivationAspect ;
+    rdfs:subClassOf archimate:Element .
 
-<#Assessment> rdf:type owl:Class ;
+archimate:Assessment rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Assessment" ;
     rdfs:comment "An evaluation of an architecture driver, such as a SWOT analysis." ;
-    rdfs:subClassOf <#MotivationAspect> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:MotivationAspect ;
+    rdfs:subClassOf archimate:Element .
 
-<#Goal> rdf:type owl:Class ;
+archimate:Goal rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Goal" ;
     rdfs:comment "A high-level outcome that an enterprise aims to achieve." ;
-    rdfs:subClassOf <#MotivationAspect> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:MotivationAspect ;
+    rdfs:subClassOf archimate:Element .
 
-<#Outcome> rdf:type owl:Class ;
+archimate:Outcome rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Outcome" ;
     rdfs:comment "A measurable result that contributes to achieving a goal." ;
-    rdfs:subClassOf <#MotivationAspect> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:MotivationAspect ;
+    rdfs:subClassOf archimate:Element .
 
-<#Principle> rdf:type owl:Class ;
+archimate:Principle rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Principle" ;
     rdfs:comment "A fundamental guideline for architecture decision-making." ;
-    rdfs:subClassOf <#MotivationAspect> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:MotivationAspect ;
+    rdfs:subClassOf archimate:Element .
 
-<#Requirement> rdf:type owl:Class ;
+archimate:Requirement rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Requirement" ;
     rdfs:comment "A specific need that must be met by the architecture." ;
-    rdfs:subClassOf <#MotivationAspect> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:MotivationAspect ;
+    rdfs:subClassOf archimate:Element .
 
-<#Constraint> rdf:type owl:Class ;
+archimate:Constraint rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Constraint" ;
     rdfs:comment "A limitation or restriction affecting architecture decisions." ;
-    rdfs:subClassOf <#MotivationAspect> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:MotivationAspect ;
+    rdfs:subClassOf archimate:Element .
 
-<#Value> rdf:type owl:Class ;
+archimate:Value rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Value" ;
     rdfs:comment "The importance or worth of a concept in the enterprise." ;
-    rdfs:subClassOf <#MotivationAspect> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:MotivationAspect ;
+    rdfs:subClassOf archimate:Element .
 
-<#Meaning> rdf:type owl:Class ;
+archimate:Meaning rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Meaning" ;
     rdfs:comment "The definition or interpretation of a concept in a specific context." ;
-    rdfs:subClassOf <#MotivationAspect> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:MotivationAspect ;
+    rdfs:subClassOf archimate:Element .
 
 
 
@@ -540,418 +599,472 @@
 # Active Structure Elements
 
 # NOTE: Per Spec: "Resources are realized by active and passive structure elements and are therefore classified as structures that are neither active nor passive."
-<#Resource> rdf:type owl:Class ;
+archimate:Resource rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Resource" ;
     rdfs:comment "An asset owned or controlled by an individual or organization." ;
-    rdfs:subClassOf <#StructureAspect> ;
-    rdfs:subClassOf <#StrategyLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:StructureAspect ;
+    rdfs:subClassOf archimate:StrategyLayer ;
+    rdfs:subClassOf archimate:Element .
 
 # Behavior Elements
-<#Capability> rdf:type owl:Class ;
+archimate:Capability rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Capability" ;
     rdfs:comment "An ability that an active structure element possesses." ;
-    rdfs:subClassOf <#BehaviorAspect> ;
-    rdfs:subClassOf <#StrategyLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:BehaviorAspect ;
+    rdfs:subClassOf archimate:StrategyLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#CourseOfAction> rdf:type owl:Class ;
+archimate:CourseOfAction rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Course of Action" ;
     rdfs:comment "An approach or plan for configuring some capabilities and resources of the enterprise." ;
-    rdfs:subClassOf <#BehaviorAspect> ;
-    rdfs:subClassOf <#StrategyLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:BehaviorAspect ;
+    rdfs:subClassOf archimate:StrategyLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#ValueStream> rdf:type owl:Class ;
+archimate:ValueStream rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Value Stream" ;
     rdfs:comment "A sequence of activities that create an overall result for a customer, stakeholder, or end user." ;
-    rdfs:subClassOf <#BehaviorAspect> ;
-    rdfs:subClassOf <#StrategyLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:BehaviorAspect ;
+    rdfs:subClassOf archimate:StrategyLayer ;
+    rdfs:subClassOf archimate:Element .
 
 
 
 #### 2.3 Business Layer Elements
 
 # Active Structure Elements
-<#BusinessActor> rdf:type owl:Class ;
+archimate:BusinessActor rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Business Actor" ;
     rdfs:comment "An organizational entity that is capable of performing behavior." ;
-    rdfs:subClassOf <#InternalActiveStructure> ;
-    rdfs:subClassOf <#BusinessLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalActiveStructure ;
+    rdfs:subClassOf archimate:BusinessLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#BusinessRole> rdf:type owl:Class ;
+archimate:BusinessRole rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Business Role" ;
     rdfs:comment "The responsibility for performing specific behavior, to which an actor can be assigned." ;
-    rdfs:subClassOf <#InternalActiveStructure> ;
-    rdfs:subClassOf <#BusinessLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalActiveStructure ;
+    rdfs:subClassOf archimate:BusinessLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#BusinessCollaboration> rdf:type owl:Class ;
+archimate:BusinessCollaboration rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Business Collaboration" ;
     rdfs:comment "An aggregate of two or more business roles that work together to perform collective behavior." ;
-    rdfs:subClassOf <#InternalActiveStructure> ;
-    rdfs:subClassOf <#BusinessLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalActiveStructure ;
+    rdfs:subClassOf archimate:BusinessLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#BusinessInterface> rdf:type owl:Class ;
+archimate:BusinessInterface rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Business Interface" ;
     rdfs:comment "A point of access where a business service is made available to the environment." ;
-    rdfs:subClassOf <#ExternalActiveStructure> ;
-    rdfs:subClassOf <#BusinessLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:ExternalActiveStructure ;
+    rdfs:subClassOf archimate:BusinessLayer ;
+    rdfs:subClassOf archimate:Element .
 
 # Behavior Elements
-<#BusinessProcess> rdf:type owl:Class ;
+archimate:BusinessProcess rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Business Process" ;
     rdfs:comment "A sequence of business behaviors that achieve a specific outcome." ;
-    rdfs:subClassOf <#InternalBehavior> ;
-    rdfs:subClassOf <#BusinessLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalBehavior ;
+    rdfs:subClassOf archimate:BusinessLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#BusinessFunction> rdf:type owl:Class ;
+archimate:BusinessFunction rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Business Function" ;
     rdfs:comment "A collection of business behavior based on a chosen set of criteria (typically required skills, resources, etc.) and closely aligned to an organization." ;
-    rdfs:subClassOf <#InternalBehavior> ;
-    rdfs:subClassOf <#BusinessLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalBehavior ;
+    rdfs:subClassOf archimate:BusinessLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#BusinessService> rdf:type owl:Class ;
+archimate:BusinessService rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Business Service" ;
     rdfs:comment "An explicitly defined exposed business behavior." ;
-    rdfs:subClassOf <#ExternalBehavior> ;
-    rdfs:subClassOf <#BusinessLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:ExternalBehavior ;
+    rdfs:subClassOf archimate:BusinessLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#BusinessInteraction> rdf:type owl:Class ;
+archimate:BusinessInteraction rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Business Interaction" ;
     rdfs:comment "A unit of collective business behavior performed by two or more business actors, business roles, or business collaborations." ;
-    rdfs:subClassOf <#CollectiveBehavior> ;
-    rdfs:subClassOf <#BusinessLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:CollectiveBehavior ;
+    rdfs:subClassOf archimate:BusinessLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#BusinessEvent> rdf:type owl:Class ;
+archimate:BusinessEvent rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Business Event" ;
     rdfs:comment "Represents a business-related state change." ;
-    rdfs:subClassOf <#BehaviorAspect> ;
-    rdfs:subClassOf <#BusinessLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:BehaviorAspect ;
+    rdfs:subClassOf archimate:BusinessLayer ;
+    rdfs:subClassOf archimate:Element .
 
 # Passive Structure Elements
-<#BusinessObject> rdf:type owl:Class ;
+archimate:BusinessObject rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Business Object" ;
     rdfs:comment "Represents a concept used within a particular business domain." ;
-    rdfs:subClassOf <#PassiveStructure> ;
-    rdfs:subClassOf <#BusinessLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:PassiveStructure ;
+    rdfs:subClassOf archimate:BusinessLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#Contract> rdf:type owl:Class ;
+archimate:Contract rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Contract" ;
     rdfs:comment "Represents a formal or informal specification of an agreement between a provider and a consumer that specifies the rights and obligations associated with a product and establishes functional and non-functional parameters for interaction." ;
-    rdfs:subClassOf <#PassiveStructure> ;
-    rdfs:subClassOf <#BusinessLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:PassiveStructure ;
+    rdfs:subClassOf archimate:BusinessLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#Representation> rdf:type owl:Class ;
+archimate:Representation rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Representation" ;
     rdfs:comment "A perceptible form of the information carried by a business object." ;
-    rdfs:subClassOf <#PassiveStructure> ;
-    rdfs:subClassOf <#BusinessLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:PassiveStructure ;
+    rdfs:subClassOf archimate:BusinessLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#Product> rdf:type owl:Class ;
+archimate:Product rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Product" ;
     rdfs:comment "Represents a coherent collection of services and/or passive structure elements, accompanied by a contract, which is offered as a whole to (internal or external) customers." ;
-    rdfs:subClassOf <#PassiveStructure> ;
-    rdfs:subClassOf <#BusinessLayer> ;
-    rdfs:subClassOf <#LayerComposite> .
+    rdfs:subClassOf archimate:PassiveStructure ;
+    rdfs:subClassOf archimate:BusinessLayer ;
+    rdfs:subClassOf archimate:LayerComposite .
 
 
 #### 2.4 Application Layer Elements
 
 # Active Structure Elements
-<#ApplicationComponent> rdf:type owl:Class ;
+archimate:ApplicationComponent rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Application Component" ;
     rdfs:comment "An encapsulation of application functionality aligned to implementation structure, which is modular and replaceable." ;
-    rdfs:subClassOf <#InternalActiveStructure> ;
-    rdfs:subClassOf <#ApplicationLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalActiveStructure ;
+    rdfs:subClassOf archimate:ApplicationLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#ApplicationCollaboration> rdf:type owl:Class ;
+archimate:ApplicationCollaboration rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Application Collaboration" ;
     rdfs:comment "Represents an aggregate of two or more application internal active structure elements that work together to perform collective application behavior." ;
-    rdfs:subClassOf <#InternalActiveStructure> ;
-    rdfs:subClassOf <#ApplicationLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalActiveStructure ;
+    rdfs:subClassOf archimate:ApplicationLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#ApplicationInterface> rdf:type owl:Class ;
+archimate:ApplicationInterface rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Application Interface" ;
     rdfs:comment "Represents a point of access where application services are made available to a user, another application component, or a node." ;
-    rdfs:subClassOf <#ExternalActiveStructure> ;
-    rdfs:subClassOf <#ApplicationLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:ExternalActiveStructure ;
+    rdfs:subClassOf archimate:ApplicationLayer ;
+    rdfs:subClassOf archimate:Element .
 
 # Behavior Elements
-<#ApplicationFunction> rdf:type owl:Class ;
+archimate:ApplicationFunction rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Application Function" ;
     rdfs:comment "Represents an automated behavior that can be performed by an application component." ;
-    rdfs:subClassOf <#InternalBehavior> ;
-    rdfs:subClassOf <#ApplicationLayer> ;
-    rdfs:subClassOf <#Element> .	
+    rdfs:subClassOf archimate:InternalBehavior ;
+    rdfs:subClassOf archimate:ApplicationLayer ;
+    rdfs:subClassOf archimate:Element .	
 
-<#ApplicationInteraction> rdf:type owl:Class ;
+archimate:ApplicationInteraction rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Application Interaction" ;
     rdfs:comment "A unit of collective application behavior performed by (a collaboration of) two or more application components." ;
-    rdfs:subClassOf <#CollectiveBehavior> ;
-    rdfs:subClassOf <#ApplicationLayer> ;
-    rdfs:subClassOf <#Element> .	
+    rdfs:subClassOf archimate:CollectiveBehavior ;
+    rdfs:subClassOf archimate:ApplicationLayer ;
+    rdfs:subClassOf archimate:Element .	
 	
-<#ApplicationProcess> rdf:type owl:Class ;
+archimate:ApplicationProcess rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Application Process" ;
     rdfs:comment "A sequence of application behaviors that achieves a specific result." ;
-    rdfs:subClassOf <#InternalBehavior> ;
-    rdfs:subClassOf <#ApplicationLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalBehavior ;
+    rdfs:subClassOf archimate:ApplicationLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#ApplicationEvent> rdf:type owl:Class ;
+archimate:ApplicationEvent rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Application Event" ;
     rdfs:comment "An application event represents an application state change." ;
-    rdfs:subClassOf <#BehaviorAspect> ;
-    rdfs:subClassOf <#ApplicationLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:BehaviorAspect ;
+    rdfs:subClassOf archimate:ApplicationLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#ApplicationService> rdf:type owl:Class ;
+archimate:ApplicationService rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Application Service" ;
     rdfs:comment "Represents an explicitly defined exposed application behavior." ;
-    rdfs:subClassOf <#ExternalBehavior> ;
-    rdfs:subClassOf <#ApplicationLayer> ;
-    rdfs:subClassOf <#Element> .	
+    rdfs:subClassOf archimate:ExternalBehavior ;
+    rdfs:subClassOf archimate:ApplicationLayer ;
+    rdfs:subClassOf archimate:Element .	
 
 # Passive Structure Elements 
-<#DataObject> rdf:type owl:Class ;
+archimate:DataObject rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Data Object" ;
     rdfs:comment "Represents data structured for automated processing." ;
-    rdfs:subClassOf <#PassiveStructure> ;
-    rdfs:subClassOf <#ApplicationLayer> ;
-    rdfs:subClassOf <#Element> .		
+    rdfs:subClassOf archimate:PassiveStructure ;
+    rdfs:subClassOf archimate:ApplicationLayer ;
+    rdfs:subClassOf archimate:Element .		
 
 
 #### 2.5 Technology Layer Elements
 
 # Active Structure Elements
-<#Node> rdf:type owl:Class ;
+archimate:Node rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Node" ;
     rdfs:comment "A computational or physical resource that hosts, manipulates, or interacts with other computational or physical resources." ;
-    rdfs:subClassOf <#InternalActiveStructure> ;
-    rdfs:subClassOf <#TechnologyLayer> ;
-    rdfs:subClassOf <#LayerComposite> .
+    rdfs:subClassOf archimate:InternalActiveStructure ;
+    rdfs:subClassOf archimate:TechnologyLayer ;
+    rdfs:subClassOf archimate:LayerComposite .
 
-<#Device> rdf:type owl:Class ;
+archimate:Device rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Device" ;
     rdfs:comment "A physical IT resource upon which system software and artifacts may be stored or deployed for execution." ;
-    rdfs:subClassOf <#InternalActiveStructure> ;
-    rdfs:subClassOf <#TechnologyLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalActiveStructure ;
+    rdfs:subClassOf archimate:TechnologyLayer ;
+    rdfs:subClassOf archimate:Element .
 	
-<#SystemSoftware> rdf:type owl:Class ;
+archimate:SystemSoftware rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "System Software" ;
     rdfs:comment "Software that provides or contributes to an environment for storing, executing, and using software or data deployed within it." ;
-    rdfs:subClassOf <#InternalActiveStructure> ;
-    rdfs:subClassOf <#TechnologyLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalActiveStructure ;
+    rdfs:subClassOf archimate:TechnologyLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#TechnologyCollaboration> rdf:type owl:Class ;
+archimate:TechnologyCollaboration rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Technology Collaboration" ;
     rdfs:comment "An aggregate of two or more technology internal active structure elements that work together to perform collective technology behavior." ;
-    rdfs:subClassOf <#InternalActiveStructure> ;
-    rdfs:subClassOf <#TechnologyLayer> ;
-    rdfs:subClassOf <#Element> .	
+    rdfs:subClassOf archimate:InternalActiveStructure ;
+    rdfs:subClassOf archimate:TechnologyLayer ;
+    rdfs:subClassOf archimate:Element .	
 	
-<#TechnologyInterface> rdf:type owl:Class ;
+archimate:TechnologyInterface rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Technology Interface" ;
     rdfs:comment "A point of access where technology services offered by a node can be accessed." ;
-    rdfs:subClassOf <#ExternalActiveStructure> ;
-    rdfs:subClassOf <#TechnologyLayer> ;
-    rdfs:subClassOf <#Element> .	
+    rdfs:subClassOf archimate:ExternalActiveStructure ;
+    rdfs:subClassOf archimate:TechnologyLayer ;
+    rdfs:subClassOf archimate:Element .	
 
-<#Path> rdf:type owl:Class ;
+archimate:Path rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Path" ;
     rdfs:comment "A link between two or more technology internal active structure elements, through which these elements can exchange data, energy, or material." ;
-    rdfs:subClassOf <#InternalActiveStructure> ;
-    rdfs:subClassOf <#TechnologyLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalActiveStructure ;
+    rdfs:subClassOf archimate:TechnologyLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#CommunicationNetwork> rdf:type owl:Class ;
+archimate:CommunicationNetwork rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Communication Network" ;
     rdfs:comment "A set of structures that connects devices or system software for transmission, routing, and reception of data." ;
-    rdfs:subClassOf <#InternalActiveStructure> ;
-    rdfs:subClassOf <#TechnologyLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalActiveStructure ;
+    rdfs:subClassOf archimate:TechnologyLayer ;
+    rdfs:subClassOf archimate:Element .
 	
 # Behavior Elements
-<#TechnologyFunction> rdf:type owl:Class ;
+archimate:TechnologyFunction rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Technology Function" ;
     rdfs:comment "A collection of technology behavior that can be performed by a technology internal active structure element." ;
-    rdfs:subClassOf <#InternalBehavior> ;
-    rdfs:subClassOf <#TechnologyLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalBehavior ;
+    rdfs:subClassOf archimate:TechnologyLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#TechnologyProcess> rdf:type owl:Class ;
+archimate:TechnologyProcess rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Technology Process" ;
     rdfs:comment "A sequence of technology behaviors that achieves a specific result." ;
-    rdfs:subClassOf <#InternalBehavior> ;
-    rdfs:subClassOf <#TechnologyLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalBehavior ;
+    rdfs:subClassOf archimate:TechnologyLayer ;
+    rdfs:subClassOf archimate:Element .
 	
-<#TechnologyInteraction> rdf:type owl:Class ;
+archimate:TechnologyInteraction rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Technology Interaction" ;
     rdfs:comment "A unit of collective technology behavior performed by (a collaboration of) two or more technology internal active structure elements." ;
-    rdfs:subClassOf <#CollectiveBehavior> ;
-    rdfs:subClassOf <#TechnologyLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:CollectiveBehavior ;
+    rdfs:subClassOf archimate:TechnologyLayer ;
+    rdfs:subClassOf archimate:Element .
 	
-<#TechnologyEvent> rdf:type owl:Class ;
+archimate:TechnologyEvent rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Technology Event" ;
     rdfs:comment "A technology event represents a technology state change." ;
-    rdfs:subClassOf <#BehaviorAspect> ;
-    rdfs:subClassOf <#TechnologyLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:BehaviorAspect ;
+    rdfs:subClassOf archimate:TechnologyLayer ;
+    rdfs:subClassOf archimate:Element .
 	
-<#TechnologyService> rdf:type owl:Class ;
+archimate:TechnologyService rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Technology Service" ;
     rdfs:comment "An explicitly defined exposed technology behavior." ;
-    rdfs:subClassOf <#ExternalBehavior> ;
-    rdfs:subClassOf <#TechnologyLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:ExternalBehavior ;
+    rdfs:subClassOf archimate:TechnologyLayer ;
+    rdfs:subClassOf archimate:Element .
 
 # Passive Structure Elements 
-<#Artifact> rdf:type owl:Class ;
+archimate:Artifact rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Artifact" ;
     rdfs:comment "A piece of data that is used or produced in a software development process, or by deployment and operation of an IT system." ;
-    rdfs:subClassOf <#PassiveStructure> ;
-    rdfs:subClassOf <#TechnologyLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:PassiveStructure ;
+    rdfs:subClassOf archimate:TechnologyLayer ;
+    rdfs:subClassOf archimate:Element .
 
 
 #### 2.6 Physical Elements
 
 # Active Structure Elements
-<#Equipment> rdf:type owl:Class ;
+archimate:Equipment rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Equipment" ;
     rdfs:comment "One or more physical machines, tools, or instruments that can create, use, store, move, or transform materials." ;
-    rdfs:subClassOf <#InternalActiveStructure> ;
-    rdfs:subClassOf <#PhysicalLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalActiveStructure ;
+    rdfs:subClassOf archimate:PhysicalLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#Facility> rdf:type owl:Class ;
+archimate:Facility rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Facility" ;
     rdfs:comment "A physical structure or environment." ;
-    rdfs:subClassOf <#InternalActiveStructure> ;
-    rdfs:subClassOf <#PhysicalLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalActiveStructure ;
+    rdfs:subClassOf archimate:PhysicalLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#DistributionNetwork> rdf:type owl:Class ;
+archimate:DistributionNetwork rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Distribution Network" ;
     rdfs:comment "A physical network used to transport materials or energy." ;
-    rdfs:subClassOf <#InternalActiveStructure> ;
-    rdfs:subClassOf <#PhysicalLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalActiveStructure ;
+    rdfs:subClassOf archimate:PhysicalLayer ;
+    rdfs:subClassOf archimate:Element .
 
 # Passive Structure Elements
-<#Material> rdf:type owl:Class ;
+archimate:Material rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Material" ;
     rdfs:comment "Tangible physical matter or physical elements." ;
-    rdfs:subClassOf <#PassiveStructure> ;
-    rdfs:subClassOf <#PhysicalLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:PassiveStructure ;
+    rdfs:subClassOf archimate:PhysicalLayer ;
+    rdfs:subClassOf archimate:Element .
 
 
 #### 2.7 Implementation and Migration Elements
 
 # Behavior Elements
-<#WorkPackage> rdf:type owl:Class ;
+archimate:WorkPackage rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Work Package" ;
     rdfs:comment "A series of actions identified and designed to achieve specific results." ;
-    rdfs:subClassOf <#InternalBehavior> ;
-    rdfs:subClassOf <#ImplementationAndMigrationLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:InternalBehavior ;
+    rdfs:subClassOf archimate:ImplementationAndMigrationLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#ImplementationEvent> rdf:type owl:Class ;
+archimate:ImplementationEvent rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Implementation Event" ;
     rdfs:comment "A state change related to implementation or migration." ;
-    rdfs:subClassOf <#BehaviorAspect> ;
-    rdfs:subClassOf <#ImplementationAndMigrationLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:BehaviorAspect ;
+    rdfs:subClassOf archimate:ImplementationAndMigrationLayer ;
+    rdfs:subClassOf archimate:Element .
 
 # Passive Structure Elements
-<#Deliverable> rdf:type owl:Class ;
+archimate:Deliverable rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Deliverable" ;
     rdfs:comment "A precisely-defined outcome of a work package." ;
-    rdfs:subClassOf <#PassiveStructure> ;
-    rdfs:subClassOf <#ImplementationAndMigrationLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:PassiveStructure ;
+    rdfs:subClassOf archimate:ImplementationAndMigrationLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#Gap> rdf:type owl:Class ;
+archimate:Gap rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Gap" ;
     rdfs:comment "A statement of difference between two states." ;
-    rdfs:subClassOf <#PassiveStructure> ;
-    rdfs:subClassOf <#ImplementationAndMigrationLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:PassiveStructure ;
+    rdfs:subClassOf archimate:ImplementationAndMigrationLayer ;
+    rdfs:subClassOf archimate:Element .
 
-<#Plateau> rdf:type owl:Class ;
+archimate:Plateau rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Plateau" ;
     rdfs:comment "A relatively stable state of the architecture that exists during a limited period of time." ;
-    rdfs:subClassOf <#PassiveStructure> ;
-    rdfs:subClassOf <#ImplementationAndMigrationLayer> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:PassiveStructure ;
+    rdfs:subClassOf archimate:ImplementationAndMigrationLayer ;
+    rdfs:subClassOf archimate:Element .
 
 
 #### 2.8 Composite Elements
 
-<#Grouping> rdf:type owl:Class ;
+archimate:Grouping rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Grouping" ;
     rdfs:comment "An element that aggregates or composes concepts that belong together based on some common characteristic." ;
-    rdfs:subClassOf <#GenericComposite> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:GenericComposite ;
+    rdfs:subClassOf archimate:Element .
 
-<#Location> rdf:type owl:Class ;
+archimate:Location rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Location" ;
     rdfs:comment "A conceptual or physical place or position where concepts are located or performed." ;
-    rdfs:subClassOf <#GenericComposite> ;
-    rdfs:subClassOf <#Element> .
+    rdfs:subClassOf archimate:GenericComposite ;
+    rdfs:subClassOf archimate:Element .
 
 
 ### 3. Relationships
 
 #### 3.1 Base Relationship Properties
-<#structuralRelationship> rdf:type owl:ObjectProperty ;
+archimate:structuralRelationship rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "structural relationship" ;
     rdfs:comment "Base property for structural relationships that define static construction or composition." ;
-    <#abstract> true ;
-    rdfs:domain <#Element> ;
-    rdfs:range <#Element> .
+    archimate:abstract true ;
+    rdfs:domain archimate:Element ;
+    rdfs:range archimate:Element .
 
-<#dependencyRelationship> rdf:type owl:ObjectProperty ;
+archimate:dependencyRelationship rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "dependency relationship" ;
     rdfs:comment "Base property for dependency relationships between elements." ;
-    <#abstract> true ;
-    rdfs:domain <#Element> ;
-    rdfs:range <#Element> .
+    archimate:abstract true ;
+    rdfs:domain archimate:Element ;
+    rdfs:range archimate:Element .
 
-<#dynamicRelationship> rdf:type owl:ObjectProperty ;
+archimate:dynamicRelationship rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "dynamic relationship" ;
-    <#abstract> true ;
+    archimate:abstract true ;
     rdfs:comment "Base property for dynamic behavioral relationships." ;
-    rdfs:domain <#Element> ;
-    rdfs:range <#Element> .
+    rdfs:domain archimate:Element ;
+    rdfs:range archimate:Element .
 
-<#otherRelationship> rdf:type owl:ObjectProperty ;
+archimate:otherRelationship rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Other Relationship" ;
     rdfs:comment "Other types of relationships not covered by structural, dependency, or dynamic relationships. Per spec Section 5.4, covers the specialization relationship." ;
-    <#abstract> true ;
-    rdfs:domain <#Concept> ;
-    rdfs:range <#Concept> .
+    archimate:abstract true ;
+    rdfs:domain archimate:Concept ;
+    rdfs:range archimate:Concept .
 
 
 #### 3.2 Relationships
@@ -965,98 +1078,111 @@
 # Actual relationship validity is enforced by SHACL (Level 2 & 3 metamodel & relationship shapes).
 
 # Structural Relationships
-<#assignment> rdf:type owl:ObjectProperty ;
+archimate:assignment rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "assignment" ;
     rdfs:comment "Links active structure elements with behavior that they perform or roles they fulfill." ;
-    rdfs:subPropertyOf <#structuralRelationship> ;
-    rdfs:domain <#Element> ;
-    rdfs:range <#Element> .
+    rdfs:subPropertyOf archimate:structuralRelationship ;
+    rdfs:domain archimate:Element ;
+    rdfs:range archimate:Element .
 
-<#aggregation> rdf:type owl:ObjectProperty ;
+archimate:aggregation rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "aggregation" ;
     rdfs:comment "Models a whole-part relationship where parts can exist independently." ;
-    rdfs:subPropertyOf <#structuralRelationship> ;
-    rdfs:domain <#Element> ;
-    rdfs:range <#Element> .
+    rdfs:subPropertyOf archimate:structuralRelationship ;
+    rdfs:domain archimate:Element ;
+    rdfs:range archimate:Element .
 
-<#composition> rdf:type owl:ObjectProperty ;
+archimate:composition rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "composition" ;
     rdfs:comment "Models a whole-part relationship where parts cannot exist without the whole." ;
-    rdfs:subPropertyOf <#structuralRelationship> ;
-    rdfs:domain <#Element> ;
-    rdfs:range <#Element> .
+    rdfs:subPropertyOf archimate:structuralRelationship ;
+    rdfs:domain archimate:Element ;
+    rdfs:range archimate:Element .
 
-<#realization> rdf:type owl:ObjectProperty ;
+archimate:realization rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "realization" ;
     rdfs:comment "Indicates that an entity realizes or implements another entity." ;
-    rdfs:subPropertyOf <#structuralRelationship> ;
-    rdfs:domain <#Element> ;
-    rdfs:range <#Element> .
+    rdfs:subPropertyOf archimate:structuralRelationship ;
+    rdfs:domain archimate:Element ;
+    rdfs:range archimate:Element .
 
 # Dependency Relationships  
-<#serving> rdf:type owl:ObjectProperty ;
+archimate:serving rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "serving" ;
     rdfs:comment "Models that an element provides functionality to another element." ;
-    rdfs:subPropertyOf <#dependencyRelationship> ;
-    rdfs:domain <#Element> ;
-    rdfs:range <#Element> .
+    rdfs:subPropertyOf archimate:dependencyRelationship ;
+    rdfs:domain archimate:Element ;
+    rdfs:range archimate:Element .
 
-<#access> rdf:type owl:ObjectProperty ;
+archimate:access rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "access" ;
     rdfs:comment "Models access of behavior elements to passive structure elements." ;
-    rdfs:subPropertyOf <#dependencyRelationship> ;
-    rdfs:domain <#Element> ;
-    rdfs:range <#Element> .
+    rdfs:subPropertyOf archimate:dependencyRelationship ;
+    rdfs:domain archimate:Element ;
+    rdfs:range archimate:Element .
 
-<#influence> rdf:type owl:ObjectProperty ;
+archimate:influence rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "influence" ;
     rdfs:comment "Models how one element influences another element." ;
-    rdfs:subPropertyOf <#dependencyRelationship> ;
-    rdfs:domain <#Element> ;
-    rdfs:range <#Element> .
+    rdfs:subPropertyOf archimate:dependencyRelationship ;
+    rdfs:domain archimate:Element ;
+    rdfs:range archimate:Element .
 
-<#association> rdf:type owl:ObjectProperty ;
+archimate:association rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "association" ;
     rdfs:comment "Models a relationship not covered by other specific relationship types." ;
-    rdfs:subPropertyOf <#dependencyRelationship> ;
-    rdfs:domain <#Element> ;
-    rdfs:range <#Element> .
+    rdfs:subPropertyOf archimate:dependencyRelationship ;
+    rdfs:domain archimate:Element ;
+    rdfs:range archimate:Element .
 
 # Dynamic Relationships
-<#triggering> rdf:type owl:ObjectProperty ;
+archimate:triggering rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "triggering" ;
     rdfs:comment "Models temporal or causal relationships where one behavior triggers another." ;
-    rdfs:subPropertyOf <#dynamicRelationship> ;
-    rdfs:domain <#Element> ;
-    rdfs:range <#Element> .
+    rdfs:subPropertyOf archimate:dynamicRelationship ;
+    rdfs:domain archimate:Element ;
+    rdfs:range archimate:Element .
 
-<#flow> rdf:type owl:ObjectProperty ;
+archimate:flow rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "flow" ;
     rdfs:comment "Models transfer of information, materials, or energy between behavior elements." ;
-    rdfs:subPropertyOf <#dynamicRelationship> ;
-    rdfs:domain <#Element> ;
-    rdfs:range <#Element> .
+    rdfs:subPropertyOf archimate:dynamicRelationship ;
+    rdfs:domain archimate:Element ;
+    rdfs:range archimate:Element .
 
 # Other Relationships (spec Section 5.4)
-<#specialization> rdf:type owl:ObjectProperty ;
+archimate:specialization rdf:type owl:ObjectProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Specialization" ;
     rdfs:comment "Instance-level ArchiMate relationship: an element is a particular kind of another element of the same type (spec Section 5.4). For class-level profile declarations, use archimate:profileSpecialization instead." ;
-    rdfs:subPropertyOf <#otherRelationship> ;
-    rdfs:domain <#Concept> ;
-    rdfs:range <#Concept> ;
+    rdfs:subPropertyOf archimate:otherRelationship ;
+    rdfs:domain archimate:Concept ;
+    rdfs:range archimate:Concept ;
     rdf:type owl:TransitiveProperty .
 
 #### 3.3 Relationship Connectors
 
-<#Junction> rdf:type owl:Class ;
+archimate:Junction rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Junction" ;
     rdfs:comment "Used to connect relationships of the same type. Junctions model logical AND or OR operations when combining or splitting relationships in an ArchiMate model." ;
-    rdfs:subClassOf <#RelationshipConnector> .
+    rdfs:subClassOf archimate:RelationshipConnector .
 
-<#junctionType> rdf:type owl:DatatypeProperty ;
+archimate:junctionType rdf:type owl:DatatypeProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "junction type" ;
     rdfs:comment "Type of junction: 'and' (default) or 'or'. AND junction means all incoming relationships must be satisfied. OR junction means at least one incoming relationship must be satisfied." ;
-    rdfs:domain <#Junction> ;
+    rdfs:domain archimate:Junction ;
     rdfs:range [ 
 		owl:oneOf ( "and" "or" ) 
 	] .
@@ -1073,27 +1199,38 @@
 
 
 # Access Relationship Specific Properties
-<#accessType> rdf:type owl:DatatypeProperty ;
+archimate:accessType rdf:type owl:DatatypeProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Access Type" ;
     rdfs:comment "Type of access: read, write, readwrite, or unspecified." ;
     rdfs:range xsd:string .
 
 # Influence Relationship Specific Properties  
-<#influenceSign> rdf:type owl:DatatypeProperty ;
+archimate:influenceSign rdf:type owl:DatatypeProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Influence Sign" ;
     rdfs:comment "Sign of the influence: positive, negative, or unspecified." ;
     rdfs:range xsd:string .
 
-<#influenceStrength> rdf:type owl:DatatypeProperty ;
+archimate:influenceStrength rdf:type owl:DatatypeProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Influence Strength" ;
     rdfs:comment "Strength of the influence: weak, moderate, strong, or unspecified." ;
     rdfs:range xsd:string .
 
 # Flow Relationship Specific Properties
-<#flowType> rdf:type owl:DatatypeProperty ;
+archimate:flowType rdf:type owl:DatatypeProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Flow Type" ;
     rdfs:comment "Type of flow: information, material, energy, or unspecified." ;
     rdfs:range xsd:string .
+
+# Association Relationship Specific Properties
+archimate:isDirected rdf:type owl:DatatypeProperty ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
+    rdfs:label "Is Directed" ;
+    rdfs:comment "Whether an association relationship is directed. Defaults to false per the ArchiMate Exchange File Format XSD." ;
+    rdfs:range xsd:boolean .
 
 
 

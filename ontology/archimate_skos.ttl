@@ -5,10 +5,10 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@base <https://purl.org/archimate/skos> .
+@prefix archimate-skos: <https://purl.org/archimate/skos#> .
 
 ### Vocabulary Declaration
-<#> rdf:type skos:ConceptScheme ;
+<https://purl.org/archimate/skos> rdf:type skos:ConceptScheme ;
     skos:prefLabel "ArchiMate Vocabulary"@en ;
     skos:altLabel "ArchiMate SKOS Vocabulary"@en ;
     dct:title "ArchiMate 3.2 Controlled Vocabulary"@en ;
@@ -20,1684 +20,1969 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2026-07-01"^^xsd:date ;
+    dct:modified "2026-08-08"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     dct:rights "Concept definitions are derived from the ArchiMate(R) 3.2 Specification, Copyright (C) 2012-2023 The Open Group. ArchiMate is a registered trademark of The Open Group. This vocabulary is a derivative work and is not the official ArchiMate documentation."@en ;
     owl:versionInfo "Beta" ;
     dct:subject "Enterprise Architecture, ArchiMate, Modeling Language" ;
     dct:conformsTo <https://pubs.opengroup.org/architecture/archimate3-doc/> ;
-    skos:hasTopConcept <#ArchiMate> .
+    skos:hasTopConcept archimate-skos:ArchiMate .
 
 ### Editorial Notes for Ontology Maintenance
-<#> skos:editorialNote "This SKOS vocabulary provides terminological and classification support for ArchiMate 3.2 concepts. It is designed for use in content management systems, taxonomies, and semantic indexing. While SKOS concept URIs use the /skos# namespace, they represent the same conceptual entities as the OWL ontology classes at https://purl.org/archimate#."@en ;
+<https://purl.org/archimate/skos> skos:editorialNote "This SKOS vocabulary provides terminological and classification support for ArchiMate 3.2 concepts. It is designed for use in content management systems, taxonomies, and semantic indexing. While SKOS concept URIs use the /skos# namespace, they represent the same conceptual entities as the OWL ontology classes at https://purl.org/archimate#."@en ;
     skos:editorialNote "For formal ontological semantics (classes, properties, restrictions), refer to the OWL ontology at https://purl.org/archimate/owl. For controlled vocabulary, multilingual labels, and concept hierarchies, use this SKOS vocabulary."@en ;
     skos:editorialNote "Concepts in this vocabulary are maintained in parallel with the OWL ontology. Changes to concept definitions, scope, or structure should be coordinated between both representations."@en .
 
 ### Change Notes for Version Control
-<#> skos:changeNote "2026-07-01: Added Latin American Spanish labels and definitions from official ArchiMate 3.2 Translation Glossary (C23A). Added new concepts for viewpoints, generic element types, framework terms, and profile concepts."@en .
-<#> skos:changeNote "2026-05-05: Renamed ConceptAttributes to ConceptProperties; added Identifier, Name, Documentation under ConceptProperties; added RelationshipProperties grouping with AccessType, InfluenceSign, InfluenceStrength, FlowType, JunctionType, Confidence."@en .
-<#> skos:changeNote "2026-02-10: Added missing 11 elements (Junction, TechnologyCollaboration, TechnologyInterface, TechnologyInteraction, TechnologyEvent, CommunicationNetwork, Path, Location, AndJunction, OrJunction, Grouping), corrected all class names to match OWL ontology exactly, added CoreFramework and CoreLanguage as SKOS concepts."@en .
-<#> skos:changeNote "2025-07-04: Split from combined OWL/SKOS file into dedicated SKOS vocabulary. Added multilingual labels, collections, and cross-references to OWL ontology."@en .
+<https://purl.org/archimate/skos> skos:changeNote "2026-07-01: Added Latin American Spanish labels and definitions from official ArchiMate 3.2 Translation Glossary (C23A). Added new concepts for viewpoints, generic element types, framework terms, and profile concepts."@en .
+<https://purl.org/archimate/skos> skos:changeNote "2026-05-05: Renamed ConceptAttributes to ConceptProperties; added Identifier, Name, Documentation under ConceptProperties; added RelationshipProperties grouping with AccessType, InfluenceSign, InfluenceStrength, FlowType, JunctionType, Confidence."@en .
+<https://purl.org/archimate/skos> skos:changeNote "2026-02-10: Added missing 11 elements (Junction, TechnologyCollaboration, TechnologyInterface, TechnologyInteraction, TechnologyEvent, CommunicationNetwork, Path, Location, AndJunction, OrJunction, Grouping), corrected all class names to match OWL ontology exactly, added CoreFramework and CoreLanguage as SKOS concepts."@en .
+<https://purl.org/archimate/skos> skos:changeNote "2025-07-04: Split from combined OWL/SKOS file into dedicated SKOS vocabulary. Added multilingual labels, collections, and cross-references to OWL ontology."@en .
+
 
 ### Top-Level Concepts
 
-<#ArchiMate> rdf:type skos:Concept ;
+archimate-skos:ArchiMate rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "ArchiMate"@en ;
+    skos:prefLabel "ArchiMate"@es ;
     skos:altLabel "ArchiMate Modeling Language"@en ;
     skos:definition "A visual language for enterprise architecture with a set of default iconography for describing, analyzing, and communicating many concerns of Enterprise Architectures as they change over time."@en ;
     skos:scopeNote "ArchiMate is an open and independent enterprise architecture modeling language maintained by The Open Group."@en ;
-    skos:inScheme <#> ;
-    skos:topConceptOf <#> .
+    skos:inScheme <https://purl.org/archimate/skos> ;
+    skos:topConceptOf <https://purl.org/archimate/skos> .
 
 ### Framework Structure Concepts
 
 ## Core Framework
-<#Framework> rdf:type skos:Concept ;
+archimate-skos:Framework rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "ArchiMate Framework"@en ;
     skos:definition "The overall structure of the ArchiMate language, consisting of layers and aspects."@en ;
-    skos:broader <#ArchiMate> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchiMate ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#CoreFramework> rdf:type skos:Concept ;
+archimate-skos:CoreFramework rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "ArchiMate Core Framework"@en ;
     skos:prefLabel "Marco de Referencia Central de ArchiMate"@es ;
     skos:definition "A reference structure used to classify elements of the ArchiMate Core language. It consists of three layers and three aspects."@en ;
     skos:definition "Una estructura de referencia usada para clasificar los elementos que conforman el núcleo o centro del lenguaje de ArchiMate. Consiste de tres capas y tres aspectos."@es ;
-    skos:broader <#Framework> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Framework ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#CoreLanguage> rdf:type skos:Concept ;
+
+archimate-skos:CoreLanguage rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "ArchiMate Core Language"@en ;
     skos:prefLabel "Lenguaje Central ArchiMate"@es ;
     skos:definition "The central part of the ArchiMate language that defines the concepts to model Enterprise Architectures. It includes concepts from three layers: Business, Application, and Technology (including Physical)."@en ;
     skos:definition "Núcleo o centro del lenguaje ArchiMate que define los conceptos para modelar Arquitecturas Empresariales. Incluye conceptos de tres capas: Negocio, Aplicación, y Tecnología (esta última incluye la Capa Física)."@es ;
-    skos:broader <#Framework> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Framework ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#FullFramework> rdf:type skos:Concept ;
+archimate-skos:FullFramework rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "ArchiMate Full Framework"@en ;
     skos:prefLabel "Marco de Referencia Completo de ArchiMate"@es ;
     skos:definition "Adds a number of layers and an aspect to the Core Framework: physical elements, strategy elements, motivation aspect, and implementation and migration elements."@en ;
     skos:definition "Añade un número de capas y aspectos al Marco de Referencia Central: elementos físicos, elementos de estrategia, aspecto de motivación y elementos de implementación y migración."@es ;
     skos:scopeNote "ArchiMate 3.2 §3.5"@en ;
-    skos:broader <#Framework> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Framework ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 ## Fundamental Language Concepts
-<#Concept_> rdf:type skos:Concept ;
+archimate-skos:Concept_ rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Concept"@en ;
     skos:prefLabel "Concepto"@es ;
     skos:definition "Either an element, a relationship, or a relationship connector."@en ;
     skos:definition "Ya sea un elemento, una relación o un conector de relaciones."@es ;
     skos:scopeNote "ArchiMate 3.2 §2.8"@en ;
-    skos:broader <#ArchiMate> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchiMate ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Element_> rdf:type skos:Concept ;
+archimate-skos:Element_ rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Element"@en ;
     skos:prefLabel "Elemento"@es ;
     skos:definition "Basic unit in the ArchiMate metamodel. Used to define and describe the constituent parts of Enterprise Architectures and their unique set of characteristics."@en ;
     skos:definition "Unidad básica en el metamodelo de ArchiMate. Usada para definir y describir las partes constituyentes de Arquitecturas Empresariales y su conjunto único de características."@es ;
     skos:scopeNote "ArchiMate 3.2 §2.12"@en ;
-    skos:broader <#Concept_> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Concept_ ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Model_> rdf:type skos:Concept ;
+archimate-skos:Model_ rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Model"@en ;
     skos:prefLabel "Modelo"@es ;
     skos:definition "A collection of concepts in the context of the ArchiMate language structure."@en ;
     skos:definition "Una colección de conceptos en el contexto de la estructura del lenguaje ArchiMate."@es ;
     skos:scopeNote "ArchiMate 3.2 §2.14"@en ;
-    skos:broader <#ArchiMate> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchiMate ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Attribute_> rdf:type skos:Concept ;
+archimate-skos:Attribute_ rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Attribute"@en ;
     skos:prefLabel "Atributo"@es ;
     skos:definition "A property associated with an ArchiMate language element or relationship."@en ;
     skos:definition "Una propiedad asociada con un elemento o relación del lenguaje ArchiMate."@es ;
     skos:scopeNote "ArchiMate 3.2 §2.6"@en ;
-    skos:broader <#ArchiMate> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchiMate ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#CoreElement> rdf:type skos:Concept ;
+archimate-skos:CoreElement rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Core Element"@en ;
     skos:prefLabel "Elemento Central"@es ;
     skos:definition "A structure or behavior element in one of the core layers of the ArchiMate language."@en ;
     skos:definition "Un elemento estructural o de comportamiento en una de las capas del centro o núcleo del lenguaje ArchiMate."@es ;
     skos:scopeNote "ArchiMate 3.2 §2.11"@en ;
-    skos:broader <#Element_> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Element_ ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Nesting_> rdf:type skos:Concept ;
+archimate-skos:Nesting_ rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Nesting"@en ;
     skos:prefLabel "Anidado"@es ;
     skos:definition "Nesting elements inside other elements can be used as an alternative graphical notation to express some relationships."@en ;
     skos:definition "Elementos anidados dentro de otros elementos, puede ser usado como una notación gráfica alternativa para expresar algunas relaciones."@es ;
     skos:scopeNote "ArchiMate 3.2 §3.8"@en ;
-    skos:broader <#ArchiMate> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchiMate ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Conformance_> rdf:type skos:Concept ;
+archimate-skos:Conformance_ rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Conformance"@en ;
     skos:prefLabel "Conformidad"@es ;
     skos:definition "Fulfillment of specified requirements."@en ;
     skos:definition "Cumplimiento de los requisitos especificados."@es ;
     skos:scopeNote "ArchiMate 3.2 §2.9"@en ;
-    skos:broader <#ArchiMate> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchiMate ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ConformingImplementation> rdf:type skos:Concept ;
+archimate-skos:ConformingImplementation rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Conforming Implementation"@en ;
     skos:prefLabel "Implementación Conforme"@es ;
     skos:definition "An implementation which satisfies the conformance requirements defined by the conformance clause of the standard."@en ;
     skos:definition "Una implementación que satisface los requerimientos de conformidad definidos por la cláusula de conformidad de un estándar."@es ;
     skos:scopeNote "ArchiMate 3.2 §2.10"@en ;
-    skos:broader <#Conformance_> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Conformance_ ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Layer> rdf:type skos:Concept ;
+archimate-skos:Layer rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
+
     skos:prefLabel "Layer"@en ;
     skos:prefLabel "Capa"@es ;
     skos:definition "A major division in the architecture that categorizes elements according to their scope and purpose."@en ;
     skos:definition "Una abstracción del marco de referencia de ArchiMate en la que se puede modelar una empresa."@es ;
-    skos:broader <#Framework> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Framework ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Aspect> rdf:type skos:Concept ;
+
+archimate-skos:Aspect rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Aspect"@en ;
     skos:prefLabel "Aspecto"@es ;
     skos:definition "Classification of elements based on layer-independent characteristics related to the concerns of different stakeholders."@en ;
     skos:definition "Clasificación de elementos acorde con características que son independientes de la capa, y que se relacionan con la índole de los asuntos o intereses de diferentes interesados."@es ;
-    skos:broader <#Framework> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Framework ;
+    skos:inScheme <https://purl.org/archimate/skos> .
+
 
 ### Layer Concepts
 
-<#StrategyLayer> rdf:type skos:Concept ;
+archimate-skos:StrategyLayer rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Strategy Layer"@en ;
     skos:definition "Represents elements that define an organization's strategic direction and choices."@en ;
-    skos:broader <#Layer> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Layer ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#BusinessLayer> rdf:type skos:Concept ;
+archimate-skos:BusinessLayer rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Business Layer"@en ;
     skos:prefLabel "Capa de Negocio"@es ;
     skos:definition "Represents elements and relationships that describe the organization's business functions and processes."@en ;
     skos:definition "Representa los servicios de negocio ofrecidos a clientes, los cuáles son creados en la organización por procesos de negocio desempeñados por actores de negocio."@es ;
-    skos:broader <#Layer> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Layer ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ApplicationLayer> rdf:type skos:Concept ;
+
+archimate-skos:ApplicationLayer rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Application Layer"@en ;
     skos:prefLabel "Capa de Aplicación"@es ;
     skos:definition "Represents the software applications and their components that support business processes and provide services to users and other applications."@en ;
     skos:definition "Representa servicios de aplicación que soportan los negocios y las aplicaciones que los ofrecen."@es ;
-    skos:broader <#Layer> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Layer ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#TechnologyLayer> rdf:type skos:Concept ;
+
+archimate-skos:TechnologyLayer rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Technology Layer"@en ;
     skos:prefLabel "Capa de Tecnología"@es ;
     skos:definition "Represents the physical and software infrastructure that supports the Application Layer and, ultimately, the Business Layer."@en ;
     skos:definition "Abarca tanto la tecnología de información como la tecnología operativa."@es ;
-    skos:broader <#Layer> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Layer ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#PhysicalLayer> rdf:type skos:Concept ;
+
+archimate-skos:PhysicalLayer rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Physical Layer"@en ;
     skos:definition "Represents physical equipment, materials, and distribution networks used to carry out business activities."@en ;
-    skos:broader <#Layer> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Layer ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ImplementationAndMigrationLayer> rdf:type skos:Concept ;
+archimate-skos:ImplementationAndMigrationLayer rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Implementation and Migration Layer"@en ;
     skos:altLabel "Implementation Layer"@en, "Migration Layer"@en ;
     skos:definition "Represents elements related to projects, programs, and transition architectures."@en ;
-    skos:broader <#Layer> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Layer ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 ### Aspect Concepts
 
-<#ActiveStructure> rdf:type skos:Concept ;
+archimate-skos:ActiveStructure rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Active Structure"@en ;
     skos:prefLabel "Aspecto de Estructura Activo"@es ;
     skos:altLabel "Active Structure Aspect"@en ;
     skos:definition "A category of elements that perform behavior and collaborate to provide services."@en ;
     skos:definition "Representa los elementos estructurales que desempeñan un comportamiento real (los actores de negocio, componentes de aplicación y dispositivos)."@es ;
-    skos:broader <#Aspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Aspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#BehaviorAspect> rdf:type skos:Concept ;
+
+archimate-skos:BehaviorAspect rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Behavior"@en ;
     skos:prefLabel "Aspecto de Comportamiento"@es ;
     skos:altLabel "Behavior Aspect"@en ;
     skos:definition "Represents elements that define the behavior performed by active structure elements."@en ;
     skos:definition "Representa el comportamiento (procesos, funciones, eventos y servicios) ejecutados por los actores."@es ;
-    skos:broader <#Aspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Aspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#PassiveStructure> rdf:type skos:Concept ;
+
+archimate-skos:PassiveStructure rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Passive Structure"@en ;
     skos:prefLabel "Aspecto de Estructura Pasivo"@es ;
     skos:altLabel "Passive Structure Aspect"@en ;
     skos:definition "Represents structural elements that are used or produced by behavior elements."@en ;
     skos:definition "Representa los objetos sobre los cuales se ejecuta un comportamiento."@es ;
-    skos:broader <#Aspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Aspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#MotivationAspect> rdf:type skos:Concept ;
+
+archimate-skos:MotivationAspect rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Motivation"@en ;
     skos:prefLabel "Elemento de Motivación"@es ;
     skos:altLabel "Motivation Aspect"@en ;
     skos:definition "A cross-cutting aspect that represents drivers, goals, requirements, and principles in an enterprise architecture."@en ;
     skos:definition "Representa el contexto o la razón detrás de la arquitectura de una empresa."@es ;
-    skos:broader <#Aspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Aspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
+
 
 ### Generic Element Types (Chapter 4 abstractions)
 
-<#ActiveStructureElement> rdf:type skos:Concept ;
+archimate-skos:ActiveStructureElement rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Active Structure Element"@en ;
     skos:prefLabel "Elemento de Estructura Activo"@es ;
     skos:definition "The subject that can perform behavior."@en ;
     skos:definition "El sujeto que puede ejecutar un comportamiento."@es ;
     skos:scopeNote "ArchiMate 3.2 §4.1.1"@en ;
-    skos:broader <#ActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#InternalActiveStructureElement> rdf:type skos:Concept ;
+archimate-skos:InternalActiveStructureElement rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Internal Active Structure Element"@en ;
     skos:prefLabel "Elemento Estructural Activo Interno"@es ;
     skos:definition "Represents an entity that is capable of performing behavior."@en ;
     skos:definition "Representa una entidad que es capaz de ejecutar un comportamiento."@es ;
     skos:scopeNote "ArchiMate 3.2 §4.1.1"@en ;
-    skos:broader <#ActiveStructureElement> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ActiveStructureElement ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ExternalActiveStructureElement> rdf:type skos:Concept ;
+archimate-skos:ExternalActiveStructureElement rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "External Active Structure Element"@en ;
     skos:prefLabel "Elemento de Estructura Activo Externo"@es ;
     skos:definition "Represents a point of access where one or more services are provided to the environment. Also called an interface."@en ;
     skos:definition "Representa un punto de acceso donde uno o más servicios se proveen al entorno. También llamado una interfaz."@es ;
     skos:scopeNote "ArchiMate 3.2 §4.1.1"@en ;
-    skos:broader <#ActiveStructureElement> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ActiveStructureElement ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#BehaviorElement> rdf:type skos:Concept ;
+archimate-skos:BehaviorElement rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Behavior Element"@en ;
     skos:prefLabel "Elemento de Comportamiento"@es ;
     skos:definition "Represents the dynamic aspects of the enterprise."@en ;
     skos:definition "Representa los aspectos dinámicos de la empresa."@es ;
     skos:scopeNote "ArchiMate 3.2 §4.1.2"@en ;
-    skos:broader <#BehaviorAspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BehaviorAspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#InternalBehaviorElement> rdf:type skos:Concept ;
+archimate-skos:InternalBehaviorElement rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Internal Behavior Element"@en ;
     skos:prefLabel "Elemento de Comportamiento Interno"@es ;
     skos:definition "Represents a unit of activity that can be performed by one or more active structure elements."@en ;
     skos:definition "Representa una unidad de actividad que puede ser ejecutada por uno o más elementos estructurales activos internos."@es ;
     skos:scopeNote "ArchiMate 3.2 §4.1.2"@en ;
-    skos:broader <#BehaviorElement> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BehaviorElement ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ExternalBehaviorElement> rdf:type skos:Concept ;
+archimate-skos:ExternalBehaviorElement rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "External Behavior Element"@en ;
     skos:prefLabel "Elemento de Comportamiento Externo"@es ;
     skos:definition "Represents an explicitly defined exposed behavior. Also called a service."@en ;
     skos:definition "Representa un comportamiento expuesto definido explícitamente. También llamado un servicio."@es ;
     skos:scopeNote "ArchiMate 3.2 §4.1.2"@en ;
-    skos:broader <#BehaviorElement> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BehaviorElement ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#PassiveStructureElement> rdf:type skos:Concept ;
+archimate-skos:PassiveStructureElement rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Passive Structure Element"@en ;
     skos:prefLabel "Elemento Estructural Pasivo"@es ;
     skos:definition "Represents an element on which behavior is performed."@en ;
     skos:definition "Representa un elemento sobre el cual es ejecutado un comportamiento."@es ;
     skos:scopeNote "ArchiMate 3.2 §4.1.3"@en ;
-    skos:broader <#PassiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:PassiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 ## Generic Specializations (§4.2)
-<#Collaboration_> rdf:type skos:Concept ;
+archimate-skos:Collaboration_ rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Collaboration"@en ;
     skos:prefLabel "Colaboración"@es ;
     skos:definition "Represents an aggregate of two or more internal active structure elements, working together to perform some collective behavior."@en ;
     skos:definition "Representa un agregado de dos o más elementos de estructura activos internos, que trabajan juntos para ejecutar un comportamiento colectivo."@es ;
     skos:scopeNote "ArchiMate 3.2 §4.2"@en ;
-    skos:broader <#ActiveStructureElement> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ActiveStructureElement ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Interface_> rdf:type skos:Concept ;
+archimate-skos:Interface_ rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Interface"@en ;
     skos:prefLabel "Interfaz"@es ;
     skos:definition "An external active structure element that represents a point of access where one or more services are provided to the environment."@en ;
     skos:definition "Un elemento estructural activo externo que representa un punto de acceso en donde uno o más servicios son proveidos al entorno."@es ;
     skos:scopeNote "ArchiMate 3.2 §4.1.1"@en ;
-    skos:broader <#ExternalActiveStructureElement> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ExternalActiveStructureElement ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Process_> rdf:type skos:Concept ;
+archimate-skos:Process_ rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Process"@en ;
     skos:prefLabel "Proceso"@es ;
     skos:definition "Represents a sequence of behaviors that achieves a specific result."@en ;
     skos:definition "Representa una secuencia de comportamientos que logran un resultado específico."@es ;
     skos:scopeNote "ArchiMate 3.2 §4.2"@en ;
-    skos:broader <#InternalBehaviorElement> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:InternalBehaviorElement ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Function_> rdf:type skos:Concept ;
+archimate-skos:Function_ rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Function"@en ;
     skos:prefLabel "Función"@es ;
     skos:definition "Represents a collection of behavior based on specific criteria, such as required resources, competencies, or location, and is managed, performed, or implemented as a whole."@en ;
     skos:definition "Representa un conjunto de comportamientos basados en criterios específicos, tales como recursos requeridos, capacidades, o localizaciones."@es ;
     skos:scopeNote "ArchiMate 3.2 §4.2"@en ;
-    skos:broader <#InternalBehaviorElement> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:InternalBehaviorElement ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Interaction_> rdf:type skos:Concept ;
+archimate-skos:Interaction_ rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Interaction"@en ;
     skos:prefLabel "Interacción"@es ;
     skos:definition "Represents a unit of collective behavior that must be performed by two or more internal active structure elements."@en ;
     skos:definition "Representa una unidad de comportamiento colectivo que debe ser ejecutada por dos o más elementos estructurales activos internos."@es ;
     skos:scopeNote "ArchiMate 3.2 §4.2"@en ;
-    skos:broader <#InternalBehaviorElement> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:InternalBehaviorElement ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Event_> rdf:type skos:Concept ;
+archimate-skos:Event_ rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Event"@en ;
     skos:prefLabel "Evento"@es ;
     skos:definition "Represents a state change."@en ;
     skos:definition "Representa un cambio de estado."@es ;
     skos:scopeNote "ArchiMate 3.2 §4.1.2"@en ;
-    skos:broader <#BehaviorElement> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BehaviorElement ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Service_> rdf:type skos:Concept ;
+archimate-skos:Service_ rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Service"@en ;
     skos:prefLabel "Servicio"@es ;
     skos:definition "An external behavior element that represents an explicitly defined exposed behavior."@en ;
     skos:definition "Un elemento de comportamiento externo que representa a un comportamiento definido explícitamente y expuesto a su entorno."@es ;
     skos:scopeNote "ArchiMate 3.2 §4.1.2"@en ;
-    skos:broader <#ExternalBehaviorElement> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ExternalBehaviorElement ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 ### Motivation Elements
 
-<#Stakeholder> rdf:type skos:Concept ;
+archimate-skos:Stakeholder rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Stakeholder"@en ;
     skos:prefLabel "Interesado"@es ;
     skos:definition "An individual or group with an interest in the architecture."@en ;
     skos:definition "Representa el rol de un individuo, equipo u organización que representa a sus intereses a efectos de la arquitectura."@es ;
-    skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:MotivationAspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Driver> rdf:type skos:Concept ;
+
+archimate-skos:Driver rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Driver"@en ;
     skos:prefLabel "Móvil"@es ;
     skos:definition "An external or internal factor that influences architecture decisions."@en ;
     skos:definition "Representa una condición externa o interna que impulsa a una organización a definir sus metas e implementar los cambios necesarios para lograrlas."@es ;
-    skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:MotivationAspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Assessment> rdf:type skos:Concept ;
+
+archimate-skos:Assessment rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Assessment"@en ;
     skos:prefLabel "Valoración"@es ;
     skos:definition "An evaluation of an architecture driver, such as a SWOT analysis."@en ;
     skos:definition "Representa el resultado de un análisis de estado de la situación de la empresa con respecto a algún móvil."@es ;
-    skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:MotivationAspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Goal> rdf:type skos:Concept ;
+
+archimate-skos:Goal rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Goal"@en ;
     skos:prefLabel "Meta"@es ;
     skos:definition "A high-level outcome that an enterprise aims to achieve."@en ;
     skos:definition "Representa una declaración a alto nivel del propósito, dirección, o estado final que una organización y sus interesados desean alcanzar."@es ;
-    skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:MotivationAspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Outcome> rdf:type skos:Concept ;
+
+archimate-skos:Outcome rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Outcome"@en ;
     skos:prefLabel "Resultado"@es ;
     skos:definition "A measurable result that contributes to achieving a goal."@en ;
     skos:definition "Representa un resultado final, efecto o consecuencia de una cierta situación."@es ;
-    skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:MotivationAspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Principle> rdf:type skos:Concept ;
+
+archimate-skos:Principle rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Principle"@en ;
     skos:prefLabel "Principio"@es ;
     skos:definition "A fundamental guideline for architecture decision-making."@en ;
     skos:definition "Representa una declaración de propósito que define una propiedad genérica a cumplir o que aplica a cualquier sistema en un cierto contexto en la arquitectura."@es ;
-    skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:MotivationAspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Requirement> rdf:type skos:Concept ;
+
+archimate-skos:Requirement rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Requirement"@en ;
     skos:prefLabel "Requerimiento"@es ;
     skos:definition "A specific need that must be met by the architecture."@en ;
     skos:definition "Representa una declaración de necesidad que define una propiedad que aplica a un sistema específico tal y como es descrito por la arquitectura."@es ;
-    skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:MotivationAspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Constraint> rdf:type skos:Concept ;
+
+archimate-skos:Constraint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Constraint"@en ;
     skos:prefLabel "Restricción"@es ;
     skos:definition "A limitation or restriction affecting architecture decisions."@en ;
     skos:definition "Representa una limitación en aspectos de la arquitectura, su proceso de implementación o su realización."@es ;
-    skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:MotivationAspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Value> rdf:type skos:Concept ;
+
+archimate-skos:Value rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Value"@en ;
     skos:prefLabel "Valor"@es ;
     skos:definition "The importance or worth of a concept in the enterprise."@en ;
     skos:definition "Representa el valor relativo, utilidad o importancia de un concepto."@es ;
-    skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:MotivationAspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Meaning> rdf:type skos:Concept ;
+
+archimate-skos:Meaning rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Meaning"@en ;
     skos:prefLabel "Significado"@es ;
     skos:definition "The definition or interpretation of a concept in a specific context."@en ;
     skos:definition "Representa el conocimiento o pericia presente en, o la interpretación hecha de un concepto en un contexto particular."@es ;
-    skos:broader <#MotivationAspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:MotivationAspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
+
 
 ### Strategy Layer Elements
 
-<#StrategyElements> rdf:type skos:Concept ;
+archimate-skos:StrategyElements rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Strategy Elements"@en ;
     skos:definition "Elements that define strategic direction and choices."@en ;
-    skos:broader <#StrategyLayer> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:StrategyLayer ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Resource> rdf:type skos:Concept ;
+archimate-skos:Resource rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Resource"@en ;
     skos:prefLabel "Recurso"@es ;
     skos:definition "An asset owned or controlled by an individual or organization."@en ;
     skos:definition "Representa un activo que es propiedad de, o está controlado por un individuo u organización."@es ;
-    skos:broader <#StrategyElements> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:StrategyElements ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Capability> rdf:type skos:Concept ;
+
+archimate-skos:Capability rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Capability"@en ;
     skos:prefLabel "Capacidad"@es ;
     skos:definition "An ability that an active structure element possesses."@en ;
     skos:definition "Representa una habilidad que posee un elemento de estructura activo, tal como una organización, persona o sistema."@es ;
-    skos:broader <#StrategyElements> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:StrategyElements ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#CourseOfAction> rdf:type skos:Concept ;
+
+archimate-skos:CourseOfAction rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Course of Action"@en ;
     skos:prefLabel "Curso de Acción"@es ;
     skos:definition "An approach or plan for configuring some capabilities and resources of the enterprise."@en ;
     skos:definition "Representa un enfoque o plan para configurar algunas capacidades y recursos de la empresa, que se emprende para alcanzar una meta."@es ;
-    skos:broader <#StrategyElements> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:StrategyElements ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ValueStream> rdf:type skos:Concept ;
+
+archimate-skos:ValueStream rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Value Stream"@en ;
     skos:prefLabel "Flujo de Valor"@es ;
     skos:definition "A sequence of activities that create an overall result for a customer, stakeholder, or end user."@en ;
     skos:definition "Representa una secuencia de actividades que crean un resultado general para un cliente, interesado, o usuario final."@es ;
-    skos:broader <#StrategyElements> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:StrategyElements ;
+    skos:inScheme <https://purl.org/archimate/skos> .
+
 
 ### Business Layer Elements
 
-<#BusinessElements> rdf:type skos:Concept ;
+archimate-skos:BusinessElements rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Business Elements"@en ;
     skos:definition "Elements that describe business functions and processes."@en ;
-    skos:broader <#BusinessLayer> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BusinessLayer ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 ## Business Active Structure
-<#BusinessActiveStructure> rdf:type skos:Concept ;
+archimate-skos:BusinessActiveStructure rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Business Active Structure"@en ;
     skos:definition "Business elements that perform behavior."@en ;
-    skos:broader <#BusinessElements> ;
-    skos:related <#ActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BusinessElements ;
+    skos:related archimate-skos:ActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#BusinessActor> rdf:type skos:Concept ;
+archimate-skos:BusinessActor rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Business Actor"@en ;
     skos:prefLabel "Actor de Negocio"@es ;
     skos:definition "An organizational entity that is capable of performing behavior."@en ;
     skos:definition "Representa a una entidad de negocio que es capaz de ejecutar un comportamiento."@es ;
-    skos:broader <#BusinessActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BusinessActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#BusinessRole> rdf:type skos:Concept ;
+
+archimate-skos:BusinessRole rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Business Role"@en ;
     skos:prefLabel "Rol de Negocio"@es ;
     skos:definition "The responsibility for performing specific behavior, to which an actor can be assigned."@en ;
     skos:definition "Representa la responsabilidad de ejecutar un comportamiento específico, que se le puede asignar a un actor."@es ;
-    skos:broader <#BusinessActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BusinessActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#BusinessCollaboration> rdf:type skos:Concept ;
+
+archimate-skos:BusinessCollaboration rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Business Collaboration"@en ;
     skos:prefLabel "Colaboración de Negocio"@es ;
     skos:definition "An aggregate of two or more business roles that work together to perform collective behavior."@en ;
     skos:definition "Representa a un agregado de dos o más elementos de estructura activos internos de negocio, que trabajan conjuntamente para ejecutar un comportamiento colectivo."@es ;
-    skos:broader <#BusinessActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BusinessActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#BusinessInterface> rdf:type skos:Concept ;
+
+archimate-skos:BusinessInterface rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Business Interface"@en ;
     skos:prefLabel "Interfaz de Negocio"@es ;
     skos:definition "A point of access where a business service is made available to the environment."@en ;
     skos:definition "Representa un punto de acceso desde el que se hacen disponibles los servicios de negocio a su entorno."@es ;
-    skos:broader <#BusinessActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BusinessActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
+
 
 ## Business Behavior
-<#BusinessBehavior> rdf:type skos:Concept ;
+archimate-skos:BusinessBehavior rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Business Behavior"@en ;
     skos:definition "Business elements that represent behavior."@en ;
-    skos:broader <#BusinessElements> ;
-    skos:related <#BehaviorAspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BusinessElements ;
+    skos:related archimate-skos:BehaviorAspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#BusinessProcess> rdf:type skos:Concept ;
+archimate-skos:BusinessProcess rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Business Process"@en ;
     skos:prefLabel "Proceso de Negocio"@es ;
     skos:altLabel "Business Workflow"@en, "Process"@en ;
     skos:definition "A sequence of business behaviors that achieve a specific outcome."@en ;
     skos:definition "Representa una secuencia de comportamientos de negocio que logran un resultado específico tal como un conjunto definido de productos o servicios de negocio."@es ;
     skos:scopeNote "Use to model sequences of business activities that deliver value to customers or stakeholders. Typically implemented by business actors or roles."@en ;
-    skos:broader <#BusinessBehavior> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BusinessBehavior ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#BusinessFunction> rdf:type skos:Concept ;
+archimate-skos:BusinessFunction rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Business Function"@en ;
     skos:prefLabel "Función de Negocio"@es ;
     skos:definition "A collection of business behavior based on a chosen set of criteria, closely aligned to an organization."@en ;
     skos:definition "Representa una colección de comportamientos de negocio acorde a un conjunto de criterios elegidos, tales como recursos necesarios y/o habilidades."@es ;
-    skos:broader <#BusinessBehavior> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BusinessBehavior ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#BusinessService> rdf:type skos:Concept ;
+
+archimate-skos:BusinessService rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Business Service"@en ;
     skos:prefLabel "Servicio de Negocio"@es ;
     skos:altLabel "Service"@en ;
     skos:definition "An explicitly defined exposed business behavior."@en ;
     skos:definition "Representa comportamiento definido explícitamente, que un rol de negocio, actor de negocio o colaboración de negocio expone a su entorno."@es ;
-    skos:broader <#BusinessBehavior> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BusinessBehavior ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#BusinessInteraction> rdf:type skos:Concept ;
+
+archimate-skos:BusinessInteraction rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Business Interaction"@en ;
     skos:prefLabel "Interacción de Negocio"@es ;
     skos:definition "A unit of collective business behavior performed by two or more business actors, roles, or collaborations."@en ;
     skos:definition "Representa una unidad de comportamiento colectivo de negocio ejecutada por dos o más actores de negocio, roles de negocio o colaboraciones de negocio."@es ;
-    skos:broader <#BusinessBehavior> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BusinessBehavior ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#BusinessEvent> rdf:type skos:Concept ;
+
+archimate-skos:BusinessEvent rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Business Event"@en ;
     skos:prefLabel "Evento de Negocio"@es ;
     skos:definition "Represents a business-related state change."@en ;
     skos:definition "Representa un cambio de estado relacionado con el negocio."@es ;
-    skos:broader <#BusinessBehavior> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BusinessBehavior ;
+    skos:inScheme <https://purl.org/archimate/skos> .
+
 
 ## Business Passive Structure
-<#BusinessPassiveStructure> rdf:type skos:Concept ;
+archimate-skos:BusinessPassiveStructure rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Business Passive Structure"@en ;
     skos:definition "Business elements that represent information or physical objects."@en ;
-    skos:broader <#BusinessElements> ;
-    skos:related <#PassiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BusinessElements ;
+    skos:related archimate-skos:PassiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#BusinessObject> rdf:type skos:Concept ;
+archimate-skos:BusinessObject rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Business Object"@en ;
     skos:prefLabel "Objeto de Negocio"@es ;
     skos:definition "Represents a concept used within a particular business domain."@en ;
     skos:definition "Representa un concepto usado dentro de un dominio de negocio particular."@es ;
-    skos:broader <#BusinessPassiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BusinessPassiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Contract> rdf:type skos:Concept ;
+
+archimate-skos:Contract rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Contract"@en ;
     skos:prefLabel "Contrato"@es ;
     skos:altLabel "Business Contract"@en ;
     skos:definition "A formal or informal specification of an agreement between a provider and a consumer."@en ;
     skos:definition "Representa una especificación formal o informal de un acuerdo entre un proveedor y un consumidor."@es ;
-    skos:broader <#BusinessPassiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BusinessPassiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Representation> rdf:type skos:Concept ;
+
+archimate-skos:Representation rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Representation"@en ;
     skos:prefLabel "Representación"@es ;
     skos:definition "A perceptible form of the information carried by a business object."@en ;
     skos:definition "Representa una forma perceptible de la información que porta un objeto de negocio."@es ;
-    skos:broader <#BusinessPassiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BusinessPassiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Product> rdf:type skos:Concept ;
+
+archimate-skos:Product rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Product"@en ;
     skos:prefLabel "Producto"@es ;
     skos:definition "A coherent collection of services and/or passive structure elements, offered as a whole to customers."@en ;
     skos:definition "Representa una colección coherente de servicios y/o elementos estructurales pasivos, acompañados por un contrato, y que se ofrece como un todo a clientes."@es ;
-    skos:broader <#BusinessPassiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:BusinessPassiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
+
 
 ### Application Layer Elements
 
-<#ApplicationElements> rdf:type skos:Concept ;
+archimate-skos:ApplicationElements rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Application Elements"@en ;
     skos:definition "Elements that represent software applications and components."@en ;
-    skos:broader <#ApplicationLayer> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ApplicationLayer ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 ## Application Active Structure
-<#ApplicationActiveStructure> rdf:type skos:Concept ;
+archimate-skos:ApplicationActiveStructure rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Application Active Structure"@en ;
     skos:definition "Application elements that can execute behavior."@en ;
-    skos:broader <#ApplicationElements> ;
-    skos:related <#ActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ApplicationElements ;
+    skos:related archimate-skos:ActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ApplicationComponent> rdf:type skos:Concept ;
+archimate-skos:ApplicationComponent rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Application Component"@en ;
     skos:prefLabel "Componente de Aplicación"@es ;
     skos:altLabel "Software Component"@en, "Application"@en ;
     skos:definition "An encapsulation of application functionality aligned to implementation structure, which is modular and replaceable."@en ;
     skos:definition "Representa un encapsulamiento de la funcionalidad de una aplicación, alineada a estructura de implementación, que es modular y reemplazable."@es ;
     skos:scopeNote "Use to model cohesive units of application functionality. Should align with implementation boundaries and be independently deployable when possible."@en ;
-    skos:broader <#ApplicationActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ApplicationActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ApplicationCollaboration> rdf:type skos:Concept ;
+archimate-skos:ApplicationCollaboration rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Application Collaboration"@en ;
     skos:prefLabel "Colaboración de Aplicaciones"@es ;
     skos:definition "An aggregate of two or more application internal active structure elements that work together to perform collective application behavior."@en ;
     skos:definition "Representa a un agregado de dos o más elementos de estructura activos internos de aplicación, que trabajan conjuntamente para ejecutar comportamientos de aplicación colectivos."@es ;
-    skos:broader <#ApplicationActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ApplicationActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ApplicationInterface> rdf:type skos:Concept ;
+
+archimate-skos:ApplicationInterface rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Application Interface"@en ;
     skos:prefLabel "Interfaz de Aplicación"@es ;
     skos:definition "A point of access where application services are made available to a user, another application component, or a node."@en ;
     skos:definition "Representa un punto de acceso desde el que están disponibles los servicios de aplicación y que se ofrecen a un usuario, otro componente de aplicación o a un nodo."@es ;
-    skos:broader <#ApplicationActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ApplicationActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
+
 
 ## Application Behavior
-<#ApplicationBehavior> rdf:type skos:Concept ;
+archimate-skos:ApplicationBehavior rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Application Behavior"@en ;
     skos:definition "Application elements that represent automated behavior."@en ;
-    skos:broader <#ApplicationElements> ;
-    skos:related <#BehaviorAspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ApplicationElements ;
+    skos:related archimate-skos:BehaviorAspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ApplicationFunction> rdf:type skos:Concept ;
+archimate-skos:ApplicationFunction rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Application Function"@en ;
     skos:prefLabel "Función de Aplicación"@es ;
     skos:definition "Automated behavior that can be performed by an application component."@en ;
     skos:definition "Representa un comportamiento automatizado que puede ser ejecutado por un componente de aplicación."@es ;
-    skos:broader <#ApplicationBehavior> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ApplicationBehavior ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ApplicationInteraction> rdf:type skos:Concept ;
+
+archimate-skos:ApplicationInteraction rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Application Interaction"@en ;
     skos:prefLabel "Interacción de Aplicaciones"@es ;
     skos:definition "A unit of collective application behavior performed by two or more application components."@en ;
     skos:definition "Representa una unidad de comportamiento colectivo de aplicación ejecutado por dos o más componentes de aplicación."@es ;
-    skos:broader <#ApplicationBehavior> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ApplicationBehavior ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ApplicationProcess> rdf:type skos:Concept ;
+
+archimate-skos:ApplicationProcess rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Application Process"@en ;
     skos:prefLabel "Proceso de Aplicación"@es ;
     skos:definition "A sequence of application behaviors that achieves a specific result."@en ;
     skos:definition "Representa una secuencia de comportamientos de aplicación que logra un resultado específico."@es ;
-    skos:broader <#ApplicationBehavior> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ApplicationBehavior ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ApplicationService> rdf:type skos:Concept ;
+
+archimate-skos:ApplicationService rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Application Service"@en ;
     skos:prefLabel "Servicio de Aplicación"@es ;
     skos:altLabel "Software Service"@en, "API"@en ;
     skos:definition "An explicitly defined exposed application behavior."@en ;
     skos:definition "Representa un comportamiento de aplicación expuesto y definido explícitamente."@es ;
-    skos:broader <#ApplicationBehavior> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ApplicationBehavior ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ApplicationEvent> rdf:type skos:Concept ;
+
+archimate-skos:ApplicationEvent rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Application Event"@en ;
     skos:prefLabel "Evento de Aplicación"@es ;
     skos:definition "An application state change."@en ;
     skos:definition "Representa un cambio de estado de aplicación."@es ;
-    skos:broader <#ApplicationBehavior> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ApplicationBehavior ;
+    skos:inScheme <https://purl.org/archimate/skos> .
+
 
 ## Application Passive Structure
-<#ApplicationPassiveStructure> rdf:type skos:Concept ;
+archimate-skos:ApplicationPassiveStructure rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Application Passive Structure"@en ;
     skos:definition "Application elements that represent data and information."@en ;
-    skos:broader <#ApplicationElements> ;
-    skos:related <#PassiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ApplicationElements ;
+    skos:related archimate-skos:PassiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#DataObject> rdf:type skos:Concept ;
+archimate-skos:DataObject rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Data Object"@en ;
     skos:prefLabel "Objeto de Datos"@es ;
     skos:altLabel "Data"@en, "Information Object"@en ;
     skos:definition "Data structured for automated processing."@en ;
     skos:definition "Representa datos estructurados para procesamiento automatizado."@es ;
-    skos:broader <#ApplicationPassiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ApplicationPassiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
+
 
 ### Technology Layer Elements
 
-<#TechnologyElements> rdf:type skos:Concept ;
+archimate-skos:TechnologyElements rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Technology Elements"@en ;
     skos:definition "Elements that represent technology infrastructure."@en ;
-    skos:broader <#TechnologyLayer> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:TechnologyLayer ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 ## Technology Active Structure
-<#TechnologyActiveStructure> rdf:type skos:Concept ;
+archimate-skos:TechnologyActiveStructure rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Technology Active Structure"@en ;
     skos:definition "Technology elements that can execute or host other elements."@en ;
-    skos:broader <#TechnologyElements> ;
-    skos:related <#ActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:TechnologyElements ;
+    skos:related archimate-skos:ActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Node> rdf:type skos:Concept ;
+archimate-skos:Node rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Node"@en ;
     skos:prefLabel "Nodo"@es ;
     skos:definition "A computational or physical resource that hosts, manipulates, or interacts with other computational or physical resources."@en ;
     skos:definition "Representa un recurso computacional o físico que aloja, manipula, o interactúa con otros recursos computacionales o físicos."@es ;
-    skos:broader <#TechnologyActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:TechnologyActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Device> rdf:type skos:Concept ;
+
+archimate-skos:Device rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Device"@en ;
     skos:prefLabel "Dispositivo"@es ;
     skos:definition "A physical IT resource upon which system software and artifacts may be stored or deployed for execution."@en ;
     skos:definition "Representa un recurso físico de TI en el que el software de sistema y artefactos, pueden almacenar o desplegar para su ejecución."@es ;
-    skos:broader <#TechnologyActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:TechnologyActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#SystemSoftware> rdf:type skos:Concept ;
+
+archimate-skos:SystemSoftware rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "System Software"@en ;
     skos:prefLabel "Software de Sistema"@es ;
     skos:definition "Software that provides or contributes to an environment for storing, executing, and using software or data deployed within it."@en ;
     skos:definition "Representa software que proporciona o contribuye a un entorno para almacenar, ejecutar y utilizar software o datos desplegados dentro de él."@es ;
-    skos:broader <#TechnologyActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:TechnologyActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#TechnologyCollaboration> rdf:type skos:Concept ;
+
+archimate-skos:TechnologyCollaboration rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Technology Collaboration"@en ;
     skos:prefLabel "Colaboración de Tecnología"@es ;
     skos:definition "An aggregate of two or more technology internal active structure elements that work together to perform collective technology behavior."@en ;
     skos:definition "Representa un agregado de dos o más elementos de estructura activos internos de tecnología, que trabajan conjuntamente para ejecutar el comportamiento colectivo de tecnología."@es ;
-    skos:broader <#TechnologyActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:TechnologyActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#TechnologyInterface> rdf:type skos:Concept ;
+
+archimate-skos:TechnologyInterface rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Technology Interface"@en ;
     skos:prefLabel "Interfaz de Tecnología"@es ;
     skos:definition "A point of access where technology services offered by a node can be accessed."@en ;
     skos:definition "Representa a un punto de acceso desde el que se hacen disponibles los servicios de tecnología ofrecidos por un elemento estructural activo interno de tecnología."@es ;
-    skos:broader <#TechnologyActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:TechnologyActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Path> rdf:type skos:Concept ;
+
+archimate-skos:Path rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Path"@en ;
     skos:prefLabel "Trayecto"@es ;
     skos:definition "A link between two or more technology internal active structure elements, through which these elements can exchange data, energy, or material."@en ;
     skos:definition "Representa un enlace entre dos o más elementos estructurales activos internos de tecnología, a través del cual estos elementos pueden intercambiar datos, energía, o material."@es ;
-    skos:broader <#TechnologyActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:TechnologyActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#CommunicationNetwork> rdf:type skos:Concept ;
+
+archimate-skos:CommunicationNetwork rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Communication Network"@en ;
     skos:prefLabel "Red de Comunicación"@es ;
     skos:definition "A set of structures that connects devices or system software for transmission, routing, and reception of data."@en ;
     skos:definition "Representa un conjunto de estructuras que conectan dispositivos o software de sistema para transmisión, enrutamiento y recepción de datos."@es ;
-    skos:broader <#TechnologyActiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:TechnologyActiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
+
 
 ## Technology Behavior
-<#TechnologyBehavior> rdf:type skos:Concept ;
+archimate-skos:TechnologyBehavior rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Technology Behavior"@en ;
     skos:definition "Technology elements that represent infrastructure behavior."@en ;
-    skos:broader <#TechnologyElements> ;
-    skos:related <#BehaviorAspect> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:TechnologyElements ;
+    skos:related archimate-skos:BehaviorAspect ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#TechnologyFunction> rdf:type skos:Concept ;
+archimate-skos:TechnologyFunction rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Technology Function"@en ;
     skos:prefLabel "Función de Tecnología"@es ;
     skos:definition "A collection of technology behavior that can be performed by a technology internal active structure element."@en ;
     skos:definition "Representa una colección de comportamientos de tecnología que pueden ser ejecutada por elementos estructurales activos internos de tecnología."@es ;
-    skos:broader <#TechnologyBehavior> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:TechnologyBehavior ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#TechnologyProcess> rdf:type skos:Concept ;
+
+archimate-skos:TechnologyProcess rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Technology Process"@en ;
     skos:prefLabel "Proceso de Tecnología"@es ;
     skos:definition "A sequence of technology behaviors that achieves a specific result."@en ;
     skos:definition "Representa una secuencia de comportamientos de tecnología que logra un resultado específico."@es ;
-    skos:broader <#TechnologyBehavior> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:TechnologyBehavior ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#TechnologyInteraction> rdf:type skos:Concept ;
+
+archimate-skos:TechnologyInteraction rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Technology Interaction"@en ;
     skos:prefLabel "Interacción de Tecnología"@es ;
     skos:definition "A unit of collective technology behavior performed by (a collaboration of) two or more technology internal active structure elements."@en ;
     skos:definition "Representa una unidad de comportamiento colectivo de tecnología ejecutada por dos o más elementos estructurales activos internos de tecnología."@es ;
-    skos:broader <#TechnologyBehavior> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:TechnologyBehavior ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#TechnologyEvent> rdf:type skos:Concept ;
+
+archimate-skos:TechnologyEvent rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Technology Event"@en ;
     skos:prefLabel "Evento de Tecnología"@es ;
     skos:definition "A technology state change."@en ;
     skos:definition "Representa un cambio de estado de tecnología."@es ;
-    skos:broader <#TechnologyBehavior> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:TechnologyBehavior ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#TechnologyService> rdf:type skos:Concept ;
+
+archimate-skos:TechnologyService rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Technology Service"@en ;
     skos:prefLabel "Servicio de Tecnología"@es ;
     skos:altLabel "Infrastructure Service"@en, "Technical Service"@en ;
     skos:definition "An explicitly defined exposed technology behavior."@en ;
     skos:definition "Representa un comportamiento de tecnología expuesto y definido explícitamente."@es ;
     skos:scopeNote "Use to model infrastructure capabilities that are exposed to applications or other technology elements. Examples include database services, messaging services, or compute services."@en ;
-    skos:broader <#TechnologyBehavior> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:TechnologyBehavior ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 ## Technology Passive Structure
-<#TechnologyPassiveStructure> rdf:type skos:Concept ;
+archimate-skos:TechnologyPassiveStructure rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Technology Passive Structure"@en ;
     skos:definition "Technology elements that represent data and artifacts."@en ;
-    skos:broader <#TechnologyElements> ;
-    skos:related <#PassiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:TechnologyElements ;
+    skos:related archimate-skos:PassiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Artifact> rdf:type skos:Concept ;
+archimate-skos:Artifact rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Artifact"@en ;
     skos:prefLabel "Artefacto"@es ;
     skos:altLabel "Software Artifact"@en, "Deployment Unit"@en ;
     skos:definition "A piece of data that is used or produced in a software development process, or by deployment and operation of an IT system."@en ;
     skos:definition "Representa una pieza de datos que es usada o producida en un proceso de desarrollo de software, o por despliegue y operación de un sistema de TI."@es ;
-    skos:broader <#TechnologyPassiveStructure> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:TechnologyPassiveStructure ;
+    skos:inScheme <https://purl.org/archimate/skos> .
+
 
 ### Physical Layer Elements
 
-<#PhysicalElements> rdf:type skos:Concept ;
+archimate-skos:PhysicalElements rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Physical Elements"@en ;
     skos:definition "Elements that represent physical infrastructure and materials."@en ;
-    skos:broader <#PhysicalLayer> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:PhysicalLayer ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Equipment> rdf:type skos:Concept ;
+archimate-skos:Equipment rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Equipment"@en ;
     skos:prefLabel "Equipo"@es ;
     skos:definition "One or more physical machines, tools, or instruments that can create, use, store, move, or transform materials."@en ;
     skos:definition "Representa una o más máquinas físicas, herramientas o instrumentos que pueden crear, usar, almacenar, mover, o transformar materiales."@es ;
-    skos:broader <#PhysicalElements> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:PhysicalElements ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Facility> rdf:type skos:Concept ;
+
+archimate-skos:Facility rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Facility"@en ;
     skos:prefLabel "Instalaciones"@es ;
     skos:definition "A physical structure or environment."@en ;
     skos:definition "Representa una estructura o entorno físico."@es ;
-    skos:broader <#PhysicalElements> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:PhysicalElements ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#DistributionNetwork> rdf:type skos:Concept ;
+
+archimate-skos:DistributionNetwork rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Distribution Network"@en ;
     skos:prefLabel "Red de Distribución"@es ;
     skos:definition "A physical network used to transport materials or energy."@en ;
     skos:definition "Representa una red física utilizada para transportar materiales o energía."@es ;
-    skos:broader <#PhysicalElements> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:PhysicalElements ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Material> rdf:type skos:Concept ;
+
+archimate-skos:Material rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Material"@en ;
     skos:prefLabel "Material"@es ;
     skos:definition "Tangible physical matter or physical elements."@en ;
     skos:definition "Representa la materia física tangible o energía."@es ;
-    skos:broader <#PhysicalElements> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:PhysicalElements ;
+    skos:inScheme <https://purl.org/archimate/skos> .
+
 
 ### Implementation and Migration Elements
 
-<#ImplementationAndMigrationElements> rdf:type skos:Concept ;
+archimate-skos:ImplementationAndMigrationElements rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Implementation and Migration Elements"@en ;
     skos:definition "Elements related to implementing and migrating architectures."@en ;
-    skos:broader <#ImplementationAndMigrationLayer> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ImplementationAndMigrationLayer ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#WorkPackage> rdf:type skos:Concept ;
+archimate-skos:WorkPackage rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Work Package"@en ;
     skos:prefLabel "Paquete de Trabajo"@es ;
     skos:definition "A series of actions identified and designed to achieve specific results."@en ;
     skos:definition "Representa una serie de acciones identificadas y diseñadas para lograr resultados específicos dentro de restricciones establecidas de tiempo y recursos."@es ;
-    skos:broader <#ImplementationAndMigrationElements> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ImplementationAndMigrationElements ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ImplementationEvent> rdf:type skos:Concept ;
+
+archimate-skos:ImplementationEvent rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Implementation Event"@en ;
     skos:prefLabel "Evento de Implementación"@es ;
     skos:definition "A state change related to implementation or migration."@en ;
     skos:definition "Representa un cambio de estado relacionado con la implementación o migración."@es ;
-    skos:broader <#ImplementationAndMigrationElements> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ImplementationAndMigrationElements ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Deliverable> rdf:type skos:Concept ;
+
+archimate-skos:Deliverable rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Deliverable"@en ;
     skos:prefLabel "Entregable"@es ;
     skos:definition "A precisely-defined outcome of a work package."@en ;
     skos:definition "Representa un resultado de un paquete de trabajo, definido con precisión."@es ;
-    skos:broader <#ImplementationAndMigrationElements> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ImplementationAndMigrationElements ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Gap> rdf:type skos:Concept ;
+
+archimate-skos:Gap rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Gap"@en ;
     skos:prefLabel "Brecha"@es ;
     skos:definition "A statement of difference between two states."@en ;
     skos:definition "Representa una declaración de diferencia entre dos etapas."@es ;
-    skos:broader <#ImplementationAndMigrationElements> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ImplementationAndMigrationElements ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Plateau> rdf:type skos:Concept ;
+
+archimate-skos:Plateau rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Plateau"@en ;
     skos:prefLabel "Etapa"@es ;
     skos:definition "A relatively stable state of the architecture that exists during a limited period of time."@en ;
     skos:definition "Representa un estado relativamente estable de la arquitectura que existe durante un período de tiempo limitado."@es ;
-    skos:broader <#ImplementationAndMigrationElements> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ImplementationAndMigrationElements ;
+    skos:inScheme <https://purl.org/archimate/skos> .
+
 
 ### Concept Properties
 
-<#ConceptProperties> rdf:type skos:Concept ;
+archimate-skos:ConceptProperties rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Concept Properties"@en ;
     skos:definition "Properties that can be attached to any ArchiMate concept (element or relationship), as defined in spec Section 2.2: identifier, name, documentation, and the open-ended property extension mechanism."@en ;
-    skos:broader <#ArchiMate> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchiMate ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#identifier> rdf:type skos:Concept ;
+archimate-skos:identifier rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Identifier"@en ;
     skos:definition "A unique identifier for any ArchiMate concept (element or relationship)."@en ;
     skos:scopeNote "Mandatory per spec Section 2.2. Modeled as a functional owl:DatatypeProperty (xsd:string) with domain archimate:Concept."@en ;
-    skos:broader <#ConceptProperties> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ConceptProperties ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#name> rdf:type skos:Concept ;
+archimate-skos:name rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Name"@en ;
     skos:definition "A human-readable name for any ArchiMate concept (element or relationship)."@en ;
-    skos:broader <#ConceptProperties> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ConceptProperties ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#documentation> rdf:type skos:Concept ;
+archimate-skos:documentation rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Documentation"@en ;
     skos:altLabel "Description"@en ;
     skos:definition "A textual description of any ArchiMate concept (element or relationship)."@en ;
-    skos:broader <#ConceptProperties> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ConceptProperties ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Property> rdf:type skos:Concept ;
+archimate-skos:Property rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Property"@en ;
     skos:altLabel "Concept Property"@en ;
     skos:definition "A user-defined key-value pair that can be attached to any ArchiMate concept (element or relationship), per spec Section 2.2. Provides an open-ended extension mechanism for unschematized metadata."@en ;
     skos:scopeNote "Use for arbitrary, untyped metadata — especially when importing from or exporting to ArchiMate exchange format files. For typed, validated properties, use profile definitions instead. Corresponds to the OWL hasProperty/Property pattern in the ontology."@en ;
-    skos:broader <#ConceptProperties> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ConceptProperties ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#abstract> rdf:type skos:Concept ;
+archimate-skos:abstract rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Abstract"@en ;
     skos:definition "A metamodel flag asserted on a class or property to mark it as an abstract organizing construct, not intended for direct instantiation or assertion in instance data."@en ;
-    skos:scopeNote "Validation shapes targeting concrete model content exclude entities marked `<#abstract> true`. Used in the OWL ontology and in SHACL `FILTER NOT EXISTS { ?x <#abstract> true }` clauses; not a model-level term."@en ;
-    skos:broader <#ConceptProperties> ;
-    skos:inScheme <#> .
+    skos:scopeNote "Validation shapes targeting concrete model content exclude entities marked `archimate-skos:abstract true`. Used in the OWL ontology and in SHACL `FILTER NOT EXISTS { ?x archimate-skos:abstract true }` clauses; not a model-level term."@en ;
+    skos:broader archimate-skos:ConceptProperties ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 ### Composite Elements
 
-<#CompositeElement> rdf:type skos:Concept ;
+archimate-skos:CompositeElement rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Composite Elements"@en ;
     skos:prefLabel "Elemento Compuesto"@es ;
     skos:definition "Elements that do not fit in a single aspect of the framework but may combine two or more aspects."@en ;
     skos:definition "Consta de otros conceptos, posiblemente de múltiples aspectos o capas del lenguaje."@es ;
-    skos:broader <#ArchiMate> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchiMate ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Grouping> rdf:type skos:Concept ;
+
+archimate-skos:Grouping rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Grouping"@en ;
     skos:prefLabel "Elemento de Agrupación"@es ;
     skos:definition "An element that aggregates or composes concepts that belong together based on some common characteristic."@en ;
     skos:definition "Agrupa o compone conceptos que van juntos con base en alguna característica común."@es ;
-    skos:broader <#CompositeElement> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:CompositeElement ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Location> rdf:type skos:Concept ;
+
+archimate-skos:Location rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Location"@en ;
     skos:prefLabel "Localización"@es ;
     skos:definition "A conceptual or physical place or position where concepts are located or performed."@en ;
     skos:definition "Representa a un lugar físico o conceptual en donde se sitúan o ejecutan los conceptos."@es ;
-    skos:broader <#CompositeElement> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:CompositeElement ;
+    skos:inScheme <https://purl.org/archimate/skos> .
+
 
 ### Relationship Concepts
 
-<#Relationship> rdf:type skos:Concept ;
+archimate-skos:Relationship rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Relationships"@en ;
     skos:prefLabel "Relación"@es ;
     skos:definition "Connections between ArchiMate elements."@en ;
     skos:definition "Conecta un conjunto predefinido de conceptos origen y destino."@es ;
-    skos:broader <#ArchiMate> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchiMate ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#structuralRelationship> rdf:type skos:Concept ;
+
+archimate-skos:structuralRelationship rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Structural Relationships"@en ;
     skos:prefLabel "Relación Estructural"@es ;
     skos:definition "Relationships that define static construction or composition."@en ;
     skos:definition "Representa la coherencia estática de la arquitectura."@es ;
-    skos:broader <#Relationship> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Relationship ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#assignment> rdf:type skos:Concept ;
+
+archimate-skos:assignment rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Assignment"@en ;
     skos:prefLabel "Relación de Asignación"@es ;
     skos:definition "Links active structure elements with behavior that they perform or roles they fulfill."@en ;
     skos:definition "Representa la asignación de responsabilidad, desempeño de comportamiento, almacenamiento o ejecución."@es ;
-    skos:broader <#structuralRelationship> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:structuralRelationship ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#aggregation> rdf:type skos:Concept ;
+
+archimate-skos:aggregation rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Aggregation"@en ;
     skos:prefLabel "Relación de Agregación"@es ;
     skos:definition "Models a whole-part relationship where parts can exist independently."@en ;
     skos:definition "Representa que un elemento combina uno o más de otros conceptos."@es ;
-    skos:broader <#structuralRelationship> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:structuralRelationship ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#composition> rdf:type skos:Concept ;
+
+archimate-skos:composition rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Composition"@en ;
     skos:prefLabel "Relación de Composición"@es ;
     skos:definition "Models a whole-part relationship where parts cannot exist without the whole."@en ;
     skos:definition "Representa que un elemento consiste de uno o más de otros conceptos."@es ;
-    skos:broader <#structuralRelationship> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:structuralRelationship ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#realization> rdf:type skos:Concept ;
+
+archimate-skos:realization rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Realization"@en ;
     skos:prefLabel "Relación de Realización"@es ;
     skos:definition "Indicates that an entity realizes or implements another entity."@en ;
     skos:definition "Representa que un elemento juega un rol crítico en la creación, logro, sostenimiento u operación de un elemento más abstracto."@es ;
     skos:scopeNote "Use when a more concrete element implements or fulfills the purpose of a more abstract element. Common in layer transitions (e.g., application process realizing business process)."@en ;
-    skos:broader <#structuralRelationship> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:structuralRelationship ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#dependencyRelationship> rdf:type skos:Concept ;
+archimate-skos:dependencyRelationship rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Dependency Relationships"@en ;
     skos:prefLabel "Relación de Dependencia"@es ;
     skos:definition "Relationships that model dependencies between elements."@en ;
     skos:definition "Describe cómo unos elementos apoyan o son usados por otros elementos."@es ;
-    skos:broader <#Relationship> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Relationship ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#serving> rdf:type skos:Concept ;
+
+archimate-skos:serving rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Serving"@en ;
     skos:prefLabel "Relación de Servicio"@es ;
     skos:definition "Models that an element provides functionality to another element."@en ;
     skos:definition "Representa que un elemento provee su funcionalidad a otro elemento."@es ;
     skos:scopeNote "Use when one element provides functionality, data, or capabilities to another element. Can cross architectural layers (e.g., application serving business)."@en ;
-    skos:broader <#dependencyRelationship> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:dependencyRelationship ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#access> rdf:type skos:Concept ;
+archimate-skos:access rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Access"@en ;
     skos:prefLabel "Relación de Acceso"@es ;
     skos:definition "Models access of behavior elements to passive structure elements."@en ;
     skos:definition "Representa la capacidad de los elementos estructurales activos y de comportamiento, para observar o actuar sobre elementos estructurales pasivos."@es ;
-    skos:broader <#dependencyRelationship> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:dependencyRelationship ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#influence> rdf:type skos:Concept ;
+
+archimate-skos:influence rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Influence"@en ;
     skos:prefLabel "Relación de Influencia"@es ;
     skos:definition "Models how one element influences another element."@en ;
     skos:definition "Representa cómo un elemento afecta la implementación o logro de algún elemento de motivación."@es ;
-    skos:broader <#dependencyRelationship> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:dependencyRelationship ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#association> rdf:type skos:Concept ;
+
+archimate-skos:association rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Association"@en ;
     skos:prefLabel "Relación de Asociación"@es ;
     skos:definition "Models a relationship not covered by other specific relationship types."@en ;
     skos:definition "Representa una relación no especificada, o una que no está representada por otra relación ArchiMate."@es ;
-    skos:broader <#dependencyRelationship> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:dependencyRelationship ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#dynamicRelationship> rdf:type skos:Concept ;
+
+archimate-skos:dynamicRelationship rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Dynamic Relationships"@en ;
     skos:prefLabel "Relación Dinámica"@es ;
     skos:definition "Relationships that model behavioral dependencies between elements."@en ;
     skos:definition "Describe dependencias temporales entre elementos dentro de la arquitectura."@es ;
-    skos:broader <#Relationship> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Relationship ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#triggering> rdf:type skos:Concept ;
+
+archimate-skos:triggering rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Triggering"@en ;
     skos:prefLabel "Relación Desencadenante"@es ;
     skos:definition "Models temporal or causal relationships where one behavior triggers another."@en ;
     skos:definition "Representa una relación temporal o causal entre elementos."@es ;
-    skos:broader <#dynamicRelationship> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:dynamicRelationship ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#flow> rdf:type skos:Concept ;
+
+archimate-skos:flow rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Flow"@en ;
     skos:prefLabel "Relación de Flujo"@es ;
     skos:definition "Models transfer of information, materials, or energy between behavior elements."@en ;
     skos:definition "Representa transferencia de información, bienes o dinero de un elemento a otro."@es ;
-    skos:broader <#dynamicRelationship> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:dynamicRelationship ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#OtherRelationships> rdf:type skos:Concept ;
+
+archimate-skos:OtherRelationships rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Other Relationships"@en ;
     skos:prefLabel "Otras Relaciones"@es ;
     skos:definition "Other types of relationships not covered by structural, dependency, or dynamic relationships."@en ;
-    skos:broader <#Relationship> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Relationship ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#specialization> rdf:type skos:Concept ;
+archimate-skos:specialization rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Specialization"@en ;
     skos:prefLabel "Relación de Especialización"@es ;
     skos:altLabel "Generalization"@en ;
     skos:definition "Indicates that an element is a more specific form of another element."@en ;
     skos:definition "Representa que un elemento es un tipo particular de otro elemento."@es ;
-    skos:broader <#OtherRelationships> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:OtherRelationships ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#DerivationRules> rdf:type skos:Concept ;
+archimate-skos:DerivationRules rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Derivation Rules"@en ;
     skos:prefLabel "Reglas de Derivación"@es ;
     skos:definition "A number of rules to derive indirect relationships between elements in a model, based on the modeled relationships."@en ;
     skos:definition "Grupo de reglas para deducir relaciones indirectas entre elementos en un modelo, con base en las relaciones modeladas."@es ;
     skos:scopeNote "ArchiMate 3.2 §5.7"@en ;
-    skos:broader <#Relationship> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Relationship ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 ### Profiles and Specialization
 
-<#Profile> rdf:type skos:Concept ;
+archimate-skos:Profile rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
+
     skos:prefLabel "Profile"@en ;
     skos:prefLabel "Perfil"@es ;
     skos:altLabel "Specialization Profile"@en ;
     skos:definition "A customization mechanism for defining user-specific subtypes of standard ArchiMate elements (spec Section 2.5). A profile is a class that specializes an ArchiMate element via rdfs:subClassOf and carries typed attributes via SHACL sh:NodeShape constraints."@en ;
     skos:definition "Una estructura de datos que puede definirse por separado del lenguaje ArchiMate, y que puede ser acoplada dinámicamente con conceptos."@es ;
     skos:scopeNote "Profiles are user/organization-defined and live in the deploying organization's own namespace, not in archimate:. The standard publishes the mechanism, not the profiles. See archimate_profile_examples.ttl for illustrative examples in a myModel: namespace."@en ;
-    skos:broader <#ArchiMate> ;
-    skos:related <#specialization> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchiMate ;
+    skos:related archimate-skos:specialization ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#PreDefinedProfile> rdf:type skos:Concept ;
+archimate-skos:PreDefinedProfile rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Pre-defined Profile"@en ;
     skos:prefLabel "Perfil Predefinido"@es ;
     skos:definition "A profile that has a predefined attribute structure and can be implemented beforehand in any tool supporting the ArchiMate language."@en ;
     skos:definition "Un perfil que tiene una estructura de atributos predefinida y que puede implementarse de antemano en cualquier herramienta que soporte el lenguaje ArchiMate."@es ;
     skos:scopeNote "ArchiMate 3.2 §14.1"@en ;
-    skos:broader <#Profile> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Profile ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#UserDefinedProfile> rdf:type skos:Concept ;
+archimate-skos:UserDefinedProfile rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "User-defined Profile"@en ;
     skos:prefLabel "Perfil definido por el Usuario"@es ;
     skos:definition "A supplementary set of attributes freely defined by the user, thus extending the definition of ArchiMate elements or relationships."@en ;
     skos:definition "Un conjunto suplementario de atributos definidos libremente por el usuario, que amplía la definición de los elementos o relaciones de ArchiMate."@es ;
     skos:scopeNote "ArchiMate 3.2 §14.1"@en ;
-    skos:broader <#Profile> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Profile ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#SpecializedElement> rdf:type skos:Concept ;
+archimate-skos:SpecializedElement rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Specialized Element"@en ;
     skos:prefLabel "Elemento Especializado"@es ;
     skos:definition "A customized element defined by means of the specialization of another element of the ArchiMate language."@en ;
     skos:definition "Un elemento modificado que se define a través de la especialización de otro elemento del lenguaje ArchiMate."@es ;
     skos:scopeNote "ArchiMate 3.2 §14.2"@en ;
-    skos:broader <#Profile> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Profile ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#SpecializedRelationship> rdf:type skos:Concept ;
+archimate-skos:SpecializedRelationship rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Specialized Relationship"@en ;
     skos:prefLabel "Relación Especializada"@es ;
     skos:definition "A customized relationship defined by means of the specialization of another relationship of the ArchiMate language."@en ;
     skos:definition "Una relación modificada que se define a través de la especialización de otra relación del lenguaje ArchiMate."@es ;
     skos:scopeNote "ArchiMate 3.2 §14.2"@en ;
-    skos:broader <#Profile> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Profile ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 ### Relationship Connectors
 
-<#RelationshipConnectors> rdf:type skos:Concept ;
+archimate-skos:RelationshipConnectors rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Relationship Connectors"@en ;
     skos:prefLabel "Conector de Relaciones"@es ;
     skos:definition "Elements that connect relationships of the same type."@en ;
     skos:definition "Un concepto que conecta dos o más relaciones del mismo tipo."@es ;
-    skos:broader <#Relationship> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Relationship ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#Junction> rdf:type skos:Concept ;
+
+archimate-skos:Junction rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Junction"@en ;
     skos:prefLabel "Unión"@es ;
     skos:definition "Used to connect relationships of the same type. Junctions model logical AND or OR operations when combining or splitting relationships."@en ;
     skos:definition "Usada para conectar relaciones del mismo tipo."@es ;
-    skos:broader <#RelationshipConnectors> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:RelationshipConnectors ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#AndJunction> rdf:type skos:Concept ;
+
+archimate-skos:AndJunction rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "And Junction"@en ;
     skos:definition "A junction where all connected relationships must be satisfied (logical AND)."@en ;
-    skos:broader <#Junction> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Junction ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#OrJunction> rdf:type skos:Concept ;
+archimate-skos:OrJunction rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Or Junction"@en ;
     skos:definition "A junction where at least one connected relationship must be satisfied (logical OR)."@en ;
-    skos:broader <#Junction> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Junction ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 ### Relationship Properties
 
-<#RelationshipProperties> rdf:type skos:Concept ;
+archimate-skos:RelationshipProperties rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Relationship Properties"@en ;
     skos:definition "Spec-defined properties that qualify specific ArchiMate relationship types, used as RDF-Star annotations on relationship instances."@en ;
     skos:scopeNote "These are constrained-vocabulary properties defined by the ArchiMate spec for specific relationship types. They are distinct from the open-ended Concept Properties (identifier, name, documentation, Property) which apply to all concepts."@en ;
-    skos:broader <#Relationship> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Relationship ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#accessType> rdf:type skos:Concept ;
+archimate-skos:accessType rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Access Type"@en ;
     skos:definition "Specifies the type of access in an Access relationship: read, write, readwrite, or unspecified."@en ;
-    skos:broader <#RelationshipProperties> ;
-    skos:related <#access> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:RelationshipProperties ;
+    skos:related archimate-skos:access ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#influenceSign> rdf:type skos:Concept ;
+archimate-skos:influenceSign rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Influence Sign"@en ;
     skos:definition "The direction of an Influence relationship: positive (+), negative (-), or unspecified."@en ;
-    skos:broader <#RelationshipProperties> ;
-    skos:related <#influence> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:RelationshipProperties ;
+    skos:related archimate-skos:influence ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#influenceStrength> rdf:type skos:Concept ;
+archimate-skos:influenceStrength rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Influence Strength"@en ;
     skos:definition "The strength of an Influence relationship: weak, moderate, strong, or unspecified."@en ;
-    skos:broader <#RelationshipProperties> ;
-    skos:related <#influence> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:RelationshipProperties ;
+    skos:related archimate-skos:influence ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#flowType> rdf:type skos:Concept ;
+archimate-skos:flowType rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Flow Type"@en ;
     skos:definition "The type of transfer in a Flow relationship: information, material, energy, or unspecified."@en ;
-    skos:broader <#RelationshipProperties> ;
-    skos:related <#flow> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:RelationshipProperties ;
+    skos:related archimate-skos:flow ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#junctionType> rdf:type skos:Concept ;
+archimate-skos:junctionType rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Junction Type"@en ;
     skos:definition "The logical operation of a Junction: 'and' (all relationships must be satisfied) or 'or' (at least one must be satisfied)."@en ;
-    skos:broader <#RelationshipProperties> ;
-    skos:related <#Junction> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:RelationshipProperties ;
+    skos:related archimate-skos:Junction ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#confidence> rdf:type skos:Concept ;
+archimate-skos:confidence rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Confidence"@en ;
     skos:definition "The confidence level of a relationship, used for derived relationships: valid, potential, or unspecified."@en ;
     skos:scopeNote "Applied to relationships produced by derivation inference rules rather than explicitly modeled. Indicates certainty of the derived relationship."@en ;
-    skos:broader <#RelationshipProperties> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:RelationshipProperties ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 ### Related Concepts from Other Vocabularies
 
-<#BusinessProcess> skos:related <http://www.w3.org/ns/org#Role> ;
+archimate-skos:BusinessProcess skos:related <http://www.w3.org/ns/org#Role> ;
     skos:closeMatch <http://purl.org/goodrelations/v1#BusinessFunction> .
 
-<#ApplicationComponent> skos:related <http://www.w3.org/ns/dcat#DataService> .
+archimate-skos:ApplicationComponent skos:related <http://www.w3.org/ns/dcat#DataService> .
 
-<#TechnologyService> skos:related <http://www.w3.org/ns/dcat#DataService> .
+archimate-skos:TechnologyService skos:related <http://www.w3.org/ns/dcat#DataService> .
 
 ### Collections for Easier Navigation
 
-<#CoreElements> rdf:type skos:Collection ;
+archimate-skos:CoreElements rdf:type skos:Collection ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Core ArchiMate Elements"@en ;
     skos:definition "The most commonly used ArchiMate elements across all layers."@en ;
-    skos:member <#BusinessActor>, <#BusinessProcess>, <#BusinessService>, <#BusinessObject>,
-                <#ApplicationComponent>, <#ApplicationService>, <#DataObject>,
-                <#Node>, <#TechnologyService>, <#Artifact> .
+    skos:member archimate-skos:BusinessActor, archimate-skos:BusinessProcess, archimate-skos:BusinessService, archimate-skos:BusinessObject,
+                archimate-skos:ApplicationComponent, archimate-skos:ApplicationService, archimate-skos:DataObject,
+                archimate-skos:Node, archimate-skos:TechnologyService, archimate-skos:Artifact .
 
-<#StructuralElements> rdf:type skos:Collection ;
+archimate-skos:StructuralElements rdf:type skos:Collection ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Structural Elements"@en ;
     skos:definition "ArchiMate elements that represent structure across all layers."@en ;
-    skos:member <#BusinessActor>, <#BusinessRole>, <#ApplicationComponent>, <#Node>, <#Equipment> .
+    skos:member archimate-skos:BusinessActor, archimate-skos:BusinessRole, archimate-skos:ApplicationComponent, archimate-skos:Node, archimate-skos:Equipment .
 
-<#BehaviorElements> rdf:type skos:Collection ;
+archimate-skos:BehaviorElements rdf:type skos:Collection ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Behavior Elements"@en ;
     skos:definition "ArchiMate elements that represent behavior across all layers."@en ;
-    skos:member <#BusinessProcess>, <#BusinessFunction>, <#BusinessService>,
-                <#ApplicationFunction>, <#ApplicationProcess>, <#ApplicationService>,
-                <#TechnologyFunction>, <#TechnologyProcess>, <#TechnologyService> .
+    skos:member archimate-skos:BusinessProcess, archimate-skos:BusinessFunction, archimate-skos:BusinessService,
+                archimate-skos:ApplicationFunction, archimate-skos:ApplicationProcess, archimate-skos:ApplicationService,
+                archimate-skos:TechnologyFunction, archimate-skos:TechnologyProcess, archimate-skos:TechnologyService .
 
-<#InformationElements> rdf:type skos:Collection ;
+archimate-skos:InformationElements rdf:type skos:Collection ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Information Elements"@en ;
     skos:definition "ArchiMate elements that represent information and data."@en ;
-    skos:member <#BusinessObject>, <#Representation>, <#DataObject>, <#Artifact> .
+    skos:member archimate-skos:BusinessObject, archimate-skos:Representation, archimate-skos:DataObject, archimate-skos:Artifact .
 
 ### Views and Viewpoints
 
-<#ArchitectureView> rdf:type skos:Concept ;
+archimate-skos:ArchitectureView rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Architecture View"@en ;
     skos:prefLabel "Vista de Arquitectura"@es ;
     skos:definition "A representation of a system from the perspective of a related set of concerns."@en ;
     skos:definition "Una representación de un sistema desde la perspectiva de un conjunto relacionado de asuntos o intereses."@es ;
     skos:scopeNote "ArchiMate 3.2 §2.3"@en ;
-    skos:broader <#Framework> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Framework ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ArchitectureViewpoint> rdf:type skos:Concept ;
+archimate-skos:ArchitectureViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Architecture Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Arquitectura"@es ;
     skos:definition "A specification of the conventions for a particular kind of architecture view."@en ;
     skos:definition "Una especificación de las convenciones para un tipo particular de vista de arquitectura."@es ;
     skos:scopeNote "ArchiMate 3.2 §2.4"@en ;
-    skos:broader <#Framework> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:Framework ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ViewpointMechanism> rdf:type skos:Concept ;
+archimate-skos:ViewpointMechanism rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Viewpoint Mechanism"@en ;
     skos:prefLabel "Mecanismo de Punto de Vista"@es ;
     skos:definition "Framework for the definition and classification of viewpoints. The framework is based on two dimensions: purpose and content."@en ;
     skos:definition "Marco de referencia para la definición y clasificación de puntos de vista. El marco se basa en dos dimensiones: propósito y contenido."@es ;
     skos:scopeNote "ArchiMate 3.2 §13.4"@en ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 ## Viewpoint Dimensions
-<#ViewpointPurposeDesigning> rdf:type skos:Concept ;
+archimate-skos:ViewpointPurposeDesigning rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Purpose: Designing"@en ;
     skos:prefLabel "Propósito: Diseñando"@es ;
     skos:definition "Design viewpoints support architects and designers in the design process from initial sketch to detailed design."@en ;
     skos:definition "Los puntos de vista de diseño sirven de apoyo a los arquitectos y diseñadores en el proceso de diseño desde el bosquejo inicial hasta al diseño detallado."@es ;
     skos:scopeNote "ArchiMate 3.2 §13.4.1"@en ;
-    skos:broader <#ViewpointMechanism> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointMechanism ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ViewpointPurposeDeciding> rdf:type skos:Concept ;
+archimate-skos:ViewpointPurposeDeciding rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Purpose: Deciding"@en ;
     skos:prefLabel "Propósito: Decidiendo"@es ;
     skos:definition "Decision support viewpoints assist managers in the process of decision-making by offering insight into cross-domain architecture relationships."@en ;
     skos:definition "Los puntos de vista de apoyo a la toma de decisiones ayudan a los gerentes en el proceso de toma de decisiones, brindándoles perspicacia sobre las relaciones de arquitectura entre dominios."@es ;
     skos:scopeNote "ArchiMate 3.2 §13.4.1"@en ;
-    skos:broader <#ViewpointMechanism> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointMechanism ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ViewpointPurposeInforming> rdf:type skos:Concept ;
+archimate-skos:ViewpointPurposeInforming rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Purpose: Informing"@en ;
     skos:prefLabel "Propósito: Informar"@es ;
     skos:definition "Informing viewpoints help to inform any stakeholder about the Enterprise Architecture, in order to achieve understanding, obtain commitment, and convince adversaries."@en ;
     skos:definition "Los puntos de vista informativos ayudan a informar a cualquier interesado sobre la Arquitectura Empresarial, con el fin de lograr la comprensión, obtener el compromiso y convencer a los adversarios."@es ;
     skos:scopeNote "ArchiMate 3.2 §13.4.1"@en ;
-    skos:broader <#ViewpointMechanism> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointMechanism ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ViewpointContentDetails> rdf:type skos:Concept ;
+archimate-skos:ViewpointContentDetails rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Content: Details"@en ;
     skos:prefLabel "Contenido: Detalles"@es ;
     skos:definition "Views on the detailed level typically consider one layer and one aspect from the ArchiMate Core Framework."@en ;
     skos:definition "Las vistas en el nivel detallado suelen abarcar una capa y un aspecto del Marco de Referencia Central de ArchiMate."@es ;
     skos:scopeNote "ArchiMate 3.2 §13.4.1"@en ;
-    skos:broader <#ViewpointMechanism> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointMechanism ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ViewpointContentCoherence> rdf:type skos:Concept ;
+archimate-skos:ViewpointContentCoherence rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Content: Coherence"@en ;
     skos:prefLabel "Contenido: Coherencia"@es ;
     skos:definition "At the coherence abstraction level, multiple layers or multiple aspects are spanned."@en ;
     skos:definition "Al nivel de abstracción de coherencia, se abarcan múltiples capas o múltiples aspectos."@es ;
     skos:scopeNote "ArchiMate 3.2 §13.4.1"@en ;
-    skos:broader <#ViewpointMechanism> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointMechanism ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ViewpointContentOverview> rdf:type skos:Concept ;
+archimate-skos:ViewpointContentOverview rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Content: Overview"@en ;
     skos:prefLabel "Contenido: Descripción General"@es ;
     skos:definition "The overview abstraction level addresses both multiple layers and multiple aspects."@en ;
     skos:definition "El nivel de abstracción de visión de conjunto, aborda tanto a múltiples capas como a múltiples aspectos."@es ;
     skos:scopeNote "ArchiMate 3.2 §13.4.1"@en ;
-    skos:broader <#ViewpointMechanism> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointMechanism ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 ## Viewpoint Categories
-<#ViewpointCategoryComposition> rdf:type skos:Concept ;
+archimate-skos:ViewpointCategoryComposition rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Category: Composition"@en ;
     skos:prefLabel "Categoría: Composición"@es ;
     skos:definition "Viewpoints that define internal compositions and aggregations of elements."@en ;
     skos:definition "Los puntos de vista que definen composiciones internas y agregados de elementos."@es ;
     skos:scopeNote "ArchiMate 3.2 Appendix C.1"@en ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ViewpointCategorySupport> rdf:type skos:Concept ;
+archimate-skos:ViewpointCategorySupport rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Category: Support"@en ;
     skos:prefLabel "Categoría: Soporte"@es ;
     skos:definition "Viewpoints where you are looking at elements that are supported by other elements, typically from one layer and upwards to an above layer."@en ;
     skos:definition "Puntos de vista en los que se observa a elementos apoyarse en otros elementos, típicamente desde una capa inferior hacia una superior."@es ;
     skos:scopeNote "ArchiMate 3.2 Appendix C.1"@en ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ViewpointCategoryCooperation> rdf:type skos:Concept ;
+archimate-skos:ViewpointCategoryCooperation rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Category: Cooperation"@en ;
     skos:prefLabel "Categoría: Cooperación"@es ;
     skos:definition "Towards peer elements which cooperate with each other, typically across aspects."@en ;
     skos:definition "Hacia elementos pares que cooperan entre sí, típicamente a través de aspectos."@es ;
     skos:scopeNote "ArchiMate 3.2 Appendix C.1"@en ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ViewpointCategoryRealization> rdf:type skos:Concept ;
+archimate-skos:ViewpointCategoryRealization rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Category: Realization"@en ;
     skos:prefLabel "Categoría: Realización"@es ;
     skos:definition "Viewpoints where you are looking at elements that realize other elements, typically from one layer and downwards to a below layer."@en ;
     skos:definition "Puntos de Vista en los que se observan elementos que realizan otros elementos, típicamente desde una capa superior hacia una inferior."@es ;
     skos:scopeNote "ArchiMate 3.2 Appendix C.1"@en ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 ## Standard Viewpoints (Appendix C)
 
 # Composition viewpoints
-<#OrganizationViewpoint> rdf:type skos:Concept ;
+archimate-skos:OrganizationViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Organization Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Organización"@es ;
     skos:definition "Structure of the enterprise in terms of roles, departments, etc."@en ;
     skos:definition "La estructura de la empresa en términos de roles, departamentos, etc."@es ;
-    skos:broader <#ViewpointCategoryComposition> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointCategoryComposition ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ApplicationStructureViewpoint> rdf:type skos:Concept ;
+archimate-skos:ApplicationStructureViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Application Structure Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Estructura de Aplicación"@es ;
     skos:definition "Shows the structure of a typical application in terms of its constituents."@en ;
     skos:definition "Muestra la estructura de una aplicación típica en términos de sus constituyentes."@es ;
-    skos:broader <#ViewpointCategoryComposition> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointCategoryComposition ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#InformationStructureViewpoint> rdf:type skos:Concept ;
+archimate-skos:InformationStructureViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Information Structure Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Estructura de Información"@es ;
     skos:definition "Shows the structure of the information used in the enterprise."@en ;
     skos:definition "Muestra la estructura de información usada en la empresa."@es ;
-    skos:broader <#ViewpointCategoryComposition> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointCategoryComposition ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#TechnologyViewpoint> rdf:type skos:Concept ;
+archimate-skos:TechnologyViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Technology Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Tecnología"@es ;
     skos:definition "Infrastructure and platforms underlying the enterprise's information systems in terms of networks, devices, and system software."@en ;
     skos:definition "Infraestructura y plataformas subyacentes a los sistemas de información de la empresa en términos de redes, dispositivos y software de sistema."@es ;
-    skos:broader <#ViewpointCategoryComposition> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointCategoryComposition ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#PhysicalViewpoint> rdf:type skos:Concept ;
+archimate-skos:PhysicalViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Physical Viewpoint"@en ;
     skos:prefLabel "Punto de Vista Físico"@es ;
     skos:definition "Physical environment and how this relates to IT infrastructure."@en ;
     skos:definition "Entorno físico y como este se relaciona a la infraestructura de TI."@es ;
-    skos:broader <#ViewpointCategoryComposition> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointCategoryComposition ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#LayeredViewpoint> rdf:type skos:Concept ;
+archimate-skos:LayeredViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Layered Viewpoint"@en ;
     skos:prefLabel "Punto de Vista por Capas"@es ;
     skos:definition "Provides overview of architecture(s)."@en ;
     skos:definition "Proporciona una visión de conjunto de la(s) arquitectura(s)."@es ;
-    skos:broader <#ViewpointCategoryComposition> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointCategoryComposition ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 # Support viewpoints
-<#ProductViewpoint> rdf:type skos:Concept ;
+archimate-skos:ProductViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Product Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Producto"@es ;
     skos:definition "Shows the contents of products."@en ;
     skos:definition "Muestra los contenidos de productos."@es ;
-    skos:broader <#ViewpointCategorySupport> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointCategorySupport ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ApplicationUsageViewpoint> rdf:type skos:Concept ;
+archimate-skos:ApplicationUsageViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Application Usage Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Uso de Aplicaciones"@es ;
     skos:definition "Relates applications to their use in, for example, business processes."@en ;
     skos:definition "Relaciona las aplicaciones con su uso en, por ejemplo, procesos de negocio."@es ;
-    skos:broader <#ViewpointCategorySupport> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointCategorySupport ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#TechnologyUsageViewpoint> rdf:type skos:Concept ;
+archimate-skos:TechnologyUsageViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Technology Usage Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Uso de Tecnología"@es ;
     skos:definition "Shows how technology is used by applications."@en ;
     skos:definition "Muestra como la tecnología es usada por las aplicaciones."@es ;
-    skos:broader <#ViewpointCategorySupport> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointCategorySupport ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 # Cooperation viewpoints
-<#BusinessProcessCooperationViewpoint> rdf:type skos:Concept ;
+archimate-skos:BusinessProcessCooperationViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Business Process Cooperation Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Cooperación de Procesos de Negocio"@es ;
     skos:definition "Shows the relationships between various business processes."@en ;
     skos:definition "Muestra las relaciones entre varios procesos de negocio."@es ;
-    skos:broader <#ViewpointCategoryCooperation> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointCategoryCooperation ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ApplicationCooperationViewpoint> rdf:type skos:Concept ;
+archimate-skos:ApplicationCooperationViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Application Cooperation Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Cooperación de Aplicaciones"@es ;
     skos:definition "Shows application components and their mutual relationships."@en ;
     skos:definition "Muestra componentes de aplicación y sus relaciones mutuas."@es ;
-    skos:broader <#ViewpointCategoryCooperation> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointCategoryCooperation ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 # Realization viewpoints
-<#ServiceRealizationViewpoint> rdf:type skos:Concept ;
+archimate-skos:ServiceRealizationViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Service Realization Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Realización de Servicio"@es ;
     skos:definition "Shows how services are realized by the requisite behavior."@en ;
     skos:definition "Muestra como los servicios son realizados por el comportamiento requerido."@es ;
-    skos:broader <#ViewpointCategoryRealization> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointCategoryRealization ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ImplementationAndDeploymentViewpoint> rdf:type skos:Concept ;
+archimate-skos:ImplementationAndDeploymentViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Implementation and Deployment Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Implementación y Despliegue"@es ;
     skos:definition "Shows how applications are mapped onto the underlying technology."@en ;
     skos:definition "Muestra cómo se mapean las aplicaciones con la tecnología subyacente."@es ;
-    skos:broader <#ViewpointCategoryRealization> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ViewpointCategoryRealization ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 # Motivation viewpoints
-<#MotivationViewpoint> rdf:type skos:Concept ;
+archimate-skos:MotivationViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Motivation Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Motivación"@es ;
     skos:definition "Covers the entire motivational aspect and allows use of all motivational elements."@en ;
     skos:definition "Abarca todo el aspecto de motivación y permite el uso de todos los elementos motivacionales."@es ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#StakeholderViewpoint> rdf:type skos:Concept ;
+archimate-skos:StakeholderViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Stakeholder Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Interesado"@es ;
     skos:definition "Focuses on modeling the stakeholders, drivers, assessments, and initial goals."@en ;
     skos:definition "Se enfoca en modelar a los interesados, sus móviles, las valoraciones de dichos móviles, y las metas iniciales."@es ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#GoalRealizationViewpoint> rdf:type skos:Concept ;
+archimate-skos:GoalRealizationViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Goal Realization Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Realización de Metas"@es ;
     skos:definition "Focuses on refining the initial, high-level goals into more concrete (sub-)goals and finally into requirements and constraints."@en ;
     skos:definition "Se centra en refinar las metas iniciales de alto nivel en (sub)metas más concretas y finalmente en requerimientos y restricciones."@es ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#GoalContributionViewpoint> rdf:type skos:Concept ;
+archimate-skos:GoalContributionViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Goal Contribution Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Contribución de Metas"@es ;
     skos:definition "Focuses on modeling and analyzing the influence relationships between goals (and requirements)."@en ;
     skos:definition "Se centra en modelar y analizar las relaciones de influencia entre metas (y requerimientos)."@es ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#PrinciplesViewpoint> rdf:type skos:Concept ;
+archimate-skos:PrinciplesViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Principles Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Principios"@es ;
     skos:definition "Focuses on modeling the relevant principles and the goals that motivate these principles."@en ;
     skos:definition "Se enfoca en modelar los principios relevantes y las metas que motivan estos principios."@es ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#RequirementsRealizationViewpoint> rdf:type skos:Concept ;
+archimate-skos:RequirementsRealizationViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Requirements Realization Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Realización de Requerimientos"@es ;
     skos:definition "Focuses on modeling the realization of requirements and constraints by means of core elements."@en ;
     skos:definition "Se enfoca en modelar la realización de requerimientos y restricciones usando elementos centrales como actores, servicios, procesos, componentes de aplicación, etc."@es ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 # Strategy viewpoints
-<#StrategyViewpoint> rdf:type skos:Concept ;
+archimate-skos:StrategyViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Strategy Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Estrategia"@es ;
     skos:definition "Provides a high-level strategic overview of the strategies of the enterprise, its capabilities, value streams, resources, and envisaged outcomes."@en ;
     skos:definition "Proporciona una visión de conjunto estratégica de alto nivel de las estrategias de la empresa, sus capacidades, flujos de valor y recursos, y de los resultados previstos."@es ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#CapabilityMapViewpoint> rdf:type skos:Concept ;
+archimate-skos:CapabilityMapViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Capability Map Viewpoint"@en ;
     skos:prefLabel "Punto de Vista Mapa de Capacidades"@es ;
     skos:definition "Provides an overview of the capabilities of the enterprise."@en ;
     skos:definition "Proporciona una visión general de las capacidades de la empresa."@es ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#OutcomeRealizationViewpoint> rdf:type skos:Concept ;
+archimate-skos:OutcomeRealizationViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Outcome Realization Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Realización de Resultados"@es ;
     skos:definition "Describes how high-level, business-oriented results are produced by the capabilities and resources of the enterprise."@en ;
     skos:definition "Describe cómo las capacidades y los recursos de la empresa producen resultados de alto nivel orientados a negocio."@es ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ResourceMapViewpoint> rdf:type skos:Concept ;
+archimate-skos:ResourceMapViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Resource Map Viewpoint"@en ;
     skos:prefLabel "Punto de Vista Mapa de Recursos"@es ;
     skos:definition "Provides a structured overview of the resources of the enterprise."@en ;
     skos:definition "Proporciona una visión de conjunto estructurada de los recursos de la empresa."@es ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ValueStreamViewpoint> rdf:type skos:Concept ;
+archimate-skos:ValueStreamViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Value Stream Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Flujo de Valor"@es ;
     skos:definition "Shows an overview of value-creating steps in the enterprise and the capabilities that support these."@en ;
     skos:definition "Muestra una visión de conjunto de los pasos de creación de valor en la empresa y las capacidades que los respaldan."@es ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
 # Implementation and Migration viewpoints
-<#ProjectViewpoint> rdf:type skos:Concept ;
+archimate-skos:ProjectViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Project Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Proyecto"@es ;
     skos:definition "Primarily used to model the management of architecture change."@en ;
     skos:definition "Usado principalmente para modelar la gestión del cambio de la arquitectura."@es ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#MigrationViewpoint> rdf:type skos:Concept ;
+archimate-skos:MigrationViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Migration Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Migración"@es ;
     skos:definition "Used to model the transition from an existing architecture to a target architecture."@en ;
     skos:definition "Usado para modelar la transición de la arquitectura existente a la arquitectura objetivo."@es ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
 
-<#ImplementationAndMigrationViewpoint> rdf:type skos:Concept ;
+archimate-skos:ImplementationAndMigrationViewpoint rdf:type skos:Concept ;
+    rdfs:isDefinedBy <https://purl.org/archimate/skos> ;
     skos:prefLabel "Implementation and Migration Viewpoint"@en ;
     skos:prefLabel "Punto de Vista de Implementación y Migración"@es ;
     skos:definition "Used to model the relationships between the programs and projects and the parts of the architecture that they implement."@en ;
     skos:definition "Usado para modelar relaciones entre programas y proyectos, y las partes de la arquitectura que implementan."@es ;
-    skos:broader <#ArchitectureViewpoint> ;
-    skos:inScheme <#> .
+    skos:broader archimate-skos:ArchitectureViewpoint ;
+    skos:inScheme <https://purl.org/archimate/skos> .
+

@@ -6,16 +6,15 @@
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix archimate: <https://purl.org/archimate#> .
 @prefix myModel: <https://example.org/myModel#> .
-@base <https://purl.org/archimate/validation/profiles> .
 
 ### SHACL Shapes for ArchiMate Specialization Profiles
-<#> rdf:type owl:Ontology ;
+<https://purl.org/archimate/validation/profiles> rdf:type owl:Ontology ;
     owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Profile Shapes — Example" ;
     rdfs:comment "Example SHACL shapes for ArchiMate specialization profiles. Profile classes are owl:Class that specialize standard ArchiMate elements; this file defines their typed attributes. The myModel: prefix is illustrative — organizations define their own namespace. This file is not a published specification." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-15"^^xsd:date ;
-    dct:modified "2026-05-28"^^xsd:date ;
+    dct:modified "2026-08-08"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Sample" ;
     sh:declare [

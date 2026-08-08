@@ -5,17 +5,16 @@
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix archimate: <https://purl.org/archimate#> .
 @prefix myModel: <https://example.org/myModel#> .
-@base <https://example.org/myModel> .
 
 ### ArchiMate Specialization Profile Examples
-<#> rdf:type owl:Ontology ;
+<https://example.org/myModel> rdf:type owl:Ontology ;
     owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Profile Examples" ;
     rdfs:comment "Example specialization profiles for ArchiMate elements. These demonstrate how to create custom subtypes of standard ArchiMate elements using the profile pattern. The myModel: prefix is illustrative — organizations define their own namespace. This file is not a published specification." ;
     dct:description "Profile classes are owl:Class that specialize standard ArchiMate elements via rdfs:subClassOf (OWL inference) and archimate:profileSpecialization (profile marker). SHACL shapes for these profiles are defined in validation/archimate_validation_profile_examples.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-10"^^xsd:date ;
-    dct:modified "2026-05-28"^^xsd:date ;
+    dct:modified "2026-08-08"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Sample" .
 
@@ -54,7 +53,6 @@
 #   Node             → Server, VM, Container, CloudInstance
 #   Artifact         → SourceCode, Configuration, LogFile, Schema
 
-
 ### 1. BusinessActor Profile Classes
 
 myModel:Person rdf:type owl:Class ;
@@ -68,7 +66,6 @@ myModel:Organization rdf:type owl:Class ;
     archimate:profileSpecialization archimate:BusinessActor ;
     rdfs:label "Organization" ;
     rdfs:comment "A BusinessActor representing a group of people or organizational unit." .
-
 
 ### 2. Profile-Specific Properties
 
@@ -96,7 +93,6 @@ myModel:email rdf:type owl:DatatypeProperty ;
     rdfs:comment "Email address of a Person." ;
     rdfs:domain myModel:Person ;
     rdfs:range xsd:anyURI .
-
 
 ### 3. Additional Profile Examples (Commented Out - Expand As Needed)
 

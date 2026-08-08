@@ -27,7 +27,7 @@ This repository models the language itself, not a specific tool implementation.
   https://purl.org/archimate#
   
 ### Last Updated Date
-  2026-08-07
+  2026-08-08
   
 ### Author
   Alberto D. Mendoza  

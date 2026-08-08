@@ -5,7 +5,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix archimate: <https://purl.org/archimate#> .
-@base <https://purl.org/archimate/validation/relationships> .
+@prefix avrel: <https://purl.org/archimate/validation/relationships#> .
 
 ### SHACL Validation: All Layers — Composition, Aggregation, Access, Realization
 ### ArchiMate 3.2 Specification — Appendix B Relationship Matrix
@@ -30,12 +30,12 @@
 ### Derived from derivation/relationships.xml
 ###
 
-<#> rdf:type owl:Ontology ;
+<https://purl.org/archimate/validation/relationships> rdf:type owl:Ontology ;
     owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Relationship Validation - All Layers (Level 3)" ;
     rdfs:comment "Composition, aggregation, access, and realization constraints for all ArchiMate 3.2 elements per Appendix B. Covers Strategy, Motivation, Business, Application, Technology, Physical, and Implementation & Migration layers." ;
     dct:creator "Alberto D. Mendoza" ;
-    dct:modified "2026-05-28"^^xsd:date ;
+    dct:modified "2026-08-08"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Beta" ;
     sh:declare [
@@ -51,14 +51,13 @@
         sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI
     ] .
 
-
 ###############################################################################
 ### Active Structure
 ###############################################################################
 
 ### BusinessActor
 
-<#BusinessActorRelationships> rdf:type sh:NodeShape ;
+avrel:BusinessActorRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessActor ;
     rdfs:label "BusinessActor Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from BusinessActor elements." ;
@@ -102,10 +101,9 @@
 
     .
 
-
 ### BusinessRole
 
-<#BusinessRoleRelationships> rdf:type sh:NodeShape ;
+avrel:BusinessRoleRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessRole ;
     rdfs:label "BusinessRole Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from BusinessRole elements, plus assignment direction (assignment itself is otherwise Level 2's §§1-2 scope, not this file's)." ;
@@ -159,10 +157,9 @@
 
     .
 
-
 ### BusinessCollaboration
 
-<#BusinessCollaborationRelationships> rdf:type sh:NodeShape ;
+avrel:BusinessCollaborationRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessCollaboration ;
     rdfs:label "BusinessCollaboration Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from BusinessCollaboration elements." ;
@@ -209,10 +206,9 @@
 
     .
 
-
 ### BusinessInterface
 
-<#BusinessInterfaceRelationships> rdf:type sh:NodeShape ;
+avrel:BusinessInterfaceRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessInterface ;
     rdfs:label "BusinessInterface Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from BusinessInterface elements." ;
@@ -257,14 +253,13 @@
 
     .
 
-
 ###############################################################################
 ### Behavior
 ###############################################################################
 
 ### BusinessProcess
 
-<#BusinessProcessRelationships> rdf:type sh:NodeShape ;
+avrel:BusinessProcessRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessProcess ;
     rdfs:label "BusinessProcess Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from BusinessProcess elements." ;
@@ -314,10 +309,9 @@
 
     .
 
-
 ### BusinessFunction
 
-<#BusinessFunctionRelationships> rdf:type sh:NodeShape ;
+avrel:BusinessFunctionRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessFunction ;
     rdfs:label "BusinessFunction Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from BusinessFunction elements." ;
@@ -367,10 +361,9 @@
 
     .
 
-
 ### BusinessService
 
-<#BusinessServiceRelationships> rdf:type sh:NodeShape ;
+avrel:BusinessServiceRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessService ;
     rdfs:label "BusinessService Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from BusinessService elements." ;
@@ -413,10 +406,9 @@
 
     .
 
-
 ### BusinessInteraction
 
-<#BusinessInteractionRelationships> rdf:type sh:NodeShape ;
+avrel:BusinessInteractionRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessInteraction ;
     rdfs:label "BusinessInteraction Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from BusinessInteraction elements." ;
@@ -466,10 +458,9 @@
 
     .
 
-
 ### BusinessEvent
 
-<#BusinessEventRelationships> rdf:type sh:NodeShape ;
+avrel:BusinessEventRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessEvent ;
     rdfs:label "BusinessEvent Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from BusinessEvent elements." ;
@@ -512,14 +503,13 @@
 
     .
 
-
 ###############################################################################
 ### Passive Structure
 ###############################################################################
 
 ### BusinessObject
 
-<#BusinessObjectRelationships> rdf:type sh:NodeShape ;
+avrel:BusinessObjectRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:BusinessObject ;
     rdfs:label "BusinessObject Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, and realization from BusinessObject elements." ;
@@ -552,10 +542,9 @@
 
     .
 
-
 ### Contract
 
-<#ContractRelationships> rdf:type sh:NodeShape ;
+avrel:ContractRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Contract ;
     rdfs:label "Contract Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, and realization from Contract elements." ;
@@ -588,10 +577,9 @@
 
     .
 
-
 ### Representation
 
-<#RepresentationRelationships> rdf:type sh:NodeShape ;
+avrel:RepresentationRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Representation ;
     rdfs:label "Representation Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, and realization from Representation elements." ;
@@ -624,14 +612,13 @@
 
     .
 
-
 ###############################################################################
 ### Composite
 ###############################################################################
 
 ### Product
 
-<#ProductRelationships> rdf:type sh:NodeShape ;
+avrel:ProductRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Product ;
     rdfs:label "Product Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from Product elements." ;
@@ -707,14 +694,13 @@
 
     .
 
-
 ###############################################################################
 ### Active Structure
 ###############################################################################
 
 ### ApplicationCollaboration
 
-<#ApplicationCollaborationRelationships> rdf:type sh:NodeShape ;
+avrel:ApplicationCollaborationRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:ApplicationCollaboration ;
     rdfs:label "ApplicationCollaboration Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from ApplicationCollaboration elements." ;
@@ -773,10 +759,9 @@
 
     .
 
-
 ### ApplicationComponent
 
-<#ApplicationComponentRelationships> rdf:type sh:NodeShape ;
+avrel:ApplicationComponentRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:ApplicationComponent ;
     rdfs:label "ApplicationComponent Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from ApplicationComponent elements." ;
@@ -832,10 +817,9 @@
 
     .
 
-
 ### ApplicationInterface
 
-<#ApplicationInterfaceRelationships> rdf:type sh:NodeShape ;
+avrel:ApplicationInterfaceRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:ApplicationInterface ;
     rdfs:label "ApplicationInterface Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from ApplicationInterface elements." ;
@@ -882,14 +866,13 @@
 
     .
 
-
 ###############################################################################
 ### Behavior
 ###############################################################################
 
 ### ApplicationFunction
 
-<#ApplicationFunctionRelationships> rdf:type sh:NodeShape ;
+avrel:ApplicationFunctionRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:ApplicationFunction ;
     rdfs:label "ApplicationFunction Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from ApplicationFunction elements." ;
@@ -943,10 +926,9 @@
 
     .
 
-
 ### ApplicationProcess
 
-<#ApplicationProcessRelationships> rdf:type sh:NodeShape ;
+avrel:ApplicationProcessRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:ApplicationProcess ;
     rdfs:label "ApplicationProcess Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from ApplicationProcess elements." ;
@@ -1000,10 +982,9 @@
 
     .
 
-
 ### ApplicationInteraction
 
-<#ApplicationInteractionRelationships> rdf:type sh:NodeShape ;
+avrel:ApplicationInteractionRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:ApplicationInteraction ;
     rdfs:label "ApplicationInteraction Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from ApplicationInteraction elements." ;
@@ -1057,10 +1038,9 @@
 
     .
 
-
 ### ApplicationService
 
-<#ApplicationServiceRelationships> rdf:type sh:NodeShape ;
+avrel:ApplicationServiceRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:ApplicationService ;
     rdfs:label "ApplicationService Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from ApplicationService elements." ;
@@ -1105,10 +1085,9 @@
 
     .
 
-
 ### ApplicationEvent
 
-<#ApplicationEventRelationships> rdf:type sh:NodeShape ;
+avrel:ApplicationEventRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:ApplicationEvent ;
     rdfs:label "ApplicationEvent Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from ApplicationEvent elements." ;
@@ -1152,14 +1131,13 @@
 
     .
 
-
 ###############################################################################
 ### Passive Structure
 ###############################################################################
 
 ### DataObject
 
-<#DataObjectRelationships> rdf:type sh:NodeShape ;
+avrel:DataObjectRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:DataObject ;
     rdfs:label "DataObject Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, and realization from DataObject elements." ;
@@ -1194,14 +1172,13 @@
 
     .
 
-
 ### ─────────────────────────────────────────────
 ### Active Structure
 ### ─────────────────────────────────────────────
 
 ### Node
 
-<#NodeRelationships> rdf:type sh:NodeShape ;
+avrel:NodeRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Node ;
     rdfs:label "Node Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from Node elements." ;
@@ -1294,10 +1271,9 @@
 
     .
 
-
 ### Device
 
-<#DeviceRelationships> rdf:type sh:NodeShape ;
+avrel:DeviceRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Device ;
     rdfs:label "Device Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from Device elements." ;
@@ -1383,10 +1359,9 @@
 
     .
 
-
 ### SystemSoftware
 
-<#SystemSoftwareRelationships> rdf:type sh:NodeShape ;
+avrel:SystemSoftwareRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:SystemSoftware ;
     rdfs:label "SystemSoftware Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from SystemSoftware elements." ;
@@ -1469,10 +1444,9 @@
 
     .
 
-
 ### TechnologyCollaboration
 
-<#TechnologyCollaborationRelationships> rdf:type sh:NodeShape ;
+avrel:TechnologyCollaborationRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:TechnologyCollaboration ;
     rdfs:label "TechnologyCollaboration Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from TechnologyCollaboration elements." ;
@@ -1562,10 +1536,9 @@
 
     .
 
-
 ### TechnologyInterface
 
-<#TechnologyInterfaceRelationships> rdf:type sh:NodeShape ;
+avrel:TechnologyInterfaceRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:TechnologyInterface ;
     rdfs:label "TechnologyInterface Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from TechnologyInterface elements." ;
@@ -1629,10 +1602,9 @@
 
     .
 
-
 ### Path
 
-<#PathRelationships> rdf:type sh:NodeShape ;
+avrel:PathRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Path ;
     rdfs:label "Path Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from Path elements." ;
@@ -1722,10 +1694,9 @@
 
     .
 
-
 ### CommunicationNetwork
 
-<#CommunicationNetworkRelationships> rdf:type sh:NodeShape ;
+avrel:CommunicationNetworkRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:CommunicationNetwork ;
     rdfs:label "CommunicationNetwork Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from CommunicationNetwork elements." ;
@@ -1819,14 +1790,13 @@
 
     .
 
-
 ### ─────────────────────────────────────────────
 ### Behavior
 ### ─────────────────────────────────────────────
 
 ### TechnologyFunction
 
-<#TechnologyFunctionRelationships> rdf:type sh:NodeShape ;
+avrel:TechnologyFunctionRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:TechnologyFunction ;
     rdfs:label "TechnologyFunction Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from TechnologyFunction elements." ;
@@ -1898,10 +1868,9 @@
 
     .
 
-
 ### TechnologyProcess
 
-<#TechnologyProcessRelationships> rdf:type sh:NodeShape ;
+avrel:TechnologyProcessRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:TechnologyProcess ;
     rdfs:label "TechnologyProcess Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from TechnologyProcess elements." ;
@@ -1973,10 +1942,9 @@
 
     .
 
-
 ### TechnologyInteraction
 
-<#TechnologyInteractionRelationships> rdf:type sh:NodeShape ;
+avrel:TechnologyInteractionRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:TechnologyInteraction ;
     rdfs:label "TechnologyInteraction Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from TechnologyInteraction elements." ;
@@ -2048,10 +2016,9 @@
 
     .
 
-
 ### TechnologyService
 
-<#TechnologyServiceRelationships> rdf:type sh:NodeShape ;
+avrel:TechnologyServiceRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:TechnologyService ;
     rdfs:label "TechnologyService Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from TechnologyService elements." ;
@@ -2112,10 +2079,9 @@
 
     .
 
-
 ### TechnologyEvent
 
-<#TechnologyEventRelationships> rdf:type sh:NodeShape ;
+avrel:TechnologyEventRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:TechnologyEvent ;
     rdfs:label "TechnologyEvent Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from TechnologyEvent elements." ;
@@ -2173,14 +2139,13 @@
 
     .
 
-
 ### ─────────────────────────────────────────────
 ### Passive Structure
 ### ─────────────────────────────────────────────
 
 ### Artifact
 
-<#ArtifactRelationships> rdf:type sh:NodeShape ;
+avrel:ArtifactRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Artifact ;
     rdfs:label "Artifact Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, and realization from Artifact elements. No access block — Artifact is passive structure." ;
@@ -2250,10 +2215,9 @@
 
     .
 
-
 ### WorkPackage
 
-<#WorkPackageRelationships> rdf:type sh:NodeShape ;
+avrel:WorkPackageRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:WorkPackage ;
     rdfs:label "WorkPackage Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from WorkPackage elements." ;
@@ -2344,10 +2308,9 @@
 
     .
 
-
 ### ImplementationEvent
 
-<#ImplementationEventRelationships> rdf:type sh:NodeShape ;
+avrel:ImplementationEventRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:ImplementationEvent ;
     rdfs:label "ImplementationEvent Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, and access from ImplementationEvent elements. No realization targets exist." ;
@@ -2375,10 +2338,9 @@
 
     .
 
-
 ### Deliverable
 
-<#DeliverableRelationships> rdf:type sh:NodeShape ;
+avrel:DeliverableRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Deliverable ;
     rdfs:label "Deliverable Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, and realization from Deliverable elements. No access block — Deliverable is passive structure." ;
@@ -2460,10 +2422,9 @@
 
     .
 
-
 ### Gap
 
-<#GapRelationships> rdf:type sh:NodeShape ;
+avrel:GapRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Gap ;
     rdfs:label "Gap Valid Relationships" ;
     rdfs:comment "Validates composition and aggregation from Gap elements. No access or realization targets exist." ;
@@ -2484,10 +2445,9 @@
 
     .
 
-
 ### Plateau
 
-<#PlateauRelationships> rdf:type sh:NodeShape ;
+avrel:PlateauRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Plateau ;
     rdfs:label "Plateau Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from Plateau elements. Plateau is an architectural state container — it composes/aggregates nearly all architecture elements." ;
@@ -2680,10 +2640,9 @@
 
     .
 
-
 ### Resource
 
-<#ResourceRelationships> rdf:type sh:NodeShape ;
+avrel:ResourceRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Resource ;
     rdfs:label "Resource Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, and realization from Resource elements." ;
@@ -2719,10 +2678,9 @@
 
     .
 
-
 ### Capability
 
-<#CapabilityRelationships> rdf:type sh:NodeShape ;
+avrel:CapabilityRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Capability ;
     rdfs:label "Capability Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, and realization from Capability elements." ;
@@ -2759,10 +2717,9 @@
 
     .
 
-
 ### ValueStream
 
-<#ValueStreamRelationships> rdf:type sh:NodeShape ;
+avrel:ValueStreamRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:ValueStream ;
     rdfs:label "ValueStream Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, and realization from ValueStream elements." ;
@@ -2798,10 +2755,9 @@
 
     .
 
-
 ### CourseOfAction
 
-<#CourseOfActionRelationships> rdf:type sh:NodeShape ;
+avrel:CourseOfActionRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:CourseOfAction ;
     rdfs:label "CourseOfAction Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, and realization from CourseOfAction elements." ;
@@ -2836,14 +2792,13 @@
 
     .
 
-
 ### ─────────────────────────────────────────────
 ### Active Structure
 ### ─────────────────────────────────────────────
 
 ### Equipment
 
-<#EquipmentRelationships> rdf:type sh:NodeShape ;
+avrel:EquipmentRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Equipment ;
     rdfs:label "Equipment Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from Equipment elements." ;
@@ -2932,10 +2887,9 @@
 
     .
 
-
 ### Facility
 
-<#FacilityRelationships> rdf:type sh:NodeShape ;
+avrel:FacilityRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Facility ;
     rdfs:label "Facility Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from Facility elements." ;
@@ -3028,10 +2982,9 @@
 
     .
 
-
 ### DistributionNetwork
 
-<#DistributionNetworkRelationships> rdf:type sh:NodeShape ;
+avrel:DistributionNetworkRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:DistributionNetwork ;
     rdfs:label "DistributionNetwork Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, access, and realization from DistributionNetwork elements." ;
@@ -3128,14 +3081,13 @@
 
     .
 
-
 ### ─────────────────────────────────────────────
 ### Passive Structure
 ### ─────────────────────────────────────────────
 
 ### Material
 
-<#MaterialRelationships> rdf:type sh:NodeShape ;
+avrel:MaterialRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Material ;
     rdfs:label "Material Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, and realization from Material elements. No access block — Material is passive structure." ;
@@ -3208,10 +3160,9 @@
 
     .
 
-
 ### Stakeholder
 
-<#StakeholderRelationships> rdf:type sh:NodeShape ;
+avrel:StakeholderRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Stakeholder ;
     rdfs:label "Stakeholder Valid Relationships" ;
     rdfs:comment "Validates composition and aggregation from Stakeholder elements." ;
@@ -3232,10 +3183,9 @@
 
     .
 
-
 ### Driver
 
-<#DriverRelationships> rdf:type sh:NodeShape ;
+avrel:DriverRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Driver ;
     rdfs:label "Driver Valid Relationships" ;
     rdfs:comment "Validates composition and aggregation from Driver elements." ;
@@ -3256,10 +3206,9 @@
 
     .
 
-
 ### Assessment
 
-<#AssessmentRelationships> rdf:type sh:NodeShape ;
+avrel:AssessmentRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Assessment ;
     rdfs:label "Assessment Valid Relationships" ;
     rdfs:comment "Validates composition and aggregation from Assessment elements." ;
@@ -3280,10 +3229,9 @@
 
     .
 
-
 ### Goal
 
-<#GoalRelationships> rdf:type sh:NodeShape ;
+avrel:GoalRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Goal ;
     rdfs:label "Goal Valid Relationships" ;
     rdfs:comment "Validates composition and aggregation from Goal elements." ;
@@ -3304,10 +3252,9 @@
 
     .
 
-
 ### Outcome
 
-<#OutcomeRelationships> rdf:type sh:NodeShape ;
+avrel:OutcomeRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Outcome ;
     rdfs:label "Outcome Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, and realization from Outcome elements." ;
@@ -3335,10 +3282,9 @@
 
     .
 
-
 ### Principle
 
-<#PrincipleRelationships> rdf:type sh:NodeShape ;
+avrel:PrincipleRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Principle ;
     rdfs:label "Principle Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, and realization from Principle elements." ;
@@ -3370,10 +3316,9 @@
 
     .
 
-
 ### Requirement
 
-<#RequirementRelationships> rdf:type sh:NodeShape ;
+avrel:RequirementRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Requirement ;
     rdfs:label "Requirement Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, and realization from Requirement elements." ;
@@ -3414,10 +3359,9 @@
 
     .
 
-
 ### Constraint
 
-<#ConstraintRelationships> rdf:type sh:NodeShape ;
+avrel:ConstraintRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Constraint ;
     rdfs:label "Constraint Valid Relationships" ;
     rdfs:comment "Validates composition, aggregation, and realization from Constraint elements." ;
@@ -3458,10 +3402,9 @@
 
     .
 
-
 ### Meaning
 
-<#MeaningRelationships> rdf:type sh:NodeShape ;
+avrel:MeaningRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Meaning ;
     rdfs:label "Meaning Valid Relationships" ;
     rdfs:comment "Validates composition and aggregation from Meaning elements." ;
@@ -3482,10 +3425,9 @@
 
     .
 
-
 ### Value
 
-<#ValueRelationships> rdf:type sh:NodeShape ;
+avrel:ValueRelationships rdf:type sh:NodeShape ;
     sh:targetClass archimate:Value ;
     rdfs:label "Value Valid Relationships" ;
     rdfs:comment "Validates composition and aggregation from Value elements." ;
