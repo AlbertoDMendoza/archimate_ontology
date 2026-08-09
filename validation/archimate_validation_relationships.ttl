@@ -18,7 +18,7 @@
 ### Excluded (covered by Levels 1 & 2):
 ###   flow, triggering, serving  → Level 2 §1 Generic Metamodel
 ###   association                → universally permissive
-###   specialization             → Level 1 §3 same-type constraint
+###   specialization             → Level 1 §2 permitted-pairs constraint
 ###   influence                  → Level 2 §7 Motivation Metamodel
 ###   assignment                 → Level 2 §§1-2
 ###

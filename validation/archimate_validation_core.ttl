@@ -11,10 +11,10 @@
 <https://purl.org/archimate/validation> rdf:type owl:Ontology ;
     owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Basic Validation Rules" ;
-    rdfs:comment "Level 1 Core Validation: universal model quality and graph integrity constraints. Validates concept requirements (identifier, name, documentation), specialization relationship integrity (same-type, no self-loops, depth), and structural relationship integrity (no circular/self composition/aggregation, composition part uniqueness). For metamodel pattern rules, see archimate_validation_metamodel.ttl. For per-element-type relationship combinations, see archimate_validation_<layer>.ttl." ;
+    rdfs:comment "Level 1 Core Validation: universal model quality and graph integrity constraints. Validates concept requirements (identifier, name, documentation), specialization relationship integrity (permitted element-type pairs, no self-loops, no cycles, chain depth), and structural relationship integrity (no circular/self composition/aggregation, composition part uniqueness). For metamodel pattern rules, see archimate_validation_metamodel.ttl. For per-element-type relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-10"^^xsd:date ;
-    dct:modified "2026-08-08"^^xsd:date ;
+    dct:modified "2026-08-09"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Beta" ;
     sh:declare [
@@ -37,13 +37,13 @@
 # This file focuses on:
 # - Universal concept requirements (identifier, name, documentation)
 # - Concept uniqueness constraints
-# - Specialization relationship validation (same-type constraint, depth check)
+# - Specialization relationship validation (permitted type pairs, no self-loops, no cycles, depth)
 # - Relationship structural integrity (no circular/self composition/aggregation,
 #   composition part uniqueness)
 #
 # Organization:
 # - Section 1: Universal Concept Requirements
-# - Section 2: Specialization Relationship Validation (same-type, depth)
+# - Section 2: Specialization Relationship Validation (permitted pairs, self-loops, cycles, depth)
 # - Section 3: Structural Relationship Validation (composition, aggregation)
 #
 # Severity levels:
@@ -55,7 +55,7 @@
 # ---------------------------------------------------------------------------
 # ENGINE REQUIREMENT: sh:targetClass ON ABSTRACT CLASSES
 #
-# Seven shapes in this file target archimate:Concept or archimate:Element. Both are marked
+# Five shapes in this file target archimate:Concept or archimate:Element. Both are marked
 # <#abstract> true in the ontology: they are organizing constructs, and NO NODE IN A REAL MODEL CARRIES
 # rdf:type archimate:Concept. A model element is typed archimate:BusinessActor, and reaching Concept
 # from there means traversing rdfs:subClassOf.
@@ -68,9 +68,9 @@
 # THAT PROVISO IS THE TRAP, and it fails quietly. An engine that evaluates shapes against a dedicated
 # shapes graph — RDF4J's ShaclSail, GraphDB — resolves the class hierarchy from THAT graph. Load these
 # shapes into the shapes graph while the ontology sits in the default graph, and archimate:Concept has
-# no subclasses as far as the validator is concerned. Every one of the seven shapes then selects zero
-# focus nodes, validation passes, and NOTHING REPORTS THAT ANYTHING WAS SKIPPED. A cross-type
-# specialization is accepted in silence.
+# no subclasses as far as the validator is concerned. Every one of the five shapes then selects zero
+# focus nodes, validation passes, and NOTHING REPORTS THAT ANYTHING WAS SKIPPED. A circular
+# composition is accepted in silence.
 #
 # Two ways to avoid it:
 #   * load archimate.ttl into the shapes graph alongside these shapes;
@@ -82,9 +82,10 @@
 # A result of 0 against a non-empty model means these shapes are inert.
 #
 # Deployments that cannot arrange either option can retarget by predicate instead — e.g.
-# sh:targetSubjectsOf archimate:specialization for the specialization shapes, or
+# sh:targetObjectsOf archimate:composition for the composition shapes, or
 # sh:targetSubjectsOf archimate:identifier for <#UniqueConceptIdentifier>. That needs no reasoning at
 # all and cannot silently select nothing, at the cost of no longer being driven by the class hierarchy.
+# The four specialization shapes are already targeted this way, for that reason.
 # ---------------------------------------------------------------------------
 #
 # owl:imports note:
@@ -161,39 +162,49 @@ avcore:UniqueConceptIdentifier rdf:type sh:NodeShape ;
 # Specialization is purely a relationship (spec Section 5.4), not a concept property.
 # It connects two elements/concepts of the same type (e.g., specialized process → generic process).
 
-# Specialization must connect same-type elements
-avcore:SpecializationSameType rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Concept ;
-    rdfs:label "Specialization Same-Type Constraint" ;
-    rdfs:comment "Ensures specialization relationships connect elements of the same concrete ArchiMate type." ;
+# Specialization must connect a pair of element types Appendix B permits
+#
+# Most permitted pairs are same-type, but not all: the tables also permit Grouping with any element,
+# Contract with BusinessObject, and Constraint with Requirement. Testing the matrix rather than type
+# equality keeps this shape in step with relationships.xml.
+#
+# Reads the permitted matrix from derivation/archimate_derivation_axioms.ttl, which must be in the
+# DEFAULT graph — the shapes graph is hidden from ordinary SPARQL. Where that file is not loaded, or
+# where an endpoint carries only types the matrix does not cover — profile specializations, for
+# instance — the shape stands aside rather than reporting every specialization.
+avcore:SpecializationPermitted rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:specialization ;
+    rdfs:label "Specialization Permitted Constraint" ;
+    rdfs:comment "Ensures specialization relationships connect a pair of element types the ArchiMate 3.2 Appendix B tables permit. Requires derivation/archimate_derivation_axioms.ttl; inactive on endpoints the matrix does not cover." ;
     sh:sparql [
         sh:prefixes <https://purl.org/archimate/validation> ;
-        sh:message "Specialization relationship must connect elements of the same type (e.g., BusinessProcess can only specialize BusinessProcess)" ;
+        sh:message "Specialization is not permitted between these element types (ArchiMate 3.2 Appendix B)" ;
         sh:select """
-            SELECT $this WHERE {
+            SELECT DISTINCT $this WHERE {
                 $this archimate:specialization ?target .
 
-                # Get the ArchiMate types of source and target
+                # Judge only endpoints the permitted matrix covers
                 $this rdf:type ?sourceType .
+                ?sourceType archimate:permitsSpecialization ?anyTarget .
                 ?target rdf:type ?targetType .
+                ?anySource archimate:permitsSpecialization ?targetType .
 
-                # Only check concrete ArchiMate element types
-                ?sourceType rdfs:subClassOf+ archimate:Element .
-                ?targetType rdfs:subClassOf+ archimate:Element .
-
-                # Source and target must share at least one common ArchiMate type
+                # Some pair of their types must be permitted
                 FILTER NOT EXISTS {
-                    $this rdf:type ?commonType .
-                    ?target rdf:type ?commonType .
-                    ?commonType rdfs:subClassOf+ archimate:Element .
+                    $this rdf:type ?st .
+                    ?target rdf:type ?tt .
+                    ?st archimate:permitsSpecialization ?tt .
                 }
             }
         """
     ] .
 
 # No self-specialization
+#
+# Targeted by predicate, not by class: an inert specialization shape accepts a malformed hierarchy in
+# silence. See the ENGINE REQUIREMENT note above.
 avcore:NoSelfSpecialization rdf:type sh:NodeShape ;
-    sh:targetClass archimate:Concept ;
+    sh:targetSubjectsOf archimate:specialization ;
     rdfs:label "No Self-Specialization" ;
     rdfs:comment "Prevents an element from specializing itself." ;
     sh:sparql [
@@ -203,6 +214,45 @@ avcore:NoSelfSpecialization rdf:type sh:NodeShape ;
             SELECT $this WHERE {
                 $this archimate:specialization $this
             }
+        """
+    ] .
+
+# No circular specialization
+#
+# archimate:specialization is owl:TransitiveProperty, so a reasoner turns a cycle into a self-loop and
+# NoSelfSpecialization reports it as a self-specialization the model does not contain. This shape
+# tests the path directly and so reports the actual defect, under any ruleset.
+avcore:NoCircularSpecialization rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:specialization ;
+    rdfs:label "No Circular Specialization" ;
+    rdfs:comment "Prevents circular specialization chains (A specializes B, B specializes C, C specializes A)." ;
+    sh:sparql [
+        sh:prefixes <https://purl.org/archimate/validation> ;
+        sh:message "Circular specialization relationships are not allowed (A specializes B, B specializes C, C specializes A)" ;
+        sh:select """
+            SELECT $this WHERE {
+                $this archimate:specialization+ $this
+            }
+        """
+    ] .
+
+# Specialization chain depth
+#
+# archimate:specialization+ yields the same ancestor set whether or not DR1's closure is materialized,
+# so the count is stable across rulesets. A chain of n produces (n-1)(n-2)/2 derived specializations.
+avcore:SpecializationChainDepth rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:specialization ;
+    rdfs:label "Specialization Chain Depth" ;
+    rdfs:comment "Limits an element's specialization ancestry to fewer than 5 levels; deeper chains multiply the derived closure without adding meaning." ;
+    sh:sparql [
+        sh:prefixes <https://purl.org/archimate/validation> ;
+        sh:message "Element has {?depth} specialization ancestors; chains this deep multiply the derived closure without adding meaning" ;
+        sh:select """
+            SELECT $this (COUNT(DISTINCT ?ancestor) AS ?depth) WHERE {
+                $this archimate:specialization+ ?ancestor .
+            }
+            GROUP BY $this
+            HAVING (COUNT(DISTINCT ?ancestor) >= 5)
         """
     ] .
 

@@ -33,6 +33,12 @@
     rdfs:seeAlso <https://digital-portfolio.opengroup.org/archimate-specs/latest/99-appendices/02-relationships-normative.html> .
 
 ### Integration with ArchiMate Ontology
+# THIS FILE HOLDS sh:SPARQLRule ONLY, AND MUST HOLD NO sh:NodeShape.
+# It is loaded into the DEFAULT graph, because applications read the rule descriptions back with
+# ordinary SPARQL. SHACL reads shapes from the shapes graph alone, so a node shape placed here is
+# inert data: it never selects a focus node and never reports a violation. Constraints belong in
+# validation/.
+#
 # owl:imports note:
 # The ontology declares @base <https://purl.org/archimate#> so its IRI is
 # <https://purl.org/archimate#>. We import <https://purl.org/archimate/owl>

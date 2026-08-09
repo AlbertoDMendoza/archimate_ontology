@@ -114,9 +114,9 @@
 #
 #   archimate:specialization (owl:ObjectProperty, owl:TransitiveProperty)
 #       Instance-level ArchiMate relationship per spec Section 5.4.
-#       Links a specialized element INSTANCE to a generic element INSTANCE
-#       of the same type (e.g., :TravelInsurance specialization :Insurance).
-#       Validated by SHACL same-type constraint (Level 1). Used by PDR1-4.
+#       Links a specialized element INSTANCE to a generic element INSTANCE,
+#       usually of the same type (e.g., :TravelInsurance specialization :Insurance).
+#       Validated against the Appendix B permitted pairs (Level 1). Used by PDR1-4.
 #
 #   archimate:profileSpecialization (owl:AnnotationProperty)
 #       Class-level declaration for the profile pattern.
