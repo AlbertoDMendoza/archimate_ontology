@@ -104,7 +104,7 @@ types" — a private downstream fork with its own consuming application carries 
 type; this table, being a specification rendering rather than a drawing surface, leaves it out. A
 relationship "through" a junction is really two relationships meeting at a shared node
 (`A --rel--> Junction --rel--> B`), and something has to say which relationship types may reach that
-node at all: `<#JunctionTransparency>` (`archimate_derivation_rules.ttl`) derives the direct
+node at all: `deriv:JunctionTransparency` (`archimate_derivation_rules.ttl`) derives the direct
 `A --rel--> B` once the endpoint types permit it; `<#JunctionRelationshipHomogeneity>`
 (`validation/archimate_validation_metamodel.ttl`) enforces that both hops share one relationship type
 — structural in the rule itself, so the shape isn't a dependency of it, it catches a different failure

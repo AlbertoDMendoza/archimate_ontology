@@ -111,7 +111,7 @@
 ## No sh:construct body: archimate:specialization is declared owl:TransitiveProperty in
 ## ontology/archimate.ttl, so any OWL-aware consumer derives this already -- an unexecuted
 ## CONSTRUCT here would be a decorative rule that looks live and is not.
-<#DR1_SpecializationTransitivity> rdf:type sh:SPARQLRule ;
+deriv:DR1_SpecializationTransitivity rdf:type sh:SPARQLRule ;
     rdfs:label "DR1: Transitivity of Specialization" ;
     rdfs:comment "If two relationships p(a,b):S and q(b,c):S exist, with S being Specialization, then a relationship r(a,c):S can be derived." .
 
@@ -306,10 +306,10 @@ deriv:DR8_TriggeringTransitivity rdf:type sh:SPARQLRule ;
 # type-permission guard the private fork's engine ruleset uses (checking the endpoint TYPES, not just
 # that ?r matches on both hops) -- consistent with this file's role as documentation of the rule shape,
 # not the enforced implementation (see file header). A rigorous deployment should add that guard.
-<#JunctionTransparency> rdf:type sh:SPARQLRule ;
+deriv:JunctionTransparency rdf:type sh:SPARQLRule ;
     rdfs:label "Junction Transparency" ;
     rdfs:comment "If p(a,j):R and p(j,c):R exist with j a Junction, derive p(a,c):R -- a junction is transparent to the relationship passing through it." ;
-    sh:prefixes <#> ;
+    sh:prefixes <https://purl.org/archimate/derivation> ;
     sh:construct """
         CONSTRUCT {
             ?a ?r ?c .
