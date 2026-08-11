@@ -246,7 +246,7 @@ avcore:SpecializationChainDepth rdf:type sh:NodeShape ;
     rdfs:comment "Limits an element's specialization ancestry to fewer than 5 levels; deeper chains multiply the derived closure without adding meaning." ;
     sh:sparql [
         sh:prefixes <https://purl.org/archimate/validation> ;
-        sh:message "Element has {?depth} specialization ancestors; chains this deep multiply the derived closure without adding meaning" ;
+        sh:message "Element has 5 or more specialization ancestors; chains this deep multiply the derived closure without adding meaning" ;
         sh:select """
             SELECT $this (COUNT(DISTINCT ?ancestor) AS ?depth) WHERE {
                 $this archimate:specialization+ ?ancestor .
