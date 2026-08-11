@@ -1200,7 +1200,7 @@ archimate:junctionType rdf:type owl:DatatypeProperty ;
 archimate:accessType rdf:type owl:DatatypeProperty ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Access Type" ;
-    rdfs:comment "Type of access: read, write, readwrite, or unspecified." ;
+    rdfs:comment "Type of access: read, write, readwrite, or unspecified. The Exchange Format writes this attribute differently, so an importer has to map it: its AccessTypeEnum is capitalised (Read, Write, ReadWrite) and it names the unspecified case 'Access', which is also the attribute's default. Read, Write and ReadWrite lower-case directly; Access becomes unspecified. Lower-casing alone is not enough, and because Access is the default it is the value an importer meets most often. Anything outside the four permitted values fails the Access Type Validation shape in validation/archimate_validation_metamodel.ttl." ;
     rdfs:range xsd:string .
 
 # Influence Relationship Specific Properties  
