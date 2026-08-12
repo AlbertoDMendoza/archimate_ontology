@@ -61,15 +61,22 @@
 ### Usage Instructions
 # To execute these derivation rules:
 # 1. Load your base ArchiMate ontology (ontology/archimate.ttl)
-# 2. Load derivation/archimate_derivation_strengths.ttl  — REQUIRED. The weakest-link rules below
+# 2. Load derivation/archimate_derivation_axioms.ttl — REQUIRED BY EVERY RULE BELOW. It carries the
+#    cased tables (archimate:permits<Relation>, archimate:permitsDirect<Relation>) and the
+#    archimate:permittedBy map from a relation to the predicate holding its permissions. Every rule
+#    requires the tables to permit its conclusion between the endpoint types; without this file that
+#    premise never matches and NOTHING derives, silently. One lookup stands in for Appendix B's
+#    fourteen B.4 endpoint clauses, which are subtractive and forbid only pairs the tables already
+#    exclude.
+# 3. Load derivation/archimate_derivation_strengths.ttl  — REQUIRED. The weakest-link rules below
 #    compare archimate:structuralStrength / archimate:dependencyStrength arithmetically; without this
 #    file those premises never match and the rules derive nothing, silently.
-# 3. Load derivation/archimate_derivation_provenance.ttl — required only if you intend to record
+# 4. Load derivation/archimate_derivation_provenance.ttl — required only if you intend to record
 #    archimate:confidence / derivedFrom / derivationRule on what you derive. Load it somewhere ordinary
 #    SPARQL can read, since applications read these back.
-# 4. Load this derivation rules file
-# 5. Run SPARQL CONSTRUCT queries or use SHACL-Advanced Features
-# 6. The derived relationships will have metadata indicating:
+# 5. Load this derivation rules file
+# 6. Run SPARQL CONSTRUCT queries or use SHACL-Advanced Features
+# 7. The derived relationships will have metadata indicating:
 #    - Confidence level (valid/potential)
 #    - Derivation rule used
 #    - Source relationships that led to the derivation
