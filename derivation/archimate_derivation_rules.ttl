@@ -34,10 +34,16 @@
 
 ### Integration with ArchiMate Ontology
 # THIS FILE HOLDS sh:SPARQLRule ONLY, AND MUST HOLD NO sh:NodeShape.
-# It is loaded into the DEFAULT graph, because applications read the rule descriptions back with
-# ordinary SPARQL. SHACL reads shapes from the shapes graph alone, so a node shape placed here is
-# inert data: it never selects a focus node and never reports a violation. Constraints belong in
-# validation/.
+#
+# Load it into any graph EXCEPT the SHACL shapes graph. The natural home is
+# <https://purl.org/archimate/derivation> — the ontology IRI this file declares for itself — together
+# with the axioms its rules consult, so the whole derivation layer drops and reloads as a unit.
+# Applications read the rule descriptions back with ordinary SPARQL, and that is no argument for the
+# default graph: an unqualified query reads the union of all graphs, so a named graph is just as
+# visible. The shapes graph is the one place that would hide them.
+#
+# SHACL reads shapes from the shapes graph alone, so a node shape placed here is inert data: it never
+# selects a focus node and never reports a violation. Constraints belong in validation/.
 #
 # owl:imports note:
 # The ontology declares @base <https://purl.org/archimate#> so its IRI is
