@@ -145,6 +145,15 @@ deriv:DR2_StructuralChain rdf:type sh:SPARQLRule ;
             # Avoid self-relationships and direct relationships
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a ?weakerRel ?c }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?a rdf:type ?permSourceType .
+                ?c rdf:type ?permTargetType .
+                ?weakerRel archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -169,6 +178,15 @@ deriv:DR3_StructuralDependency rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a ?depRel ?c }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?a rdf:type ?permSourceType .
+                ?c rdf:type ?permTargetType .
+                ?depRel archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -193,6 +211,15 @@ deriv:DR4_OpposingStructuralDependency rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?c ?depRel ?a }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?c rdf:type ?permSourceType .
+                ?a rdf:type ?permTargetType .
+                ?depRel archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -217,6 +244,15 @@ deriv:DR5_StructuralDynamic rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a ?dynRel ?c }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?a rdf:type ?permSourceType .
+                ?c rdf:type ?permTargetType .
+                ?dynRel archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -240,6 +276,15 @@ deriv:DR6_StructuralFlow rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?c archimate:flow ?a }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?c rdf:type ?permSourceType .
+                ?a rdf:type ?permTargetType .
+                archimate:flow archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -263,6 +308,15 @@ deriv:DR7_TriggeringStructural rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a archimate:triggering ?c }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?a rdf:type ?permSourceType .
+                ?c rdf:type ?permTargetType .
+                archimate:triggering archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -284,6 +338,15 @@ deriv:DR8_TriggeringTransitivity rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a archimate:triggering ?c }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?a rdf:type ?permSourceType .
+                ?c rdf:type ?permTargetType .
+                archimate:triggering archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -300,11 +363,6 @@ deriv:DR8_TriggeringTransitivity rdf:type sh:SPARQLRule ;
 # <#JunctionRelationshipHomogeneity> (archimate_validation_metamodel.ttl) still matters, because it
 # catches a modeller *asserting* mixed types through a junction, which this rule cannot: the rule
 # simply declines to fire rather than flagging the error.
-#
-# SIMPLIFIED RELATIVE TO THE DEPLOYED RULESET: like DR6-DR8 above, this omits the archi:permittedBy
-# type-permission guard the private fork's engine ruleset uses (checking the endpoint TYPES, not just
-# that ?r matches on both hops) -- consistent with this file's role as documentation of the rule shape,
-# not the enforced implementation (see file header). A rigorous deployment should add that guard.
 deriv:JunctionTransparency rdf:type sh:SPARQLRule ;
     rdfs:label "Junction Transparency" ;
     rdfs:comment "If p(a,j):R and p(j,c):R exist with j a Junction, derive p(a,c):R -- a junction is transparent to the relationship passing through it." ;
@@ -323,6 +381,21 @@ deriv:JunctionTransparency rdf:type sh:SPARQLRule ;
 
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a ?r ?c }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl. A Junction endpoint is exempt:
+            # connectors have no row in the tables, and an intermediate hop of a
+            # multi-junction chain is one. The chain's final conclusion is still judged.
+            FILTER (
+                EXISTS { ?a a archimate:Junction }
+                || EXISTS { ?c a archimate:Junction }
+                || EXISTS {
+                    ?a rdf:type ?permSourceType .
+                    ?c rdf:type ?permTargetType .
+                    ?r archimate:permittedBy ?permits .
+                    ?permSourceType ?permits ?permTargetType .
+                }
+            )
         }
     """ .
 
@@ -355,6 +428,15 @@ deriv:PDR1_SpecializationInheritance rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a ?rel ?c }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?a rdf:type ?permSourceType .
+                ?c rdf:type ?permTargetType .
+                ?rel archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -385,6 +467,15 @@ deriv:PDR2_SpecializationInheritanceReverse rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?c ?rel ?a }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?c rdf:type ?permSourceType .
+                ?a rdf:type ?permTargetType .
+                ?rel archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -415,6 +506,15 @@ deriv:PDR3_SpecializationSourceInheritance rdf:type sh:SPARQLRule ;
             
             FILTER(?b != ?c)
             FILTER NOT EXISTS { ?b ?rel ?c }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?b rdf:type ?permSourceType .
+                ?c rdf:type ?permTargetType .
+                ?rel archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -445,6 +545,15 @@ deriv:PDR4_SpecializationTargetInheritance rdf:type sh:SPARQLRule ;
             
             FILTER(?c != ?b)
             FILTER NOT EXISTS { ?c ?rel ?b }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?c rdf:type ?permSourceType .
+                ?b rdf:type ?permTargetType .
+                ?rel archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -469,6 +578,15 @@ deriv:PDR5_StructuralDependencyAtSource rdf:type sh:SPARQLRule ;
             
             FILTER(?c != ?b)
             FILTER NOT EXISTS { ?c ?depRel ?b }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?c rdf:type ?permSourceType .
+                ?b rdf:type ?permTargetType .
+                ?depRel archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -493,6 +611,15 @@ deriv:PDR6_StructuralDependencyFromSource rdf:type sh:SPARQLRule ;
             
             FILTER(?b != ?c)
             FILTER NOT EXISTS { ?b ?depRel ?c }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?b rdf:type ?permSourceType .
+                ?c rdf:type ?permTargetType .
+                ?depRel archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -524,6 +651,15 @@ deriv:PDR7_DependencyChain rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a ?weakerRel ?c }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?a rdf:type ?permSourceType .
+                ?c rdf:type ?permTargetType .
+                ?weakerRel archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -547,6 +683,15 @@ deriv:PDR8_FlowStructural rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a archimate:flow ?c }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?a rdf:type ?permSourceType .
+                ?c rdf:type ?permTargetType .
+                archimate:flow archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -571,6 +716,15 @@ deriv:PDR9_StructuralDynamicReverse rdf:type sh:SPARQLRule ;
             
             FILTER(?b != ?c)
             FILTER NOT EXISTS { ?b ?dynRel ?c }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?b rdf:type ?permSourceType .
+                ?c rdf:type ?permTargetType .
+                ?dynRel archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -592,6 +746,15 @@ deriv:PDR10_FlowChain rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a archimate:flow ?c }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?a rdf:type ?permSourceType .
+                ?c rdf:type ?permTargetType .
+                archimate:flow archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -615,6 +778,15 @@ deriv:PDR11_TriggeringStructuralReverse rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a archimate:triggering ?c }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?a rdf:type ?permSourceType .
+                ?c rdf:type ?permTargetType .
+                archimate:triggering archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
@@ -653,6 +825,15 @@ deriv:PDR12_GroupingDerivation rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a ?targetRel ?c }
+
+            # Appendix B permits this relationship between these endpoint types.
+            # Requires archimate_derivation_axioms.ttl.
+            FILTER EXISTS {
+                ?a rdf:type ?permSourceType .
+                ?c rdf:type ?permTargetType .
+                ?targetRel archimate:permittedBy ?permits .
+                ?permSourceType ?permits ?permTargetType .
+            }
         }
     """ .
 
