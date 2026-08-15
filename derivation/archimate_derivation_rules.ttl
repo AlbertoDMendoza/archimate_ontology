@@ -135,9 +135,10 @@ deriv:DR2_StructuralChain rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?a ?weakerRel ?c .
-            <<?a ?weakerRel ?c>> archimate:confidence "valid" ;
+            <<?a ?weakerRel ?c>> archimate:confidence archimate:ValidDerivation ;
+                                archimate:derivationRule deriv:DR2_StructuralChain ;
                                 archimate:description "Derived via DR2: structural relationship chain" ;
-                                archimate:derivedFrom ?rel1, ?rel2 .
+                                archimate:derivedFrom <<?a ?rel1 ?b>>, <<?b ?rel2 ?c>> .
         }
         WHERE {
             # Find chain of two structural relationships
@@ -178,9 +179,10 @@ deriv:DR3_StructuralDependency rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?a ?depRel ?c .
-            <<?a ?depRel ?c>> archimate:confidence "valid" ;
+            <<?a ?depRel ?c>> archimate:confidence archimate:ValidDerivation ;
+                             archimate:derivationRule deriv:DR3_StructuralDependency ;
                              archimate:description "Derived via DR3: structural + dependency" ;
-                             archimate:derivedFrom ?structRel, ?depRel .
+                             archimate:derivedFrom <<?a ?structRel ?b>>, <<?b ?depRel ?c>> .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -211,9 +213,10 @@ deriv:DR4_OpposingStructuralDependency rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?c ?depRel ?a .
-            <<?c ?depRel ?a>> archimate:confidence "valid" ;
+            <<?c ?depRel ?a>> archimate:confidence archimate:ValidDerivation ;
+                             archimate:derivationRule deriv:DR4_OpposingStructuralDependency ;
                              archimate:description "Derived via DR4: opposing structural + dependency" ;
-                             archimate:derivedFrom ?structRel, ?depRel .
+                             archimate:derivedFrom <<?a ?structRel ?b>>, <<?c ?depRel ?b>> .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -244,9 +247,10 @@ deriv:DR5_StructuralDynamic rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?a ?dynRel ?c .
-            <<?a ?dynRel ?c>> archimate:confidence "valid" ;
+            <<?a ?dynRel ?c>> archimate:confidence archimate:ValidDerivation ;
+                             archimate:derivationRule deriv:DR5_StructuralDynamic ;
                              archimate:description "Derived via DR5: structural + dynamic" ;
-                             archimate:derivedFrom ?structRel, ?dynRel .
+                             archimate:derivedFrom <<?a ?structRel ?b>>, <<?b ?dynRel ?c>> .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -277,9 +281,10 @@ deriv:DR6_StructuralFlow rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?c archimate:flow ?a .
-            <<?c archimate:flow ?a>> archimate:confidence "valid" ;
+            <<?c archimate:flow ?a>> archimate:confidence archimate:ValidDerivation ;
+                                     archimate:derivationRule deriv:DR6_StructuralFlow ;
                                      archimate:description "Derived via DR6: structural + flow (opposite)" ;
-                                     archimate:derivedFrom ?structRel, archimate:flow .
+                                     archimate:derivedFrom <<?a ?structRel ?b>>, <<?c archimate:flow ?b>> .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -309,9 +314,10 @@ deriv:DR7_TriggeringStructural rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?a archimate:triggering ?c .
-            <<?a archimate:triggering ?c>> archimate:confidence "valid" ;
+            <<?a archimate:triggering ?c>> archimate:confidence archimate:ValidDerivation ;
+                                           archimate:derivationRule deriv:DR7_TriggeringStructural ;
                                            archimate:description "Derived via DR7: triggering + structural" ;
-                                           archimate:derivedFrom archimate:triggering, ?structRel .
+                                           archimate:derivedFrom <<?a archimate:triggering ?b>>, <<?b ?structRel ?c>> .
         }
         WHERE {
             ?a archimate:triggering ?b .
@@ -341,9 +347,10 @@ deriv:DR8_TriggeringTransitivity rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?a archimate:triggering ?c .
-            <<?a archimate:triggering ?c>> archimate:confidence "valid" ;
+            <<?a archimate:triggering ?c>> archimate:confidence archimate:ValidDerivation ;
+                                           archimate:derivationRule deriv:DR8_TriggeringTransitivity ;
                                            archimate:description "Derived via DR8: triggering transitivity" ;
-                                           archimate:derivedFrom archimate:triggering, archimate:triggering .
+                                           archimate:derivedFrom <<?a archimate:triggering ?b>>, <<?b archimate:triggering ?c>> .
         }
         WHERE {
             ?a archimate:triggering ?b .
@@ -383,9 +390,10 @@ deriv:JunctionTransparency rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?a ?r ?c .
-            <<?a ?r ?c>> archimate:confidence "valid" ;
+            <<?a ?r ?c>> archimate:confidence archimate:ValidDerivation ;
+                        archimate:derivationRule deriv:JunctionTransparency ;
                         archimate:description "Derived via Junction transparency: connector merge/split" ;
-                        archimate:derivedFrom ?r, ?r .
+                        archimate:derivedFrom <<?a ?r ?j>>, <<?j ?r ?c>> .
         }
         WHERE {
             ?a ?r ?j .
@@ -422,9 +430,10 @@ deriv:PDR1_SpecializationInheritance rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?a ?rel ?c .
-            <<?a ?rel ?c>> archimate:confidence "potential" ;
+            <<?a ?rel ?c>> archimate:confidence archimate:PotentialDerivation ;
+                          archimate:derivationRule deriv:PDR1_SpecializationInheritance ;
                           archimate:description "Derived via PDR1: specialization inheritance (forward)" ;
-                          archimate:derivedFrom archimate:specialization, ?rel .
+                          archimate:derivedFrom <<?a archimate:specialization ?b>>, <<?b ?rel ?c>> .
         }
         WHERE {
             ?a archimate:specialization ?b .
@@ -461,9 +470,10 @@ deriv:PDR2_SpecializationInheritanceReverse rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?c ?rel ?a .
-            <<?c ?rel ?a>> archimate:confidence "potential" ;
+            <<?c ?rel ?a>> archimate:confidence archimate:PotentialDerivation ;
+                          archimate:derivationRule deriv:PDR2_SpecializationInheritanceReverse ;
                           archimate:description "Derived via PDR2: specialization inheritance (reverse)" ;
-                          archimate:derivedFrom archimate:specialization, ?rel .
+                          archimate:derivedFrom <<?a archimate:specialization ?b>>, <<?c ?rel ?b>> .
         }
         WHERE {
             ?a archimate:specialization ?b .
@@ -500,9 +510,10 @@ deriv:PDR3_SpecializationSourceInheritance rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?b ?rel ?c .
-            <<?b ?rel ?c>> archimate:confidence "potential" ;
+            <<?b ?rel ?c>> archimate:confidence archimate:PotentialDerivation ;
+                          archimate:derivationRule deriv:PDR3_SpecializationSourceInheritance ;
                           archimate:description "Derived via PDR3: specialization source inheritance" ;
-                          archimate:derivedFrom archimate:specialization, ?rel .
+                          archimate:derivedFrom <<?a archimate:specialization ?b>>, <<?a ?rel ?c>> .
         }
         WHERE {
             ?a archimate:specialization ?b .
@@ -539,9 +550,10 @@ deriv:PDR4_SpecializationTargetInheritance rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?c ?rel ?b .
-            <<?c ?rel ?b>> archimate:confidence "potential" ;
+            <<?c ?rel ?b>> archimate:confidence archimate:PotentialDerivation ;
+                          archimate:derivationRule deriv:PDR4_SpecializationTargetInheritance ;
                           archimate:description "Derived via PDR4: specialization target inheritance" ;
-                          archimate:derivedFrom archimate:specialization, ?rel .
+                          archimate:derivedFrom <<?a archimate:specialization ?b>>, <<?c ?rel ?a>> .
         }
         WHERE {
             ?a archimate:specialization ?b .
@@ -578,9 +590,10 @@ deriv:PDR5_StructuralDependencyAtSource rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?c ?depRel ?b .
-            <<?c ?depRel ?b>> archimate:confidence "potential" ;
+            <<?c ?depRel ?b>> archimate:confidence archimate:PotentialDerivation ;
+                             archimate:derivationRule deriv:PDR5_StructuralDependencyAtSource ;
                              archimate:description "Derived via PDR5: structural + dependency (at source)" ;
-                             archimate:derivedFrom ?structRel, ?depRel .
+                             archimate:derivedFrom <<?a ?structRel ?b>>, <<?c ?depRel ?a>> .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -611,9 +624,10 @@ deriv:PDR6_StructuralDependencyFromSource rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?b ?depRel ?c .
-            <<?b ?depRel ?c>> archimate:confidence "potential" ;
+            <<?b ?depRel ?c>> archimate:confidence archimate:PotentialDerivation ;
+                             archimate:derivationRule deriv:PDR6_StructuralDependencyFromSource ;
                              archimate:description "Derived via PDR6: structural + dependency (from source)" ;
-                             archimate:derivedFrom ?structRel, ?depRel .
+                             archimate:derivedFrom <<?a ?structRel ?b>>, <<?a ?depRel ?c>> .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -644,9 +658,10 @@ deriv:PDR7_DependencyChain rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?a ?weakerRel ?c .
-            <<?a ?weakerRel ?c>> archimate:confidence "potential" ;
+            <<?a ?weakerRel ?c>> archimate:confidence archimate:PotentialDerivation ;
+                                archimate:derivationRule deriv:PDR7_DependencyChain ;
                                 archimate:description "Derived via PDR7: dependency chain" ;
-                                archimate:derivedFrom ?rel1, ?rel2 .
+                                archimate:derivedFrom <<?a ?rel1 ?b>>, <<?b ?rel2 ?c>> .
         }
         WHERE {
             ?a ?rel1 ?b .
@@ -684,9 +699,10 @@ deriv:PDR8_FlowStructural rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?a archimate:flow ?c .
-            <<?a archimate:flow ?c>> archimate:confidence "potential" ;
+            <<?a archimate:flow ?c>> archimate:confidence archimate:PotentialDerivation ;
+                                     archimate:derivationRule deriv:PDR8_FlowStructural ;
                                      archimate:description "Derived via PDR8: flow + structural" ;
-                                     archimate:derivedFrom archimate:flow, ?structRel .
+                                     archimate:derivedFrom <<?a archimate:flow ?b>>, <<?b ?structRel ?c>> .
         }
         WHERE {
             ?a archimate:flow ?b .
@@ -716,9 +732,10 @@ deriv:PDR9_StructuralDynamicReverse rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?b ?dynRel ?c .
-            <<?b ?dynRel ?c>> archimate:confidence "potential" ;
+            <<?b ?dynRel ?c>> archimate:confidence archimate:PotentialDerivation ;
+                             archimate:derivationRule deriv:PDR9_StructuralDynamicReverse ;
                              archimate:description "Derived via PDR9: structural + dynamic (reverse)" ;
-                             archimate:derivedFrom ?structRel, ?dynRel .
+                             archimate:derivedFrom <<?a ?structRel ?b>>, <<?a ?dynRel ?c>> .
         }
         WHERE {
             ?a ?structRel ?b .
@@ -749,9 +766,10 @@ deriv:PDR10_FlowChain rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?a archimate:flow ?c .
-            <<?a archimate:flow ?c>> archimate:confidence "potential" ;
+            <<?a archimate:flow ?c>> archimate:confidence archimate:PotentialDerivation ;
+                                     archimate:derivationRule deriv:PDR10_FlowChain ;
                                      archimate:description "Derived via PDR10: flow chain" ;
-                                     archimate:derivedFrom archimate:flow, archimate:flow .
+                                     archimate:derivedFrom <<?a archimate:flow ?b>>, <<?b archimate:flow ?c>> .
         }
         WHERE {
             ?a archimate:flow ?b .
@@ -779,9 +797,10 @@ deriv:PDR11_TriggeringStructuralReverse rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?a archimate:triggering ?c .
-            <<?a archimate:triggering ?c>> archimate:confidence "potential" ;
+            <<?a archimate:triggering ?c>> archimate:confidence archimate:PotentialDerivation ;
+                                           archimate:derivationRule deriv:PDR11_TriggeringStructuralReverse ;
                                            archimate:description "Derived via PDR11: triggering + structural (reverse)" ;
-                                           archimate:derivedFrom archimate:triggering, ?structRel .
+                                           archimate:derivedFrom <<?a archimate:triggering ?b>>, <<?c ?structRel ?b>> .
         }
         WHERE {
             ?a archimate:triggering ?b .
@@ -811,9 +830,10 @@ deriv:PDR12_GroupingDerivation rdf:type sh:SPARQLRule ;
     sh:construct """
         CONSTRUCT {
             ?a ?targetRel ?c .
-            <<?a ?targetRel ?c>> archimate:confidence "potential" ;
+            <<?a ?targetRel ?c>> archimate:confidence archimate:PotentialDerivation ;
+                                archimate:derivationRule deriv:PDR12_GroupingDerivation ;
                                 archimate:description "Derived via PDR12: grouping element derivation" ;
-                                archimate:derivedFrom ?sourceRel, ?targetRel .
+                                archimate:derivedFrom <<?b ?sourceRel ?a>>, <<?b ?targetRel ?c>> .
         }
         WHERE {
             ?b ?sourceRel ?a .

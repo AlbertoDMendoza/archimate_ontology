@@ -64,7 +64,33 @@ asserting what they produce. **PDR1–PDR12** are potential — B.3 says a poten
 relevant but may also be wrong… it is up to the modeler to decide". Asserting a PDR result without a
 modeller's judgement asserts something the specification does not sanction.
 
-`archimate:confidence` records which a given derived relationship was: `"valid"` or `"potential"`.
+`archimate:confidence` records which a given derived relationship was:
+`archimate:ValidDerivation` or `archimate:PotentialDerivation`.
+
+## What a rule records about what it derived
+
+Every rule annotates the derived relationship's quoted triple with four things, so a derivation can
+be explained and undone without re-running anything:
+
+| term | value |
+|---|---|
+| `archimate:confidence` | `archimate:ValidDerivation` or `archimate:PotentialDerivation` |
+| `archimate:derivationRule` | the rule's own IRI, e.g. `deriv:DR2_StructuralChain` |
+| `archimate:derivedFrom` | the **quoted source triples** the rule matched — one per premise |
+| `archimate:description` | a human-readable note |
+
+The first three are IRIs rather than strings, which is what makes them useful. `derivationRule` can
+be matched exactly instead of by substring — `"PDR1"` is a prefix of `PDR10`, `PDR11` and `PDR12` —
+and it joins to the rule's own label and comment. `derivedFrom` names the specific relationships the
+derivation consumed, not their types, so a modeller reviewing a suggestion can be shown exactly why
+it was proposed:
+
+```sparql
+# Which edges justified this derived relationship?
+SELECT ?ss ?pp ?oo WHERE {
+  << ?s ?p ?o >> archimate:derivedFrom << ?ss ?pp ?oo >> .
+}
+```
 
 ## Restrictions as positive premises
 

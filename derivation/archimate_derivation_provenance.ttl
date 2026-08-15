@@ -20,21 +20,34 @@
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-<#confidence> rdf:type owl:DatatypeProperty ;
+<#DerivationCertainty> rdf:type owl:Class ;
+    rdfs:label "Derivation certainty" ;
+    rdfs:comment "How far a derived relationship is to be trusted. Appendix B draws the line: a valid derivation is one the specification permits a modeller to assert, a potential derivation is one it merely suggests. Two individuals exhaust it." .
+
+<#ValidDerivation> rdf:type <#DerivationCertainty> ;
+    rdfs:label "valid derivation" ;
+    rdfs:comment "Produced by one of Appendix B's valid derivation rules (DR1-DR8). The specification permits a modeller to assert the result." .
+
+<#PotentialDerivation> rdf:type <#DerivationCertainty> ;
+    rdfs:label "potential derivation" ;
+    rdfs:comment "Produced by one of Appendix B's potential derivation rules (PDR1-PDR12). B.3 says such a relationship \"might be relevant but may also be wrong… it is up to the modeler to decide\", so asserting it without a modeller's judgement asserts something the specification does not sanction." .
+
+<#confidence> rdf:type owl:ObjectProperty ;
     rdfs:label "Confidence" ;
-    rdfs:comment "On a derived relationship's quoted triple: how far the derivation is to be trusted. \"valid\" for a relationship one of Appendix B's valid derivation rules produced, which the specification permits a modeller to assert; \"potential\" for one a potential rule suggested, which Appendix B B.3 says \"might be relevant but may also be wrong… it is up to the modeler to decide\"." ;
-    rdfs:range xsd:string .
+    rdfs:comment "On a derived relationship's quoted triple: how far the derivation is to be trusted. Points at <#ValidDerivation> or <#PotentialDerivation> — an IRI rather than a string, so the distinction can be joined against and carries its own definition." ;
+    rdfs:range <#DerivationCertainty> .
 
 <#derivedFrom> rdf:type owl:ObjectProperty ;
     rdfs:label "derived from" ;
-    rdfs:comment "On a derived relationship's quoted triple: the source relationship(s) or bridging element it was derived from. Range left open deliberately — usages vary between relationship IRIs (predicates) and the bridging element, depending on which rule fired." .
+    rdfs:comment "On a derived relationship's quoted triple: the quoted source triples the derivation consumed — the actual relationships, not their types, so a derived relationship can be traced back to the specific edges that justified it. Every rule writes one per premise it matched." .
 
-<#derivationRule> rdf:type owl:DatatypeProperty ;
+<#derivationRule> rdf:type owl:ObjectProperty ;
     rdfs:label "derivation rule" ;
-    rdfs:comment "On a derived relationship's quoted triple: which derivation rule (e.g. \"DR2\", \"DR3\") produced it." ;
-    rdfs:range xsd:string .
+    rdfs:comment "On a derived relationship's quoted triple: the rule that produced it, as the rule's own IRI (e.g. deriv:DR2_StructuralChain). An IRI rather than a name, so a query reaches the rule's label, comment and Appendix B reference without matching substrings — \"PDR1\" is a prefix of PDR10, PDR11 and PDR12." ;
+    rdfs:range sh:SPARQLRule .
 
 <#description> rdf:type owl:DatatypeProperty ;
     rdfs:label "description" ;
