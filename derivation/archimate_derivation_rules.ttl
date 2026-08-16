@@ -160,6 +160,13 @@ deriv:DR2_StructuralChain rdf:type sh:SPARQLRule ;
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a ?weakerRel ?c }
 
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?rel1 archimate:permittedBy ?permitsRel1 }
+            FILTER EXISTS { ?rel2 archimate:permittedBy ?permitsRel2 }
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
             FILTER EXISTS {
@@ -193,6 +200,13 @@ deriv:DR3_StructuralDependency rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a ?depRel ?c }
+
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?depRel archimate:permittedBy ?permitsDepRel }
+            FILTER EXISTS { ?structRel archimate:permittedBy ?permitsStructRel }
 
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
@@ -228,6 +242,13 @@ deriv:DR4_OpposingStructuralDependency rdf:type sh:SPARQLRule ;
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?c ?depRel ?a }
 
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?depRel archimate:permittedBy ?permitsDepRel }
+            FILTER EXISTS { ?structRel archimate:permittedBy ?permitsStructRel }
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
             FILTER EXISTS {
@@ -262,6 +283,13 @@ deriv:DR5_StructuralDynamic rdf:type sh:SPARQLRule ;
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a ?dynRel ?c }
 
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?dynRel archimate:permittedBy ?permitsDynRel }
+            FILTER EXISTS { ?structRel archimate:permittedBy ?permitsStructRel }
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
             FILTER EXISTS {
@@ -295,6 +323,12 @@ deriv:DR6_StructuralFlow rdf:type sh:SPARQLRule ;
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?c archimate:flow ?a }
 
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?structRel archimate:permittedBy ?permitsStructRel }
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
             FILTER EXISTS {
@@ -327,6 +361,12 @@ deriv:DR7_TriggeringStructural rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a archimate:triggering ?c }
+
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?structRel archimate:permittedBy ?permitsStructRel }
 
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
@@ -403,6 +443,12 @@ deriv:JunctionTransparency rdf:type sh:SPARQLRule ;
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a ?r ?c }
 
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?r archimate:permittedBy ?permitsR }
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl. A Junction endpoint is exempt:
             # connectors have no row in the tables, and an intermediate hop of a
@@ -451,6 +497,12 @@ deriv:PDR1_SpecializationInheritance rdf:type sh:SPARQLRule ;
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a ?rel ?c }
 
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?rel archimate:permittedBy ?permitsRel }
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
             FILTER EXISTS {
@@ -490,6 +542,12 @@ deriv:PDR2_SpecializationInheritanceReverse rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?c ?rel ?a }
+
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?rel archimate:permittedBy ?permitsRel }
 
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
@@ -531,6 +589,12 @@ deriv:PDR3_SpecializationSourceInheritance rdf:type sh:SPARQLRule ;
             FILTER(?b != ?c)
             FILTER NOT EXISTS { ?b ?rel ?c }
 
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?rel archimate:permittedBy ?permitsRel }
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
             FILTER EXISTS {
@@ -571,6 +635,12 @@ deriv:PDR4_SpecializationTargetInheritance rdf:type sh:SPARQLRule ;
             FILTER(?c != ?b)
             FILTER NOT EXISTS { ?c ?rel ?b }
 
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?rel archimate:permittedBy ?permitsRel }
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
             FILTER EXISTS {
@@ -605,6 +675,13 @@ deriv:PDR5_StructuralDependencyAtSource rdf:type sh:SPARQLRule ;
             FILTER(?c != ?b)
             FILTER NOT EXISTS { ?c ?depRel ?b }
 
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?depRel archimate:permittedBy ?permitsDepRel }
+            FILTER EXISTS { ?structRel archimate:permittedBy ?permitsStructRel }
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
             FILTER EXISTS {
@@ -638,6 +715,13 @@ deriv:PDR6_StructuralDependencyFromSource rdf:type sh:SPARQLRule ;
             
             FILTER(?b != ?c)
             FILTER NOT EXISTS { ?b ?depRel ?c }
+
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?depRel archimate:permittedBy ?permitsDepRel }
+            FILTER EXISTS { ?structRel archimate:permittedBy ?permitsStructRel }
 
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
@@ -680,6 +764,13 @@ deriv:PDR7_DependencyChain rdf:type sh:SPARQLRule ;
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a ?weakerRel ?c }
 
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?rel1 archimate:permittedBy ?permitsRel1 }
+            FILTER EXISTS { ?rel2 archimate:permittedBy ?permitsRel2 }
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
             FILTER EXISTS {
@@ -712,6 +803,12 @@ deriv:PDR8_FlowStructural rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a archimate:flow ?c }
+
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?structRel archimate:permittedBy ?permitsStructRel }
 
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
@@ -746,6 +843,13 @@ deriv:PDR9_StructuralDynamicReverse rdf:type sh:SPARQLRule ;
             
             FILTER(?b != ?c)
             FILTER NOT EXISTS { ?b ?dynRel ?c }
+
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?dynRel archimate:permittedBy ?permitsDynRel }
+            FILTER EXISTS { ?structRel archimate:permittedBy ?permitsStructRel }
 
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
@@ -811,6 +915,12 @@ deriv:PDR11_TriggeringStructuralReverse rdf:type sh:SPARQLRule ;
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a archimate:triggering ?c }
 
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?structRel archimate:permittedBy ?permitsStructRel }
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
             FILTER EXISTS {
@@ -858,6 +968,13 @@ deriv:PDR12_GroupingDerivation rdf:type sh:SPARQLRule ;
             
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a ?targetRel ?c }
+
+            # Cite only concrete relationships. rdfs:subPropertyOf is reflexive under
+            # RDFS entailment, so an abstract superproperty binds here too and would be
+            # recorded as a source edge nobody drew. Only the eleven concrete relations
+            # carry archimate:permittedBy.
+            FILTER EXISTS { ?sourceRel archimate:permittedBy ?permitsSourceRel }
+            FILTER EXISTS { ?targetRel archimate:permittedBy ?permitsTargetRel }
 
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
