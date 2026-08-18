@@ -23,7 +23,7 @@
 #
 #     BIND(IF(?strength1 <= ?strength2, ?rel1, ?rel2) AS ?weakerRel)
 #
-# NOT TO BE CONFUSED WITH archimate:influenceStrength, which stays in ontology/archimate.ttl. That is
+# NOT TO BE CONFUSED WITH archimate:influenceModifier, which stays in ontology/archimate.ttl. That is
 # the specification's own attribute on an influence relationship (weak / moderate / strong) and has
 # nothing to do with the weakest-link ordering. Two different things both called "strength"; do not
 # consolidate them.

@@ -57,7 +57,7 @@
 #
 # 2) RDF-STAR FOR RELATIONSHIP METADATA
 # ArchiMate relationships can have metadata attributes (e.g., accessType for Access,
-# influenceSign for Influence). In traditional RDF, this requires reification which creates
+# influenceModifier for Influence). In traditional RDF, this requires reification which creates
 # verbose, complex models. RDF-Star solves this elegantly using quoted triples.
 #
 # Design pattern:
@@ -103,7 +103,7 @@
 # Why this works:
 # - Relationships remain clean OWL properties (no reification overhead)
 # - Metadata is attached directly to relationship instances via <<...>> syntax
-# - Supports all ArchiMate relationship attributes (accessType, influenceSign, etc.).
+# - Supports all ArchiMate relationship attributes (accessType, influenceModifier, etc.).
 # - Compatible with standard SPARQL queries and OWL reasoning
 # - Junction elements can reference relationships using the same pattern
 #
@@ -199,13 +199,6 @@ archimate:ArchiMateViewpoint rdf:type owl:Class ;
     rdfs:comment "A specification of the conventions for a particular kind of architecture view.";
     rdfs:subClassOf archimate:Concept .
 
-archimate:Aspect rdf:type owl:Class ;
-    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
-    rdfs:label "Aspect" ;
-    rdfs:comment "Classification of elements based on layer-independent characteristics related to the concerns of different stakeholders. Used for positioning elements in the ArchiMate metamodel." ;
-    archimate:abstract true ;
-    rdfs:subClassOf archimate:ArchiMate .
-
 archimate:Attribute rdf:type owl:Class ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Attribute";
@@ -251,7 +244,7 @@ archimate:documentation rdf:type owl:DatatypeProperty ;
 #      here; as domains formalize, those properties are promoted to profile attributes.
 #
 #   2. Relationship properties (Section 3.4) — spec-defined, constrained-vocabulary
-#      properties (accessType, influenceSign, influenceStrength, flowType). These are
+#      properties (accessType, influenceModifier, isDirected). These are
 #      typed owl:DatatypeProperty used as RDF-Star annotations on quoted triples.
 #      They must NOT be routed through hasProperty: doing so loses SHACL enforcement
 #      of allowed values and makes SPARQL queries fragile.
@@ -365,6 +358,13 @@ archimate:RelationshipConnector rdf:type owl:Class ;
 
 
 # Aspects
+archimate:Aspect rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
+    rdfs:label "Aspect" ;
+    rdfs:comment "Classification of elements based on layer-independent characteristics related to the concerns of different stakeholders. Used for positioning elements in the ArchiMate metamodel." ;
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:ArchiMate .
+	
 archimate:StructureAspect rdf:type owl:Class ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Structure Aspect" ;
@@ -428,6 +428,7 @@ archimate:MotivationAspect rdf:type owl:Class ;
     rdfs:label "Motivation" ;
     rdfs:comment "A cross-cutting aspect that represents drivers, goals, requirements, and principles in an enterprise architecture." ;
     archimate:abstract true ;
+    rdfs:subClassOf archimate:MotivationDomain ;
     rdfs:subClassOf archimate:Aspect .
 
 archimate:CompositeElement rdf:type owl:Class ;
@@ -450,6 +451,43 @@ archimate:LayerComposite rdf:type owl:Class ;
     rdfs:subClassOf archimate:CompositeElement .
 
 
+# Domains
+archimate:Domain rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
+    rdfs:label "Domain" ;
+    rdfs:comment "Classification of concepts used by the restrictions that govern derivation. A derivation is refused when the intermediate element a chain passes through sits in a domain matching neither endpoint. Domains cut across layers and cannot be inferred from them: the Core domain additionally covers the physical extension, the location element and the grouping element, none of which follow the generic metamodel template that defines archimate:CoreLayer." ;
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:ArchiMate .
+
+archimate:CoreDomain rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
+    rdfs:label "Core Domain" ;
+    rdfs:comment "The Business, Application and Technology layers, together with the physical extension, the location element and the grouping element." ;
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:Domain .
+
+archimate:StrategyDomain rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
+    rdfs:label "Strategy Domain" ;
+    rdfs:comment "The strategy concepts." ;
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:Domain .
+
+archimate:MotivationDomain rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
+    rdfs:label "Motivation Domain" ;
+    rdfs:comment "The motivation concepts." ;
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:Domain .
+
+archimate:ImplementationAndMigrationDomain rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
+    rdfs:label "Implementation and Migration Domain" ;
+    rdfs:comment "The implementation and migration concepts." ;
+    archimate:abstract true ;
+    rdfs:subClassOf archimate:Domain .
+
+
 # Layers
 archimate:Layer rdf:type owl:Class ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
@@ -463,6 +501,7 @@ archimate:CoreLayer rdf:type owl:Class ;
     rdfs:label "Core Layer" ;
     rdfs:comment "The three layers of the ArchiMate Core Framework (Section 3.4): Business, Application, and Technology. These follow the generic metamodel template (Figure 5)." ;
     archimate:abstract true ;
+    rdfs:subClassOf archimate:CoreDomain ;
     rdfs:subClassOf archimate:Layer .
 
 archimate:ExtendedLayer rdf:type owl:Class ;
@@ -477,6 +516,7 @@ archimate:StrategyLayer rdf:type owl:Class ;
     rdfs:label "Strategy Layer" ;
     rdfs:comment "Represents elements that define an organization's strategic direction and choices." ;
     archimate:abstract true ;
+    rdfs:subClassOf archimate:StrategyDomain ;
     rdfs:subClassOf archimate:ExtendedLayer .
 
 archimate:BusinessLayer rdf:type owl:Class ;
@@ -505,6 +545,7 @@ archimate:PhysicalLayer rdf:type owl:Class ;
     rdfs:label "Physical Layer" ;
     rdfs:comment "Represents physical equipment, materials, and distribution networks used to carry out business activities. An extension to the Technology Layer (Section 10.5)." ;
     archimate:abstract true ;
+    rdfs:subClassOf archimate:CoreDomain ;
     rdfs:subClassOf archimate:ExtendedLayer .
 
 archimate:ImplementationAndMigrationLayer rdf:type owl:Class ;
@@ -512,6 +553,7 @@ archimate:ImplementationAndMigrationLayer rdf:type owl:Class ;
     rdfs:label "Implementation and Migration Layer" ;
     rdfs:comment "Represents elements related to projects, programs, and transition architectures." ;
     archimate:abstract true ;
+    rdfs:subClassOf archimate:ImplementationAndMigrationDomain ;
     rdfs:subClassOf archimate:ExtendedLayer .
 
 
@@ -1019,6 +1061,7 @@ archimate:Grouping rdf:type owl:Class ;
     rdfs:label "Grouping" ;
     rdfs:comment "An element that aggregates or composes concepts that belong together based on some common characteristic." ;
     rdfs:subClassOf archimate:GenericComposite ;
+    rdfs:subClassOf archimate:CoreDomain ;
     rdfs:subClassOf archimate:Element .
 
 archimate:Location rdf:type owl:Class ;
@@ -1026,6 +1069,7 @@ archimate:Location rdf:type owl:Class ;
     rdfs:label "Location" ;
     rdfs:comment "A conceptual or physical place or position where concepts are located or performed." ;
     rdfs:subClassOf archimate:GenericComposite ;
+    rdfs:subClassOf archimate:CoreDomain ;
     rdfs:subClassOf archimate:Element .
 
 
@@ -1204,23 +1248,10 @@ archimate:accessType rdf:type owl:DatatypeProperty ;
     rdfs:range xsd:string .
 
 # Influence Relationship Specific Properties  
-archimate:influenceSign rdf:type owl:DatatypeProperty ;
+archimate:influenceModifier rdf:type owl:DatatypeProperty ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
-    rdfs:label "Influence Sign" ;
-    rdfs:comment "Sign of the influence: positive, negative, or unspecified." ;
-    rdfs:range xsd:string .
-
-archimate:influenceStrength rdf:type owl:DatatypeProperty ;
-    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
-    rdfs:label "Influence Strength" ;
-    rdfs:comment "Strength of the influence: weak, moderate, strong, or unspecified." ;
-    rdfs:range xsd:string .
-
-# Flow Relationship Specific Properties
-archimate:flowType rdf:type owl:DatatypeProperty ;
-    rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
-    rdfs:label "Flow Type" ;
-    rdfs:comment "Type of flow: information, material, energy, or unspecified." ;
+    rdfs:label "Influence Modifier" ;
+    rdfs:comment "The influence modifier, held exactly as the model states it. The Exchange Format types this attribute as a union of a suggested enumeration and an unrestricted string, and annotates the enumeration itself as suggestions: '+', '++', '-', '--' and '0' through '10' are the values it proposes, and any other string is equally valid. It therefore carries no fixed vocabulary to validate against, and no decomposition into a sign and a magnitude: the suggested values mix a polarity scale with an unsigned numeric one. Stored verbatim so that a round trip returns what it was given." ;
     rdfs:range xsd:string .
 
 # Association Relationship Specific Properties

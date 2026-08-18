@@ -61,9 +61,9 @@
 # permitted (source type, relationship, target type) lookup, which is what Level 3
 # (archimate_validation_relationships.ttl) does — generated from derivation/relationships.xml, one
 # constraint per pair, no path evaluation. Level 3 cannot express the value-domain shapes
-# (AccessTypeValidation, InfluenceSignValidation, InfluenceStrengthValidation, FlowTypeValidation,
-# JunctionTypeValidation) or JunctionRelationshipHomogeneity, which constrain a literal or a set rather
-# than a pair. A cost-constrained deployment can reasonably run Level 3 plus those six and leave the
+# (AccessTypeValidation, JunctionTypeValidation) or JunctionRelationshipHomogeneity, which constrain a
+# literal or a set rather than a pair. A cost-constrained deployment can reasonably run Level 3 plus
+# those three and leave the
 # rest of this file to batch reporting.
 # ---------------------------------------------------------------------------
 #
@@ -809,58 +809,7 @@ avmeta:AccessTypeValidation rdf:type sh:NodeShape ;
         """
     ] .
 
-## 10.2 Influence sign validation
-
-avmeta:InfluenceSignValidation rdf:type sh:NodeShape ;
-    sh:targetSubjectsOf archimate:influence ;
-    rdfs:label "Influence Sign Validation" ;
-    sh:sparql [
-        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
-        sh:message "Influence sign must be: positive, negative, or unspecified" ;
-        sh:select """
-            SELECT $this ?target WHERE {
-                $this archimate:influence ?target .
-                <<$this archimate:influence ?target>> archimate:influenceSign ?val .
-                FILTER(?val NOT IN ("positive", "negative", "unspecified"))
-            }
-        """
-    ] .
-
-## 10.3 Influence strength validation
-
-avmeta:InfluenceStrengthValidation rdf:type sh:NodeShape ;
-    sh:targetSubjectsOf archimate:influence ;
-    rdfs:label "Influence Strength Validation" ;
-    sh:sparql [
-        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
-        sh:message "Influence strength must be: weak, moderate, strong, or unspecified" ;
-        sh:select """
-            SELECT $this ?target WHERE {
-                $this archimate:influence ?target .
-                <<$this archimate:influence ?target>> archimate:influenceStrength ?val .
-                FILTER(?val NOT IN ("weak", "moderate", "strong", "unspecified"))
-            }
-        """
-    ] .
-
-## 10.4 Flow type validation
-
-avmeta:FlowTypeValidation rdf:type sh:NodeShape ;
-    sh:targetSubjectsOf archimate:flow ;
-    rdfs:label "Flow Type Validation" ;
-    sh:sparql [
-        sh:prefixes <https://purl.org/archimate/validation/metamodel> ;
-        sh:message "Flow type must be: information, material, energy, or unspecified" ;
-        sh:select """
-            SELECT $this ?target WHERE {
-                $this archimate:flow ?target .
-                <<$this archimate:flow ?target>> archimate:flowType ?val .
-                FILTER(?val NOT IN ("information", "material", "energy", "unspecified"))
-            }
-        """
-    ] .
-
-## 10.5 Association directedness validation
+## 10.2 Association directedness validation
 
 avmeta:AssociationIsDirectedValidation rdf:type sh:NodeShape ;
     sh:targetSubjectsOf archimate:association ;

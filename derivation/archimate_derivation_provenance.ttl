@@ -11,7 +11,7 @@
 # does), so a deployment that puts archimate_derivation_rules.ttl in a shapes graph must still load
 # this file outside it.
 #
-# NOT derivation, despite the similar name: archimate:influenceStrength stays in
+# NOT derivation, despite the similar name: archimate:influenceModifier stays in
 # ontology/archimate.ttl. That is the specification's own attribute on an influence relationship
 # (weak / moderate / strong), unrelated to the weakest-link ordering in
 # archimate_derivation_strengths.ttl.

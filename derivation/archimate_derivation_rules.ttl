@@ -167,6 +167,42 @@ deriv:DR2_StructuralChain rdf:type sh:SPARQLRule ;
             FILTER EXISTS { ?rel1 archimate:permittedBy ?permitsRel1 }
             FILTER EXISTS { ?rel2 archimate:permittedBy ?permitsRel2 }
 
+            # --- Restrictions on applying this rule -------------------------
+            # Named explicitly because two rules conclude in the opposite
+            # direction to the chain they match.
+            BIND(?a AS ?srcNode)
+            BIND(?c AS ?tgtNode)
+            BIND(?weakerRel AS ?derivedRel)
+
+            # Domain of each participant. Connectors carry no domain and are
+            # exempt, in the same way they carry no row in the tables.
+            OPTIONAL { ?srcNode rdf:type ?domSource .
+                       FILTER(?domSource IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?b rdf:type ?domBridge .
+                       FILTER(?domBridge IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?tgtNode rdf:type ?domTarget .
+                       FILTER(?domTarget IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?srcNode rdf:type archimate:PassiveStructure .
+                       BIND(true AS ?srcPassive) }
+            OPTIONAL { ?tgtNode rdf:type archimate:PassiveStructure .
+                       BIND(true AS ?tgtPassive) }
+
+            # A chain may not be collapsed through an element whose domain
+            # matches neither endpoint.
+            FILTER(
+                !BOUND(?domSource) || !BOUND(?domBridge) || !BOUND(?domTarget)
+                || ?domBridge = ?domSource
+                || ?domBridge = ?domTarget
+                || ( ?domSource = archimate:ImplementationAndMigrationDomain
+                     && ?domBridge = archimate:CoreDomain
+                     && ?domTarget IN (archimate:MotivationDomain, archimate:StrategyDomain)
+                     && NOT EXISTS { ?b rdf:type ?lg .
+                                     FILTER(?lg IN (archimate:Location, archimate:Grouping)) } )
+            )
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
             FILTER EXISTS {
@@ -175,6 +211,38 @@ deriv:DR2_StructuralChain rdf:type sh:SPARQLRule ;
                 ?weakerRel archimate:permittedBy ?permits .
                 ?permSourceType ?permits ?permTargetType .
             }
+
+            # Cross-domain endpoint restrictions.
+            FILTER( !BOUND(?domSource) || !BOUND(?domTarget) || (
+                   ( !(?domSource IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain, archimate:StrategyDomain) && ?domTarget = archimate:MotivationDomain)
+                     || ?derivedRel IN (archimate:assignment, archimate:realization,
+                                        archimate:influence, archimate:association) )
+                && ( !(?domSource = archimate:MotivationDomain && ?domTarget IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain, archimate:StrategyDomain))
+                     || ?derivedRel = archimate:association )
+                && ( !(?domSource IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain) && ?domTarget = archimate:StrategyDomain)
+                     || ?derivedRel IN (archimate:realization, archimate:association) )
+                && ( !(?domSource = archimate:StrategyDomain && ?domTarget IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain))
+                     || ?derivedRel = archimate:association )
+                && ( !(?domSource = archimate:ImplementationAndMigrationDomain && ?domTarget = archimate:CoreDomain)
+                     || ?derivedRel IN (archimate:realization, archimate:association) )
+                && ( !(?domSource = archimate:CoreDomain && ?domTarget = archimate:ImplementationAndMigrationDomain)
+                     || ?derivedRel IN (archimate:assignment, archimate:association) )
+            ) )
+
+            # Influence concludes only into the motivation domain.
+            FILTER( ?derivedRel != archimate:influence
+                    || !BOUND(?domTarget) || ?domTarget = archimate:MotivationDomain )
+
+            # Passive structure restrictions.
+            FILTER( ?derivedRel != archimate:access || BOUND(?tgtPassive) )
+            FILTER( BOUND(?srcPassive) || !BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:access, archimate:assignment,
+                                       archimate:association) )
+            FILTER( !BOUND(?srcPassive) || !BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:realization, archimate:association) )
+            FILTER( !BOUND(?srcPassive) || BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:realization, archimate:influence,
+                                       archimate:association) )
         }
     """ .
 
@@ -208,6 +276,42 @@ deriv:DR3_StructuralDependency rdf:type sh:SPARQLRule ;
             FILTER EXISTS { ?depRel archimate:permittedBy ?permitsDepRel }
             FILTER EXISTS { ?structRel archimate:permittedBy ?permitsStructRel }
 
+            # --- Restrictions on applying this rule -------------------------
+            # Named explicitly because two rules conclude in the opposite
+            # direction to the chain they match.
+            BIND(?a AS ?srcNode)
+            BIND(?c AS ?tgtNode)
+            BIND(?depRel AS ?derivedRel)
+
+            # Domain of each participant. Connectors carry no domain and are
+            # exempt, in the same way they carry no row in the tables.
+            OPTIONAL { ?srcNode rdf:type ?domSource .
+                       FILTER(?domSource IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?b rdf:type ?domBridge .
+                       FILTER(?domBridge IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?tgtNode rdf:type ?domTarget .
+                       FILTER(?domTarget IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?srcNode rdf:type archimate:PassiveStructure .
+                       BIND(true AS ?srcPassive) }
+            OPTIONAL { ?tgtNode rdf:type archimate:PassiveStructure .
+                       BIND(true AS ?tgtPassive) }
+
+            # A chain may not be collapsed through an element whose domain
+            # matches neither endpoint.
+            FILTER(
+                !BOUND(?domSource) || !BOUND(?domBridge) || !BOUND(?domTarget)
+                || ?domBridge = ?domSource
+                || ?domBridge = ?domTarget
+                || ( ?domSource = archimate:ImplementationAndMigrationDomain
+                     && ?domBridge = archimate:CoreDomain
+                     && ?domTarget IN (archimate:MotivationDomain, archimate:StrategyDomain)
+                     && NOT EXISTS { ?b rdf:type ?lg .
+                                     FILTER(?lg IN (archimate:Location, archimate:Grouping)) } )
+            )
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
             FILTER EXISTS {
@@ -216,6 +320,38 @@ deriv:DR3_StructuralDependency rdf:type sh:SPARQLRule ;
                 ?depRel archimate:permittedBy ?permits .
                 ?permSourceType ?permits ?permTargetType .
             }
+
+            # Cross-domain endpoint restrictions.
+            FILTER( !BOUND(?domSource) || !BOUND(?domTarget) || (
+                   ( !(?domSource IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain, archimate:StrategyDomain) && ?domTarget = archimate:MotivationDomain)
+                     || ?derivedRel IN (archimate:assignment, archimate:realization,
+                                        archimate:influence, archimate:association) )
+                && ( !(?domSource = archimate:MotivationDomain && ?domTarget IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain, archimate:StrategyDomain))
+                     || ?derivedRel = archimate:association )
+                && ( !(?domSource IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain) && ?domTarget = archimate:StrategyDomain)
+                     || ?derivedRel IN (archimate:realization, archimate:association) )
+                && ( !(?domSource = archimate:StrategyDomain && ?domTarget IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain))
+                     || ?derivedRel = archimate:association )
+                && ( !(?domSource = archimate:ImplementationAndMigrationDomain && ?domTarget = archimate:CoreDomain)
+                     || ?derivedRel IN (archimate:realization, archimate:association) )
+                && ( !(?domSource = archimate:CoreDomain && ?domTarget = archimate:ImplementationAndMigrationDomain)
+                     || ?derivedRel IN (archimate:assignment, archimate:association) )
+            ) )
+
+            # Influence concludes only into the motivation domain.
+            FILTER( ?derivedRel != archimate:influence
+                    || !BOUND(?domTarget) || ?domTarget = archimate:MotivationDomain )
+
+            # Passive structure restrictions.
+            FILTER( ?derivedRel != archimate:access || BOUND(?tgtPassive) )
+            FILTER( BOUND(?srcPassive) || !BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:access, archimate:assignment,
+                                       archimate:association) )
+            FILTER( !BOUND(?srcPassive) || !BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:realization, archimate:association) )
+            FILTER( !BOUND(?srcPassive) || BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:realization, archimate:influence,
+                                       archimate:association) )
         }
     """ .
 
@@ -249,6 +385,42 @@ deriv:DR4_OpposingStructuralDependency rdf:type sh:SPARQLRule ;
             FILTER EXISTS { ?depRel archimate:permittedBy ?permitsDepRel }
             FILTER EXISTS { ?structRel archimate:permittedBy ?permitsStructRel }
 
+            # --- Restrictions on applying this rule -------------------------
+            # Named explicitly because two rules conclude in the opposite
+            # direction to the chain they match.
+            BIND(?c AS ?srcNode)
+            BIND(?a AS ?tgtNode)
+            BIND(?depRel AS ?derivedRel)
+
+            # Domain of each participant. Connectors carry no domain and are
+            # exempt, in the same way they carry no row in the tables.
+            OPTIONAL { ?srcNode rdf:type ?domSource .
+                       FILTER(?domSource IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?b rdf:type ?domBridge .
+                       FILTER(?domBridge IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?tgtNode rdf:type ?domTarget .
+                       FILTER(?domTarget IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?srcNode rdf:type archimate:PassiveStructure .
+                       BIND(true AS ?srcPassive) }
+            OPTIONAL { ?tgtNode rdf:type archimate:PassiveStructure .
+                       BIND(true AS ?tgtPassive) }
+
+            # A chain may not be collapsed through an element whose domain
+            # matches neither endpoint.
+            FILTER(
+                !BOUND(?domSource) || !BOUND(?domBridge) || !BOUND(?domTarget)
+                || ?domBridge = ?domSource
+                || ?domBridge = ?domTarget
+                || ( ?domSource = archimate:ImplementationAndMigrationDomain
+                     && ?domBridge = archimate:CoreDomain
+                     && ?domTarget IN (archimate:MotivationDomain, archimate:StrategyDomain)
+                     && NOT EXISTS { ?b rdf:type ?lg .
+                                     FILTER(?lg IN (archimate:Location, archimate:Grouping)) } )
+            )
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
             FILTER EXISTS {
@@ -257,6 +429,38 @@ deriv:DR4_OpposingStructuralDependency rdf:type sh:SPARQLRule ;
                 ?depRel archimate:permittedBy ?permits .
                 ?permSourceType ?permits ?permTargetType .
             }
+
+            # Cross-domain endpoint restrictions.
+            FILTER( !BOUND(?domSource) || !BOUND(?domTarget) || (
+                   ( !(?domSource IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain, archimate:StrategyDomain) && ?domTarget = archimate:MotivationDomain)
+                     || ?derivedRel IN (archimate:assignment, archimate:realization,
+                                        archimate:influence, archimate:association) )
+                && ( !(?domSource = archimate:MotivationDomain && ?domTarget IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain, archimate:StrategyDomain))
+                     || ?derivedRel = archimate:association )
+                && ( !(?domSource IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain) && ?domTarget = archimate:StrategyDomain)
+                     || ?derivedRel IN (archimate:realization, archimate:association) )
+                && ( !(?domSource = archimate:StrategyDomain && ?domTarget IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain))
+                     || ?derivedRel = archimate:association )
+                && ( !(?domSource = archimate:ImplementationAndMigrationDomain && ?domTarget = archimate:CoreDomain)
+                     || ?derivedRel IN (archimate:realization, archimate:association) )
+                && ( !(?domSource = archimate:CoreDomain && ?domTarget = archimate:ImplementationAndMigrationDomain)
+                     || ?derivedRel IN (archimate:assignment, archimate:association) )
+            ) )
+
+            # Influence concludes only into the motivation domain.
+            FILTER( ?derivedRel != archimate:influence
+                    || !BOUND(?domTarget) || ?domTarget = archimate:MotivationDomain )
+
+            # Passive structure restrictions.
+            FILTER( ?derivedRel != archimate:access || BOUND(?tgtPassive) )
+            FILTER( BOUND(?srcPassive) || !BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:access, archimate:assignment,
+                                       archimate:association) )
+            FILTER( !BOUND(?srcPassive) || !BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:realization, archimate:association) )
+            FILTER( !BOUND(?srcPassive) || BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:realization, archimate:influence,
+                                       archimate:association) )
         }
     """ .
 
@@ -290,6 +494,42 @@ deriv:DR5_StructuralDynamic rdf:type sh:SPARQLRule ;
             FILTER EXISTS { ?dynRel archimate:permittedBy ?permitsDynRel }
             FILTER EXISTS { ?structRel archimate:permittedBy ?permitsStructRel }
 
+            # --- Restrictions on applying this rule -------------------------
+            # Named explicitly because two rules conclude in the opposite
+            # direction to the chain they match.
+            BIND(?a AS ?srcNode)
+            BIND(?c AS ?tgtNode)
+            BIND(?dynRel AS ?derivedRel)
+
+            # Domain of each participant. Connectors carry no domain and are
+            # exempt, in the same way they carry no row in the tables.
+            OPTIONAL { ?srcNode rdf:type ?domSource .
+                       FILTER(?domSource IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?b rdf:type ?domBridge .
+                       FILTER(?domBridge IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?tgtNode rdf:type ?domTarget .
+                       FILTER(?domTarget IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?srcNode rdf:type archimate:PassiveStructure .
+                       BIND(true AS ?srcPassive) }
+            OPTIONAL { ?tgtNode rdf:type archimate:PassiveStructure .
+                       BIND(true AS ?tgtPassive) }
+
+            # A chain may not be collapsed through an element whose domain
+            # matches neither endpoint.
+            FILTER(
+                !BOUND(?domSource) || !BOUND(?domBridge) || !BOUND(?domTarget)
+                || ?domBridge = ?domSource
+                || ?domBridge = ?domTarget
+                || ( ?domSource = archimate:ImplementationAndMigrationDomain
+                     && ?domBridge = archimate:CoreDomain
+                     && ?domTarget IN (archimate:MotivationDomain, archimate:StrategyDomain)
+                     && NOT EXISTS { ?b rdf:type ?lg .
+                                     FILTER(?lg IN (archimate:Location, archimate:Grouping)) } )
+            )
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
             FILTER EXISTS {
@@ -298,6 +538,38 @@ deriv:DR5_StructuralDynamic rdf:type sh:SPARQLRule ;
                 ?dynRel archimate:permittedBy ?permits .
                 ?permSourceType ?permits ?permTargetType .
             }
+
+            # Cross-domain endpoint restrictions.
+            FILTER( !BOUND(?domSource) || !BOUND(?domTarget) || (
+                   ( !(?domSource IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain, archimate:StrategyDomain) && ?domTarget = archimate:MotivationDomain)
+                     || ?derivedRel IN (archimate:assignment, archimate:realization,
+                                        archimate:influence, archimate:association) )
+                && ( !(?domSource = archimate:MotivationDomain && ?domTarget IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain, archimate:StrategyDomain))
+                     || ?derivedRel = archimate:association )
+                && ( !(?domSource IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain) && ?domTarget = archimate:StrategyDomain)
+                     || ?derivedRel IN (archimate:realization, archimate:association) )
+                && ( !(?domSource = archimate:StrategyDomain && ?domTarget IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain))
+                     || ?derivedRel = archimate:association )
+                && ( !(?domSource = archimate:ImplementationAndMigrationDomain && ?domTarget = archimate:CoreDomain)
+                     || ?derivedRel IN (archimate:realization, archimate:association) )
+                && ( !(?domSource = archimate:CoreDomain && ?domTarget = archimate:ImplementationAndMigrationDomain)
+                     || ?derivedRel IN (archimate:assignment, archimate:association) )
+            ) )
+
+            # Influence concludes only into the motivation domain.
+            FILTER( ?derivedRel != archimate:influence
+                    || !BOUND(?domTarget) || ?domTarget = archimate:MotivationDomain )
+
+            # Passive structure restrictions.
+            FILTER( ?derivedRel != archimate:access || BOUND(?tgtPassive) )
+            FILTER( BOUND(?srcPassive) || !BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:access, archimate:assignment,
+                                       archimate:association) )
+            FILTER( !BOUND(?srcPassive) || !BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:realization, archimate:association) )
+            FILTER( !BOUND(?srcPassive) || BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:realization, archimate:influence,
+                                       archimate:association) )
         }
     """ .
 
@@ -329,6 +601,42 @@ deriv:DR6_StructuralFlow rdf:type sh:SPARQLRule ;
             # carry archimate:permittedBy.
             FILTER EXISTS { ?structRel archimate:permittedBy ?permitsStructRel }
 
+            # --- Restrictions on applying this rule -------------------------
+            # Named explicitly because two rules conclude in the opposite
+            # direction to the chain they match.
+            BIND(?c AS ?srcNode)
+            BIND(?a AS ?tgtNode)
+            BIND(archimate:flow AS ?derivedRel)
+
+            # Domain of each participant. Connectors carry no domain and are
+            # exempt, in the same way they carry no row in the tables.
+            OPTIONAL { ?srcNode rdf:type ?domSource .
+                       FILTER(?domSource IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?b rdf:type ?domBridge .
+                       FILTER(?domBridge IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?tgtNode rdf:type ?domTarget .
+                       FILTER(?domTarget IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?srcNode rdf:type archimate:PassiveStructure .
+                       BIND(true AS ?srcPassive) }
+            OPTIONAL { ?tgtNode rdf:type archimate:PassiveStructure .
+                       BIND(true AS ?tgtPassive) }
+
+            # A chain may not be collapsed through an element whose domain
+            # matches neither endpoint.
+            FILTER(
+                !BOUND(?domSource) || !BOUND(?domBridge) || !BOUND(?domTarget)
+                || ?domBridge = ?domSource
+                || ?domBridge = ?domTarget
+                || ( ?domSource = archimate:ImplementationAndMigrationDomain
+                     && ?domBridge = archimate:CoreDomain
+                     && ?domTarget IN (archimate:MotivationDomain, archimate:StrategyDomain)
+                     && NOT EXISTS { ?b rdf:type ?lg .
+                                     FILTER(?lg IN (archimate:Location, archimate:Grouping)) } )
+            )
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
             FILTER EXISTS {
@@ -337,6 +645,38 @@ deriv:DR6_StructuralFlow rdf:type sh:SPARQLRule ;
                 archimate:flow archimate:permittedBy ?permits .
                 ?permSourceType ?permits ?permTargetType .
             }
+
+            # Cross-domain endpoint restrictions.
+            FILTER( !BOUND(?domSource) || !BOUND(?domTarget) || (
+                   ( !(?domSource IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain, archimate:StrategyDomain) && ?domTarget = archimate:MotivationDomain)
+                     || ?derivedRel IN (archimate:assignment, archimate:realization,
+                                        archimate:influence, archimate:association) )
+                && ( !(?domSource = archimate:MotivationDomain && ?domTarget IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain, archimate:StrategyDomain))
+                     || ?derivedRel = archimate:association )
+                && ( !(?domSource IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain) && ?domTarget = archimate:StrategyDomain)
+                     || ?derivedRel IN (archimate:realization, archimate:association) )
+                && ( !(?domSource = archimate:StrategyDomain && ?domTarget IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain))
+                     || ?derivedRel = archimate:association )
+                && ( !(?domSource = archimate:ImplementationAndMigrationDomain && ?domTarget = archimate:CoreDomain)
+                     || ?derivedRel IN (archimate:realization, archimate:association) )
+                && ( !(?domSource = archimate:CoreDomain && ?domTarget = archimate:ImplementationAndMigrationDomain)
+                     || ?derivedRel IN (archimate:assignment, archimate:association) )
+            ) )
+
+            # Influence concludes only into the motivation domain.
+            FILTER( ?derivedRel != archimate:influence
+                    || !BOUND(?domTarget) || ?domTarget = archimate:MotivationDomain )
+
+            # Passive structure restrictions.
+            FILTER( ?derivedRel != archimate:access || BOUND(?tgtPassive) )
+            FILTER( BOUND(?srcPassive) || !BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:access, archimate:assignment,
+                                       archimate:association) )
+            FILTER( !BOUND(?srcPassive) || !BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:realization, archimate:association) )
+            FILTER( !BOUND(?srcPassive) || BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:realization, archimate:influence,
+                                       archimate:association) )
         }
     """ .
 
@@ -368,6 +708,42 @@ deriv:DR7_TriggeringStructural rdf:type sh:SPARQLRule ;
             # carry archimate:permittedBy.
             FILTER EXISTS { ?structRel archimate:permittedBy ?permitsStructRel }
 
+            # --- Restrictions on applying this rule -------------------------
+            # Named explicitly because two rules conclude in the opposite
+            # direction to the chain they match.
+            BIND(?a AS ?srcNode)
+            BIND(?c AS ?tgtNode)
+            BIND(archimate:triggering AS ?derivedRel)
+
+            # Domain of each participant. Connectors carry no domain and are
+            # exempt, in the same way they carry no row in the tables.
+            OPTIONAL { ?srcNode rdf:type ?domSource .
+                       FILTER(?domSource IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?b rdf:type ?domBridge .
+                       FILTER(?domBridge IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?tgtNode rdf:type ?domTarget .
+                       FILTER(?domTarget IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?srcNode rdf:type archimate:PassiveStructure .
+                       BIND(true AS ?srcPassive) }
+            OPTIONAL { ?tgtNode rdf:type archimate:PassiveStructure .
+                       BIND(true AS ?tgtPassive) }
+
+            # A chain may not be collapsed through an element whose domain
+            # matches neither endpoint.
+            FILTER(
+                !BOUND(?domSource) || !BOUND(?domBridge) || !BOUND(?domTarget)
+                || ?domBridge = ?domSource
+                || ?domBridge = ?domTarget
+                || ( ?domSource = archimate:ImplementationAndMigrationDomain
+                     && ?domBridge = archimate:CoreDomain
+                     && ?domTarget IN (archimate:MotivationDomain, archimate:StrategyDomain)
+                     && NOT EXISTS { ?b rdf:type ?lg .
+                                     FILTER(?lg IN (archimate:Location, archimate:Grouping)) } )
+            )
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
             FILTER EXISTS {
@@ -376,6 +752,38 @@ deriv:DR7_TriggeringStructural rdf:type sh:SPARQLRule ;
                 archimate:triggering archimate:permittedBy ?permits .
                 ?permSourceType ?permits ?permTargetType .
             }
+
+            # Cross-domain endpoint restrictions.
+            FILTER( !BOUND(?domSource) || !BOUND(?domTarget) || (
+                   ( !(?domSource IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain, archimate:StrategyDomain) && ?domTarget = archimate:MotivationDomain)
+                     || ?derivedRel IN (archimate:assignment, archimate:realization,
+                                        archimate:influence, archimate:association) )
+                && ( !(?domSource = archimate:MotivationDomain && ?domTarget IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain, archimate:StrategyDomain))
+                     || ?derivedRel = archimate:association )
+                && ( !(?domSource IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain) && ?domTarget = archimate:StrategyDomain)
+                     || ?derivedRel IN (archimate:realization, archimate:association) )
+                && ( !(?domSource = archimate:StrategyDomain && ?domTarget IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain))
+                     || ?derivedRel = archimate:association )
+                && ( !(?domSource = archimate:ImplementationAndMigrationDomain && ?domTarget = archimate:CoreDomain)
+                     || ?derivedRel IN (archimate:realization, archimate:association) )
+                && ( !(?domSource = archimate:CoreDomain && ?domTarget = archimate:ImplementationAndMigrationDomain)
+                     || ?derivedRel IN (archimate:assignment, archimate:association) )
+            ) )
+
+            # Influence concludes only into the motivation domain.
+            FILTER( ?derivedRel != archimate:influence
+                    || !BOUND(?domTarget) || ?domTarget = archimate:MotivationDomain )
+
+            # Passive structure restrictions.
+            FILTER( ?derivedRel != archimate:access || BOUND(?tgtPassive) )
+            FILTER( BOUND(?srcPassive) || !BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:access, archimate:assignment,
+                                       archimate:association) )
+            FILTER( !BOUND(?srcPassive) || !BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:realization, archimate:association) )
+            FILTER( !BOUND(?srcPassive) || BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:realization, archimate:influence,
+                                       archimate:association) )
         }
     """ .
 
@@ -399,6 +807,42 @@ deriv:DR8_TriggeringTransitivity rdf:type sh:SPARQLRule ;
             FILTER(?a != ?c)
             FILTER NOT EXISTS { ?a archimate:triggering ?c }
 
+            # --- Restrictions on applying this rule -------------------------
+            # Named explicitly because two rules conclude in the opposite
+            # direction to the chain they match.
+            BIND(?a AS ?srcNode)
+            BIND(?c AS ?tgtNode)
+            BIND(archimate:triggering AS ?derivedRel)
+
+            # Domain of each participant. Connectors carry no domain and are
+            # exempt, in the same way they carry no row in the tables.
+            OPTIONAL { ?srcNode rdf:type ?domSource .
+                       FILTER(?domSource IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?b rdf:type ?domBridge .
+                       FILTER(?domBridge IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?tgtNode rdf:type ?domTarget .
+                       FILTER(?domTarget IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?srcNode rdf:type archimate:PassiveStructure .
+                       BIND(true AS ?srcPassive) }
+            OPTIONAL { ?tgtNode rdf:type archimate:PassiveStructure .
+                       BIND(true AS ?tgtPassive) }
+
+            # A chain may not be collapsed through an element whose domain
+            # matches neither endpoint.
+            FILTER(
+                !BOUND(?domSource) || !BOUND(?domBridge) || !BOUND(?domTarget)
+                || ?domBridge = ?domSource
+                || ?domBridge = ?domTarget
+                || ( ?domSource = archimate:ImplementationAndMigrationDomain
+                     && ?domBridge = archimate:CoreDomain
+                     && ?domTarget IN (archimate:MotivationDomain, archimate:StrategyDomain)
+                     && NOT EXISTS { ?b rdf:type ?lg .
+                                     FILTER(?lg IN (archimate:Location, archimate:Grouping)) } )
+            )
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl.
             FILTER EXISTS {
@@ -407,6 +851,38 @@ deriv:DR8_TriggeringTransitivity rdf:type sh:SPARQLRule ;
                 archimate:triggering archimate:permittedBy ?permits .
                 ?permSourceType ?permits ?permTargetType .
             }
+
+            # Cross-domain endpoint restrictions.
+            FILTER( !BOUND(?domSource) || !BOUND(?domTarget) || (
+                   ( !(?domSource IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain, archimate:StrategyDomain) && ?domTarget = archimate:MotivationDomain)
+                     || ?derivedRel IN (archimate:assignment, archimate:realization,
+                                        archimate:influence, archimate:association) )
+                && ( !(?domSource = archimate:MotivationDomain && ?domTarget IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain, archimate:StrategyDomain))
+                     || ?derivedRel = archimate:association )
+                && ( !(?domSource IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain) && ?domTarget = archimate:StrategyDomain)
+                     || ?derivedRel IN (archimate:realization, archimate:association) )
+                && ( !(?domSource = archimate:StrategyDomain && ?domTarget IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain))
+                     || ?derivedRel = archimate:association )
+                && ( !(?domSource = archimate:ImplementationAndMigrationDomain && ?domTarget = archimate:CoreDomain)
+                     || ?derivedRel IN (archimate:realization, archimate:association) )
+                && ( !(?domSource = archimate:CoreDomain && ?domTarget = archimate:ImplementationAndMigrationDomain)
+                     || ?derivedRel IN (archimate:assignment, archimate:association) )
+            ) )
+
+            # Influence concludes only into the motivation domain.
+            FILTER( ?derivedRel != archimate:influence
+                    || !BOUND(?domTarget) || ?domTarget = archimate:MotivationDomain )
+
+            # Passive structure restrictions.
+            FILTER( ?derivedRel != archimate:access || BOUND(?tgtPassive) )
+            FILTER( BOUND(?srcPassive) || !BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:access, archimate:assignment,
+                                       archimate:association) )
+            FILTER( !BOUND(?srcPassive) || !BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:realization, archimate:association) )
+            FILTER( !BOUND(?srcPassive) || BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:realization, archimate:influence,
+                                       archimate:association) )
         }
     """ .
 
@@ -449,6 +925,42 @@ deriv:JunctionTransparency rdf:type sh:SPARQLRule ;
             # carry archimate:permittedBy.
             FILTER EXISTS { ?r archimate:permittedBy ?permitsR }
 
+            # --- Restrictions on applying this rule -------------------------
+            # Named explicitly because two rules conclude in the opposite
+            # direction to the chain they match.
+            BIND(?a AS ?srcNode)
+            BIND(?c AS ?tgtNode)
+            BIND(?r AS ?derivedRel)
+
+            # Domain of each participant. Connectors carry no domain and are
+            # exempt, in the same way they carry no row in the tables.
+            OPTIONAL { ?srcNode rdf:type ?domSource .
+                       FILTER(?domSource IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?j rdf:type ?domBridge .
+                       FILTER(?domBridge IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?tgtNode rdf:type ?domTarget .
+                       FILTER(?domTarget IN (archimate:CoreDomain, archimate:StrategyDomain,
+                                        archimate:MotivationDomain, archimate:ImplementationAndMigrationDomain)) }
+            OPTIONAL { ?srcNode rdf:type archimate:PassiveStructure .
+                       BIND(true AS ?srcPassive) }
+            OPTIONAL { ?tgtNode rdf:type archimate:PassiveStructure .
+                       BIND(true AS ?tgtPassive) }
+
+            # A chain may not be collapsed through an element whose domain
+            # matches neither endpoint.
+            FILTER(
+                !BOUND(?domSource) || !BOUND(?domBridge) || !BOUND(?domTarget)
+                || ?domBridge = ?domSource
+                || ?domBridge = ?domTarget
+                || ( ?domSource = archimate:ImplementationAndMigrationDomain
+                     && ?domBridge = archimate:CoreDomain
+                     && ?domTarget IN (archimate:MotivationDomain, archimate:StrategyDomain)
+                     && NOT EXISTS { ?j rdf:type ?lg .
+                                     FILTER(?lg IN (archimate:Location, archimate:Grouping)) } )
+            )
+
             # Appendix B permits this relationship between these endpoint types.
             # Requires archimate_derivation_axioms.ttl. A Junction endpoint is exempt:
             # connectors have no row in the tables, and an intermediate hop of a
@@ -463,6 +975,38 @@ deriv:JunctionTransparency rdf:type sh:SPARQLRule ;
                     ?permSourceType ?permits ?permTargetType .
                 }
             )
+
+            # Cross-domain endpoint restrictions.
+            FILTER( !BOUND(?domSource) || !BOUND(?domTarget) || (
+                   ( !(?domSource IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain, archimate:StrategyDomain) && ?domTarget = archimate:MotivationDomain)
+                     || ?derivedRel IN (archimate:assignment, archimate:realization,
+                                        archimate:influence, archimate:association) )
+                && ( !(?domSource = archimate:MotivationDomain && ?domTarget IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain, archimate:StrategyDomain))
+                     || ?derivedRel = archimate:association )
+                && ( !(?domSource IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain) && ?domTarget = archimate:StrategyDomain)
+                     || ?derivedRel IN (archimate:realization, archimate:association) )
+                && ( !(?domSource = archimate:StrategyDomain && ?domTarget IN (archimate:ImplementationAndMigrationDomain, archimate:CoreDomain))
+                     || ?derivedRel = archimate:association )
+                && ( !(?domSource = archimate:ImplementationAndMigrationDomain && ?domTarget = archimate:CoreDomain)
+                     || ?derivedRel IN (archimate:realization, archimate:association) )
+                && ( !(?domSource = archimate:CoreDomain && ?domTarget = archimate:ImplementationAndMigrationDomain)
+                     || ?derivedRel IN (archimate:assignment, archimate:association) )
+            ) )
+
+            # Influence concludes only into the motivation domain.
+            FILTER( ?derivedRel != archimate:influence
+                    || !BOUND(?domTarget) || ?domTarget = archimate:MotivationDomain )
+
+            # Passive structure restrictions.
+            FILTER( ?derivedRel != archimate:access || BOUND(?tgtPassive) )
+            FILTER( BOUND(?srcPassive) || !BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:access, archimate:assignment,
+                                       archimate:association) )
+            FILTER( !BOUND(?srcPassive) || !BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:realization, archimate:association) )
+            FILTER( !BOUND(?srcPassive) || BOUND(?tgtPassive)
+                    || ?derivedRel IN (archimate:realization, archimate:influence,
+                                       archimate:association) )
         }
     """ .
 
