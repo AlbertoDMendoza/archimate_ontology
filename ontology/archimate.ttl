@@ -29,7 +29,9 @@
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
     dct:modified "2026-08-08"^^xsd:date ;
-    dct:license <http://www.apache.org/licenses/LICENSE-2.0> .
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
+    dct:source <https://pubs.opengroup.org/architecture/archimate3-doc/> ;
+    dct:rights "Class and property definitions are derived from the ArchiMate(R) 3.2 Specification, Copyright (C) 2012-2023 The Open Group. ArchiMate is a registered trademark of The Open Group. This ontology is an independent formalization, is a derivative work, and is not the official ArchiMate documentation. The Apache 2.0 license applies to the formalization itself -- the class and property structure, IRIs, RDF-Star design, and the axioms and shapes distributed alongside it -- and not to the underlying specification text."@en .
 
 # NOTES 
 # Ontology file now 100% complete with ArchiMate 3.2 spec --61 elements, 11 relationships, relationship connectors (junctions). 
@@ -1225,9 +1227,8 @@ archimate:junctionType rdf:type owl:DatatypeProperty ;
     rdfs:label "junction type" ;
     rdfs:comment "Type of junction: 'and' (default) or 'or'. AND junction means all incoming relationships must be satisfied. OR junction means at least one incoming relationship must be satisfied." ;
     rdfs:domain archimate:Junction ;
-    rdfs:range [ 
-		owl:oneOf ( "and" "or" ) 
-	] .
+    rdfs:range [ rdf:type rdfs:Datatype ;
+        owl:oneOf ( "and" "or" ) ] .
 
 #### 3.4 RDF-Star Relationship Metadata Properties
 

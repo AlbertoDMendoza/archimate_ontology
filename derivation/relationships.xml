@@ -2,6 +2,18 @@
 <relationships version="3.2">
 
     <!--
+    The permitted-relationship data below is transcribed from Appendix B of the ArchiMate(R) 3.2
+    Specification, Copyright (C) 2012-2023 The Open Group. ArchiMate is a registered trademark of
+    The Open Group. This file is a derivative work and is not the official ArchiMate documentation;
+    the specification is the authority where the two disagree. See
+    https://pubs.opengroup.org/architecture/archimate3-doc/.
+
+    The Apache 2.0 license covering this repository applies to the encoding (the letter legend, the
+    element ordering, and the generator that turns this table into axioms), not to the underlying
+    specification content.
+    -->
+
+    <!--
     relations letter legend:
     a=access  c=composition  f=flow  g=aggregation  i=assignment  n=influence
     o=association  r=realization  s=specialization  t=triggering  v=serving
