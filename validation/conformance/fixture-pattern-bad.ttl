@@ -100,3 +100,12 @@ fixbad:NestedNoPrimitive rdf:type owl:Class ;
     rdfs:subClassOf fixbad:FixedParent ;
     archimate:profileSpecialization fixbad:FixedParent ;
     rdfs:label "bad: primitive reached only through the parent profile" .
+
+## Must violate avpat:ProfileOrderValue (the property shape of
+## avpat:ProfileOrderWellFormed): two order values, so the sibling sort is
+## undefined. Everything else about the class is well-formed.
+fixbad:DoubleOrder rdf:type owl:Class ;
+    rdfs:subClassOf archimate:BusinessActor ;
+    archimate:profileSpecialization archimate:BusinessActor ;
+    archimate:profileOrder 10 , 20 ;
+    rdfs:label "bad: two profile order values" .

@@ -123,3 +123,34 @@
 <#profileSpecialization> rdf:type owl:AnnotationProperty ;
     rdfs:label "profile specialization" ;
     rdfs:comment "Marks an OWL class as a domain-specific profile (specialization) of a standard ArchiMate element type or another profile class. This is a class-level annotation for the profile pattern — it does not participate in OWL reasoning (rdfs:subClassOf handles inference) or ArchiMate derivation rules (archimate:specialization handles instance-level PDR1-4). Queryable via SPARQL property paths for profile discovery." .
+
+# =============================================================================
+# DESIGN NOTE — Sibling order
+# =============================================================================
+#
+# A profile hierarchy is a tree of classes, and a tree has no order of its own.
+# Where a profile encodes a framework that DOES state an order — a taxonomy read
+# in a canonical sequence, a lifecycle whose stages run early to late — that
+# order is part of what the profile asserts, not a rendering preference, and it
+# belongs in the ontology beside the tree it orders.
+#
+# <#profileOrder> carries it. The value orders a class among the siblings that
+# share its <#profileSpecialization> parent; it says nothing across parents, so
+# two classes under different parents may hold the same value without conflict.
+# A consumer walking the tree sorts each sibling set by it and falls back to the
+# label where it is absent.
+#
+# Values are sparse — 10, 20, 30 — so a tenant adding a class between two
+# existing ones needs no renumbering of what is already there. Gaps carry no
+# meaning; only the relative order does.
+#
+# A profile either orders every one of its classes or none of them. A sibling
+# set where some classes carry a value and others do not sorts by two different
+# keys at once, which is more confusing than plain alphabetical order.
+#
+# =============================================================================
+
+<#profileOrder> rdf:type owl:AnnotationProperty ;
+    rdfs:label "profile order" ;
+    rdfs:comment "The position of a profile class among the sibling classes that declare the same <#profileSpecialization> parent, lowest first. A class-level annotation for the profile pattern: it records an order the profiled framework itself states, and takes no part in OWL reasoning or the derivation rules. Sparse integers (10, 20, 30) leave room to insert between; the gaps carry no meaning, and values are comparable only within one sibling set." ;
+    rdfs:range xsd:integer .

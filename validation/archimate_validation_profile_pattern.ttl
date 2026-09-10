@@ -11,7 +11,7 @@
 <https://purl.org/archimate/validation/profile-pattern> rdf:type owl:Ontology ;
     owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Profile Pattern Validation" ;
-    rdfs:comment "Meta-shapes that validate profile DEFINITIONS as data: every class carrying archimate:profileSpecialization is checked for the three-declaration pattern (owl:Class + rdfs:subClassOf + marker naming the same parent), for naming its ArchiMate primitive directly, and for well-formed fixed attributes (sh:hasValue capped by sh:maxCount 1, value consistent with the declared datatype, no fixed value contradicting an ancestor profile's). These are authoring-time checks on profile TBoxes, complementary to the instance-level shapes in archimate_validation_profile_examples.ttl. See ontology/archimate_profile.ttl for the pattern these shapes enforce." ;
+    rdfs:comment "Meta-shapes that validate profile DEFINITIONS as data: every class carrying archimate:profileSpecialization is checked for the three-declaration pattern (owl:Class + rdfs:subClassOf + marker naming the same parent), for naming its ArchiMate primitive directly, and for well-formed fixed attributes (sh:hasValue capped by sh:maxCount 1, value consistent with the declared datatype, no fixed value contradicting an ancestor profile's); every class carrying archimate:profileOrder is checked for a single integer value. These are authoring-time checks on profile TBoxes, complementary to the instance-level shapes in archimate_validation_profile_examples.ttl. See ontology/archimate_profile.ttl for the pattern these shapes enforce." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-09-10"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
@@ -47,9 +47,11 @@
 # instances), so these targets resolve there too, and well-formed profiles
 # report nothing.
 #
-# All shapes target sh:targetSubjectsOf archimate:profileSpecialization — the
-# profile marker is the discovery hook, so no class-target machinery is
-# involved and the checks run identically on any conforming engine.
+# Almost every shape targets sh:targetSubjectsOf archimate:profileSpecialization
+# — the profile marker is the discovery hook, so no class-target machinery is
+# involved and the checks run identically on any conforming engine. The one
+# exception is section 3, which targets subjects of archimate:profileOrder,
+# for the same reason: the annotation is its own discovery hook.
 #
 # What is deliberately NOT checked:
 # - That a profile class is typed sh:NodeShape. A profile that adds no
@@ -207,3 +209,28 @@ avpat:FixedAttributeChainConflict rdf:type sh:NodeShape ;
             }
         """
     ] .
+
+
+### 3. Sibling Order
+
+## 3.1 A profile order is a single integer.
+# archimate:profileOrder sorts a class among its profileSpecialization
+# siblings, so a consumer reads it as a comparable scalar. Two values, or a
+# value that is not an integer, leave the sort undefined rather than wrong,
+# which is the harder failure to see. Only the datatype and cardinality are
+# checkable here: whether the numbers put the siblings in the order the
+# profiled framework states is a claim about that framework, not about RDF.
+# The property shape is named so a validation report can cite it as
+# sh:sourceShape (the conformance oracle matches on that).
+avpat:ProfileOrderWellFormed rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:profileOrder ;
+    rdfs:label "Profile order must be a single integer" ;
+    sh:property avpat:ProfileOrderValue .
+
+avpat:ProfileOrderValue rdf:type sh:PropertyShape ;
+    sh:path archimate:profileOrder ;
+    sh:datatype xsd:integer ;
+    sh:maxCount 1 ;
+    sh:name "profile order" ;
+    sh:description "Position among the sibling classes sharing this class's profileSpecialization parent, lowest first." ;
+    sh:message "archimate:profileOrder must be exactly one xsd:integer — sparse values (10, 20, 30) leave room to insert between siblings" .
