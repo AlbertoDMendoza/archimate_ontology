@@ -50,8 +50,9 @@ python3 tools/profile_conformance.py
 3. **Meta oracle** — validating `fixture-pattern-bad.ttl` against
    `validation/archimate_validation_profile_pattern.ttl` must report exactly the violations in
    `fixture-pattern-expected.ttl`, one per malformed class (marker/subclass mismatch,
-   self-specialization, missing `owl:Class`, uncapped fixed attribute, fixed value outside its
-   datatype, fixed value contradicting an ancestor's). `fixbad:FixedParent` is well-formed by
+   self-specialization, missing `owl:Class`, nested class not naming its ArchiMate primitive,
+   uncapped fixed attribute, fixed value outside its datatype, fixed value contradicting an
+   ancestor's). `fixbad:FixedParent` is well-formed by
    construction — a violation on it means a meta-shape broadened.
 4. **Examples check** — the shipped example profiles (`ontology/archimate_profile_examples.ttl` +
    `validation/archimate_validation_profile_examples.ttl`) must conform to the meta-shapes.

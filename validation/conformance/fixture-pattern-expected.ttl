@@ -34,3 +34,7 @@
 [] a sh:ValidationResult ;
     sh:focusNode fixbad:ConflictChild ;
     sh:sourceShape avpat:FixedAttributeChainConflict .
+
+[] a sh:ValidationResult ;
+    sh:focusNode fixbad:NestedNoPrimitive ;
+    sh:sourceShape avpat:ProfileNamesItsPrimitive .

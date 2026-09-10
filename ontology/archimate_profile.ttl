@@ -45,11 +45,19 @@
 #       rdfs:subClassOf archimate:BusinessActor ;          # OWL inference
 #       archimate:profileSpecialization archimate:BusinessActor .  # profile marker
 #
-# Sub-profiles nest naturally via rdfs:subClassOf:
+# Sub-profiles nest via rdfs:subClassOf, and still name the primitive
+# directly:
 #
 #   ex:Employee rdf:type owl:Class ;
-#       rdfs:subClassOf ex:Person ;                        # OWL inference
+#       rdfs:subClassOf ex:Person, archimate:BusinessActor ; # OWL inference
 #       archimate:profileSpecialization ex:Person .        # profile marker
+#
+# The primitive is repeated because discovery matches the asserted triple.
+# Reaching archimate:BusinessActor through ex:Person is rdfs:subClassOf
+# entailment, which a repository running a custom ruleset may not compute;
+# there, a query of the form { ?c rdfs:subClassOf archimate:BusinessActor }
+# never returns ex:Employee, and nothing reports the omission. The meta-shape
+# avpat:ProfileNamesItsPrimitive enforces this.
 #
 # -----------------------------------------------------------------------------
 # Fixed vs Open Attributes
@@ -102,8 +110,9 @@
 #
 # The pattern is enforced and regression-guarded:
 # - validation/archimate_validation_profile_pattern.ttl — meta-shapes that
-#   validate profile DEFINITIONS as data (three-declaration coherence, fixed
-#   attribute well-formedness, no fixed value contradicting an ancestor's).
+#   validate profile DEFINITIONS as data (three-declaration coherence, the
+#   primitive named directly, fixed attribute well-formedness, no fixed value
+#   contradicting an ancestor's).
 # - validation/conformance/ — frozen fixtures with expected-output oracles
 #   for the instance-level guarantees (inheritance via subclass targeting,
 #   fixed-value immutability, rule ordering); runner in

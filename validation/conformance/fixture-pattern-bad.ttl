@@ -30,10 +30,10 @@ fixbad:MarkerMismatch rdf:type owl:Class ;
     rdfs:label "bad: marker/subclass mismatch" .
 
 ## Must violate avpat:ProfileNoSelfSpecialization.
-## The reflexive rdfs:subClassOf satisfies the coherence check, so only the
-## self-loop shape may fire.
+## The reflexive rdfs:subClassOf satisfies the coherence check and the
+## primitive is named directly, so only the self-loop shape may fire.
 fixbad:SelfMarker rdf:type owl:Class ;
-    rdfs:subClassOf fixbad:SelfMarker ;
+    rdfs:subClassOf fixbad:SelfMarker , archimate:BusinessActor ;
     archimate:profileSpecialization fixbad:SelfMarker ;
     rdfs:label "bad: self-specialization" .
 
@@ -83,7 +83,7 @@ fixbad:FixedParent rdf:type owl:Class , sh:NodeShape ;
     ] .
 
 fixbad:ConflictChild rdf:type owl:Class , sh:NodeShape ;
-    rdfs:subClassOf fixbad:FixedParent ;
+    rdfs:subClassOf fixbad:FixedParent , archimate:BusinessActor ;
     archimate:profileSpecialization fixbad:FixedParent ;
     rdfs:label "bad: contradicts ancestor's fixed value" ;
     sh:property [
@@ -92,3 +92,11 @@ fixbad:ConflictChild rdf:type owl:Class , sh:NodeShape ;
         sh:hasValue "child" ;
         sh:maxCount 1
     ] .
+
+## Must violate avpat:ProfileNamesItsPrimitive: nested under the well-formed
+## fixbad:FixedParent, marker and subclass axiom agree, but the ArchiMate
+## primitive is reachable only through the parent -- never asserted here.
+fixbad:NestedNoPrimitive rdf:type owl:Class ;
+    rdfs:subClassOf fixbad:FixedParent ;
+    archimate:profileSpecialization fixbad:FixedParent ;
+    rdfs:label "bad: primitive reached only through the parent profile" .

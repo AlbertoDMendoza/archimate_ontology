@@ -11,7 +11,7 @@
 <https://purl.org/archimate/validation/profile-pattern> rdf:type owl:Ontology ;
     owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Profile Pattern Validation" ;
-    rdfs:comment "Meta-shapes that validate profile DEFINITIONS as data: every class carrying archimate:profileSpecialization is checked for the three-declaration pattern (owl:Class + rdfs:subClassOf + marker naming the same parent) and for well-formed fixed attributes (sh:hasValue capped by sh:maxCount 1, value consistent with the declared datatype, no fixed value contradicting an ancestor profile's). These are authoring-time checks on profile TBoxes, complementary to the instance-level shapes in archimate_validation_profile_examples.ttl. See ontology/archimate_profile.ttl for the pattern these shapes enforce." ;
+    rdfs:comment "Meta-shapes that validate profile DEFINITIONS as data: every class carrying archimate:profileSpecialization is checked for the three-declaration pattern (owl:Class + rdfs:subClassOf + marker naming the same parent), for naming its ArchiMate primitive directly, and for well-formed fixed attributes (sh:hasValue capped by sh:maxCount 1, value consistent with the declared datatype, no fixed value contradicting an ancestor profile's). These are authoring-time checks on profile TBoxes, complementary to the instance-level shapes in archimate_validation_profile_examples.ttl. See ontology/archimate_profile.ttl for the pattern these shapes enforce." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-09-10"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
@@ -113,6 +113,31 @@ avpat:ProfileIsOwlClass rdf:type sh:NodeShape ;
             SELECT $this WHERE {
                 $this archimate:profileSpecialization ?parent .
                 FILTER NOT EXISTS { $this rdf:type owl:Class }
+            }
+        """
+    ] .
+
+## 1.4 A profile class must name its ArchiMate primitive directly.
+# A nested profile (ex:Employee under ex:Person) reaches its primitive only
+# through its parent, and that hop is rdfs:subClassOf ENTAILMENT, which a
+# repository running a custom ruleset may not compute. Discovery queries of
+# the form { ?c archimate:profileSpecialization ?p ; rdfs:subClassOf
+# archimate:X } match asserted triples, so a class carrying only the
+# transitive path is silently invisible there. The marker may still name the
+# profile parent; the subclass axioms say what the class IS.
+avpat:ProfileNamesItsPrimitive rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:profileSpecialization ;
+    rdfs:label "Profile class must name its ArchiMate primitive" ;
+    sh:sparql [
+        sh:prefixes <https://purl.org/archimate/validation/profile-pattern> ;
+        sh:message "A profile class must declare rdfs:subClassOf a core ArchiMate class directly, even when it already reaches one through a parent profile class — discovery matches the asserted triple, so without it the class is invisible on any repository that does not entail rdfs:subClassOf" ;
+        sh:select """
+            SELECT $this WHERE {
+                $this archimate:profileSpecialization ?parent .
+                FILTER NOT EXISTS {
+                    $this rdfs:subClassOf ?base .
+                    FILTER(STRSTARTS(STR(?base), "https://purl.org/archimate#"))
+                }
             }
         """
     ] .
