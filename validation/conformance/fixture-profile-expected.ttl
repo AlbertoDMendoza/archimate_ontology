@@ -1,0 +1,28 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix fix: <https://purl.org/archimate/validation/conformance/fixture#> .
+
+# Conformance oracle — expected validation results
+# Test data — never load into a working repository.
+#
+# After running the materialization rule, validating the fixture data graph
+# against the fixture shapes graph must report EXACTLY these violations,
+# matched on (sh:focusNode, sh:resultPath, sh:sourceConstraintComponent).
+# A missing violation means a shape went inert (silent under-validation — the
+# failure mode this fixture exists to catch); an extra violation means a
+# constraint broadened or the rule harness was skipped (fix:probe-conforming
+# then fails sh:hasValue).
+
+[] a sh:ValidationResult ;
+    sh:focusNode fix:probe-deviant ;
+    sh:resultPath fix:betaKind ;
+    sh:sourceConstraintComponent sh:HasValueConstraintComponent .
+
+[] a sh:ValidationResult ;
+    sh:focusNode fix:probe-excess ;
+    sh:resultPath fix:betaKind ;
+    sh:sourceConstraintComponent sh:MaxCountConstraintComponent .
+
+[] a sh:ValidationResult ;
+    sh:focusNode fix:probe-missing-inherited ;
+    sh:resultPath fix:alphaCode ;
+    sh:sourceConstraintComponent sh:MinCountConstraintComponent .

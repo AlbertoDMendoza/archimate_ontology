@@ -1,6 +1,7 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix archimate: <https://purl.org/archimate#> .
@@ -14,9 +15,19 @@
     dct:description "Profile classes are owl:Class that specialize standard ArchiMate elements via rdfs:subClassOf (OWL inference) and archimate:profileSpecialization (profile marker). SHACL shapes for these profiles are defined in validation/archimate_validation_profile_examples.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-10"^^xsd:date ;
-    dct:modified "2026-08-08"^^xsd:date ;
+    dct:modified "2026-09-10"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
-    owl:versionInfo "Sample" .
+    owl:versionInfo "Sample" ;
+    sh:declare [
+        sh:prefix "myModel" ;
+        sh:namespace "https://example.org/myModel#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "rdf" ;
+        sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "rdfs" ;
+        sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
+    ] .
 
 # DESIGN NOTES
 # ArchiMate profiles allow user-defined subtypes of standard elements,
@@ -94,7 +105,62 @@ myModel:email rdf:type owl:DatatypeProperty ;
     rdfs:domain myModel:Person ;
     rdfs:range xsd:anyURI .
 
-### 3. Additional Profile Examples (Commented Out - Expand As Needed)
+### 3. Sub-Profile with Fixed and Open Attributes (Employee)
+
+# A sub-profile inherits every attribute of its parent profile automatically —
+# SHACL class targets walk rdfs:subClassOf*, so Person's shape validates
+# Employee instances with no re-declaration. Employee declares only its
+# deltas, which come in the two attribute flavors (see
+# ontology/archimate_profile.ttl, "Fixed vs Open Attributes"):
+#
+#   Open attribute   myModel:employeeId — the Employee shape constrains
+#                    datatype and cardinality; each instance supplies its
+#                    own value.
+#   Fixed attribute  myModel:employmentStatus — the Employee shape pins the
+#                    value with sh:hasValue; an instance asserting a
+#                    different value fails validation. The rule below
+#                    materializes the pinned value so instances need not
+#                    repeat it.
+
+myModel:Employee rdf:type owl:Class ;
+    rdfs:subClassOf myModel:Person ;
+    archimate:profileSpecialization myModel:Person ;
+    rdfs:label "Employee" ;
+    rdfs:comment "A Person employed by the organization. Sub-profile of Person: inherits Person's attributes (firstName, lastName, dateOfBirth, email) via rdfs:subClassOf, adds one open attribute (employeeId) and one fixed attribute (employmentStatus)." .
+
+myModel:employeeId rdf:type owl:DatatypeProperty ;
+    rdfs:label "employee id" ;
+    rdfs:comment "Open attribute: organizational identifier of an Employee. The Employee shape constrains datatype and cardinality; each instance supplies its own value." ;
+    rdfs:domain myModel:Employee ;
+    rdfs:range xsd:string .
+
+myModel:employmentStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "employment status" ;
+    rdfs:comment "Fixed attribute: pinned to \"employed\" for every Employee by sh:hasValue in the Employee shape (validation/archimate_validation_profile_examples.ttl). The profile supplies the value; an instance asserting a different value fails validation." ;
+    rdfs:domain myModel:Employee ;
+    rdfs:range xsd:string .
+
+## Fixed-attribute materialization rule (constrain+materialize deployment).
+# Optional: without it, every Employee instance must assert the pinned triple
+# itself (constrain-only deployment). Load this rule into any graph EXCEPT the
+# SHACL shapes graph — same placement rule as the derivation rules (see
+# derivation/archimate_derivation_rules.ttl for the rationale). Run rules
+# before validation, or the sh:hasValue constraint reports the missing value.
+myModel:EmployeeEmploymentStatusRule rdf:type sh:SPARQLRule ;
+    rdfs:label "Employee fixed attribute: employmentStatus" ;
+    rdfs:comment "Materializes the fixed value \"employed\" for every Employee instance (including instances of Employee sub-profiles) that does not carry one, so instances stay lean and exports still carry the triple." ;
+    sh:prefixes <https://example.org/myModel> ;
+    sh:construct """
+        CONSTRUCT {
+            ?e myModel:employmentStatus "employed" .
+        }
+        WHERE {
+            ?e rdf:type/rdfs:subClassOf* myModel:Employee .
+            FILTER NOT EXISTS { ?e myModel:employmentStatus ?any }
+        }
+    """ .
+
+### 4. Additional Profile Examples (Commented Out - Expand As Needed)
 
 # ## BusinessRole Profiles
 # myModel:Manager rdf:type owl:Class ;

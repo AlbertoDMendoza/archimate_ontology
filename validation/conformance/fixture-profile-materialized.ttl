@@ -1,0 +1,13 @@
+@prefix fix: <https://purl.org/archimate/validation/conformance/fixture#> .
+
+# Conformance oracle — expected rule output
+# Test data — never load into a working repository.
+#
+# Running fix:BetaKindRule (fixture-profile-data.ttl) over the fixture data
+# must produce EXACTLY these triples. A missing triple means the rule or its
+# harness stopped materializing; an extra triple means the rule fires outside
+# its scope (e.g. on fix:probe-alpha-only, which is not a Beta) or overwrites
+# probes that already carry a value.
+
+fix:probe-conforming fix:betaKind "beta" .
+fix:probe-missing-inherited fix:betaKind "beta" .

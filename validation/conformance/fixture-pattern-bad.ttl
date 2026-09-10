@@ -1,0 +1,94 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix archimate: <https://purl.org/archimate#> .
+@prefix fixbad: <https://purl.org/archimate/validation/conformance/fixture-bad#> .
+
+# Conformance fixture — malformed profile definitions
+# Test data — never load into a working repository.
+#
+# Probe TBox for the meta-shapes in
+# validation/archimate_validation_profile_pattern.ttl. Each class below
+# violates exactly ONE meta-shape (its other declarations are deliberately
+# correct so nothing else fires); the oracle in fixture-pattern-expected.ttl
+# states the required report. Validated as DATA — load this file into the
+# data graph, the meta-shapes into the shapes graph. The shape declarations
+# on these classes are inert triples under inspection, never active shapes.
+
+<https://purl.org/archimate/validation/conformance/pattern-bad> rdf:type owl:Ontology ;
+    rdfs:label "Profile Pattern Fixture — Malformed Definitions" ;
+    rdfs:comment "Deliberately malformed profile TBox probes for the profile-pattern meta-shapes. Test data — never load into a working repository." ;
+    owl:versionInfo "Test fixture" .
+
+## Must violate avpat:ProfileDeclarationCoherence:
+## marker names BusinessActor, subclass axiom names BusinessRole.
+fixbad:MarkerMismatch rdf:type owl:Class ;
+    rdfs:subClassOf archimate:BusinessRole ;
+    archimate:profileSpecialization archimate:BusinessActor ;
+    rdfs:label "bad: marker/subclass mismatch" .
+
+## Must violate avpat:ProfileNoSelfSpecialization.
+## The reflexive rdfs:subClassOf satisfies the coherence check, so only the
+## self-loop shape may fire.
+fixbad:SelfMarker rdf:type owl:Class ;
+    rdfs:subClassOf fixbad:SelfMarker ;
+    archimate:profileSpecialization fixbad:SelfMarker ;
+    rdfs:label "bad: self-specialization" .
+
+## Must violate avpat:ProfileIsOwlClass: marker and subclass axiom present,
+## owl:Class typing missing.
+fixbad:NotAClass rdfs:subClassOf archimate:BusinessActor ;
+    archimate:profileSpecialization archimate:BusinessActor ;
+    rdfs:label "bad: not an owl:Class" .
+
+## Must violate avpat:FixedAttributeMaxCount: sh:hasValue without
+## sh:maxCount 1 — instances could carry the pinned value plus extras.
+fixbad:LooseFixed rdf:type owl:Class , sh:NodeShape ;
+    rdfs:subClassOf archimate:BusinessActor ;
+    archimate:profileSpecialization archimate:BusinessActor ;
+    rdfs:label "bad: uncapped fixed attribute" ;
+    sh:property [
+        sh:path fixbad:looseProp ;
+        sh:datatype xsd:string ;
+        sh:hasValue "x"
+    ] .
+
+## Must violate avpat:FixedAttributeDatatype: the pinned literal is a plain
+## string, the declared datatype xsd:integer — unsatisfiable for every
+## instance. (sh:maxCount 1 is present so the maxCount shape stays quiet.)
+fixbad:WrongDatatype rdf:type owl:Class , sh:NodeShape ;
+    rdfs:subClassOf archimate:BusinessActor ;
+    archimate:profileSpecialization archimate:BusinessActor ;
+    rdfs:label "bad: fixed value outside its datatype" ;
+    sh:property [
+        sh:path fixbad:wrongProp ;
+        sh:datatype xsd:integer ;
+        sh:hasValue "5" ;
+        sh:maxCount 1
+    ] .
+
+## Must violate avpat:FixedAttributeChainConflict — on the CHILD only.
+## The parent is fully well-formed and must report nothing.
+fixbad:FixedParent rdf:type owl:Class , sh:NodeShape ;
+    rdfs:subClassOf archimate:BusinessActor ;
+    archimate:profileSpecialization archimate:BusinessActor ;
+    rdfs:label "good parent: pins kindProp to \"parent\"" ;
+    sh:property [
+        sh:path fixbad:kindProp ;
+        sh:datatype xsd:string ;
+        sh:hasValue "parent" ;
+        sh:maxCount 1
+    ] .
+
+fixbad:ConflictChild rdf:type owl:Class , sh:NodeShape ;
+    rdfs:subClassOf fixbad:FixedParent ;
+    archimate:profileSpecialization fixbad:FixedParent ;
+    rdfs:label "bad: contradicts ancestor's fixed value" ;
+    sh:property [
+        sh:path fixbad:kindProp ;
+        sh:datatype xsd:string ;
+        sh:hasValue "child" ;
+        sh:maxCount 1
+    ] .

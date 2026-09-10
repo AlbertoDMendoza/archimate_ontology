@@ -1,0 +1,93 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix fix: <https://purl.org/archimate/validation/conformance/fixture#> .
+
+# Conformance fixture — materialization rule and probe instances
+# Test data — never load into a working repository.
+#
+# Graph placement: DATA graph only. The rule is a standalone sh:SPARQLRule in
+# the derivation-rules idiom and, like them, must stay out of the shapes graph
+# (see derivation/archimate_derivation_rules.ttl for the placement rationale).
+#
+# Each probe is a crafted input that can only misbehave if one specific piece
+# of the class-level machinery breaks; the oracle in
+# fixture-profile-expected.ttl states exactly which violations the SHACL
+# report must contain — no more, no fewer. See README.md in this directory.
+
+<https://purl.org/archimate/validation/conformance/profile-data> rdf:type owl:Ontology ;
+    rdfs:label "Profile Conformance Fixture — Rule and Probes" ;
+    rdfs:comment "Probe instances and the fixed-attribute materialization rule for the frozen profile TBox in fixture-profile-shapes.ttl. Test data — never load into a working repository." ;
+    owl:versionInfo "Test fixture" ;
+    sh:declare [
+        sh:prefix "fix" ;
+        sh:namespace "https://purl.org/archimate/validation/conformance/fixture#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "rdf" ;
+        sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "rdfs" ;
+        sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
+    ] .
+
+## Fixed-attribute materialization rule (constrain+materialize deployment).
+# Must run BEFORE validation. Expected output is pinned in
+# fixture-profile-materialized.ttl — the rule must produce exactly those
+# triples: firing on a non-Beta instance or skipping a lean Beta both fail
+# the oracle.
+fix:BetaKindRule rdf:type sh:SPARQLRule ;
+    rdfs:label "Fixture rule: materialize betaKind" ;
+    rdfs:comment "Asserts the pinned value \"beta\" for every fix:Beta instance (including instances of Beta sub-profiles) that lacks one." ;
+    sh:prefixes <https://purl.org/archimate/validation/conformance/profile-data> ;
+    sh:construct """
+        CONSTRUCT {
+            ?e fix:betaKind "beta" .
+        }
+        WHERE {
+            ?e rdf:type/rdfs:subClassOf* fix:Beta .
+            FILTER NOT EXISTS { ?e fix:betaKind ?any }
+        }
+    """ .
+
+## Probe instances
+
+# Must CONFORM — but only after the rule has materialized betaKind "beta".
+# Guards: rule execution and the rule-before-validation ordering. If the
+# harness skips rules, this probe fails sh:hasValue and the oracle reports it.
+fix:probe-conforming rdf:type fix:Beta ;
+    rdfs:label "probe: lean conforming Beta" ;
+    fix:alphaCode "A-1" .
+
+# Must VIOLATE sh:hasValue on fix:betaKind.
+# Guards: fixed-value immutability — an instance asserting a value other than
+# the profile-pinned one must be rejected. The rule must NOT touch it (a
+# value is present).
+fix:probe-deviant rdf:type fix:Beta ;
+    rdfs:label "probe: deviant fixed value" ;
+    fix:alphaCode "A-2" ;
+    fix:betaKind "gamma" .
+
+# Must VIOLATE sh:maxCount on fix:betaKind.
+# Guards: the cardinality cap — the pinned value plus extras is not
+# conformance. (sh:hasValue alone is satisfied here: "beta" is present.)
+fix:probe-excess rdf:type fix:Beta ;
+    rdfs:label "probe: pinned value plus extras" ;
+    fix:alphaCode "A-3" ;
+    fix:betaKind "beta" , "gamma" .
+
+# Must VIOLATE sh:minCount on fix:alphaCode — a constraint declared on
+# fix:Alpha, while this node is typed only fix:Beta.
+# Guards: attribute inheritance via subclass targeting. This is the canary
+# for silent under-validation: if the rdfs:subClassOf triples drop out of the
+# data graph or the engine stops walking them, this probe "passes" and the
+# oracle fails on the missing violation.
+fix:probe-missing-inherited rdf:type fix:Beta ;
+    rdfs:label "probe: missing inherited attribute" .
+
+# Must CONFORM, and the rule must NOT fire on it (it is an Alpha, not a
+# Beta). Guards: rule scoping — betaKind belongs to Beta alone.
+fix:probe-alpha-only rdf:type fix:Alpha ;
+    rdfs:label "probe: plain Alpha" ;
+    fix:alphaCode "A-4" .

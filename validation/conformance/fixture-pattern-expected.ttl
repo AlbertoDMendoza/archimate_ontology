@@ -1,0 +1,36 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix avpat: <https://purl.org/archimate/validation/profile-pattern#> .
+@prefix fixbad: <https://purl.org/archimate/validation/conformance/fixture-bad#> .
+
+# Conformance oracle — expected meta-shape results
+# Test data — never load into a working repository.
+#
+# Validating fixture-pattern-bad.ttl (data graph) against
+# validation/archimate_validation_profile_pattern.ttl (shapes graph) must
+# report EXACTLY these violations, matched on (sh:focusNode, sh:sourceShape).
+# fixbad:FixedParent must not appear: it is well-formed by construction, and
+# a violation on it means a meta-shape broadened.
+
+[] a sh:ValidationResult ;
+    sh:focusNode fixbad:MarkerMismatch ;
+    sh:sourceShape avpat:ProfileDeclarationCoherence .
+
+[] a sh:ValidationResult ;
+    sh:focusNode fixbad:SelfMarker ;
+    sh:sourceShape avpat:ProfileNoSelfSpecialization .
+
+[] a sh:ValidationResult ;
+    sh:focusNode fixbad:NotAClass ;
+    sh:sourceShape avpat:ProfileIsOwlClass .
+
+[] a sh:ValidationResult ;
+    sh:focusNode fixbad:LooseFixed ;
+    sh:sourceShape avpat:FixedAttributeMaxCount .
+
+[] a sh:ValidationResult ;
+    sh:focusNode fixbad:WrongDatatype ;
+    sh:sourceShape avpat:FixedAttributeDatatype .
+
+[] a sh:ValidationResult ;
+    sh:focusNode fixbad:ConflictChild ;
+    sh:sourceShape avpat:FixedAttributeChainConflict .

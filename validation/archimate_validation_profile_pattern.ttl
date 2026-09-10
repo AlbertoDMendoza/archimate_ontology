@@ -1,0 +1,184 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix archimate: <https://purl.org/archimate#> .
+@prefix avpat: <https://purl.org/archimate/validation/profile-pattern#> .
+
+### SHACL Meta-Shapes for the ArchiMate Profile Pattern
+<https://purl.org/archimate/validation/profile-pattern> rdf:type owl:Ontology ;
+    owl:imports <https://purl.org/archimate/owl> ;
+    rdfs:label "ArchiMate Profile Pattern Validation" ;
+    rdfs:comment "Meta-shapes that validate profile DEFINITIONS as data: every class carrying archimate:profileSpecialization is checked for the three-declaration pattern (owl:Class + rdfs:subClassOf + marker naming the same parent) and for well-formed fixed attributes (sh:hasValue capped by sh:maxCount 1, value consistent with the declared datatype, no fixed value contradicting an ancestor profile's). These are authoring-time checks on profile TBoxes, complementary to the instance-level shapes in archimate_validation_profile_examples.ttl. See ontology/archimate_profile.ttl for the pattern these shapes enforce." ;
+    dct:creator "Alberto D. Mendoza" ;
+    dct:created "2026-09-10"^^xsd:date ;
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
+    owl:versionInfo "Beta" ;
+    sh:declare [
+        sh:prefix "archimate" ;
+        sh:namespace "https://purl.org/archimate#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "rdf" ;
+        sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "rdfs" ;
+        sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "owl" ;
+        sh:namespace "http://www.w3.org/2002/07/owl#"^^xsd:anyURI ;
+    ] , [
+        sh:prefix "sh" ;
+        sh:namespace "http://www.w3.org/ns/shacl#"^^xsd:anyURI ;
+    ] .
+
+### NOTES
+# These shapes validate profile DEFINITIONS, not model instances. The data
+# graph for a meta-validation run is the profile TBox together with its
+# shapes — e.g. ontology/archimate_profile_examples.ttl plus
+# validation/archimate_validation_profile_examples.ttl — and the shapes graph
+# is this file. Instance-level enforcement (does a model element conform to
+# its profile?) is the job of the profile shapes themselves.
+#
+# It is safe to leave this file co-loaded in the shapes graph during instance
+# validation: instance validation already requires the profile TBox in the
+# data graph (its rdfs:subClassOf triples let class targets reach sub-profile
+# instances), so these targets resolve there too, and well-formed profiles
+# report nothing.
+#
+# All shapes target sh:targetSubjectsOf archimate:profileSpecialization — the
+# profile marker is the discovery hook, so no class-target machinery is
+# involved and the checks run identically on any conforming engine.
+#
+# What is deliberately NOT checked:
+# - That a profile class is typed sh:NodeShape. A profile that adds no
+#   attributes (a pure stereotype, e.g. the commented-out Manager/Developer
+#   examples) legitimately has no shape; the differentiation principle —
+#   whether every profile must add at least one attribute or restriction —
+#   is an open architectural decision, not enforced here.
+# - Attribute paths are assumed to be simple IRIs (as the profile pattern
+#   prescribes); SHACL property paths expressed as blank nodes are not
+#   compared across shapes by the chain-conflict check.
+#
+# Severity: every shape here reports sh:Violation (by SHACL's default — no
+# sh:severity declared), matching the repository rule that advisory
+# severities are avoided for RDF4J compatibility (see
+# archimate_validation_core.ttl NOTES).
+
+### 1. Three-Declaration Coherence
+
+## 1.1 The marker and the subclass axiom must name the same parent.
+# archimate:profileSpecialization carries no OWL semantics — rdfs:subClassOf
+# does the inferential work. A marker without the matching direct subclass
+# axiom is a profile that LOOKS discoverable but inherits nothing.
+avpat:ProfileDeclarationCoherence rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:profileSpecialization ;
+    rdfs:label "Profile marker and rdfs:subClassOf must agree" ;
+    sh:sparql [
+        sh:prefixes <https://purl.org/archimate/validation/profile-pattern> ;
+        sh:message "A class carrying archimate:profileSpecialization must also declare rdfs:subClassOf to the same parent — the marker is annotation-only and inherits nothing by itself" ;
+        sh:select """
+            SELECT $this ?value WHERE {
+                $this archimate:profileSpecialization ?value .
+                FILTER NOT EXISTS { $this rdfs:subClassOf ?value }
+            }
+        """
+    ] .
+
+## 1.2 A profile must not specialize itself.
+# A reflexive rdfs:subClassOf assertion would satisfy 1.1, so the self-loop
+# is checked explicitly.
+avpat:ProfileNoSelfSpecialization rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:profileSpecialization ;
+    rdfs:label "Profile must not specialize itself" ;
+    sh:sparql [
+        sh:prefixes <https://purl.org/archimate/validation/profile-pattern> ;
+        sh:message "A profile class must not carry archimate:profileSpecialization pointing at itself" ;
+        sh:select """
+            SELECT $this WHERE {
+                $this archimate:profileSpecialization $this .
+            }
+        """
+    ] .
+
+## 1.3 A profile must be declared owl:Class.
+avpat:ProfileIsOwlClass rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:profileSpecialization ;
+    rdfs:label "Profile must be an owl:Class" ;
+    sh:sparql [
+        sh:prefixes <https://purl.org/archimate/validation/profile-pattern> ;
+        sh:message "A class carrying archimate:profileSpecialization must be declared rdf:type owl:Class (the three-declaration pattern)" ;
+        sh:select """
+            SELECT $this WHERE {
+                $this archimate:profileSpecialization ?parent .
+                FILTER NOT EXISTS { $this rdf:type owl:Class }
+            }
+        """
+    ] .
+
+### 2. Fixed Attribute Well-Formedness
+
+## 2.1 A fixed attribute must cap its cardinality.
+# sh:hasValue alone requires the pinned value to be PRESENT but does not
+# forbid additional values alongside it; without sh:maxCount 1 an instance
+# could carry the pinned value plus arbitrary others and still conform.
+avpat:FixedAttributeMaxCount rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:profileSpecialization ;
+    rdfs:label "Fixed attribute requires sh:maxCount 1" ;
+    sh:sparql [
+        sh:prefixes <https://purl.org/archimate/validation/profile-pattern> ;
+        sh:message "A fixed attribute (sh:hasValue) must also declare sh:maxCount 1 — otherwise instances may carry the pinned value plus arbitrary others" ;
+        sh:select """
+            SELECT $this ?value WHERE {
+                $this sh:property ?ps .
+                ?ps sh:hasValue ?fixed ;
+                    sh:path ?value .
+                FILTER NOT EXISTS { ?ps sh:maxCount 1 }
+            }
+        """
+    ] .
+
+## 2.2 A fixed value must satisfy its own declared datatype.
+# A pinned value outside the declared sh:datatype makes the property shape
+# unsatisfiable: no instance can ever conform.
+avpat:FixedAttributeDatatype rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:profileSpecialization ;
+    rdfs:label "Fixed value must match declared sh:datatype" ;
+    sh:sparql [
+        sh:prefixes <https://purl.org/archimate/validation/profile-pattern> ;
+        sh:message "The sh:hasValue literal of a fixed attribute must carry the property shape's declared sh:datatype — otherwise no instance can ever conform" ;
+        sh:select """
+            SELECT $this ?value WHERE {
+                $this sh:property ?ps .
+                ?ps sh:hasValue ?value ;
+                    sh:datatype ?dt .
+                FILTER( !isLiteral(?value) || datatype(?value) != ?dt )
+            }
+        """
+    ] .
+
+## 2.3 A sub-profile must not contradict an ancestor's fixed value.
+# Shapes compose by conjunction: a sub-profile pinning a DIFFERENT value on
+# the same path does not override the ancestor — it makes conformance
+# impossible for every instance. This is the one "relaxation/override"
+# authoring error that is structurally detectable at definition time.
+avpat:FixedAttributeChainConflict rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:profileSpecialization ;
+    rdfs:label "Fixed value must not contradict an ancestor profile" ;
+    sh:sparql [
+        sh:prefixes <https://purl.org/archimate/validation/profile-pattern> ;
+        sh:message "A sub-profile pins a fixed value on a path an ancestor profile already pins to a different value — the shapes conjoin, so no instance can ever conform to both" ;
+        sh:select """
+            SELECT $this ?value WHERE {
+                $this sh:property ?ps .
+                ?ps sh:path ?p ;
+                    sh:hasValue ?value .
+                $this rdfs:subClassOf+ ?ancestor .
+                ?ancestor sh:property ?aps .
+                ?aps sh:path ?p ;
+                     sh:hasValue ?ancestorValue .
+                FILTER( !sameTerm(?value, ?ancestorValue) )
+            }
+        """
+    ] .

@@ -51,6 +51,64 @@
 #       rdfs:subClassOf ex:Person ;                        # OWL inference
 #       archimate:profileSpecialization ex:Person .        # profile marker
 #
+# -----------------------------------------------------------------------------
+# Fixed vs Open Attributes
+# -----------------------------------------------------------------------------
+#
+# An attribute is a schema-declared slot: an owl:DatatypeProperty (the term)
+# plus a sh:property constraint in the profile shape (datatype, cardinality).
+# Whether the slot carries a value at the profile level is orthogonal — it
+# distinguishes two flavors of attribute, not attribute from property:
+#
+#   Open attribute   The shape constrains datatype and cardinality; each
+#                    instance supplies its own value (e.g. a Person's
+#                    firstName, or archimate:documentation at the core level).
+#
+#   Fixed attribute  The profile also pins the value with sh:hasValue
+#                    (+ sh:maxCount 1). The profile supplies the value; an
+#                    instance asserting a different value fails validation.
+#                    Immutability here is conformance, not a lock — the only
+#                    kind an open-world RDF graph offers.
+#
+# Neither flavor collapses into archimate:hasProperty (tier 1 of the property
+# extension model, see ontology/archimate.ttl): a hasProperty pair has a value
+# but no schema; an open attribute has schema but no value yet. The
+# categorical split is declared-by-schema vs ad hoc — never valuedness.
+#
+# Inheritance: SHACL class targets select instances via rdfs:subClassOf*, so
+# both flavors reach every sub-profile with no re-declaration. Shapes compose
+# by conjunction, so a sub-profile can only narrow an inherited constraint
+# (e.g. a parent's sh:in ("full-time" "part-time") pinned by the child to
+# sh:hasValue "full-time") — it can never relax or override a fixed value.
+# This matches the spec's specialization semantics: a specialization inherits
+# everything, may add attributes, may restrict, and may never widen.
+#
+# A fixed attribute can be deployed two ways:
+#
+#   Constrain-only        Every instance must assert the pinned triple itself;
+#                         validation rejects omission or deviation.
+#
+#   Constrain+materialize A standalone sh:SPARQLRule asserts the pinned value
+#                         for every instance that lacks it, so instances stay
+#                         lean and exports still carry the triple. Such rules
+#                         load into any graph EXCEPT the SHACL shapes graph,
+#                         same as the derivation rules (see
+#                         derivation/archimate_derivation_rules.ttl for the
+#                         placement rationale).
+#
+# Worked example: myModel:Employee — terms and materialization rule in
+# ontology/archimate_profile_examples.ttl, shape in
+# validation/archimate_validation_profile_examples.ttl.
+#
+# The pattern is enforced and regression-guarded:
+# - validation/archimate_validation_profile_pattern.ttl — meta-shapes that
+#   validate profile DEFINITIONS as data (three-declaration coherence, fixed
+#   attribute well-formedness, no fixed value contradicting an ancestor's).
+# - validation/conformance/ — frozen fixtures with expected-output oracles
+#   for the instance-level guarantees (inheritance via subclass targeting,
+#   fixed-value immutability, rule ordering); runner in
+#   tools/profile_conformance.py.
+#
 # =============================================================================
 
 <#profileSpecialization> rdf:type owl:AnnotationProperty ;

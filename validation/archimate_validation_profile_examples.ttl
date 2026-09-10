@@ -14,7 +14,7 @@
     rdfs:comment "Example SHACL shapes for ArchiMate specialization profiles. Profile classes are owl:Class that specialize standard ArchiMate elements; this file defines their typed attributes. The myModel: prefix is illustrative — organizations define their own namespace. This file is not a published specification." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-15"^^xsd:date ;
-    dct:modified "2026-08-08"^^xsd:date ;
+    dct:modified "2026-09-10"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Sample" ;
     sh:declare [
@@ -48,10 +48,25 @@
 # (archimate_validation_core.ttl) and are not redeclared in profile shapes.
 # Profile shapes declare only what is new and specific to the profile.
 #
+# Attributes come in two flavors (see ontology/archimate_profile.ttl,
+# "Fixed vs Open Attributes"): OPEN attributes constrain datatype and
+# cardinality and each instance supplies its own value; FIXED attributes also
+# pin the value with sh:hasValue (+ sh:maxCount 1), so the profile supplies
+# the value and a deviating instance fails validation. Both flavors reach
+# every sub-profile automatically — SHACL class targets walk rdfs:subClassOf*
+# — and shapes compose by conjunction, so a sub-profile can narrow an
+# inherited constraint but never relax or override it.
+#
 # This validation file should be used alongside:
+# - ontology/archimate_profile_examples.ttl — REQUIRED in the data graph (its
+#   rdfs:subClassOf triples let class targets reach sub-profile instances) and
+#   in the shapes graph (its class typings let implicit class targets fire)
 # - archimate_validation_core.ttl (Level 1: graph integrity, concept requirements)
 # - archimate_validation_metamodel.ttl (Level 2: abstract metamodel pattern rules)
 # - archimate_validation_relationships.ttl (Level 3: per-element-type relationship combinations)
+# - archimate_validation_profile_pattern.ttl (meta-shapes: validates the profile
+#   definitions themselves — three-declaration coherence, fixed attribute
+#   well-formedness; safe to co-load, well-formed profiles report nothing)
 # - ../derivation/archimate_derivation_rules.ttl (derivation rules)
 
 ### 1. BusinessActor Profile Shapes
@@ -85,6 +100,30 @@ myModel:Person a sh:NodeShape ;
         sh:name "Email" ;
         sh:datatype xsd:anyURI ;
         sh:order 4
+    ] .
+
+## Employee Shape (sub-profile of Person)
+# Person's shape also targets Employee instances (SHACL class targets walk
+# rdfs:subClassOf*), so the inherited attributes — firstName, lastName,
+# dateOfBirth, email — are not redeclared here. Employee declares only its
+# deltas: one fixed attribute and one open attribute.
+myModel:Employee a sh:NodeShape ;
+    rdfs:label "Employee" ;
+    rdfs:comment "Typed attribute shape for the Employee sub-profile (specialization of Person). Declares only what Employee adds: employmentStatus is a FIXED attribute (the profile pins the value with sh:hasValue; materialize it with myModel:EmployeeEmploymentStatusRule or assert it per instance), employeeId is an OPEN attribute (each instance supplies its own value). Inherited Person attributes are enforced by the Person shape." ;
+    sh:property [
+        sh:path myModel:employmentStatus ;
+        sh:name "Employment Status" ;
+        sh:datatype xsd:string ;
+        sh:hasValue "employed" ;    # fixed attribute: the profile supplies the value
+        sh:maxCount 1 ;             # ...and no other value is allowed
+        sh:order 1
+    ] ;
+    sh:property [
+        sh:path myModel:employeeId ;
+        sh:name "Employee ID" ;     # open attribute: the instance supplies the value
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:order 2
     ] .
 
 ## Organization Shape

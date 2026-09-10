@@ -1,0 +1,73 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix archimate: <https://purl.org/archimate#> .
+@prefix fix: <https://purl.org/archimate/validation/conformance/fixture#> .
+
+# Conformance fixture — frozen profile TBox and shapes
+# Test data — never load into a working repository.
+#
+# This TBox is deliberately independent of the myModel: examples, which are
+# documented as free-to-change samples. It exists only to pin the profile
+# pattern's machine-checkable guarantees (see validation/conformance/README.md):
+# subclass targeting, shape conjunction, fixed-value immutability, and rule
+# ordering. FROZEN: changing anything here invalidates the expected-output
+# fixtures beside it.
+#
+# Graph placement: load this file into the SHAPES graph (shape declarations,
+# class typings for implicit targets) AND the DATA graph (the rdfs:subClassOf
+# triples that let class targets reach fix:Beta instances).
+#
+# Classes are typed owl:Class, rdfs:Class, and sh:NodeShape: the SHACL spec
+# grants implicit class targets to SHACL instances of rdfs:Class, and not
+# every engine treats owl:Class as one — asserting both keeps the fixture
+# processor-portable.
+
+<https://purl.org/archimate/validation/conformance/profile-shapes> rdf:type owl:Ontology ;
+    rdfs:label "Profile Conformance Fixture — TBox and Shapes" ;
+    rdfs:comment "Frozen test TBox: one profile (fix:Alpha, of BusinessActor) with an open attribute, one sub-profile (fix:Beta) with a fixed attribute. Test data — never load into a working repository." ;
+    owl:versionInfo "Test fixture" .
+
+## fix:Alpha — profile of BusinessActor, one OPEN attribute (alphaCode).
+fix:Alpha rdf:type owl:Class , rdfs:Class , sh:NodeShape ;
+    rdfs:subClassOf archimate:BusinessActor ;
+    archimate:profileSpecialization archimate:BusinessActor ;
+    rdfs:label "Alpha (fixture)" ;
+    rdfs:comment "Fixture profile with one open attribute. Its shape must also reach fix:Beta instances via subclass targeting — that inheritance is what probe-missing-inherited guards." ;
+    sh:property [
+        sh:path fix:alphaCode ;
+        sh:name "Alpha Code" ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:order 1
+    ] .
+
+## fix:Beta — sub-profile of Alpha, one FIXED attribute (betaKind = "beta").
+fix:Beta rdf:type owl:Class , rdfs:Class , sh:NodeShape ;
+    rdfs:subClassOf fix:Alpha ;
+    archimate:profileSpecialization fix:Alpha ;
+    rdfs:label "Beta (fixture)" ;
+    rdfs:comment "Fixture sub-profile with one fixed attribute, pinned to \"beta\". Inherits alphaCode from fix:Alpha without re-declaration." ;
+    sh:property [
+        sh:path fix:betaKind ;
+        sh:name "Beta Kind" ;
+        sh:datatype xsd:string ;
+        sh:hasValue "beta" ;
+        sh:maxCount 1 ;
+        sh:order 1
+    ] .
+
+## Attribute terms
+fix:alphaCode rdf:type owl:DatatypeProperty ;
+    rdfs:label "alpha code" ;
+    rdfs:comment "Open attribute of fix:Alpha: each instance supplies its own value." ;
+    rdfs:domain fix:Alpha ;
+    rdfs:range xsd:string .
+
+fix:betaKind rdf:type owl:DatatypeProperty ;
+    rdfs:label "beta kind" ;
+    rdfs:comment "Fixed attribute of fix:Beta: pinned to \"beta\" by the shape above, materialized by the rule in fixture-profile-data.ttl." ;
+    rdfs:domain fix:Beta ;
+    rdfs:range xsd:string .
