@@ -52,7 +52,8 @@ python3 tools/profile_conformance.py
    `fixture-pattern-expected.ttl`, one per malformed class (marker/subclass mismatch,
    self-specialization, missing `owl:Class`, nested class not naming its ArchiMate primitive,
    uncapped fixed attribute, fixed value outside its datatype, fixed value contradicting an
-   ancestor's, two `archimate:profileOrder` values).
+   ancestor's, two `archimate:profileOrder` values, an `archimate:profileAspect` pointer at a
+   class with no marker).
    Note the last one is reported with the named property shape `avpat:ProfileOrderValue` as
    `sh:sourceShape`, since SHACL core results cite the property shape, not the node shape. `fixbad:FixedParent` is well-formed by
    construction — a violation on it means a meta-shape broadened.

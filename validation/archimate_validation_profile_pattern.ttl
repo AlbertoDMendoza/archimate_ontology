@@ -11,7 +11,7 @@
 <https://purl.org/archimate/validation/profile-pattern> rdf:type owl:Ontology ;
     owl:imports <https://purl.org/archimate/owl> ;
     rdfs:label "ArchiMate Profile Pattern Validation" ;
-    rdfs:comment "Meta-shapes that validate profile DEFINITIONS as data: every class carrying archimate:profileSpecialization is checked for the three-declaration pattern (owl:Class + rdfs:subClassOf + marker naming the same parent), for naming its ArchiMate primitive directly, and for well-formed fixed attributes (sh:hasValue capped by sh:maxCount 1, value consistent with the declared datatype, no fixed value contradicting an ancestor profile's); every class carrying archimate:profileOrder is checked for a single integer value. These are authoring-time checks on profile TBoxes, complementary to the instance-level shapes in archimate_validation_profile_examples.ttl. See ontology/archimate_profile.ttl for the pattern these shapes enforce." ;
+    rdfs:comment "Meta-shapes that validate profile DEFINITIONS as data: every class carrying archimate:profileSpecialization is checked for the three-declaration pattern (owl:Class + rdfs:subClassOf + marker naming the same parent), for naming its ArchiMate primitive directly, and for well-formed fixed attributes (sh:hasValue capped by sh:maxCount 1, value consistent with the declared datatype, no fixed value contradicting an ancestor profile's); every class carrying archimate:profileOrder is checked for a single integer value, and every pointer declared under archimate:profileAspect is checked to land on a profile class. These are authoring-time checks on profile TBoxes, complementary to the instance-level shapes in archimate_validation_profile_examples.ttl. See ontology/archimate_profile.ttl for the pattern these shapes enforce." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-09-10"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
@@ -234,3 +234,28 @@ avpat:ProfileOrderValue rdf:type sh:PropertyShape ;
     sh:name "profile order" ;
     sh:description "Position among the sibling classes sharing this class's profileSpecialization parent, lowest first." ;
     sh:message "archimate:profileOrder must be exactly one xsd:integer — sparse values (10, 20, 30) leave room to insert between siblings" .
+
+
+### 4. Inherited-Context Pointers
+
+## 4.1 A profileAspect pointer must land on a profile class.
+# A property declared rdfs:subPropertyOf archimate:profileAspect tells a
+# consumer to treat its object as a context ancestor of the subject. An object
+# that is not a profile class (no archimate:profileSpecialization) has no
+# class-level context to inherit, so the pointer is either a typo or a
+# relation misdeclared as an aspect; either way the consumer would walk into
+# nothing. The sub-property declaration is matched as an asserted triple.
+avpat:ProfileAspectTargetsProfileClass rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf archimate:profileSpecialization ;
+    rdfs:label "Profile aspect must point at a profile class" ;
+    sh:sparql [
+        sh:prefixes <https://purl.org/archimate/validation/profile-pattern> ;
+        sh:message "A property declared rdfs:subPropertyOf archimate:profileAspect must point at a profile class (one carrying archimate:profileSpecialization) — its object is inherited context, and a class without a marker has none" ;
+        sh:select """
+            SELECT $this ?value WHERE {
+                ?aspect rdfs:subPropertyOf archimate:profileAspect .
+                $this ?aspect ?value .
+                FILTER NOT EXISTS { ?value archimate:profileSpecialization ?parent }
+            }
+        """
+    ] .

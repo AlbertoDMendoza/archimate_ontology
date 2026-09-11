@@ -42,3 +42,7 @@
 [] a sh:ValidationResult ;
     sh:focusNode fixbad:DoubleOrder ;
     sh:sourceShape avpat:ProfileOrderValue .
+
+[] a sh:ValidationResult ;
+    sh:focusNode fixbad:AspectToNonProfile ;
+    sh:sourceShape avpat:ProfileAspectTargetsProfileClass .

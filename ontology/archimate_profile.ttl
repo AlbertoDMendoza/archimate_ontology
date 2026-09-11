@@ -112,7 +112,8 @@
 # - validation/archimate_validation_profile_pattern.ttl — meta-shapes that
 #   validate profile DEFINITIONS as data (three-declaration coherence, the
 #   primitive named directly, fixed attribute well-formedness, no fixed value
-#   contradicting an ancestor's).
+#   contradicting an ancestor's, a single integer profileOrder, profileAspect
+#   pointers landing on profile classes).
 # - validation/conformance/ — frozen fixtures with expected-output oracles
 #   for the instance-level guarantees (inheritance via subclass targeting,
 #   fixed-value immutability, rule ordering); runner in
@@ -154,3 +155,33 @@
     rdfs:label "profile order" ;
     rdfs:comment "The position of a profile class among the sibling classes that declare the same <#profileSpecialization> parent, lowest first. A class-level annotation for the profile pattern: it records an order the profiled framework itself states, and takes no part in OWL reasoning or the derivation rules. Sparse integers (10, 20, 30) leave room to insert between; the gaps carry no meaning, and values are comparable only within one sibling set." ;
     rdfs:range xsd:integer .
+
+# =============================================================================
+# DESIGN NOTE — Inherited context outside the subclass chain
+# =============================================================================
+#
+# A profile class may carry class-level annotations that describe every
+# instance of it — a panel of context a consumer shows beside an element,
+# assembled by walking rdf:type/rdfs:subClassOf* and collecting what each
+# ancestor states. Sometimes a profile has a second axis of such context that
+# cannot be a parent without turning the tree into a lattice, so it is
+# attached as a pointer from the class to another profile class instead.
+#
+# That pointer is indistinguishable, as RDF, from a pointer that merely
+# RELATES the class to another type (a "leads to", a "related artifact"):
+# both are annotation properties whose object is a profile class. A consumer
+# following the first must not follow the second, and no rule stated on the
+# graph's shape separates them.
+#
+# <#profileAspect> states the distinction. A property declared
+# rdfs:subPropertyOf <#profileAspect> points at a profile class whose
+# class-level context the SUBJECT INHERITS, as if it were a parent. A consumer
+# extends its ancestor walk along any such property and along nothing else.
+# The assertion is a plain triple, matched with no reasoner, in keeping with
+# the rest of the pattern.
+#
+# =============================================================================
+
+<#profileAspect> rdf:type owl:AnnotationProperty ;
+    rdfs:label "profile aspect" ;
+    rdfs:comment "Super-property for a class-level pointer from one profile class to another whose class-level context the subject inherits, as if it were a parent, without the target being a parent in rdfs:subClassOf. A property declared rdfs:subPropertyOf profileAspect is followed by consumers assembling an element's inherited profile context; a property not so declared, however similar in shape, relates the class to another type and is not followed. The object must be a profile class (one carrying profileSpecialization). Takes no part in OWL reasoning or the derivation rules." .

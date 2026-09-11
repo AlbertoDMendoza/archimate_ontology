@@ -109,3 +109,19 @@ fixbad:DoubleOrder rdf:type owl:Class ;
     archimate:profileSpecialization archimate:BusinessActor ;
     archimate:profileOrder 10 , 20 ;
     rdfs:label "bad: two profile order values" .
+
+## Must violate avpat:ProfileAspectTargetsProfileClass: the aspect property is
+## declared under archimate:profileAspect, but its object carries no marker,
+## so there is no class-level context to inherit. fixbad:PlainClass is
+## deliberately outside the pattern (no marker), so no other shape targets it.
+fixbad:badAspect rdf:type owl:AnnotationProperty ;
+    rdfs:subPropertyOf archimate:profileAspect .
+
+fixbad:PlainClass rdf:type owl:Class ;
+    rdfs:label "plain class, not a profile" .
+
+fixbad:AspectToNonProfile rdf:type owl:Class ;
+    rdfs:subClassOf archimate:BusinessActor ;
+    archimate:profileSpecialization archimate:BusinessActor ;
+    fixbad:badAspect fixbad:PlainClass ;
+    rdfs:label "bad: aspect pointer at a non-profile class" .
