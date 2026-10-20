@@ -1,0 +1,52 @@
+@prefix archimate: <https://purl.org/archimate#> .
+@prefix fixk: <https://purl.org/archimate/validation/conformance/fixture-kinds#> .
+
+# Conformance fixture — kinds of concept under RDFS entailment
+# Test data — never load into a working repository.
+#
+# Relationships may start or end at a relationship or a junction (Appendix B.6,
+# Table 21). Under RDFS entailment over the ontology, none of the nodes below
+# may become an archimate:Element unless it was typed as one, and only the
+# deliberate probe may be both an element and a relationship. Every node is a
+# declared concept (identifier and name), so no other Level 1 shape reports it.
+
+fixk:p1 a archimate:BusinessProcess ;
+    archimate:identifier "fixk-p1" ;
+    archimate:name "p1" .
+fixk:p2 a archimate:BusinessProcess ;
+    archimate:identifier "fixk-p2" ;
+    archimate:name "p2" .
+fixk:p3 a archimate:BusinessProcess ;
+    archimate:identifier "fixk-p3" ;
+    archimate:name "p3" .
+
+# A flow split through a junction.
+fixk:j1 a archimate:Junction ;
+    archimate:identifier "fixk-j1" ;
+    archimate:name "j1" .
+fixk:p1 archimate:flow fixk:j1 .
+fixk:j1 archimate:flow fixk:p2 .
+fixk:j1 archimate:flow fixk:p3 .
+
+# A location composing a relationship connector (grouping and location may
+# aggregate or compose any concept).
+fixk:loc1 a archimate:Location ;
+    archimate:identifier "fixk-loc1" ;
+    archimate:name "loc1" .
+fixk:loc1 archimate:composition fixk:j1 .
+
+# A relationship identified by its own node, aggregated by a grouping and
+# associated with an element.
+fixk:rel1 a archimate:Relationship ;
+    archimate:identifier "fixk-rel1" ;
+    archimate:name "rel1" .
+fixk:g1 a archimate:Grouping ;
+    archimate:identifier "fixk-g1" ;
+    archimate:name "g1" .
+fixk:g1 archimate:aggregation fixk:rel1 .
+fixk:rel1 archimate:association fixk:p3 .
+
+# Probe: typed as both an element and a relationship. Must be reported.
+fixk:probe-both a archimate:BusinessProcess , archimate:Relationship ;
+    archimate:identifier "fixk-probe-both" ;
+    archimate:name "probe-both" .

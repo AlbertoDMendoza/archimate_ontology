@@ -22,7 +22,7 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2026-08-08"^^xsd:date ;
+    dct:modified "2026-10-20"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     dct:rights "Concept definitions are derived from the ArchiMate(R) 3.2 Specification, Copyright (C) 2012-2023 The Open Group. ArchiMate is a registered trademark of The Open Group. This vocabulary is a derivative work and is not the official ArchiMate documentation. Latin American Spanish translations sourced from the ArchiMate 3.2 Translation Glossary (C23A), Copyright (C) 2023 The Open Group."@en ;
     owl:versionInfo "Beta" ;
@@ -1477,7 +1477,7 @@ archimate-skos:RelationshipConnectors rdf:type skos:Concept ;
     skos:prefLabel "Conector de Relaciones"@es ;
     skos:definition "Elements that connect relationships of the same type."@en ;
     skos:definition "Un concepto que conecta dos o más relaciones del mismo tipo."@es ;
-    skos:broader archimate-skos:Relationship ;
+    skos:broader archimate-skos:Concept_ ;
     skos:inScheme <https://purl.org/archimate/skos> .
 
 

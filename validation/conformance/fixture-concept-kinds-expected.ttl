@@ -1,0 +1,20 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix avcore: <https://purl.org/archimate/validation#> .
+@prefix fixk: <https://purl.org/archimate/validation/conformance/fixture-kinds#> .
+
+# Conformance oracle — expected results for fixture-concept-kinds-data.ttl
+# Test data — never load into a working repository.
+#
+# 1. Entailment: after RDFS entailment over ontology/archimate.ttl plus the
+#    fixture, the nodes typed both archimate:Element and archimate:Relationship
+#    (or archimate:RelationshipConnector) are EXACTLY the focus nodes below.
+# 2. Validation: validating that entailed graph against
+#    validation/archimate_validation_core.ttl reports EXACTLY these violations,
+#    matched on (sh:focusNode, sh:sourceShape).
+#
+# fixk:j1 and fixk:rel1 must not appear: a junction and a relationship take
+# part in relationships without becoming elements.
+
+[] a sh:ValidationResult ;
+    sh:focusNode fixk:probe-both ;
+    sh:sourceShape avcore:ConceptKindsDisjoint .

@@ -14,7 +14,7 @@
     rdfs:comment "Level 1 Core Validation: universal model quality and graph integrity constraints. Validates concept requirements (identifier, name, documentation), specialization relationship integrity (permitted element-type pairs, no self-loops, no cycles, chain depth), and structural relationship integrity (no circular/self composition/aggregation, composition part uniqueness). For metamodel pattern rules, see archimate_validation_metamodel.ttl. For per-element-type relationship combinations, see archimate_validation_<layer>.ttl." ;
     dct:creator "Alberto D. Mendoza" ;
     dct:created "2026-02-10"^^xsd:date ;
-    dct:modified "2026-08-09"^^xsd:date ;
+    dct:modified "2026-10-20"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     owl:versionInfo "Beta" ;
     sh:declare [
@@ -36,6 +36,7 @@
 #
 # This file focuses on:
 # - Universal concept requirements (identifier, name, documentation)
+# - Element, Relationship and RelationshipConnector disjointness
 # - Concept uniqueness constraints
 # - Specialization relationship validation (permitted type pairs, no self-loops, no cycles, depth)
 # - Relationship structural integrity (no circular/self composition/aggregation,
@@ -157,6 +158,16 @@ avcore:UniqueConceptIdentifier rdf:type sh:NodeShape ;
             }
         """
     ] .
+
+# Element, Relationship and RelationshipConnector are disjoint kinds of concept
+avcore:ConceptKindsDisjoint rdf:type sh:NodeShape ;
+    sh:targetClass archimate:Element ;
+    rdfs:label "Concept Kinds Disjoint" ;
+    rdfs:comment "An element is not also a relationship or a relationship connector. Appendix B.6 names element, relationship and relationship connector as the three kinds of concept a relationship can connect. The ontology states the same with owl:AllDisjointClasses, which only an OWL reasoner acts on; this shape reports it without one." ;
+    sh:not [
+        sh:or ( [ sh:class archimate:Relationship ] [ sh:class archimate:RelationshipConnector ] )
+    ] ;
+    sh:message "A concept cannot be both an element and a relationship or relationship connector" .
 
 ### 2. Specialization Relationship Validation
 # Specialization is purely a relationship (spec Section 5.4), not a concept property.

@@ -28,7 +28,7 @@
         foaf:weblog <https://albertodmendoza.net>
     ] ;
     dct:created "2024-06-14"^^xsd:date ;
-    dct:modified "2026-08-08"^^xsd:date ;
+    dct:modified "2026-10-20"^^xsd:date ;
     dct:license <http://www.apache.org/licenses/LICENSE-2.0> ;
     dct:source <https://pubs.opengroup.org/architecture/archimate3-doc/> ;
     dct:rights "Class and property definitions are derived from the ArchiMate(R) 3.2 Specification, Copyright (C) 2012-2023 The Open Group. ArchiMate is a registered trademark of The Open Group. This ontology is an independent formalization, is a derivative work, and is not the official ArchiMate documentation. The Apache 2.0 license applies to the formalization itself -- the class and property structure, IRIs, RDF-Star design, and the axioms and shapes distributed alongside it -- and not to the underlying specification text."@en .
@@ -309,6 +309,15 @@ archimate:Element rdf:type owl:Class ;
 # narrow types causes incorrect inferences for cross-layer patterns. Relationship validity
 # is enforced by SHACL (Levels 2 and 3), not OWL class reasoning.
 #
+# For the same reason every relationship property, including the four abstract base
+# properties, has domain and range archimate:Concept rather than archimate:Element.
+# Appendix B.6 lets relationships start or end at a relationship (any relationship may be
+# associated with an element; grouping and location may aggregate or compose a
+# relationship) and at a junction. Under RDFS entailment a domain or range of Element would
+# type those relationships and junctions as elements. Which concepts a relationship may
+# actually connect is checked by SHACL. Element, Relationship and RelationshipConnector are
+# disjoint.
+#
 # RDF-Star bridges the two representations: <<subject property object>> quoted triples
 # allow relationship metadata (name, identifier, accessType, etc.) to be attached to
 # property-as-predicate usages without reification overhead.
@@ -341,7 +350,7 @@ archimate:Relationship rdf:type owl:Class ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Relationship" ;
     archimate:abstract true ;
-    rdfs:comment """A relationship between two ArchiMate elements, modeled as an owl:Class for 
+    rdfs:comment """A relationship between two ArchiMate concepts, modeled as an owl:Class for
     metadata inheritance purposes (identifier, name, documentation via archimate:Concept). 
     The actual relationship types (assignment, serving, realization, etc.) are declared as 
     owl:ObjectProperty under structuralRelationship, dependencyRelationship, dynamicRelationship, 
@@ -354,9 +363,14 @@ archimate:Relationship rdf:type owl:Class ;
 archimate:RelationshipConnector rdf:type owl:Class ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "Relationship Connector" ;
-    rdfs:comment "A connector that connects relationships of the same type between elements." ;
+    rdfs:comment "A connector that connects relationships of the same type between elements. Not a relationship itself: Appendix B.6 names element, relationship and relationship connector as the three kinds of concept a relationship can connect." ;
     archimate:abstract true ;
-    rdfs:subClassOf archimate:Relationship .
+    rdfs:subClassOf archimate:Concept .
+
+# Element, Relationship and RelationshipConnector are the three kinds of concept a
+# relationship can connect (Appendix B.6, Table 21); nothing is more than one of them.
+[] rdf:type owl:AllDisjointClasses ;
+    owl:members ( archimate:Element archimate:Relationship archimate:RelationshipConnector ) .
 
 
 # Aspects
@@ -1083,24 +1097,24 @@ archimate:structuralRelationship rdf:type owl:ObjectProperty ;
     rdfs:label "structural relationship" ;
     rdfs:comment "Base property for structural relationships that define static construction or composition." ;
     archimate:abstract true ;
-    rdfs:domain archimate:Element ;
-    rdfs:range archimate:Element .
+    rdfs:domain archimate:Concept ;
+    rdfs:range archimate:Concept .
 
 archimate:dependencyRelationship rdf:type owl:ObjectProperty ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "dependency relationship" ;
     rdfs:comment "Base property for dependency relationships between elements." ;
     archimate:abstract true ;
-    rdfs:domain archimate:Element ;
-    rdfs:range archimate:Element .
+    rdfs:domain archimate:Concept ;
+    rdfs:range archimate:Concept .
 
 archimate:dynamicRelationship rdf:type owl:ObjectProperty ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "dynamic relationship" ;
     archimate:abstract true ;
     rdfs:comment "Base property for dynamic behavioral relationships." ;
-    rdfs:domain archimate:Element ;
-    rdfs:range archimate:Element .
+    rdfs:domain archimate:Concept ;
+    rdfs:range archimate:Concept .
 
 archimate:otherRelationship rdf:type owl:ObjectProperty ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
@@ -1127,32 +1141,32 @@ archimate:assignment rdf:type owl:ObjectProperty ;
     rdfs:label "assignment" ;
     rdfs:comment "Links active structure elements with behavior that they perform or roles they fulfill." ;
     rdfs:subPropertyOf archimate:structuralRelationship ;
-    rdfs:domain archimate:Element ;
-    rdfs:range archimate:Element .
+    rdfs:domain archimate:Concept ;
+    rdfs:range archimate:Concept .
 
 archimate:aggregation rdf:type owl:ObjectProperty ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "aggregation" ;
     rdfs:comment "Models a whole-part relationship where parts can exist independently." ;
     rdfs:subPropertyOf archimate:structuralRelationship ;
-    rdfs:domain archimate:Element ;
-    rdfs:range archimate:Element .
+    rdfs:domain archimate:Concept ;
+    rdfs:range archimate:Concept .
 
 archimate:composition rdf:type owl:ObjectProperty ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "composition" ;
     rdfs:comment "Models a whole-part relationship where parts cannot exist without the whole." ;
     rdfs:subPropertyOf archimate:structuralRelationship ;
-    rdfs:domain archimate:Element ;
-    rdfs:range archimate:Element .
+    rdfs:domain archimate:Concept ;
+    rdfs:range archimate:Concept .
 
 archimate:realization rdf:type owl:ObjectProperty ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "realization" ;
     rdfs:comment "Indicates that an entity realizes or implements another entity." ;
     rdfs:subPropertyOf archimate:structuralRelationship ;
-    rdfs:domain archimate:Element ;
-    rdfs:range archimate:Element .
+    rdfs:domain archimate:Concept ;
+    rdfs:range archimate:Concept .
 
 # Dependency Relationships  
 archimate:serving rdf:type owl:ObjectProperty ;
@@ -1160,32 +1174,32 @@ archimate:serving rdf:type owl:ObjectProperty ;
     rdfs:label "serving" ;
     rdfs:comment "Models that an element provides functionality to another element." ;
     rdfs:subPropertyOf archimate:dependencyRelationship ;
-    rdfs:domain archimate:Element ;
-    rdfs:range archimate:Element .
+    rdfs:domain archimate:Concept ;
+    rdfs:range archimate:Concept .
 
 archimate:access rdf:type owl:ObjectProperty ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "access" ;
     rdfs:comment "Models access of behavior elements to passive structure elements." ;
     rdfs:subPropertyOf archimate:dependencyRelationship ;
-    rdfs:domain archimate:Element ;
-    rdfs:range archimate:Element .
+    rdfs:domain archimate:Concept ;
+    rdfs:range archimate:Concept .
 
 archimate:influence rdf:type owl:ObjectProperty ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "influence" ;
     rdfs:comment "Models how one element influences another element." ;
     rdfs:subPropertyOf archimate:dependencyRelationship ;
-    rdfs:domain archimate:Element ;
-    rdfs:range archimate:Element .
+    rdfs:domain archimate:Concept ;
+    rdfs:range archimate:Concept .
 
 archimate:association rdf:type owl:ObjectProperty ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "association" ;
     rdfs:comment "Models a relationship not covered by other specific relationship types." ;
     rdfs:subPropertyOf archimate:dependencyRelationship ;
-    rdfs:domain archimate:Element ;
-    rdfs:range archimate:Element .
+    rdfs:domain archimate:Concept ;
+    rdfs:range archimate:Concept .
 
 # Dynamic Relationships
 archimate:triggering rdf:type owl:ObjectProperty ;
@@ -1193,16 +1207,16 @@ archimate:triggering rdf:type owl:ObjectProperty ;
     rdfs:label "triggering" ;
     rdfs:comment "Models temporal or causal relationships where one behavior triggers another." ;
     rdfs:subPropertyOf archimate:dynamicRelationship ;
-    rdfs:domain archimate:Element ;
-    rdfs:range archimate:Element .
+    rdfs:domain archimate:Concept ;
+    rdfs:range archimate:Concept .
 
 archimate:flow rdf:type owl:ObjectProperty ;
     rdfs:isDefinedBy <https://purl.org/archimate/owl> ;
     rdfs:label "flow" ;
     rdfs:comment "Models transfer of information, materials, or energy between behavior elements." ;
     rdfs:subPropertyOf archimate:dynamicRelationship ;
-    rdfs:domain archimate:Element ;
-    rdfs:range archimate:Element .
+    rdfs:domain archimate:Concept ;
+    rdfs:range archimate:Concept .
 
 # Other Relationships (spec Section 5.4)
 archimate:specialization rdf:type owl:ObjectProperty ;

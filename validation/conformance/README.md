@@ -20,6 +20,9 @@ working repository.**
 | `fixture-profile-expected.ttl` | oracle: the exact violations the SHACL report must contain, matched on (focusNode, resultPath, sourceConstraintComponent). |
 | `fixture-pattern-bad.ttl` | deliberately malformed profile *definitions*, one meta-shape violation each. Data graph for a meta-validation run. |
 | `fixture-pattern-expected.ttl` | oracle: the exact meta-shape violations, matched on (focusNode, sourceShape). |
+| `fixture-concept-kinds-data.ttl` | a junction splitting a flow, a location composing that junction, a relationship node aggregated by a grouping and associated with an element, and one probe typed as both an element and a relationship. Data graph only. |
+| `fixture-concept-kinds-expected.ttl` | oracle: the only node that may be both an element and a relationship or relationship connector after RDFS entailment, and the exact `avcore:ConceptKindsDisjoint` violation, matched on (focusNode, sourceShape). |
+| `../../tools/concept_kinds_conformance.py` | runner for the two concept-kinds oracles: computes RDFS entailment (subproperty, subclass, domain, range) over `ontology/archimate.ttl` plus the fixture, then validates against `validation/archimate_validation_core.ttl`. Exit 1 on any mismatch. Requires `pyshacl`. |
 | `../../tools/profile_conformance.py` | runner: executes all four oracles below, exit 1 on any mismatch. Requires `pyshacl`. |
 
 The fixture TBox is deliberately independent of the `myModel:` examples — those are documented as
@@ -67,3 +70,21 @@ python3 tools/profile_conformance.py
 | violation expected **and** reported | mechanism confirmed |
 | expected, **not** reported | a shape went inert: subclass axioms missing from the data graph, implicit class targets not firing on this engine, or a constraint narrowed |
 | reported, **not** expected | a constraint broadened, the rule harness was skipped, or a rule fired outside its scope |
+
+## The concept-kinds oracles
+
+```
+python3 tools/concept_kinds_conformance.py
+```
+
+Appendix B.6 lets a relationship start or end at a relationship or a junction, and lets grouping and
+location aggregate or compose any concept. Relationship properties therefore have domain and range
+`archimate:Concept`. Under RDFS entailment, a domain or range of `archimate:Element` on any
+relationship property *or on one of its super-properties* types every such junction and relationship
+as an element, silently. The two oracles pin that this does not happen:
+
+1. **Entailment oracle** — after RDFS entailment, the nodes that are both an element and a relationship
+   or relationship connector are exactly `fixk:probe-both`, the one typed that way on purpose.
+   `fixk:j1` (junction) and `fixk:rel1` (relationship) appearing here means a domain or range has
+   narrowed to Element again.
+2. **Validation oracle** — `avcore:ConceptKindsDisjoint` reports exactly `fixk:probe-both`.
