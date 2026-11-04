@@ -123,7 +123,7 @@ myModel:email rdf:type owl:DatatypeProperty ;
 #                    repeat it.
 
 myModel:Employee rdf:type owl:Class ;
-    rdfs:subClassOf myModel:Person ;
+    rdfs:subClassOf myModel:Person , archimate:BusinessActor ;
     archimate:profileSpecialization myModel:Person ;
     rdfs:label "Employee" ;
     rdfs:comment "A Person employed by the organization. Sub-profile of Person: inherits Person's attributes (firstName, lastName, dateOfBirth, email) via rdfs:subClassOf, adds one open attribute (employeeId) and one fixed attribute (employmentStatus)." .
